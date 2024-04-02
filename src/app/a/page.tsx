@@ -42,12 +42,12 @@ const Page = () => {
     return <div className={"space-y-10px"}>
         {cards.map((item,index)=> (
             <Card
-            time = {item.time}
-            img = {item.img}
-            title = {item.title}
-            likes={item.likes}
-            name = {item.name}
-            key={index}
+                time = {item.time}
+                img = {item.img}
+                title = {item.title}
+                likes={item.likes}
+                name = {item.name}
+                key={index}
             />
         ))}
     </div>
