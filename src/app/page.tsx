@@ -4,3 +4,4 @@ export default async function Home() {
     <div>hello</div>
   );
 }
+
