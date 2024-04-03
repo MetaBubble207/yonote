@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { Modal, Button } from "antd"; // 从 Ant Design 中导入 Modal 和 Button 组件
 import Image from "next/image";
 
 const Login = () => {
@@ -58,19 +57,6 @@ const Login = () => {
                 </div>
             </div>
 
-            {/* Ant Design 的 Modal */}
-            <Modal
-                title="微信登录" // 模态框标题
-                visible={modalVisible} // 控制模态框的可见性
-                onCancel={handleCancel} // 处理取消/关闭的函数
-                footer={[ // 底部按钮
-                    <Button key="cancel" onClick={handleCancel}>取消</Button>, // 取消按钮
-                    <Button key="submit" type="primary" onClick={handleCancel}>确定</Button>, // 确定按钮
-                ]}
-            >
-                {/* 模态框内容 */}
-                <p>这是微信登录的模态框内容。</p>
-            </Modal>
         </div>
     );
 }
