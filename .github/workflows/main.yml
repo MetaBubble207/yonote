@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Push to remote repository
-        uses: ad-m/github-push-action@main
+        uses: ad-m/github-push-action@master # 把 `main` 改成 `master` 或具体的版本号
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           remote_repo: ${{ secrets.GIT_REPO_URL}} # 你的远程仓库URL
