@@ -15,8 +15,9 @@ jobs:
       - name: Push to remote repository
         uses: ad-m/github-push-action@master # 把 `main` 改成 `master` 或具体的版本号
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ secrets.GIT_REPO_URL}} # 你的远程仓库URL
+          github_token: ${{ secrets.GIT_TOKEN }}
+          github_url: ${{ secrets.GIT_REPO_URL}}
+          repository: yonote # 你的远程仓库URL
           branch: main
           force: true # 使用 "true" 强制推送（当你想要你的变化覆盖远程仓库时）
           tags: true # 也推送tags
