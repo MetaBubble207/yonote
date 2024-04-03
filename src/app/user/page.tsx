@@ -74,25 +74,52 @@ function User() {
             </div>
 
             {/*  我的服务模块*/}
-            <div className={"w-85.75 h-51.5 border-rd-2.5 bg-[#FFF] mx-auto mt-1.5 pl-5.5 pt-4.5"}>
+            <div className={"w-85.75 h-51.5 border-rd-2.5 bg-[#FFF] mx-auto mt-1.5  pt-4.5"}>
                 {/*标题*/}
-                <h2 className={"text-[#252525] text-3.5 font-500 lh-6"}>我的服务</h2>
+                <h2 className={"text-[#252525] text-3.5 font-500 lh-6 pl-5.5"}>我的服务</h2>
 
                 <div className="service">
-                    <ul className={"flex flex-wrap mt-4.5"}>
-                        <li className={"flex flex-col items-center"}>
+                    <ul className={"flex flex-wrap"}>
+                        <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
                             <Image src={'/images/user/HomePage.svg'} alt={"个人主页"} width={"48"} height={"48"}
                                    className={"w-6 h-6"}/>
                             <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>个人主页</p>
                         </li>
+                        <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
+                            <Image src={'/images/user/KnowledgePlanet.svg'} alt={"知识星球"} width={"48"} height={"48"}
+                                   className={"w-6 h-6"}/>
+                            <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>知识星球</p>
+                        </li>
+                        <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
+                            <Image src={'/images/user/Usage.svg'} alt={"使用说明"} width={"48"} height={"48"}
+                                   className={"w-6 h-6"}/>
+                            <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>使用说明</p>
+                        </li>
+                        <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
+                            <Image src={'/images/user/Income.svg'} alt={"收入提现"} width={"48"} height={"48"}
+                                   className={"w-6 h-6"}/>
+                            <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>收入提现</p>
+                        </li>
+                        <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
+                            <Image src={'/images/user/Feedback.svg'} alt={"意见反馈"} width={"48"} height={"48"}
+                                   className={"w-6 h-6"}/>
+                            <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>意见反馈</p>
+                        </li>
+                        <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
+                            <Image src={'/images/user/Contact.svg'} alt={"联系客服"} width={"48"} height={"48"}
+                                   className={"w-6 h-6"}/>
+                            <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>联系客服</p>
+                        </li>
+                        <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
+                            <Image src={'/images/user/SignOut.svg'} alt={"退出登录"} width={"48"} height={"48"}
+                                   className={"w-6 h-6"}/>
+                            <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>退出登录</p>
+                        </li>
 
-                        {/*<li><Image src={'/images/user/HomePage.svg'} alt={"知识星球"} />知识星球</li>*/}
-                        {/*<li><Image src={'/images/user/HomePage.svg'} alt={"使用说明"} />使用说明</li>*/}
-                        {/*<li><Image src={'/images/user/HomePage.svg'} alt={"收入提现"} />收入提现</li>*/}
-                        {/*<li><Image src={'/images/user/HomePage.svg'} alt={"意见反馈"} />意见反馈</li>*/}
-                        {/*<li><Image src={'/images/user/HomePage.svg'} alt={"联系客服"} />联系客服</li>*/}
-                        {/*<li><Image src={'/images/user/HomePage.svg'} alt={"退出登录"} />退出登录</li>*/}
-                    </ul>
+
+
+
+                      </ul>
                 </div>
 
             </div>
