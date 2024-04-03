@@ -2,16 +2,19 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import GeneralModal from "../dialog/dialog"; // 引入GeneralModal组件
+import GeneralModal from "../_components/dialog/dialog"; // 引入GeneralModal组件
+import { useRouter } from "next/navigation";
 
 const Login = () => {
     const [checked, setChecked] = useState(false);
     const [modalVisible, setModalVisible] = useState(false); // 用于管理模态框可见性的状态
+    const router = useRouter();
 
 
     const handleCancel = () => {
         // 处理模态框取消/关闭的函数
         setModalVisible(false); // 当取消时隐藏模态框
+        router.back();
     };
 
       // 定义关闭模态框的函数
@@ -27,7 +30,7 @@ const Login = () => {
         alert("请先勾选同意!");
     }
     };
-    
+
     // const [scanning, setScanning] = useState(false);
     // const handleScanLogin = () => {
     //      // 在此处可以触发后端请求，以获取微信用户的授权信息
