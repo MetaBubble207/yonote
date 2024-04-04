@@ -27,7 +27,6 @@ const Subscribe = () => {
                 </div>
             </div>
 
-
             <div className="bottom-4 justify-center w-full fixed">
                 <Navbar />
             </div>

@@ -1,19 +1,9 @@
-// const Navscribe = () => {
-//     return (
-//         <div>更新 专栏 小课</div>
-//     )
-// }
 "use client";
-'use strict'
+'use strict';
 import React from 'react';
 import SubscribeColumn from './SubscribeColumn';
 import SubscribeRenew from './SubscribeRenew';
-
-
-// export default function Navscribr({ children }: { children: React.ReactNode }) {
-
-
-// }
+import Image from 'next/image';
 
 
 const Page = () => {
@@ -29,11 +19,23 @@ const Page = () => {
     };
     const Page2 = () => {
         const [c, setC] = React.useState<undefined>(undefined);
-        return <SubscribeColumn />;
+        return (
+            <div>
+                <SubscribeColumn />
+                <SubscribeColumn />
+            </div>
+
+        )
     };
     const Page3 = () => {
         const [c, setC] = React.useState<undefined>(undefined);
-        return <div>3</div>;
+        return (
+            <div>
+                <SubscribeColumn />
+                <SubscribeColumn />
+                <SubscribeColumn />
+            </div>
+        );
     }
     const renderContent = (): React.ReactNode => {
         switch (currentPage) {
@@ -48,10 +50,16 @@ const Page = () => {
 
     return (
         <div>
-            <div className='flex'>
-                <div onClick={() => setCurrentPage(1)}>更新</div>
-                <div onClick={() => setCurrentPage(2)} >专栏</div>
-                <div onClick={() => setCurrentPage(3)}>小课</div>
+            <div className='mt-6 mb-3 flex justify-between items-center'>
+                <div className='flex w-43 justify-between'>
+                    <div onClick={() => setCurrentPage(1)} className=''>更新</div>
+                    <div onClick={() => setCurrentPage(2)} className=''>专栏</div>
+                    <div onClick={() => setCurrentPage(3)} className=''>小课</div>
+                </div>
+                <div className='text-[#B5B5B5] text-2.5 lh-6 flex items-center'>
+                    <div className='mr-1'>订阅管理</div>
+                    <Image src={"/images/subscribe/manage.svg"} width={12} height={12} alt="manage" className='w-3 h-3'></Image>
+                </div>
             </div>
             {renderContent()}
         </div>
