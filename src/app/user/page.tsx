@@ -47,8 +47,12 @@ function User() {
                 <div className="flex">
                     <a href="#"
                         className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">专栏</a>
-                    <a href="#"
-                        className="w-8 h-6 text-gray-900 font-source-han-sans-sc text-base font-medium leading-6 ">小课</a>
+                    <div className={"flex-col"}>
+                        <a href="#"
+                           className="text-[#252525] text-3.5 font-500 lh-6">小课</a>
+                        <div className={"ml-2.25 mt-1 w-2.75 h-1 border-rd-2 bg-[#45E1B8]"}></div>
+                    </div>
+
                 </div>
 
                 {/* 内容区域 */}

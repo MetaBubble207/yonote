@@ -68,8 +68,11 @@ function User() {
                         <div className="flex">
                             <a href="#"
                                className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">专栏</a>
-                            <a href="#"
-                               className="w-8 h-6 text-gray-900 font-source-han-sans-sc text-base font-medium leading-6 ">小课</a>
+                            <div className={"flex-col"}>
+                                <a href="#"
+                                   className="text-[#252525] text-3.5 font-500 lh-6">小课</a>
+                                <div className={"ml-2.25 mt-1 w-2.75 h-1 border-rd-2 bg-[#45E1B8]"}></div>
+                            </div>
                         </div>
 
                         {/* 内容区域 */}
@@ -92,15 +95,12 @@ function User() {
                             </div>
                         </div>
                     </div>
-
                     <div className={"flex justify-center mt-18"}>
                         <div className={"w-26 h-7 pl-3.44 shrink-0 border-rd-9 bg-[#DAF9F1]"}>
                             <a href="#"
                                className={"w-19.12225 h-6.25 shrink-0 text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</a>
                         </div>
                     </div>
-
-
                 </div>
 
 
