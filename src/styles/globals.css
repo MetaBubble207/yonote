@@ -1,11 +1,9 @@
 @import '@unocss/reset/tailwind.css';
 @unocss all;
 
-html {
+html{
   font-size: 4.26672vw;
-  background: #f5f7fb;
 }
-
 body {
   padding: 0;
   margin: 0;
