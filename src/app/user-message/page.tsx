@@ -16,9 +16,9 @@ const UserMessage = () => {
 
             {/*用户信息*/}
             <div className={"ml-4 mt-11.75"}>
-                <div className={"flex"}><p className={"text-[#252525] text-3.5 font-500"}>用户名</p><span className={"pl-15 flex-1 text-[#252525] text-3.5 font-400"}>芋圆</span><Image className={"w-3 h-3 shrink-0 mr-3.25"} src={"/images/user/RightArrow.svg"} alt={"RightArrow"} width={"10"} height={"10"}/></div>
-                <div className={"mt-5.5 flex"}><p className={"text-[#252525] text-3.5 font-500"}>用户ID</p><span className={"pl-15 text-[#252525] text-3.5 font-400"}>1314wfa2</span></div>
-                <div className={"mt-5.5 flex"}><p className={"text-[#252525] text-3.5 font-500"}>手机号</p><span className={"pl-15 text-[#252525] text-3.5 font-400"}>15293663718</span></div>
+                <div className={"flex"}><p className={"w-14 text-[#252525] text-3.5 font-500 lh-6"}>用户名</p><span className={"pl-15 flex-1  text-3.5 font-400"}>芋圆</span><Image className={"w-3 h-3 shrink-0 mr-3.25"} src={"/images/user/RightArrow.svg"} alt={"RightArrow"} width={"10"} height={"10"}/></div>
+                <div className={"mt-5.5 flex"}><p className={"w-14 text-[#252525] text-3.5 font-500 lh-6"}>用户ID</p><span className={"pl-15  text-3.5 font-400"}>1314wfa2</span></div>
+                <div className={"mt-5.5 flex"}><p className={"w-14 text-[#252525] text-3.5 font-500 lh-6"}>手机号</p><span className={"pl-15  text-3.5 font-400"}>15293663718</span></div>
             </div>
         </div>
 
