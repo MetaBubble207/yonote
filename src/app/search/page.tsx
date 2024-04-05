@@ -1,7 +1,5 @@
 import Image from "next/image"
-import Navbar from "../_components/common/Navbar";
 
-/*import Page from           */
 
 
 const Page=()=>{
@@ -17,6 +15,8 @@ const Page=()=>{
                 <div className="text-3.75 text-[#252525] lh-6 w-8.25 h-5.5 ">取消</div>
                 
             </div>
+
+
 
 
             {/*搜索结果-vip*/}
@@ -58,51 +58,6 @@ const Page=()=>{
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-            
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         </div>
