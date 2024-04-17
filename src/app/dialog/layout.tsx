@@ -3,15 +3,15 @@
 
 import Image from "next/image";
 import React from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { TRPCReactProvider } from "@/trpc/react";
 
 
 const dialogLayout=({children}:{children:React.ReactNode})=>{
-    const router = useRouter();
+    // const router = useRouter();
 
     const closeModal = () => {
-        router.back();
+        // router.back();
     }
 
     return(
