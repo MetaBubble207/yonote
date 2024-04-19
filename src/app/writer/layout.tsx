@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import React from "react";
-import styles from '../writer/writer.css';
+import styles from './writer.css';
 
 
 // import { useRouter } from "next/navigation";
