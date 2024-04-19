@@ -1,5 +1,6 @@
 // page.tsx
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 function User() {
@@ -66,11 +67,11 @@ function User() {
                     <div className="w-85.75 h-63.75 border-rd-2.5 bg-#FFF ml-4 pl-4 pt-4 mt-4">
                         {/* 导航区域 */}
                         <div className="flex">
-                            <a href="#"
-                               className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">专栏</a>
+                            <Link href="#"
+                               className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">专栏</Link>
                             <div className={"flex-col"}>
-                                <a href="#"
-                                   className="text-[#252525] text-3.5 font-500 lh-6">小课</a>
+                                <Link href="#"
+                                   className="text-[#252525] text-3.5 font-500 lh-6">小课</Link>
                                 <div className={"ml-2.25 mt-1 w-2.75 h-1 border-rd-2 bg-[#45E1B8]"}></div>
                             </div>
                         </div>
@@ -97,8 +98,8 @@ function User() {
                     </div>
                     <div className={"flex justify-center mt-18"}>
                         <div className={"w-26 h-7 pl-3.44 shrink-0 border-rd-9 bg-[#DAF9F1]"}>
-                            <a href="#"
-                               className={"w-19.12225 h-6.25 shrink-0 text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</a>
+                            <Link href="#"
+                               className={"w-19.12225 h-6.25 shrink-0 text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
                         </div>
                     </div>
                 </div>
