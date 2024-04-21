@@ -75,7 +75,7 @@ const Page = () => {
                                 <th>
                                     <div className='flex justify-center items-center'>
                                         <span>订阅开始时间</span>
-                                        <div className='flex-col '>
+                                        <div className='flex-col ml-2'>
                                             <button className='flex items-center'>
                                                 <Image
                                                     className='w-1.66275 h-1.0675 shrink-0 fill-#BFBFBF'
@@ -94,7 +94,7 @@ const Page = () => {
                                 <th>
                                     <div className='flex justify-center items-center'>
                                         <span>订阅结束时间</span>
-                                        <div className='flex-col '>
+                                        <div className='flex-col ml-2'>
                                             <button className='flex items-center'>
                                                 <Image
                                                     className='w-1.66275 h-1.0675 shrink-0 fill-#BFBFBF'
