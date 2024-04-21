@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import MySlider from "@/app/writer/slider/page";
 import Date from "@/app/writer/datarange/page";
+import LeftCompass from "@/app/writer/left-compass/page";
 
 
 const Page = () => {
@@ -12,7 +13,8 @@ const Page = () => {
             <Compass></Compass>
             <div className='flex'>
                 {/*左边 侧边导航*/}
-                <div className="w-65.25 h-225 shrink-0 bg-[#FFF]">侧边导航</div>
+                {/*<div className="w-65.25 h-225 shrink-0 bg-[#FFF]">侧边导航</div>*/}
+                <LeftCompass />
 
                 {/*右边 加速计划*/}
                 <div className='mt-4 ml-4 pl-8 pt-8 w-286.75 h-203.5 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF]'>
