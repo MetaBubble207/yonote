@@ -5,6 +5,8 @@ import React from 'react';
 import Image from "next/image";
 import MyPagination from "@/app/writer/pagination/page";
 import Date from "@/app/writer/datarange/page";
+import LeftCompass from "@/app/writer/left-compass/page";
+import Page_customized from "@/app/writer/pagination/page";
 
 
 const Page = () => {
@@ -12,12 +14,13 @@ const Page = () => {
         <div>
             <Compass></Compass>
             <div className='flex'>
-                <div className="w-64.77925 h-224.9975 shrink-0 bg-[#FFF]">侧边导航</div>
+                <LeftCompass></LeftCompass>
+                {/*<div className="w-64.77925 h-224.9975 shrink-0 bg-[#FFF]">侧边导航</div>*/}
 
 
                 {/*订单管理页面*/}
                 <div
-                    className='relative ml-4.465 mt-4.02 pt-8 pl-8 w-286.75 h-195 shrink-0 rounded-tl-lg rounded-tr-lg bg-[#FFF]'>
+                    className='relative ml-4.465 mt-4.02 pt-8 pl-8 h-195 shrink-0 rounded-tl-lg rounded-tr-lg bg-[#FFF]'>
                     <h3 className='text-[#323232] text-4 font-700 lh-6'>订阅管理</h3>
                     <div className='flex items-center mt-2.125'>
 
@@ -52,7 +55,8 @@ const Page = () => {
 
                     {/*信息列表*/}
                     <div className="mt-4">
-                        <table className="table-auto w-269.75 h-13.5 shrink-0 border-rd-[4px_4px_0px_0px] bg-[#FAFAFA] lh-13.5 text-[rgba(0,0,0,0.85)] text-3.5 font-400 '">
+                        <table
+                            className="table-auto w-269.75 h-13.5 shrink-0 border-rd-[4px_4px_0px_0px] bg-[#FAFAFA] lh-13.5 text-[rgba(0,0,0,0.85)] text-3.5 font-400 '">
 
                             {/*表头*/}
                             <thead>
@@ -71,13 +75,13 @@ const Page = () => {
                                 <th>
                                     <div className='flex justify-center items-center'>
                                         <span>订阅开始时间</span>
-                                        <div className='flex-col shrink-0 items-end'>
-                                            <button>
+                                        <div className='flex-col '>
+                                            <button className='flex items-center'>
                                                 <Image
                                                     className='w-1.66275 h-1.0675 shrink-0 fill-#BFBFBF'
                                                     src={'/images/writer/up.svg'} alt={'up'} width={5} height={5}/>
                                             </button>
-                                            <button>
+                                            <button className='flex items-center'>
                                                 <Image
                                                     className=' w-1.66275 h-1.0675 shrink-0 fill-#BFBFBF'
                                                     src={'/images/writer/down.svg'} alt={'down'} width={5} height={5}/>
@@ -85,23 +89,25 @@ const Page = () => {
 
                                         </div>
                                     </div>
-
                                 </th>
 
-                                <th>订阅结束时间
-                                    <span className='flex-col shrink-0 items-end'>
-                                            <button>
+                                <th>
+                                    <div className='flex justify-center items-center'>
+                                        <span>订阅结束时间</span>
+                                        <div className='flex-col '>
+                                            <button className='flex items-center'>
                                                 <Image
-                                                    className=' w-1.66275 h-1.0675 shrink-0 fill-#BFBFBF'
+                                                    className='w-1.66275 h-1.0675 shrink-0 fill-#BFBFBF'
                                                     src={'/images/writer/up.svg'} alt={'up'} width={5} height={5}/>
                                             </button>
-                                            <button>
+                                            <button className='flex items-center'>
                                                 <Image
                                                     className=' w-1.66275 h-1.0675 shrink-0 fill-#BFBFBF'
                                                     src={'/images/writer/down.svg'} alt={'down'} width={5} height={5}/>
                                             </button>
 
-                                    </span>
+                                        </div>
+                                    </div>
                                 </th>
                                 <th>操作</th>
                             </tr>
@@ -109,7 +115,49 @@ const Page = () => {
 
                             {/*表体*/}
                             <tbody className='text-center'>
-                            <tr className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
+                                <tr className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
+                                    <td>1</td>
+                                    <td>头像</td>
+                                    <td>1239f7.5</td>
+                                    <td>胖头鱼吃瓜</td>
+                                    <td>订阅中</td>
+                                    <td>2017-10-31 23:12:00</td>
+                                    <td>2017-10-31 23:12:00</td>
+                                    <td>
+                                        <button
+                                            className='text-[#1DB48D] font-"Microsoft YaHei" text-3.5 font-not-italic font-400 lh-5.5'>结束订阅
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
+                                    <td>1</td>
+                                    <td>头像</td>
+                                    <td>1239f7.5</td>
+                                    <td>胖头鱼吃瓜</td>
+                                    <td>订阅中</td>
+                                    <td>2017-10-31 23:12:00</td>
+                                    <td>2017-10-31 23:12:00</td>
+                                    <td>
+                                        <button
+                                            className='text-[#1DB48D] font-"Microsoft YaHei" text-3.5 font-not-italic font-400 lh-5.5'>结束订阅
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
+                                    <td>1</td>
+                                    <td>头像</td>
+                                    <td>1239f7.5</td>
+                                    <td>胖头鱼吃瓜</td>
+                                    <td>订阅中</td>
+                                    <td>2017-10-31 23:12:00</td>
+                                    <td>2017-10-31 23:12:00</td>
+                                    <td>
+                                        <button
+                                            className='text-[#1DB48D] font-"Microsoft YaHei" text-3.5 font-not-italic font-400 lh-5.5'>结束订阅
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
                                 <td>1</td>
                                 <td>头像</td>
                                 <td>1239f7.5</td>
@@ -123,14 +171,13 @@ const Page = () => {
                                     </button>
                                 </td>
                             </tr>
-                          </tbody>
+                            </tbody>
                         </table>
                     </div>
 
                     {/*分页*/}
-                    <div className='w-100% absolute bottom-18.73 left-60.6075'>
-                        {/*<Page_customed></Page_customed>*/}
-                        <MyPagination/>
+                    <div className="mt-4 flex flex-col justify-end items-center">
+                        <Page_customized/>
                     </div>
                 </div>
             </div>
