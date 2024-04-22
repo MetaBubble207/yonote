@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ManagementColumn from './ManagementColumn';
-
+import Image from 'next/image';
 const SubscribeManage = () => {
     const [showModal, setShowModal] = useState(false);
 
@@ -15,6 +15,7 @@ const SubscribeManage = () => {
     return (
         <div>
             <button onClick={handleModal} className='text-[#B5B5B5] text-2.5 lh-6'>订阅管理</button>
+            <Image src={"/images/subscribe/manage.svg"} width={12} height={12} alt="manage" className='w-3 h-3 inline-block justify-center ml-2 mt-1'></Image>
             {showModal && (
                 <div className=" bg-[rgba(0,0,0,0.65)] h-100% fixed top-0 w-100% left-0 z-999" onClick={closeModal}>
                     <div className="" onClick={(e) => e.stopPropagation()}>
