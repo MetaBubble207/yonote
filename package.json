@@ -19,6 +19,8 @@
     "@trpc/react-query": "next",
     "@trpc/server": "next",
     "@unocss/reset": "^0.58.7",
+    "antd": "^5.16.2",
+    "dayjs": "^1.11.10",
     "drizzle-orm": "^0.29.4",
     "echarts": "^5.5.0",
     "echarts-for-react": "^3.0.2",
