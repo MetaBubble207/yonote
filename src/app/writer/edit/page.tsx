@@ -1,8 +1,7 @@
-import exp from "constants";
 import React from "react";
 import Compass from "../compass/page";
 import Image from "next/image";
-import left_compass from "../left-compass/page";
+import LeftCompass from "../left-compass/page";
 
 const edit =() =>{
 
@@ -11,7 +10,7 @@ const edit =() =>{
             {Compass()}
             <div className="w-360 h-197.824 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] flex">
                 <div>
-                    {left_compass()}
+                    {LeftCompass()}
                 </div>
                 <div className="inline-flex p-2 items-start gap-2 ml-13.375 mt-8.375">
                     <div>

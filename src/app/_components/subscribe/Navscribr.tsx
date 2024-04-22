@@ -79,10 +79,7 @@ const Page = () => {
                     <button onClick={() => setCurrentPage(3)} onClickCapture={() => handleButtonClick(3)} className={` ${selectedButton === 3 ? ' text-black' : 'text-[#B5B5B5]'}`}>小课
                         <div className={`w-2.75 h-1 m-auto border-rd-2 bg-[#45E1B8] ${selectedButton === 3 ? 'bg-#45E1B8' : 'bg-#f5f7fb'}`}></div></button>
                 </div>
-                <button className='text-[#B5B5B5] text-2.5 lh-6 flex items-center'>
-                    <div className='mr-1'>订阅管理</div>
-                    <Image src={"/images/subscribe/manage.svg"} width={12} height={12} alt="manage" className='w-3 h-3'></Image>
-                </button>
+                
                 <SubscribeManage></SubscribeManage>
             </div>
             {renderContent()}

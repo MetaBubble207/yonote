@@ -57,8 +57,8 @@ const Find=()=>{
                         </div>
 
                                                   
-                        <Link href={"/"} className="ml-61 mt-23.5 w-18.25 h-6.25 bg-[#DAF9F1] border-rd-5.25  
-                            text-[#1DB48D] font-500 lh-6 text-center text-3 absolute right-4 bottom-4 ">立即查看</Link>
+                        <button className="ml-61 mt-23.5 w-18.25 h-6.25 bg-[#DAF9F1] border-rd-5.25  
+                            text-[#1DB48D] font-500 lh-6 text-center text-3 absolute right-4 bottom-4 ">立即查看</button>
                         
                     </div>
                 </div>
