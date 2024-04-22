@@ -1,4 +1,5 @@
 import Image from "next/image";
+import {AnswerQuestion} from "@/app/_components/special-column/AnswerQuestion";
 
 const Page = () => {
     return <div className={"relative bg-#F5F7FB h-screen"}>
@@ -49,24 +50,7 @@ const Page = () => {
         </div>
 
         {/*答题*/}
-        <div className={"mx-16px pb-50px "}>
-            <div className={" shrink-0 text-[#252525] text-3.75 font-not-italic font-500 lh-6 mb-16px"}>
-                题目内容是这个的那我随便打一下，选择题，字数多了你就下去吧...
-            </div>
-            {/*选项*/}
-            <div className={"w-98% h-40px shrink-0 border-rd-1.25 border-1 border-solid border-[#EAF7EE] bg-[#DAF9F1] py-10px mt-8px"}>
-                <div className={"shrink-0 text-[#1DB48D] text-3.5 font-not-italic font-500 pl-21px"}>正确答案</div>
-            </div>
-            <div className={"w-98% h-40px shrink-0 border-rd-1.25 border-1 border-solid border-[#EAF7EE] bg-[#ffebec] py-10px mt-8px"}>
-                <div className={"shrink-0 text-[#f04444] text-3.5 font-not-italic font-500 pl-21px"}>错误答案</div>
-            </div>
-            <div className={"w-98% h-40px shrink-0 border-rd-1.25 border-1 border-solid border-[#EAF7EE] bg-[#ffffff] py-10px mt-8px"}>
-                <div className={"shrink-0 text-[#b5b5b5] text-3.5 font-not-italic font-500 pl-21px"}>选项在这</div>
-            </div>
-            <div className={"w-98% h-40px shrink-0 border-rd-1.25 border-1 border-solid border-[#EAF7EE] bg-[#ffffff] py-10px mt-8px "}>
-                <div className={"shrink-0 text-[#b5b5b5] text-3.5 font-not-italic font-500 pl-21px"}>选项在这</div>
-            </div>
-        </div>
+        <AnswerQuestion></AnswerQuestion>
     </div>
 }
 
