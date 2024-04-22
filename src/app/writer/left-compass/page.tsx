@@ -1,11 +1,11 @@
 import React from "react";
 import Image from "next/image";
 
-const left_compass=()=>{
+const LeftCompass=()=>{
 
     return(
         <div>
-            <div className="w-64.77925 h-224.9975 shrink-0 bg-[#FFF]">
+            <div className="fixed top-17.5 w-64.77925 h-screen shrink-0 bg-[#FFF]">
                 <div className="w-65.25 h-72.4785 shrink-0 flex items-center flex-col pt-4.27">
                     <div className="w-65.25 h-12.4705 shrink-0 bg-[#DAF9F1] flex">
                         <Image src={"/images/writer/Monitor1.svg"} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"></Image>
@@ -37,4 +37,4 @@ const left_compass=()=>{
     );
 }
 
-export default left_compass;
+export default LeftCompass;
