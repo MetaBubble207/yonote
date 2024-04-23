@@ -3,8 +3,8 @@ import React from 'react';
 
 
 import Image from "next/image";
-import MyPagination from "@/app/writer/pagination/page";
-import Date from "@/app/writer/datarange/page";
+// import MyPagination from "@/app/writer/pagination/page";
+// import Date from "@/app/writer/datarange/page";
 import LeftCompass from "@/app/writer/left-compass/page";
 import Page_customized from "@/app/writer/pagination/page";
 
