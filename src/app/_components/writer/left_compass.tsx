@@ -37,8 +37,4 @@ const LeftCompass=()=>{
     );
 }
 
-<<<<<<< HEAD:src/app/_components/writer/left_compass.tsx
-export default Left_Compass;
-=======
 export default LeftCompass;
->>>>>>> a19d6e24917a5c0e2181a0ca411f0262d3d8427f:src/app/writer/left-compass/page.tsx

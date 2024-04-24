@@ -1,8 +1,6 @@
 "use client"
-import React from "react";
-import Compass from "../compass/page";
 import Image from "next/image";
-import LeftCompass from "../left-compass/page";
+import LeftCompass from "@/app/_components/writer/left_compass";
 
 import Compass from "../../_components/writer/compass";
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
@@ -10,19 +8,6 @@ import React, { useState, useEffect } from 'react'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
 import { IDomEditor, IEditorConfig, IToolbarConfig, DomEditor} from '@wangeditor/editor'
 import Preview from "@/app/_components/writer/preview";
-
-    return(
-        <div>
-            {Compass()}
-            <div className="w-360 h-197.824 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] flex">
-                <div>
-                    {LeftCompass()}
-                </div>
-                <div className="inline-flex p-2 items-start gap-2 ml-13.375 mt-8.375">
-                    <div>
-                        <Image src={"/images/writer/Vector.svg"} alt="Vector" width={16} height={14} className="w-3.75 h-3.28125 shrink-0 fill-#212529 ml-3.625"></Image>
-                        <button>
-
 
 function MyEditor() {
 
