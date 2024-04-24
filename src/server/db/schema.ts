@@ -18,7 +18,7 @@ import {
  */
 export const createTable = pgTableCreator((name) => `yonote_${name}`);
 
-export const posts = createTable(
+export const post = createTable(
   "post",
   {
     id: serial("id").primaryKey(),
