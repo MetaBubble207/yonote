@@ -43,3 +43,5 @@ export const user = createTable(
     updatedAt: timestamp("updatedAt"),
   }
 );
+
+export type User = typeof user.$inferInsert
