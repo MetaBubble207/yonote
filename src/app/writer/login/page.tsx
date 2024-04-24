@@ -1,5 +1,5 @@
 import React from "react";
-import Compass from "../compass/page";
+import Compass from "../../_components/writer/compass";
 import Image from "next/image";
 
 

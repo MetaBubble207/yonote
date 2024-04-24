@@ -6,7 +6,7 @@ import React from "react";
 import Image from "next/image";
 import { Span } from "next/dist/trace";
 
-const Shareing =()=>{
+const Join =()=>{
     let discount = "20%"
     return(
         <div className="flex flex-col items-center justify-center"> 
@@ -30,4 +30,4 @@ const Shareing =()=>{
     );
 }
 
-export default Shareing;
+export default Join;

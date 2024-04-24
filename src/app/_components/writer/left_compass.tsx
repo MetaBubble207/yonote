@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-const left_compass=()=>{
+const Left_Compass=()=>{
 
     return(
         <div>
@@ -37,4 +37,4 @@ const left_compass=()=>{
     );
 }
 
-export default left_compass;
+export default Left_Compass;

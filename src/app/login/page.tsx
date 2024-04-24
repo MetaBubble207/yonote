@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import GeneralModal from "../_components/dialog/dialog"; // 引入GeneralModal组件
+import GeneralModal from "../_components/dialog/dialog/dialog"; // 引入GeneralModal组件
 import { useRouter } from "next/navigation";
 
 const Login = () => {
