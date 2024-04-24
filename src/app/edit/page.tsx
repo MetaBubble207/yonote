@@ -1,8 +1,7 @@
 "use client"
 import Image from "next/image";
-import LeftCompass from "@/app/_components/writer/left_compass";
 
-import Compass from "../../_components/writer/compass";
+import Compass from "@/app/_components/writer/compass";
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import React, { useState, useEffect } from 'react'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
@@ -11,16 +10,10 @@ import Preview from "@/app/_components/writer/preview";
 
 function MyEditor() {
 
-
     const [editor, setEditor] = useState(null);
     const [html, setHtml] = useState('<p>hello</p>');
     const [title, setTitle] = useState('');
     const [preview, setPreview] = useState(true);
-
-    const handleEditorChange = (editor:any) => {
-        const newHtml = editor.getHtml();
-        setHtml(newHtml);
-    };
 
     const toolbar = DomEditor.getToolbar(editor!)
     
@@ -100,9 +93,8 @@ function MyEditor() {
 
     return (
         <>
-        {Compass()}
-        <div className="w-360 h-197.824 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] pt-4">
-            <div style={{ zIndex: 100}} className="w-340.36225 h-180 shrink-0 bg-[#FFF] m-auto">
+        <div className="w-360 h-197.824 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] pt-21.5">
+            <div style={{ zIndex: 100}} className="w-340.36225 h-180 shrink-0 m-auto">
                 <div className="flex">      
                     {/* 工具栏 */}
                     <Toolbar
@@ -113,9 +105,9 @@ function MyEditor() {
                     />
                     <div className="flex">
                         <div>
-                            <button className="w-27.4995 h-8 shrink-0 b-1 b-rd-1 mt-1.5 ml-4">+ 添加标签</button>
+                            <button className="w-27.4995 h-8 shrink-0 b-1 b-rd-1 mt-1 ml-4">+ 添加标签</button>
                         </div>
-                        <div className="w-22 h-8 shrink-0 bg-#DAF9F1 b-1 b-rd-1 ml-28 mt-1.5">
+                        <div className="w-22 h-8 shrink-0 bg-#DAF9F1 b-1 b-rd-1 ml-28 mt-2">
                             <button className="text-[#1DB48D] font-Abel text-3.5 font-not-italic font-400 lh-5.5 ml-4 mt-1">保存草稿</button>
                         </div>
                         <div className={`b-1 b-rd-1 w-22 h-8 shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9]  mt-2 ml-1.5 ${preview ? 'bg-#1db48d': ''}`}>
@@ -131,8 +123,34 @@ function MyEditor() {
 
                 </div>
 
-                <div className="flex  relative w-340.36225 h-154.18775 shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] b-1 b-solid b-#ccc mt-16.625"> <div className="relative">
-                        <div className={`relative ${preview ? 'w-243.3755' : 'w-335'}`}>
+                <div className="flex  relative w-340.36225 h-154.18775 shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-16.625"> <div className="relative">
+                        {
+                            preview 
+                            ?
+                                <div className={'relative w-243.3755 mr-10 b-1 b-solid b-#ccc '}>
+                                    {/* 标题输入框 */}
+                                    <input
+                                        type="text"
+                                        value={title}
+                                        onChange={handleTitleChange}
+                                        placeholder="在这里输入标题"
+                                        maxLength={64}
+                                        className="outline-none  mt-7.5 pl-10"
+                                        v-mode="title"
+                                    />
+                                    {/* 富文本编辑器 */}
+                                    <Editor
+                                        defaultConfig={editorConfig}
+                                        onCreated={setEditor}
+                                        onChange={editor => setHtml(editor.getHtml())}
+                                        mode="default"
+                                        v-model="html"
+                                        style={{ height: '500px', overflowY: 'hidden'}}
+                                        className="  shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-5 p-l-10"
+                                    />
+                            </div>
+                            :
+                                <div className={'relative w-335 b-1 b-solid b-#ccc '}>
                             {/* 标题输入框 */}
                             <input
                                 type="text"
@@ -153,9 +171,10 @@ function MyEditor() {
                                 className="  shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-5 p-l-10"
                             />
                         </div>
+                        }
                         {preview && (
-                            <div className="absolute top-0 right--93 h-full w-93 bg-white">
-                                <Preview html={html}></Preview>
+                            <div className="absolute top-0 right--89 h-full w-93 bg-white">
+                                <Preview html={html} title={title}></Preview>
                             </div>
                         )} 
                     </div>

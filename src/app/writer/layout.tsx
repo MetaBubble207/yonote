@@ -1,7 +1,7 @@
 import React from "react";
 import './writer.css';
-import Compass from "@/app/writer/compass/page";
-import LeftCompass from "@/app/writer/left-compass/page";
+import Compass from "../_components/writer/compass";
+import LeftCompass from "../_components/writer/left_compass";
 
 const dialogLayout=({children}:{children:React.ReactNode})=>{
     return(
