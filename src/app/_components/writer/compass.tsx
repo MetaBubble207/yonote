@@ -6,7 +6,7 @@ const Compass= () => {
 
     return (
         <div>
-            <div className="w-360 h-17.5 shrink-0 bg-[#FFF] flex items-center">
+            <div className="fixed top-0 w-100% h-17.5 shrink-0 bg-[#FFF] flex items-center">
                 <div className="flex items-center w-107.55675 h-11.75 shrink-0 ml-7.1975 mt-2.875">
                     <div className="inline-flex w-20 h-9.48025 items-center">
                         <Image src={"/images/logo.svg"} alt={"logo"} width={30.3} height={30.42} className="w-7.57425 h-8.35625 shrink-0"></Image>
