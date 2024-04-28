@@ -1,24 +1,24 @@
-import Compass from "@/app/writer/compass/page";
+// import Compass from "@/app/writer/compass/page";
 import Page_customized from "@/app/writer/pagination/page";
 import Image from "next/image";
 import React from "react";
-import MySlider from "@/app/writer/slider/page";
-import Date from "@/app/writer/datarange/page";
-import LeftCompass from "@/app/writer/left-compass/page";
+import MySlider from "@/app/_components/slider/page";
+import Date from '../../_components/datarange/Date'
+// import LeftCompass from "@/app/writer/left-compass/page";
 
 
 const Page = () => {
     return (
-        <div>
-            <Compass></Compass>
-            <div className='flex'>
+        <div className='w-100%'>
+            {/*<Compass></Compass>*/}
+            <div className='w-100% flex'>
                 {/*左边 侧边导航*/}
                 {/*<div className="w-65.25 h-225 shrink-0 bg-[#FFF]">侧边导航</div>*/}
-                <LeftCompass />
+                {/*<LeftCompass />*/}
 
                 {/*右边 加速计划*/}
-                <div className='mt-4 ml-4 pl-8 pt-8 w-286.75 h-203.5 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF]'>
-                    <div className='w-271.75 h-126.605 shrink-0 '>
+                <div className='w-97.5% mt-4 ml-4 pl-8 pt-8 w-286.75 h-203.5 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF]'>
+                    <div className=' w-271.75 h-126.605 shrink-0 '>
                         <h3 className='text-[#323232] text-4 font-700 lh-6'>加速计划</h3>
                         {/*加速激励*/}
                         <div className='pl-2 mt-6.0525'>
