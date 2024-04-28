@@ -1,11 +1,11 @@
-import Compass from "../compass/page"
+import Compass from '@/app/_components/writer/compass';
 import React from 'react';
 
 
 import Image from "next/image";
 // import MyPagination from "@/app/writer/pagination/page";
 // import Date from "@/app/writer/datarange/page";
-import LeftCompass from "@/app/writer/left-compass/page";
+import LeftCompass from "@/app/_components/writer/left_compass";
 import Page_customized from "@/app/writer/pagination/page";
 
 
