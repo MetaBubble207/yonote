@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import GeneralModal from "../_components/dialog/dialog"; // 引入GeneralModal组件
+import GeneralModal from "../_components/dialog/dialog/dialog"; // 引入GeneralModal组件
 import { useRouter } from "next/navigation";
 
 const Login = () => {
@@ -51,7 +51,7 @@ const Login = () => {
     return (
         <div>
             <div className="flex justify-center items-center mt-46">
-                <Image src={"/images/logo.png"} alt={"logo"} width={41} height={45}></Image>
+                <Image src={"/images/logo.svg"} alt={"logo"} width={41} height={45}></Image>
                 <div className="ml-10px">
                     <div className={"shrink-0 font-size-5.25 "}>
                         有记
@@ -72,7 +72,9 @@ const Login = () => {
             <div>
                 <GeneralModal isOpen={modalVisible} onClick={closeModal}>
                     {/* 这里放入模态框内部的内容 */}
-                    <div>此处放入微信二维码</div>
+                    <div>
+                        <Image src={"/images/writer/image 1.svg"} alt={"erweima"} width={240} height={240} className="w-60 h-60 shrink-0 mt-14.5725 m-auto "></Image>
+                    </div>
                 </GeneralModal>
             </div>
         </div>

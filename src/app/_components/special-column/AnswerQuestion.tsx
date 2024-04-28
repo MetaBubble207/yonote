@@ -26,9 +26,8 @@ export const AnswerQuestion = () => {
                 {options.map((option, index) => (
                     <div
                         key={index}
-                        className={`w-98% h-40px shrink-0 border-rd-1.25 border-1 border-solid border-[#EAF7EE] 
-              ${selectedOption === index ? (option.answer ? 'bg-[#DAF9F1] text-[#1DB48D]' : 'bg-[#ffebec] text-[#f04444]') : 'bg-[#ffffff] text-[#b5b5b5]'} 
-              py-10px mt-8px`}
+                        className={`w-98% h-40px shrink-0 border-rd-1.25 border-1 border-solid border-[#EAF7EE] py-10px mt-8px
+              ${selectedOption === index ? (option.answer ? 'bg-[#DAF9F1] text-[#1DB48D]' : 'bg-[#ffebec] text-[#f04444]') : 'bg-[#ffffff] text-[#b5b5b5]'}`}
                         onClick={() => handleOptionClick(index)}
                     >
                         <div className="shrink-0 font-not-italic font-500 pl-21px">{option.text}</div>

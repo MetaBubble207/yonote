@@ -32,7 +32,7 @@ const Compass= () => {
                     </div>
                 </div>
                 <div>
-                    <Image src={"/images/writer/Ellipse 7.svg"} alt="Ellipse 7" width={44} height={44} className="w-11 h-11 shrink-0 border-rd-11 ml-183"></Image>
+                    <Image src={"/images/writer/touxiang.svg"} alt="Ellipse 7" width={44} height={44} className="w-11 h-11 shrink-0 border-rd-11 ml-183"></Image>
                 </div>
                 <div className="ml-3.4275">
                     {name}
