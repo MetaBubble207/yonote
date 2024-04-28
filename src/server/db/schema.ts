@@ -18,7 +18,7 @@ import {
  */
 export const createTable = pgTableCreator((name) => `yonote_${name}`);
 
-export const posts = createTable(
+export const post = createTable(
   "post",
   {
     id: serial("id").primaryKey(),
@@ -43,3 +43,5 @@ export const user = createTable(
     updatedAt: timestamp("updatedAt"),
   }
 );
+
+export type User = typeof user.$inferInsert
