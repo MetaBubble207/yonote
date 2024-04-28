@@ -3,24 +3,23 @@ import React from 'react';
 
 
 import Image from "next/image";
-import MyPagination from "@/app/writer/pagination/page";
-import Date from "@/app/writer/datarange/page";
+import Date from '../../_components/datarange/Date'
 import LeftCompass from "@/app/writer/left-compass/page";
 import Page_customized from "@/app/writer/pagination/page";
 
 
 const Page = () => {
     return (
-        <div>
-            <Compass></Compass>
-            <div className='flex'>
-                <LeftCompass></LeftCompass>
+        <div className='w-100% h-100%'>
+            {/*<Compass></Compass>*/}
+            <div className='w-100%  flex'>
+                {/*<LeftCompass />*/}
                 {/*<div className="w-64.77925 h-224.9975 shrink-0 bg-[#FFF]">侧边导航</div>*/}
 
 
                 {/*订单管理页面*/}
                 <div
-                    className='relative ml-4.465 mt-4.02 pt-8 pl-8 h-195 shrink-0 rounded-tl-lg rounded-tr-lg bg-[#FFF]'>
+                    className='w-97.5%  relative ml-4.465 mt-4.02 pt-8 pl-8 h-195 shrink-0 rounded-tl-lg rounded-tr-lg bg-[#FFF]'>
                     <h3 className='text-[#323232] text-4 font-700 lh-6'>订阅管理</h3>
                     <div className='flex items-center mt-2.125'>
 
