@@ -7,19 +7,19 @@ import data from './imitate.json'
 import Echarts from './Echarts';
 import { log } from 'console';
 
-const Daterange: React.FC = () => {
+const Daterange: React.FC = (props,ref) => {
 
-    const [selectedDates, setSelectedDates] = useState<[Date, Date] | null>(null);
-    let dateStrings: string[] = [];
-    const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings: string[]) => {
+    const [selectedDates] = useState<[Date, Date] | null>(null);
+    const [daterange,setdaterange] = useState (0);
+    const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings:any) => {
         if (dates) {
             console.log(dateStrings[0], dateStrings[1]);
+            setdaterange(dateStrings);
         } else {
             console.log('Clear');
         }
     };
-    console.log(1232, dateStrings);
-
+    
 
     const disabledDate = (time: any) => {
         const today = new Date();
@@ -28,9 +28,16 @@ const Daterange: React.FC = () => {
     };
     dayjs.locale('zh-cn');
     return (
-        <ConfigProvider locale={locale}>
-            <DatePicker.RangePicker style={{ width: '100%' }} disabledDate={disabledDate} onChange={onRangeChange} />
-        </ConfigProvider>
+        <>
+            <ConfigProvider locale={locale}>
+                <DatePicker.RangePicker style={{ width: '100%' }} onChange={onRangeChange} />
+            </ConfigProvider>
+            <div className='w-1200px h-50px relative right-900px'>
+                <Echarts daterange={daterange}></Echarts>
+            </div>
+
+        </>
+
     );
 }
 export default Daterange;
