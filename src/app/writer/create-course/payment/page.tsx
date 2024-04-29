@@ -2,11 +2,11 @@ import React from "react";
 import Image from "next/image";
 
 const Page =()=>{
-    return <div className="relative w-360 h-225 bg-[#FFF]"> 
-        <div className=" w-100 h-48.75 mt-51.6 ml-134 ">
-            <div className="flex items-center  h-8  ">
+    return <div className="relative w-286.75 h-195 bg-[#FFF] mt-16px ml-18px pt-25.75"> 
+        <div className=" w-100 h-48.75 ml-90 mt-20 ">
+            <div className="flex items-center h-8">
                 <button>
-                    <Image src={"/images/co-author/check.svg"} alt="check" width={20} height={20} className="w-4 h-4 mt-10 ml-8"/>      
+                    <Image src={"/images/writer/co-author/check.svg"} alt="check" width={20} height={20} className="w-4 h-4 mt-10 ml-8"/>      
                 </button>               
                 <div className="w-8 text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5 ml-3 mt-10">30天</div>
                 <div className="w-8 text-[rgba(0,0,0,0.85)]  text-3.5 font-400 lh-5.5 ml-4 mt-10 ">价格</div>   
@@ -18,9 +18,9 @@ const Page =()=>{
                 <div className="w-3.51075 text-[rgba(0,0,0,0.65)] text-right text-3.5 font-400 lh-5.5 ml-2 mt-10">元</div> 
             </div>
 
-            <div className="flex items-center  h-8 mt-4  ">
+            <div className="flex items-center h-8 mt-4">
                 <button>
-                    <Image src={"/images/co-author/uncheck.svg"} alt="uncheck" width={20} height={20} className="w-4 h-4 mt-10 ml-8"/>      
+                    <Image src={"/images/writer/co-author/uncheck.svg"} alt="uncheck" width={20} height={20} className="w-4 h-4 mt-10 ml-8"/>      
                 </button>               
                 <div className="w-8 text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5 ml-3 mt-10">90天</div>
                 <div className="w-8 text-[rgba(0,0,0,0.85)]  text-3.5 font-400 lh-5.5 ml-4 mt-10 ">价格</div>   
@@ -34,7 +34,7 @@ const Page =()=>{
 
             <div className="flex items-center  h-8 mt-4  ">
                 <button>
-                    <Image src={"/images/co-author/uncheck.svg"} alt="uncheck" width={20} height={20} className="w-4 h-4 mt-10 ml-8"/>      
+                    <Image src={"/images/writer/co-author/uncheck.svg"} alt="uncheck" width={20} height={20} className="w-4 h-4 mt-10 ml-8"/>      
                 </button>               
                 <div className=" text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5 ml-3 mt-10">365天</div>
                 <div className="text-[rgba(0,0,0,0.85)]  text-3.5 font-400 lh-5.5 ml-2.5 mt-10 ">价格</div>   

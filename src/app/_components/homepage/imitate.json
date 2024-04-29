@@ -1,0 +1,352 @@
+[
+    {
+        "date": "2024-04-24",
+        "work_id": 1,
+        "read_count": 978,
+        "subscribe_count": 58,
+        "accelerate_plan_count": 5
+    },
+    {
+        "date": "2024-04-23",
+        "work_id": 2,
+        "read_count": 140,
+        "subscribe_count": 70,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-04-22",
+        "work_id": 3,
+        "read_count": 216,
+        "subscribe_count": 11,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-04-21",
+        "work_id": 4,
+        "read_count": 567,
+        "subscribe_count": 75,
+        "accelerate_plan_count": 2
+    },
+    {
+        "date": "2024-04-20",
+        "work_id": 5,
+        "read_count": 466,
+        "subscribe_count": 37,
+        "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-04-19",
+        "work_id": 6,
+        "read_count": 789,
+        "subscribe_count": 80,
+        "accelerate_plan_count": 2
+    },
+    {
+        "date": "2024-04-18",
+        "work_id": 7,
+        "read_count": 100,
+        "subscribe_count": 19,
+        "accelerate_plan_count": 3
+    },
+    {
+        "date": "2024-04-17",
+        "work_id": 8,
+        "read_count": 285,
+        "subscribe_count": 67,
+        "accelerate_plan_count": 9
+    },
+    {
+        "date": "2024-04-16",
+        "work_id": 9,
+        "read_count": 693,
+        "subscribe_count": 84,
+        "accelerate_plan_count": 2
+    },
+    {
+        "date": "2024-04-15",
+        "work_id": 10,
+        "read_count": 283,
+        "subscribe_count": 58,
+        "accelerate_plan_count": 2
+    },
+    {
+        "date": "2024-04-14",
+        "work_id": 11,
+        "read_count": 409,
+        "subscribe_count": 50,
+        "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-04-13",
+        "work_id": 12,
+        "read_count": 528,
+        "subscribe_count": 25,
+        "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-04-12",
+        "work_id": 13,
+        "read_count": 789,
+        "subscribe_count": 37,
+        "accelerate_plan_count": 10
+    },
+    {
+        "date": "2024-04-11",
+        "work_id": 14,
+        "read_count": 226,
+        "subscribe_count": 21,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-04-10",
+        "work_id": 15,
+        "read_count": 845,
+        "subscribe_count": 21,
+        "accelerate_plan_count": 9
+    },
+    {
+        "date": "2024-04-09",
+        "work_id": 16,
+        "read_count": 666,
+        "subscribe_count": 24,
+        "accelerate_plan_count": 2
+    },
+    {
+        "date": "2024-04-08",
+        "work_id": 17,
+        "read_count": 493,
+        "subscribe_count": 98,
+        "accelerate_plan_count": 3
+    },
+    {
+        "date": "2024-04-07",
+        "work_id": 18,
+        "read_count": 639,
+        "subscribe_count": 93,
+        "accelerate_plan_count": 2
+    },
+    {
+        "date": "2024-04-06",
+        "work_id": 19,
+        "read_count": 956,
+        "subscribe_count": 27,
+        "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-04-05",
+        "work_id": 20,
+        "read_count": 618,
+        "subscribe_count": 84,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-04-04",
+        "work_id": 21,
+        "read_count": 541,
+        "subscribe_count": 94,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-04-03",
+        "work_id": 22,
+        "read_count": 883,
+        "subscribe_count": 60,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-04-02",
+        "work_id": 23,
+        "read_count": 934,
+        "subscribe_count": 100,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-04-01",
+        "work_id": 24,
+        "read_count": 869,
+        "subscribe_count": 82,
+        "accelerate_plan_count": 5
+    },
+    {
+        "date": "2024-03-31",
+        "work_id": 25,
+        "read_count": 796,
+        "subscribe_count": 93,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-03-30",
+        "work_id": 26,
+        "read_count": 234,
+        "subscribe_count": 99,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-03-29",
+        "work_id": 27,
+        "read_count": 178,
+        "subscribe_count": 94,
+        "accelerate_plan_count": 10
+    },
+    {
+        "date": "2024-03-28",
+        "work_id": 28,
+        "read_count": 129,
+        "subscribe_count": 77,
+        "accelerate_plan_count": 3
+    },
+    {
+        "date": "2024-03-27",
+        "work_id": 29,
+        "read_count": 259,
+        "subscribe_count": 29,
+        "accelerate_plan_count": 7
+    },
+    {
+        "date": "2024-03-26",
+        "work_id": 30,
+        "read_count": 647,
+        "subscribe_count": 93,
+        "accelerate_plan_count": 9
+    },
+    {
+        "date": "2024-03-25",
+        "work_id": 31,
+        "read_count": 770,
+        "subscribe_count": 75,
+        "accelerate_plan_count": 4
+    },
+    {
+        "date": "2024-03-24",
+        "work_id": 32,
+        "read_count": 419,
+        "subscribe_count": 87,
+        "accelerate_plan_count": 7
+    },
+    {
+        "date": "2024-03-23",
+        "work_id": 33,
+        "read_count": 926,
+        "subscribe_count": 66,
+        "accelerate_plan_count": 3
+    },
+    {
+        "date": "2024-03-22",
+        "work_id": 34,
+        "read_count": 786,
+        "subscribe_count": 96,
+        "accelerate_plan_count": 7
+    },
+    {
+        "date": "2024-03-21",
+        "work_id": 35,
+        "read_count": 499,
+        "subscribe_count": 83,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-03-20",
+        "work_id": 36,
+        "read_count": 809,
+        "subscribe_count": 12,
+        "accelerate_plan_count": 10
+    },
+    {
+        "date": "2024-03-19",
+        "work_id": 37,
+        "read_count": 700,
+        "subscribe_count": 70,
+        "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-03-18",
+        "work_id": 38,
+        "read_count": 359,
+        "subscribe_count": 63,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-03-17",
+        "work_id": 39,
+        "read_count": 563,
+        "subscribe_count": 17,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-03-16",
+        "work_id": 40,
+        "read_count": 271,
+        "subscribe_count": 14,
+        "accelerate_plan_count": 7
+    },
+    {
+        "date": "2024-03-15",
+        "work_id": 41,
+        "read_count": 564,
+        "subscribe_count": 84,
+        "accelerate_plan_count": 9
+    },
+    {
+        "date": "2024-03-14",
+        "work_id": 42,
+        "read_count": 330,
+        "subscribe_count": 86,
+        "accelerate_plan_count": 2
+    },
+    {
+        "date": "2024-03-13",
+        "work_id": 43,
+        "read_count": 543,
+        "subscribe_count": 61,
+        "accelerate_plan_count": 3
+    },
+    {
+        "date": "2024-03-12",
+        "work_id": 44,
+        "read_count": 857,
+        "subscribe_count": 36,
+        "accelerate_plan_count": 7
+    },
+    {
+        "date": "2024-03-11",
+        "work_id": 45,
+        "read_count": 941,
+        "subscribe_count": 49,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-03-10",
+        "work_id": 46,
+        "read_count": 393,
+        "subscribe_count": 78,
+        "accelerate_plan_count": 5
+    },
+    {
+        "date": "2024-03-09",
+        "work_id": 47,
+        "read_count": 919,
+        "subscribe_count": 80,
+        "accelerate_plan_count": 4
+    },
+    {
+        "date": "2024-03-08",
+        "work_id": 48,
+        "read_count": 992,
+        "subscribe_count": 90,
+        "accelerate_plan_count": 2
+    },
+    {
+        "date": "2024-03-07",
+        "work_id": 49,
+        "read_count": 197,
+        "subscribe_count": 22,
+        "accelerate_plan_count": 5
+    },
+    {
+        "date": "2024-03-06",
+        "work_id": 50,
+        "read_count": 156,
+        "subscribe_count": 43,
+        "accelerate_plan_count": 6
+    }
+]

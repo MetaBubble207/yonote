@@ -2,9 +2,26 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
 import { Hedvig_Letters_Sans } from 'next/font/google';
+import data from './imitate.json'
+import { log } from 'console';
 
 
-const Echarts = () => {
+
+const Echarts = ({ }) => {
+    const newxaxis_read = data.map((item: any) => {
+        return item.read_count;
+    })
+    const newxaxis_subscribe = data.map((item: any) => {
+        return item.subscribe_count;
+    })
+    const newxaxis_accelerate = data.map((item: any) => {
+        return item.accelerate_plan_count;
+    })
+    const newyaxis = data.map((item: any) => {
+        return item.date;
+    })
+    console.log();
+
     const option = {
         width: 1010,
         height: 220,
@@ -13,7 +30,7 @@ const Echarts = () => {
             data: ['销量']
         },
         xAxis: {
-            data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月'],
+            data: newyaxis,
 
         },
         yAxis: {},
@@ -24,7 +41,7 @@ const Echarts = () => {
                 smooth: true,
                 color: '#71AFFF',
                 symbol: 'none',
-                data: [5, 20, 36, 10, 10, 20, 30]
+                data: newxaxis_read,
             },
             {
                 name: '订阅量',
@@ -32,7 +49,7 @@ const Echarts = () => {
                 smooth: true,
                 color: '#fdb069',
                 symbol: 'none',
-                data: [5, 50, 30, 50, 20, 20, 4]
+                data: newxaxis_subscribe,
             },
             {
                 name: '加速计划',
@@ -40,7 +57,7 @@ const Echarts = () => {
                 smooth: true,
                 color: '#1db48d',
                 symbol: 'none',
-                data: [6, 30, 50, 22, 35, 62, 70]
+                data: newxaxis_accelerate,
             }
         ]
     };
