@@ -1,11 +1,9 @@
-import Compass from "../compass/page"
 import React from 'react';
 
 
 import Image from "next/image";
 import Date from '../../_components/datarange/Date'
-import LeftCompass from "@/app/writer/left-compass/page";
-import Page_customized from "@/app/writer/pagination/page";
+import MyPagination from "@/app/_components/pagination/page";
 
 
 const Page = () => {
@@ -176,7 +174,7 @@ const Page = () => {
 
                     {/*分页*/}
                     <div className="mt-4 flex flex-col justify-end items-center">
-                        <Page_customized/>
+                        <MyPagination/>
                     </div>
                 </div>
             </div>
