@@ -16,6 +16,9 @@ import {
   integer,
   smallint,
 } from "drizzle-orm/pg-core";
+import { url } from "inspector";
+import { writer } from "repl";
+import internal from "stream";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -88,12 +91,12 @@ export const distributorshipDetail = createTable(
   "distributorshipDetail",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt"),
-
+    columnID: serial("columnID"),
+    platDistributorship: integer("platDistributorship"),
+    speedUp: integer("speedUp"),
+    writerMoney: real("writerMoney"),
+    Price: real("columnPrice"),
+    distributorship: integer("distributorship"),
   }
 );
 
@@ -135,12 +138,8 @@ export const speedUp = createTable(
 export const wallet = createTable(
   "wallet",
   {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    regularIncome: real("regularIncome"),
+    freezeIncome: real("regularOutcome"),
   }
 );
 
@@ -148,11 +147,8 @@ export const activity = createTable(
   "activity",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    introduction: varchar("introduction", { length: 256 }),
+    url: varchar("url", { length: 256 }),
   }
 );
 
@@ -164,7 +160,9 @@ export const coColumn = createTable(
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    deadline: timestamp("deadline"),
+    subscribers: integer("subscribers"),
+    number: integer("number"),
   }
 );
 
@@ -176,7 +174,9 @@ export const courseRecommendation = createTable(
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    deadline: timestamp("deadline"),
+    subscribers: integer("subscribers"),
+    number: integer("number"),
   }
 );
 
@@ -188,7 +188,9 @@ export const columnRecommendation = createTable(
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    deadline: timestamp("deadline"),
+    subscribers: integer("subscribers"),
+    number: integer("number"),
   }
 );
 
