@@ -3,6 +3,12 @@ import React, { useState, ChangeEvent } from 'react';
 import Image from 'next/image';
 
 const Course = () => {
+    //付费模式的button切换
+    const [selectedButton, setSelectButton] = useState(1);
+    const handleClick =()=>{
+        setSelectButton(selectedButton==1?2:1);
+    };
+
     // 限制输入框 “专栏ID” 输入为英文或数字
     const [columnID, setColumnID] = useState('');
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -67,12 +73,20 @@ const Course = () => {
 
             <div className="flex items-center w-full h-5.5 mt-8">
                 <div className="text-[rgba(0,0,0,0.85)] text-right text-3.5 font-400 lh-5.5 ml-74.25">付费模式：</div>
-                <button className="flex items-center w-20 h-5.5">
-                    <Image src={"/images/writer/co-author/check.svg"} alt="check" width={20} height={20} className="w-4 h-4 "/>
+                <button className="flex items-center w-20 h-5.5" onClick={handleClick}>
+                    {selectedButton ===1?(
+                        <Image src={"/images/writer/co-author/check.svg"} alt="check" width={20} height={20} className="w-4 h-4 "/>
+                    ):(
+                        <Image src={"/images/writer/co-author/uncheck.svg"} alt="uncheck" width={20} height={20} className="w-4 h-4"/>
+                    )} 
                     <div className="text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5 ml-2">永久买断</div>
                 </button>
-                <button className="flex items-center w-20 h-5.5 ml-8">
-                    <Image src={"/images/writer/co-author/uncheck.svg"} alt="uncheck" width={20} height={20} className="w-4 h-4"/>
+                <button className="flex items-center w-20 h-5.5 ml-8" onClick={handleClick}>
+                    {selectedButton ===2?(
+                        <Image src={"/images/writer/co-author/check.svg"} alt="check" width={20} height={20} className="w-4 h-4 "/>
+                    ):(
+                        <Image src={"/images/writer/co-author/uncheck.svg"} alt="uncheck" width={20} height={20} className="w-4 h-4"/>
+                    )} 
                     <div className="text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5 ml-2">限时订阅</div>
                 </button>
                 <div className="text-[red] text-3 font-400 lh-5.5 ml-12 h-5.5">*</div>  
@@ -100,7 +114,6 @@ const Course = () => {
             <button className="w-16.25 h-8 ml-65.75 mt-20" onClick={handleSubmit}>
                 <Image src={"/images/writer/co-author/submit.svg"} alt="submit" width={20} height={20} className="w-16.25 h-8"/>        
             </button>
-
         </div>
     );
 };
