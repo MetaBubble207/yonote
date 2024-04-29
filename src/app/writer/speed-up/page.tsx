@@ -1,9 +1,10 @@
 // import Compass from "@/app/writer/compass/page";
-import Page_customized from "@/app/writer/pagination/page";
+// import Page_customized from "@/app/writer/pagination/page";
 import Image from "next/image";
 import React from "react";
 import MySlider from "@/app/_components/slider/page";
 import Date from '../../_components/datarange/Date'
+import MyPagination from "@/app/_components/pagination/page";
 // import LeftCompass from "@/app/writer/left-compass/page";
 
 
@@ -150,7 +151,7 @@ const Page = () => {
                             </div>
 
                             <div className="mt-4 flex flex-col justify-end items-center">
-                                <Page_customized/>
+                                <MyPagination/>
                             </div>
 
                         </div>
