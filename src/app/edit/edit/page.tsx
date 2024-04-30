@@ -8,10 +8,10 @@ import TagInput from "../../_components/edit/tag";
 
 function MyEditor() {
 
-    const [editor, setEditor] = useState(null);
+    const [editor, setEditor] = useState<IDomEditor | null>(null);
     const [html, setHtml] = useState('<p>hello</p>');
     const [title, setTitle] = useState('');
-    const [preview, setPreview] = useState(false);
+    const [preview, setPreview] = useState(true);
     const toolbar = DomEditor.getToolbar(editor!)
     const [tags, setTags] = useState([]);
 
@@ -83,7 +83,7 @@ function MyEditor() {
     useEffect(() => {
         return () => {
             if (editor == null) return;
-            // editor.destroy();
+            editor.destroy();
             setEditor(null);
         };
     }, [editor]);
@@ -134,7 +134,7 @@ function MyEditor() {
                         {/* 富文本编辑器 */}
                         <Editor
                           defaultConfig={editorConfig}
-                          // onCreated={setEditor}
+                          onCreated={setEditor}
                           onChange={editor => setHtml(editor.getHtml())}
                           mode="default"
                           v-model="html"
@@ -157,7 +157,7 @@ function MyEditor() {
                         {/* 富文本编辑器 */}
                         <Editor
                           defaultConfig={editorConfig}
-                          // onCreated={setEditor}
+                          onCreated={setEditor}
                           onChange={editor => setHtml(editor.getHtml())}
                           mode="default"
                           v-model="html"
