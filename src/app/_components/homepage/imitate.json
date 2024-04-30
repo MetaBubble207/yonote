@@ -1,353 +1,353 @@
 [
     {
-        "date": "2024-04-25",
+        "date": "2024-02-25",
         "work_id": 0,
-        "read_count": 137,
-        "subscribe_count": 39,
-        "accelerate_plan_count": 3
+        "read_count": 316,
+        "subscribe_count": 49,
+        "accelerate_plan_count": 4
     },
     {
-        "date": "2024-04-26",
+        "date": "2024-02-26",
         "work_id": 1,
-        "read_count": 113,
-        "subscribe_count": 42,
-        "accelerate_plan_count": 10
-    },
-    {
-        "date": "2024-04-27",
-        "work_id": 2,
-        "read_count": 117,
-        "subscribe_count": 29,
+        "read_count": 459,
+        "subscribe_count": 13,
         "accelerate_plan_count": 5
     },
     {
-        "date": "2024-04-28",
+        "date": "2024-02-27",
+        "work_id": 2,
+        "read_count": 454,
+        "subscribe_count": 30,
+        "accelerate_plan_count": 4
+    },
+    {
+        "date": "2024-02-28",
         "work_id": 3,
-        "read_count": 203,
-        "subscribe_count": 46,
-        "accelerate_plan_count": 7
-    },
-    {
-        "date": "2024-04-29",
-        "work_id": 4,
-        "read_count": 307,
-        "subscribe_count": 27,
-        "accelerate_plan_count": 6
-    },
-    {
-        "date": "2024-04-30",
-        "work_id": 5,
-        "read_count": 369,
-        "subscribe_count": 23,
-        "accelerate_plan_count": 9
-    },
-    {
-        "date": "2024-05-01",
-        "work_id": 6,
-        "read_count": 230,
-        "subscribe_count": 36,
-        "accelerate_plan_count": 2
-    },
-    {
-        "date": "2024-05-02",
-        "work_id": 7,
-        "read_count": 275,
-        "subscribe_count": 28,
-        "accelerate_plan_count": 2
-    },
-    {
-        "date": "2024-05-03",
-        "work_id": 8,
-        "read_count": 314,
+        "read_count": 375,
         "subscribe_count": 12,
         "accelerate_plan_count": 8
     },
     {
-        "date": "2024-05-04",
-        "work_id": 9,
-        "read_count": 150,
-        "subscribe_count": 13,
-        "accelerate_plan_count": 1
-    },
-    {
-        "date": "2024-05-05",
-        "work_id": 10,
-        "read_count": 233,
-        "subscribe_count": 16,
-        "accelerate_plan_count": 9
-    },
-    {
-        "date": "2024-05-06",
-        "work_id": 11,
-        "read_count": 427,
-        "subscribe_count": 45,
-        "accelerate_plan_count": 5
-    },
-    {
-        "date": "2024-05-07",
-        "work_id": 12,
-        "read_count": 196,
-        "subscribe_count": 27,
-        "accelerate_plan_count": 9
-    },
-    {
-        "date": "2024-05-08",
-        "work_id": 13,
-        "read_count": 414,
-        "subscribe_count": 27,
-        "accelerate_plan_count": 9
-    },
-    {
-        "date": "2024-05-09",
-        "work_id": 14,
-        "read_count": 443,
-        "subscribe_count": 13,
-        "accelerate_plan_count": 6
-    },
-    {
-        "date": "2024-05-10",
-        "work_id": 15,
-        "read_count": 427,
-        "subscribe_count": 34,
-        "accelerate_plan_count": 2
-    },
-    {
-        "date": "2024-05-11",
-        "work_id": 16,
-        "read_count": 108,
-        "subscribe_count": 10,
-        "accelerate_plan_count": 10
-    },
-    {
-        "date": "2024-05-12",
-        "work_id": 17,
-        "read_count": 297,
-        "subscribe_count": 10,
-        "accelerate_plan_count": 7
-    },
-    {
-        "date": "2024-05-13",
-        "work_id": 18,
-        "read_count": 413,
-        "subscribe_count": 31,
-        "accelerate_plan_count": 10
-    },
-    {
-        "date": "2024-05-14",
-        "work_id": 19,
-        "read_count": 383,
-        "subscribe_count": 38,
-        "accelerate_plan_count": 7
-    },
-    {
-        "date": "2024-05-15",
-        "work_id": 20,
-        "read_count": 285,
-        "subscribe_count": 29,
-        "accelerate_plan_count": 3
-    },
-    {
-        "date": "2024-05-16",
-        "work_id": 21,
-        "read_count": 415,
-        "subscribe_count": 14,
-        "accelerate_plan_count": 9
-    },
-    {
-        "date": "2024-05-17",
-        "work_id": 22,
-        "read_count": 251,
-        "subscribe_count": 10,
-        "accelerate_plan_count": 7
-    },
-    {
-        "date": "2024-05-18",
-        "work_id": 23,
-        "read_count": 306,
-        "subscribe_count": 50,
-        "accelerate_plan_count": 2
-    },
-    {
-        "date": "2024-05-19",
-        "work_id": 24,
-        "read_count": 163,
-        "subscribe_count": 20,
-        "accelerate_plan_count": 5
-    },
-    {
-        "date": "2024-05-20",
-        "work_id": 25,
-        "read_count": 472,
-        "subscribe_count": 18,
-        "accelerate_plan_count": 4
-    },
-    {
-        "date": "2024-05-21",
-        "work_id": 26,
-        "read_count": 279,
-        "subscribe_count": 45,
-        "accelerate_plan_count": 7
-    },
-    {
-        "date": "2024-05-22",
-        "work_id": 27,
-        "read_count": 331,
-        "subscribe_count": 25,
-        "accelerate_plan_count": 10
-    },
-    {
-        "date": "2024-05-23",
-        "work_id": 28,
-        "read_count": 361,
-        "subscribe_count": 24,
-        "accelerate_plan_count": 1
-    },
-    {
-        "date": "2024-05-24",
-        "work_id": 29,
-        "read_count": 385,
-        "subscribe_count": 30,
-        "accelerate_plan_count": 8
-    },
-    {
-        "date": "2024-05-25",
-        "work_id": 30,
-        "read_count": 249,
-        "subscribe_count": 14,
-        "accelerate_plan_count": 1
-    },
-    {
-        "date": "2024-05-26",
-        "work_id": 31,
-        "read_count": 471,
-        "subscribe_count": 45,
-        "accelerate_plan_count": 4
-    },
-    {
-        "date": "2024-05-27",
-        "work_id": 32,
-        "read_count": 274,
-        "subscribe_count": 23,
-        "accelerate_plan_count": 1
-    },
-    {
-        "date": "2024-05-28",
-        "work_id": 33,
-        "read_count": 373,
-        "subscribe_count": 31,
-        "accelerate_plan_count": 1
-    },
-    {
-        "date": "2024-05-29",
-        "work_id": 34,
-        "read_count": 142,
-        "subscribe_count": 35,
-        "accelerate_plan_count": 8
-    },
-    {
-        "date": "2024-05-30",
-        "work_id": 35,
-        "read_count": 267,
-        "subscribe_count": 33,
-        "accelerate_plan_count": 4
-    },
-    {
-        "date": "2024-05-31",
-        "work_id": 36,
-        "read_count": 184,
-        "subscribe_count": 35,
-        "accelerate_plan_count": 1
-    },
-    {
-        "date": "2024-06-01",
-        "work_id": 37,
-        "read_count": 194,
+        "date": "2024-02-29",
+        "work_id": 4,
+        "read_count": 228,
         "subscribe_count": 37,
-        "accelerate_plan_count": 4
+        "accelerate_plan_count": 1
     },
     {
-        "date": "2024-06-02",
-        "work_id": 38,
-        "read_count": 158,
-        "subscribe_count": 40,
-        "accelerate_plan_count": 3
+        "date": "2024-03-01",
+        "work_id": 5,
+        "read_count": 357,
+        "subscribe_count": 23,
+        "accelerate_plan_count": 5
     },
     {
-        "date": "2024-06-03",
-        "work_id": 39,
-        "read_count": 465,
-        "subscribe_count": 41,
-        "accelerate_plan_count": 3
-    },
-    {
-        "date": "2024-06-04",
-        "work_id": 40,
-        "read_count": 123,
-        "subscribe_count": 31,
-        "accelerate_plan_count": 8
-    },
-    {
-        "date": "2024-06-05",
-        "work_id": 41,
-        "read_count": 399,
-        "subscribe_count": 41,
-        "accelerate_plan_count": 3
-    },
-    {
-        "date": "2024-06-06",
-        "work_id": 42,
-        "read_count": 247,
-        "subscribe_count": 46,
-        "accelerate_plan_count": 2
-    },
-    {
-        "date": "2024-06-07",
-        "work_id": 43,
-        "read_count": 430,
-        "subscribe_count": 32,
-        "accelerate_plan_count": 4
-    },
-    {
-        "date": "2024-06-08",
-        "work_id": 44,
-        "read_count": 268,
-        "subscribe_count": 27,
-        "accelerate_plan_count": 4
-    },
-    {
-        "date": "2024-06-09",
-        "work_id": 45,
-        "read_count": 414,
+        "date": "2024-03-02",
+        "work_id": 6,
+        "read_count": 278,
         "subscribe_count": 15,
         "accelerate_plan_count": 2
     },
     {
-        "date": "2024-06-10",
-        "work_id": 46,
-        "read_count": 248,
-        "subscribe_count": 24,
-        "accelerate_plan_count": 1
+        "date": "2024-03-03",
+        "work_id": 7,
+        "read_count": 366,
+        "subscribe_count": 48,
+        "accelerate_plan_count": 5
     },
     {
-        "date": "2024-06-11",
-        "work_id": 47,
-        "read_count": 302,
-        "subscribe_count": 34,
-        "accelerate_plan_count": 1
-    },
-    {
-        "date": "2024-06-12",
-        "work_id": 48,
+        "date": "2024-03-04",
+        "work_id": 8,
         "read_count": 400,
-        "subscribe_count": 27,
+        "subscribe_count": 44,
+        "accelerate_plan_count": 2
+    },
+    {
+        "date": "2024-03-05",
+        "work_id": 9,
+        "read_count": 101,
+        "subscribe_count": 40,
+        "accelerate_plan_count": 9
+    },
+    {
+        "date": "2024-03-06",
+        "work_id": 10,
+        "read_count": 464,
+        "subscribe_count": 33,
+        "accelerate_plan_count": 7
+    },
+    {
+        "date": "2024-03-07",
+        "work_id": 11,
+        "read_count": 434,
+        "subscribe_count": 43,
+        "accelerate_plan_count": 9
+    },
+    {
+        "date": "2024-03-08",
+        "work_id": 12,
+        "read_count": 268,
+        "subscribe_count": 34,
+        "accelerate_plan_count": 4
+    },
+    {
+        "date": "2024-03-09",
+        "work_id": 13,
+        "read_count": 126,
+        "subscribe_count": 34,
+        "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-03-10",
+        "work_id": 14,
+        "read_count": 337,
+        "subscribe_count": 43,
+        "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-03-11",
+        "work_id": 15,
+        "read_count": 148,
+        "subscribe_count": 34,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-03-12",
+        "work_id": 16,
+        "read_count": 274,
+        "subscribe_count": 39,
+        "accelerate_plan_count": 10
+    },
+    {
+        "date": "2024-03-13",
+        "work_id": 17,
+        "read_count": 306,
+        "subscribe_count": 29,
+        "accelerate_plan_count": 10
+    },
+    {
+        "date": "2024-03-14",
+        "work_id": 18,
+        "read_count": 438,
+        "subscribe_count": 11,
+        "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-03-15",
+        "work_id": 19,
+        "read_count": 187,
+        "subscribe_count": 37,
         "accelerate_plan_count": 1
     },
     {
-        "date": "2024-06-13",
-        "work_id": 49,
-        "read_count": 123,
-        "subscribe_count": 24,
+        "date": "2024-03-16",
+        "work_id": 20,
+        "read_count": 243,
+        "subscribe_count": 33,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-03-17",
+        "work_id": 21,
+        "read_count": 317,
+        "subscribe_count": 27,
+        "accelerate_plan_count": 4
+    },
+    {
+        "date": "2024-03-18",
+        "work_id": 22,
+        "read_count": 478,
+        "subscribe_count": 19,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-03-19",
+        "work_id": 23,
+        "read_count": 425,
+        "subscribe_count": 18,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-03-20",
+        "work_id": 24,
+        "read_count": 490,
+        "subscribe_count": 23,
+        "accelerate_plan_count": 10
+    },
+    {
+        "date": "2024-03-21",
+        "work_id": 25,
+        "read_count": 320,
+        "subscribe_count": 39,
+        "accelerate_plan_count": 4
+    },
+    {
+        "date": "2024-03-22",
+        "work_id": 26,
+        "read_count": 238,
+        "subscribe_count": 33,
+        "accelerate_plan_count": 10
+    },
+    {
+        "date": "2024-03-23",
+        "work_id": 27,
+        "read_count": 337,
+        "subscribe_count": 45,
+        "accelerate_plan_count": 10
+    },
+    {
+        "date": "2024-03-24",
+        "work_id": 28,
+        "read_count": 428,
+        "subscribe_count": 23,
+        "accelerate_plan_count": 3
+    },
+    {
+        "date": "2024-03-25",
+        "work_id": 29,
+        "read_count": 147,
+        "subscribe_count": 13,
+        "accelerate_plan_count": 10
+    },
+    {
+        "date": "2024-03-26",
+        "work_id": 30,
+        "read_count": 315,
+        "subscribe_count": 15,
+        "accelerate_plan_count": 4
+    },
+    {
+        "date": "2024-03-27",
+        "work_id": 31,
+        "read_count": 232,
+        "subscribe_count": 10,
+        "accelerate_plan_count": 9
+    },
+    {
+        "date": "2024-03-28",
+        "work_id": 32,
+        "read_count": 447,
+        "subscribe_count": 15,
         "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-03-29",
+        "work_id": 33,
+        "read_count": 272,
+        "subscribe_count": 13,
+        "accelerate_plan_count": 10
+    },
+    {
+        "date": "2024-03-30",
+        "work_id": 34,
+        "read_count": 197,
+        "subscribe_count": 44,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-03-31",
+        "work_id": 35,
+        "read_count": 102,
+        "subscribe_count": 26,
+        "accelerate_plan_count": 2
+    },
+    {
+        "date": "2024-04-01",
+        "work_id": 36,
+        "read_count": 401,
+        "subscribe_count": 49,
+        "accelerate_plan_count": 7
+    },
+    {
+        "date": "2024-04-02",
+        "work_id": 37,
+        "read_count": 366,
+        "subscribe_count": 26,
+        "accelerate_plan_count": 9
+    },
+    {
+        "date": "2024-04-03",
+        "work_id": 38,
+        "read_count": 167,
+        "subscribe_count": 27,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-04-04",
+        "work_id": 39,
+        "read_count": 437,
+        "subscribe_count": 43,
+        "accelerate_plan_count": 5
+    },
+    {
+        "date": "2024-04-05",
+        "work_id": 40,
+        "read_count": 197,
+        "subscribe_count": 26,
+        "accelerate_plan_count": 5
+    },
+    {
+        "date": "2024-04-06",
+        "work_id": 41,
+        "read_count": 168,
+        "subscribe_count": 45,
+        "accelerate_plan_count": 5
+    },
+    {
+        "date": "2024-04-07",
+        "work_id": 42,
+        "read_count": 387,
+        "subscribe_count": 24,
+        "accelerate_plan_count": 5
+    },
+    {
+        "date": "2024-04-08",
+        "work_id": 43,
+        "read_count": 396,
+        "subscribe_count": 38,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-04-09",
+        "work_id": 44,
+        "read_count": 428,
+        "subscribe_count": 43,
+        "accelerate_plan_count": 1
+    },
+    {
+        "date": "2024-04-10",
+        "work_id": 45,
+        "read_count": 457,
+        "subscribe_count": 16,
+        "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-04-11",
+        "work_id": 46,
+        "read_count": 301,
+        "subscribe_count": 40,
+        "accelerate_plan_count": 6
+    },
+    {
+        "date": "2024-04-12",
+        "work_id": 47,
+        "read_count": 390,
+        "subscribe_count": 24,
+        "accelerate_plan_count": 4
+    },
+    {
+        "date": "2024-04-13",
+        "work_id": 48,
+        "read_count": 369,
+        "subscribe_count": 40,
+        "accelerate_plan_count": 8
+    },
+    {
+        "date": "2024-04-14",
+        "work_id": 49,
+        "read_count": 380,
+        "subscribe_count": 27,
+        "accelerate_plan_count": 5
     }
 ]
 
