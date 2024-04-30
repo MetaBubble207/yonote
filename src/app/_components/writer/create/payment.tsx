@@ -88,7 +88,7 @@ const Payment = () => {
                 <div className="w-8 text-[rgba(0,0,0,0.85)]  text-3.5 font-400 lh-5.5 ml-4 mt-10 ">价格</div>   
                 <div className="text-[rgba(0,0,0,0.45)] text-3.5 font-400 lh-5 mt-10 ">（最低10元）</div>
                 <div className=" text-[rgba(0,0,0,0.85)]  text-3.5 font-400 lh-5.5 mt-10 ">:</div> 
-                <div className="inline items-center w-22.06775 h-8 border-rd-1 border-2 border-solid ml-2.5 mt-10">
+                <div className="inline items-center w-22.06775 h-8 border-rd-1 border-2 border-solid ml-3 mt-10">
                     <input 
                         type="number" 
                         name="value2" 
@@ -112,7 +112,7 @@ const Payment = () => {
                 <div className="text-[rgba(0,0,0,0.85)]  text-3.5 font-400 lh-5.5 ml-2.5 mt-10 ">价格</div>   
                 <div className="text-[rgba(0,0,0,0.45)] text-3.5 font-400 lh-5 mt-10 ">（最低10元）</div>
                 <div className="text-[rgba(0,0,0,0.85)]  text-3.5 font-400 lh-5.5 mt-10 ">:</div> 
-                <div className="inline items-center w-22.06775 h-8 border-rd-1 border-2 border-solid ml-3 mt-10">
+                <div className="inline items-center w-22.06775 h-8 border-rd-1 border-2 border-solid ml-4 mt-10">
                     <input 
                         type="number" 
                         name="value3" 

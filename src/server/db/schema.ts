@@ -15,6 +15,7 @@ import {
   real,
   integer,
   smallint,
+  text,
 } from "drizzle-orm/pg-core";
 import { url } from "inspector";
 import { writer } from "repl";
@@ -60,7 +61,7 @@ export const user = createTable(
     phone: integer("phone"),
     idNumber: integer("idNumber"),
     Password: integer("password"),
-    logo: bytea("logo"),
+    logo: text("logo"),
     idType: varchar("idType"),
     weChat: varchar("weChat"),
     enddate: timestamp("enddate"),
@@ -81,7 +82,7 @@ export const column = createTable(
     intriduce:varchar("intriduce"),
     type:varchar("type"),
     price:real("price"),
-    logo:bytea("logo"),
+    logo:text("logo"),
     description:varchar("description"),
     payment:varchar("payment"),
   }
@@ -195,7 +196,3 @@ export const columnRecommendation = createTable(
 );
 
 export type User = typeof user.$inferInsert
-function bytea(arg0: string): any {
-  throw new Error("Function not implemented.");
-}
-

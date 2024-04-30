@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, ChangeEvent } from 'react';
+import {usePathname, useRouter} from "next/navigation";
 import Image from 'next/image';
 
 const Course = () => {
@@ -7,7 +8,14 @@ const Course = () => {
     const [selectedButton, setSelectButton] = useState(1);
     const handleClick =()=>{
         setSelectButton(selectedButton==1?2:1);
+        
     };
+
+    // 点击限时订阅跳转页面
+    const handleButtonClick =()=>{
+        handleClick();
+        router.push('/writer/create-course/payment');
+    }
 
     // 限制输入框 “专栏ID” 输入为英文或数字
     const [columnID, setColumnID] = useState('');
@@ -33,8 +41,18 @@ const Course = () => {
         // 在这里可以添加其他提交逻辑
     };
 
+    // 路由到payment页面
+    const router = useRouter();
+    const pathname = usePathname();
+
+
     return(
         <div className="relative w-286.75 h-195 border-rd-[0px_0px_10px_10px] bg-[#FFF] ml-16px mt-18px pt-25.75">
+            {/* <button onClick={() => router.push('/writer/create-course/payment')}>路由</button> */}
+
+            
+
+
             <div className="text-[#323232]  text-4 font-700 lh-6  ml-53.75 w-16 ">小课创建</div>
 
             <div className="flex items-center w-full h-8 mt-6 ">
@@ -81,7 +99,7 @@ const Course = () => {
                     )} 
                     <div className="text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5 ml-2">永久买断</div>
                 </button>
-                <button className="flex items-center w-20 h-5.5 ml-8" onClick={handleClick}>
+                <button className="flex items-center w-20 h-5.5 ml-8" onClick={handleButtonClick} >
                     {selectedButton ===2?(
                         <Image src={"/images/writer/co-author/check.svg"} alt="check" width={20} height={20} className="w-4 h-4 "/>
                     ):(
@@ -89,6 +107,7 @@ const Course = () => {
                     )} 
                     <div className="text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5 ml-2">限时订阅</div>
                 </button>
+                
                 <div className="text-[red] text-3 font-400 lh-5.5 ml-12 h-5.5">*</div>  
                 <div className="text-[rgba(51,51,51,0.60)] text-right text-3 font-400 lh-5.5  h-5.5">提交后不可修改</div> 
             </div>
