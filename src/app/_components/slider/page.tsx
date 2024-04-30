@@ -17,7 +17,7 @@ const IntegerStep: React.FC = () => {
                 <Col span={24}>
                     <Slider className={'mr-18.7025'}
                         min={0}
-                        max={100}
+                        max={70}
                         onChange={onChange}
                         value={typeof inputValue === 'number' ? inputValue : 0}
                     />
