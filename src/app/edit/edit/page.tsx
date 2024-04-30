@@ -1,14 +1,10 @@
 "use client"
-import Image from "next/image";
-
-import Compass from "@/app/_components/writer/compass";
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import React, { useState, useEffect, use } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
 import { IDomEditor, IEditorConfig, IToolbarConfig, DomEditor } from '@wangeditor/editor'
 import Preview from "@/app/_components/writer/preview";
 import TagInput from "../../_components/edit/tag";
-import { string } from "zod";
 
 function MyEditor() {
 
@@ -87,7 +83,7 @@ function MyEditor() {
     useEffect(() => {
         return () => {
             if (editor == null) return;
-            editor.destroy();
+            // editor.destroy();
             setEditor(null);
         };
     }, [editor]);
@@ -119,7 +115,7 @@ function MyEditor() {
                         </div>
                 </div>
               </div>
-      
+
               <div className="flex relative w-340.36225 h-154.18775 shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-16.625">
                 <div className="relative">
                   {preview
@@ -138,7 +134,7 @@ function MyEditor() {
                         {/* 富文本编辑器 */}
                         <Editor
                           defaultConfig={editorConfig}
-                          onCreated={setEditor}
+                          // onCreated={setEditor}
                           onChange={editor => setHtml(editor.getHtml())}
                           mode="default"
                           v-model="html"
@@ -161,7 +157,7 @@ function MyEditor() {
                         {/* 富文本编辑器 */}
                         <Editor
                           defaultConfig={editorConfig}
-                          onCreated={setEditor}
+                          // onCreated={setEditor}
                           onChange={editor => setHtml(editor.getHtml())}
                           mode="default"
                           v-model="html"
@@ -182,7 +178,7 @@ function MyEditor() {
           </div>
         </div>
       );
-      
+
 }
 
 export default MyEditor;
