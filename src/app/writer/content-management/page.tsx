@@ -1,17 +1,33 @@
 "use client"
-import React from 'react';
+import React, {useState} from 'react';
 import MyPagination from '@/app/_components/pagination/page';
 import Image from "next/image";
-
-const ArticleRow = ({ title, isTop, isFree, label, updatedAt, publishedAt }: { title: string, isTop: boolean, isFree: boolean, label: string, updatedAt: string, publishedAt: string }) => {
-    const statusClassName = `px-2 py-1 rounded-full ${isTop ? 'bg-yellow-500' : 'bg-transparent'} ${isFree ? 'text-white bg-green-500' : 'text-gray-700 bg-gray-200'}`;
+interface ArticleProps {
+    title:string,
+    isTop:boolean,
+    isFree:boolean,
+    label:string,
+    updatedAt:string,
+    publishedAt:string
+}
+const ArticleRow = () => {
+    // const statusClassName = `px-2 py-1 rounded-full ${isTop ? 'bg-yellow-500' : 'bg-transparent'} ${isFree ? 'text-white bg-green-500' : 'text-gray-700 bg-gray-200'}`;
 
     const handleEdit = () => {
         // 编辑文章逻辑
     };
 
-    const handleToggleTop = () => {
-        // 切换置顶状态逻辑
+    const handleToggleTop = (index: number) => {
+        // setData(prevData => {
+        //     const newData = [...prevData];
+        //     newData[index] = { ...newData[index], isTop: !newData[index].isTop };
+        //     return newData;
+        // });
+        const newData = [...data]
+        if(newData[index] !== undefined){
+            newData[index]!.isTop  = !newData[index]!.isTop
+        }
+        setData(newData)
     };
 
     const handleToggleFree = () => {
@@ -28,6 +44,14 @@ const ArticleRow = ({ title, isTop, isFree, label, updatedAt, publishedAt }: { t
         { title: '标题2', isTop: false, isFree: true, label: '免费', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
         { title: '标题3', isTop: false, isFree: true, label: '全部', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
     ];
+
+    const [data,setData] = useState<ArticleProps[]>(options)
+
+    const changeData = () => {
+        const newData = [...data];
+        newData[1]!.isTop = true;
+        setData(newData)
+    }
 
     // 表格内容
     return (
@@ -95,7 +119,7 @@ const ArticleRow = ({ title, isTop, isFree, label, updatedAt, publishedAt }: { t
                     </tr>
                     </thead>
                     <tbody>
-                    {options.map((option, index) => (
+                    {data.map((option, index) => (
                         <tr key={index} className={'h-52px'}>
                             <td className="px-4 pl-63px pr-2 text-left text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{option.title}</td>
                             <td className={`px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5 ${option.isTop ? 'text-[#1DB48D]' : ''} ${option.isFree ? 'text-[#1DB48D]' : ''}`}>{option.isTop ? '置顶' : ''} {option.isFree ? '免费' : ''}</td>
@@ -104,7 +128,7 @@ const ArticleRow = ({ title, isTop, isFree, label, updatedAt, publishedAt }: { t
                             <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{option.publishedAt}</td>
                             <td className="px-4 py-2">
                                 <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={handleEdit}>编辑</button>
-                                <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={handleToggleTop}>{option.isTop ? '取消置顶' : '置顶'}</button>
+                                <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={() => handleToggleTop(index)}>{option.isTop ? '取消置顶' : '置顶'}</button>
                                 <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={handleToggleFree}>{option.isFree ? '取消免费' : '免费'}</button>
                                 <button className={'mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5'} onClick={handleDelete}>删除</button>
                             </td>
