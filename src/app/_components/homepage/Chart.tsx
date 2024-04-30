@@ -1,5 +1,4 @@
 "use client"
-import Echarts from "./Echarts";
 import Daterange from "./Daterange"
 
 const Chart = () => {
@@ -21,11 +20,11 @@ const Chart = () => {
                         加速计划
                     </div>
                     <div className="w-55.5 h-8 ">
-                        <Daterange></Daterange>
+                    <Daterange/>
                     </div>
                 </div>
             </div>
-            <Echarts></Echarts>
+            
         </div>
     )
 }

@@ -15,7 +15,7 @@ function MyEditor() {
     const [editor, setEditor] = useState(null);
     const [html, setHtml] = useState('<p>hello</p>');
     const [title, setTitle] = useState('');
-    const [preview, setPreview] = useState(true);
+    const [preview, setPreview] = useState(false);
     const toolbar = DomEditor.getToolbar(editor!)
     const [tags, setTags] = useState([]);
 

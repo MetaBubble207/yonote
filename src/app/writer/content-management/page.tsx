@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import MyPagination from '../pagination/page';
+import MyPagination from '@/app/_components/pagination/page';
 import Image from "next/image";
 
 const ArticleRow = ({ title, isTop, isFree, label, updatedAt, publishedAt }: { title: string, isTop: boolean, isFree: boolean, label: string, updatedAt: string, publishedAt: string }) => {
