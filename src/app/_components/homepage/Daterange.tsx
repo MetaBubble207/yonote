@@ -26,13 +26,14 @@ const Daterange: React.FC = (props,ref) => {
         today.setHours(0, 0, 0, 0);
         return time && time > today;
     };
+
     dayjs.locale('zh-cn');
     return (
         <>
             <ConfigProvider locale={locale}>
-                <DatePicker.RangePicker style={{ width: '100%' }} onChange={onRangeChange} />
+                <DatePicker.RangePicker style={{ width: '100%' }} onChange={onRangeChange} disabledDate={disabledDate}/>
             </ConfigProvider>
-            <div className='w-1200px h-50px relative right-900px'>
+            <div className='w-1200px h-50px relative right-940px'>
                 <Echarts daterange={daterange}></Echarts>
             </div>
 
