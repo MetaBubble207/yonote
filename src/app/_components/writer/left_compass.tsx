@@ -20,37 +20,37 @@ const LeftCompass = () => {
                 <div className="w-65.25 h-72.4785 shrink-0 flex items-center flex-col pt-4.27">
                     {column && <Column />}
                     <div className={`w-65.25 h-12.4705 shrink-0 flex mt-35px ${pathname === '/writer/homepage' ? 'text-[#4CC5A6] bg-[#DAF9F1] ' : 'text-[#999] bg-[#FFF]'}`} >
-                        <Image src={"/images/writer/edit/Monitor1.svg"} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"></Image>
+                        <Image src={`${pathname === '/writer/homepage' ? '/images/writer/edit/Monitor1.svg' : '/images/writer/edit/Monitor-one.svg'}`} alt="Monitor1" width={24} height={24.03} className={`w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89`}></Image>
                         <Link href="/writer/homepage" passHref>
                             <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">主页看板</div>
                         </Link>
                     </div>
                     <div className={`w-65.25 h-12.4705 shrink-0 flex ${pathname === '/writer/content-management' ? 'text-[#4CC5A6] bg-[#DAF9F1] ' : 'text-[#999] bg-[#FFF]'}`}>
-                        <Image src={"/images/writer/edit/Rocket2.svg"} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89 "></Image>
+                        <Image src={`${pathname === '/writer/content-management' ? '/images/writer/edit/Rocket2 copy.svg' : '/images/writer/edit/Rocket2.svg'}`} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89 "></Image>
                         <Link href="/writer/content-management" passHref>
                             <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">内容管理</div>
                         </Link>
                     </div>
                     <div className={`w-65.25 h-12.4705 shrink-0 flex ${pathname === '/writer/subscribe-manage' ? 'text-[#4CC5A6] bg-[#DAF9F1] ' : 'text-[#999] bg-[#FFF]'}`}>
-                        <Image src={"/images/writer/edit/Rocket3.svg"} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"></Image>
+                        <Image src={`${pathname === '/writer/subscribe-manage' ? '/images/writer/edit/Rocket3 copy.svg' : '/images/writer/edit/Rocket3.svg'}`} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"></Image>
                         <Link href="/writer/subscribe-manage" passHref>
                             <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">订阅管理</div>
                         </Link>
                     </div>
                     <div className={`w-65.25 h-12.4705 shrink-0 flex ${pathname === '/writer/column-settings' ? 'text-[#4CC5A6] bg-[#DAF9F1] ' : 'text-[#999] bg-[#FFF]'}`}>
-                        <Image src={"/images/writer/edit/Rocket4.svg"} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"></Image>
+                        <Image src={`${pathname === '/writer/column-settings' ? '/images/writer/edit/Rocket4 copy.svg' : '/images/writer/edit/Rocket4.svg'}`} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"></Image>
                         <Link href="/writer/column-settings" passHref>
                             <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">专栏设置</div>
                         </Link>
                     </div>
                     <div className={`w-65.25 h-12.4705 shrink-0 flex ${pathname === '/writer/co-author' ? 'text-[#4CC5A6] bg-[#DAF9F1] ' : 'text-[#999] bg-[#FFF]'}`}>
-                        <Image src={"/images/writer/edit/Rocket5.svg"} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"></Image>
+                        <Image src={`${pathname === '/writer/co-author' ? '/images/writer/edit/Rocket5 copy.svg' : '/images/writer/edit/Rocket5.svg'}`} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"></Image>
                         <Link href="/writer/co-author" passHref>
                             <div className="w-14 h-6.00625 shrink-0 text-3.5  font-400 lh-6 ml-2.07 mt-2.89">共创作者</div>
                         </Link>
                     </div>
                     <div className={`w-65.25 h-12.4705 shrink-0 flex ${pathname === '/writer/speed-up' ? 'text-[#4CC5A6] bg-[#DAF9F1] ' : 'text-[#999] bg-[#FFF]'}`}>
-                        <Image src={"/images/writer/edit/Rocket6.svg"} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"></Image>
+                        <Image src={`${pathname === '/writer/speed-up' ? '/images/writer/edit/Rocket6 copy.svg' : '/images/writer/edit/Rocket6.svg'}`} alt="Monitor1" width={24} height={24.03} className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"></Image>
                         <Link href="/writer/speed-up" passHref>
                             <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">加速计划</div>
                         </Link>
