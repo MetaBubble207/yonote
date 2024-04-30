@@ -12,10 +12,7 @@ dayjs.extend(localeData)
 dayjs.extend(customParseFormat);
 const {RangePicker} = DatePicker;
 
-interface DisabledDateProps {
-    currentDate: Dayjs;
-    info?: { from?: Dayjs };
-}
+
 
 interface DisabledDateProps {
     currentDate: Dayjs;
