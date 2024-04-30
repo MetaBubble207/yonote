@@ -1,6 +1,6 @@
 "use client"
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ChangeEvent } from 'react'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
 import { IDomEditor, IEditorConfig, IToolbarConfig, DomEditor } from '@wangeditor/editor'
 import Preview from "@/app/_components/writer/preview";
@@ -11,7 +11,7 @@ function MyEditor() {
     const [editor, setEditor] = useState<IDomEditor | null>(null);
     const [html, setHtml] = useState('<p>hello</p>');
     const [title, setTitle] = useState('');
-    const [preview, setPreview] = useState(true);
+    const [preview, setPreview] = useState(false);
     const toolbar = DomEditor.getToolbar(editor!)
     const [tags, setTags] = useState([]);
 
@@ -24,7 +24,7 @@ function MyEditor() {
         }, 1500);
     }, []);
 
-    const handleTitleChange = (event: any) => {
+    const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newTitle = event.target.value.slice(0, 64); // 限制标题长度为64个字符
         setTitle(newTitle);
     };
