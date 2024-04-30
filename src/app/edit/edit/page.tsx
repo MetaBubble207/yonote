@@ -13,7 +13,7 @@ function MyEditor() {
     const [title, setTitle] = useState('');
     const [preview, setPreview] = useState(false);
     const toolbar = DomEditor.getToolbar(editor!)
-    const [tags, setTags] = useState([]);
+    const [tags, setTags] = useState<string[]>([]);
 
     const curToolbarConfig = toolbar?.getConfig()
     console.log(curToolbarConfig?.toolbarKeys) // 当前菜单排序和分组
