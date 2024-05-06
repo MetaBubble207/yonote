@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import Compass from "../../_components/writer/compass";
 import Image from "next/image";

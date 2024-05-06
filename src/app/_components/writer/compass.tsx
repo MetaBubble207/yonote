@@ -1,8 +1,15 @@
+"use client"
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Compass= () => {
     const name = "我的昵称"
+    const router = useRouter();
+
+    const handleLogout = () => {
+        router.push("/edit/login");
+    }
 
     return (
         <div>
@@ -38,13 +45,13 @@ const Compass= () => {
                     {name}
                 </div> 
                 <div>
-                    <select name="" id="">
+                    <select name="" id="" onChange={handleLogout}>
                         <option value=""> </option>
                         <option value="">退出登录</option>
                     </select>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 export default Compass;

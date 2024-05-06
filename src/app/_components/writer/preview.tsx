@@ -46,7 +46,7 @@ const Preview = ({ title, html, tags }: PreviewProps) => {
                         <div className="break-all h-15" dangerouslySetInnerHTML={{ __html: html }}></div>
                     </div>
                 </div>
-                <div className="fixed mt-5 ml-3.725 w-full">
+                <div className="flex mt-5 ml-3.725 w-23 h-40px ">
                     {tags.map((tag, index) => (
                         <a key={index} href="" className=" w-15.5 text-[#1DB48D] text-3 font-not-italic font-400 lh-6">#{tag}</a>
                     ))}

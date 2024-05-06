@@ -1,10 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 const Homepagedata = () => {
     return (
         <div className="w-286.738 h-82 pl-32px bg-[#FFF] border-rd-2.5">
             <div className="flex items-center pt-34px">
                 <span className="text-[#323232] text-4 font-700 lh-6">主板看板</span>
-                <button className="w-20.5 h-8 color-[#1db48d] bg-[#dbf9f1] ml-32px">+ 发布</button>
+                <Link href={'../edit/edit'} className="w-20.5 h-8 color-[#1db48d] bg-[#dbf9f1] ml-32px">+ 发布</Link>
             </div>
 
             <div className="pt-24px flex">
