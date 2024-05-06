@@ -5,7 +5,6 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-react'
 import { IDomEditor, IEditorConfig, IToolbarConfig, DomEditor } from '@wangeditor/editor'
 import Preview from "@/app/_components/writer/preview";
 import TagInput from "../../_components/edit/tag";
-import dynamic from 'next/dynamic'
  
 function MyEditor() {
 
