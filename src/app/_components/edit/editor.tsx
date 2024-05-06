@@ -19,12 +19,6 @@ function MyEditor() {
     const curToolbarConfig = toolbar?.getConfig()
     console.log(curToolbarConfig?.toolbarKeys) // 当前菜单排序和分组
 
-    useEffect(() => {
-        setTimeout(() => {
-            setHtml('<p>hello world</p>');
-        }, 1500);
-    }, []);
-
     const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newTitle = event.target.value.slice(0, 64); // 限制标题长度为64个字符
         setTitle(newTitle);
