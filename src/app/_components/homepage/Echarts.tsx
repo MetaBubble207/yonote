@@ -56,12 +56,12 @@ const Echarts = ({ daterange }: EchartsProps, ref: React.RefObject<any>) => {
     // 根据筛选出的数据索引，更新图表的数据
     const [targetIndexes, settargetIndexes] = useState<number[]>(all);
 
-    useEffect(() => {
-        if (daterange[0] == '0') {
+    useEffect(() => { 
+        if (daterange[0] == '' && daterange[1] == '') {
             settargetIndexes(all);
         } else {
             settargetIndexes(splitDate(daterange, imitate));
-            console.log(splitDate(daterange, imitate));
+            console.log(daterange);
         }
     }, [daterange]);
 
