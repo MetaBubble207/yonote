@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { any } from 'zod';
 
 interface TagInputProps{
-  tags:any,
-  setTags:any,
+  tags:string[],
+  setTags:(tags: string[]) => void,
 }
 
 function TagInput(props:TagInputProps) {

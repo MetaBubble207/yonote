@@ -4,6 +4,7 @@ import MyPagination from '@/app/_components/pagination/page';
 import Image from "next/image";
 import Date from "@/app/_components/datarange/Date";
 import {ContentForm} from "@/app/_components/writer/ContentForm";
+import Link from 'next/link';
 
 const Page = () => {
     // const statusClassName = `px-2 py-1 rounded-full ${isTop ? 'bg-yellow-500' : 'bg-transparent'} ${isFree ? 'text-white bg-green-500' : 'text-gray-700 bg-gray-200'}`;
@@ -15,7 +16,7 @@ const Page = () => {
                 <div className={'flex items-center pt-51px '}>
                     <div className="text-[#323232] text-4 font-not-italic font-700 lh-6 ml-32.5px">内容管理</div>
                     {/*发布*/}
-                    <div className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+ 发布</div>
+                    <Link href={'../edit/edit'} className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+ 发布</Link>
                 </div>
 
                 {/*justify-between*/}

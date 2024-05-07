@@ -37,7 +37,7 @@ function User() {
                         className="w-20 text-[#252525] text-2.5 font-500 lh-6 rounded-xl mr-4 flex flex-row bg-white pl-2.5 items-center ">
                         <Image src="/images/user/icon_edit.png" alt="icon" width={14} height={14}
                             className="w-4 h-4 mr-1" />
-                        <Link href="user-message">编辑资料</Link>
+                        <Link href="user/user-message">编辑资料</Link>
                     </div>
                 </div>
             </div>
@@ -87,7 +87,7 @@ function User() {
                 <div className="service">
                     <ul className={"flex flex-wrap"}>
                         <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
-                            <Link href="user-detailed" className="flex flex-col items-center">
+                            <Link href="user/user-detailed" className="flex flex-col items-center">
                                 <Image src={'/images/user/HomePage.svg'} alt={"个人主页"} width={"48"} height={"48"}
                                     className={"w-6 h-6"} />
                                 <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>个人主页</p>
@@ -108,7 +108,7 @@ function User() {
                             </Link>
                         </li>
                         <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
-                            <Link href="wallet" className="flex flex-col items-center">
+                            <Link href="../wallet" className="flex flex-col items-center">
                                 <Image src={'/images/user/Income.svg'} alt={"收入提现"} width={"48"} height={"48"}
                                     className={"w-6 h-6"} />
                                 <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>收入提现</p>
@@ -129,7 +129,7 @@ function User() {
                             </Link>
                         </li>
                         <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
-                            <Link href="login" className="flex flex-col items-center">
+                            <Link href="../login" className="flex flex-col items-center">
                                 <Image src={'/images/user/SignOut.svg'} alt={"退出登录"} width={"48"} height={"48"}
                                     className={"w-6 h-6"} />
                                 <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>退出登录</p>
