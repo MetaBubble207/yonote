@@ -21,10 +21,12 @@ const Login = () => {
     setModalVisible(false);
   };
 
-  const appid = "wx5765f3d4b5cb4459";
-  const redirect_uri = encodeURIComponent("https://app.yonote.cn/login/callback");
+  // const appid = "wx5765f3d4b5cb4459";
+  const appid = "wxe2e88a6ba8fcfeba";
+  // const redirect_uri = encodeURIComponent("https://app.yonote.cn/login/callback");
+  const redirect_uri = encodeURIComponent("http://192.168.100.73:3001/login/callback");
   const auth_url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_userinfo&forcePopup=true&state=STATE#wechat_redirect`;
-
+  // const aut1_url = `https://open.weixin.qq.com/connect/qrconnect?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect`;
   const handleLogin = () => {
     if (checked) {
       // 跳转到微信认证中心

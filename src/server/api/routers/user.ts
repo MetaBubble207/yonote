@@ -1,6 +1,6 @@
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {z} from "zod";
-import { user } from "@/server/db/schema";
+import {user} from "@/server/db/schema";
 import {eq} from "drizzle-orm";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 
@@ -51,9 +51,22 @@ export const userRouter = createTRPCRouter({
           return ctx.db.delete(user).where(eq(user.id, input.id)).returning({name: user.name});
         }),
 
-    getLatest: publicProcedure.query(({ ctx }) => {
-        return ctx.db.query.post.findFirst({
-            orderBy: (post, { desc }) => [desc(post.createdAt)],
-        });
+    getAccessToken:  publicProcedure.input(z.object({code:z.string()}))
+        .query(async({input }) => {
+            // 测试使用的appid
+            //https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index
+            const appid = "wxe2e88a6ba8fcfeba";
+            // 测试使用的appsecret
+            const appsecret = "1a8c6b587c596c0789f7853d7d01a62c";
+            // 获取access_token
+            const get_access_token_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${appsecret}&code=${input.code}&grant_type=authorization_code`;
+            return fetch(get_access_token_url)
+                // 转成json
+                .then(r => r.json())
+                // 通过返回的access_token和openid去请求另一个地址获取用户信息
+                .then((r) => {
+                    const get_user_info_url = `https://api.weixin.qq.com/sns/userinfo?access_token=${r.access_token}&openid=${r.openid}&lang=zh_CN`;
+                    return fetch(get_user_info_url).then((res) => res.json());
+                 })
     }),
 });
