@@ -7,10 +7,9 @@ import Link from "next/link";
 function User() {
     return (
         // 背景颜色
-        <div className="bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3 w-screen h-screen">
+        <div className="px-4 bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3 w-screen h-screen">
             {/* 顶部 */}
-            <div className="pl-4 pt-9">
-                <div className="flex flex-row items-center">
+            <div className="pt-9 flex flex-row items-center">
                     <Image src="/images/user/avatar.svg" alt="avatar" width={83} height={83} className={"w-20.75 h-20.75 fill-url( stroke-0.25 stroke-[#FFF]"} />
 
                     {/* 用户信息 */}
@@ -40,11 +39,9 @@ function User() {
                         <Link href="user/user-message">编辑资料</Link>
                     </div>
                 </div>
-            </div>
-
 
             {/* 专栏、小课区域 */}
-            <div className="w-85.75 h-63.75 border-rd-2.5 bg-#FFF ml-2 pl-4 pt-4 mt-4">
+            <div className="w-full h-63.75 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4">
                 {/* 导航区域 */}
                 <div className="flex">
                     <Link href="#"
@@ -80,7 +77,7 @@ function User() {
             </div>
 
             {/*  我的服务模块*/}
-            <div className={"w-85.75 h-51.5 border-rd-2.5 bg-[#FFF] ml-2 mt-1.5  pt-4.5 mb-3"}>
+            <div className={"w-full h-51.5 border-rd-2.5 bg-[#FFF] mt-1.5  pt-4.5 mb-3"}>
                 {/*标题*/}
                 <h2 className={"text-[#252525] text-3.5 font-500 lh-6 pl-5.5"}>我的服务</h2>
 
