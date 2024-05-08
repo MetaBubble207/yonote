@@ -55,9 +55,9 @@ export const userRouter = createTRPCRouter({
         .query(async({input }) => {
             // 测试使用的appid
             //https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index
-            const appid = "wxe2e88a6ba8fcfeba";
+            const appid = "wx7b8dfff150d551ab";
             // 测试使用的appsecret
-            const appsecret = "1a8c6b587c596c0789f7853d7d01a62c";
+            const appsecret = "108638f33a60ffa3486d50572c8aa2f3";
             // 获取access_token
             const get_access_token_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${appsecret}&code=${input.code}&grant_type=authorization_code`;
             return fetch(get_access_token_url)

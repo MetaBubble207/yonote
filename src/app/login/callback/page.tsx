@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import {api} from "@/trpc/react";
 import Image from "next/image";
 
@@ -12,8 +12,15 @@ const LoginCallback = () => {
   const res = api.users.getAccessToken.useQuery({
     code:code!
   })
-  console.log("res == ",res)
+ useEffect(() => {
+    // 获取网页地址
+  const targetOrigin = window.location.origin
+  window.postMessage(code, targetOrigin)
+  }, [code])
 
+
+  console.log("res == ",res)
+//   loader={() => res.data.headimgurl } 
   return (
     <div>
       <h1>
@@ -21,7 +28,7 @@ const LoginCallback = () => {
         res.data
             ?
             <div>
-                {res.data.headimgurl ? <Image src={res.data.headimgurl} loader={() => res.data.headimgurl } alt={"avatar"} width={100} height={100}/> : <span></span> }
+                {res.data.headimgurl ? <Image priority src={res.data.headimgurl} alt={"avatar"} width={100} height={100}/> : <span></span> }
               <div>{res.data.nickname}</div>
             </div>
             :
