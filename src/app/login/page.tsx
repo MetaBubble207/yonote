@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Image from "next/image";
 import GeneralModal from "../_components/dialog/dialog/dialog"; // 引入GeneralModal组件
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 
 const Login = () => {
   const [checked, setChecked] = useState(false);
@@ -21,20 +21,15 @@ const Login = () => {
     setModalVisible(false);
   };
 
-  //   const appid = "wx5765f3d4b5cb4459";
-  const appid = "wx7b8dfff150d551ab";
-
-  //   const redirect_uri = encodeURIComponent("https://app.yonote.cn/login/callback");
-
+  // const aut1_url = `https://open.weixin.qq.com/connect/qrconnect?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect`;
   const handleLogin = () => {
     if (checked && typeof window !== "undefined") {
+      const appid = "wxe2e88a6ba8fcfeba";
       const originURL = window?.location?.origin;
       const redirect_uri = encodeURIComponent(originURL + "/login/callback");
 
-      const auth_url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_userinfo&forcePopup=true&state=STATE#wechat_redirect`;
-
       // 跳转到微信认证中心
-      window.location.href = auth_url;
+      window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_userinfo&forcePopup=true&state=STATE#wechat_redirect`;
       // setModalVisible(true);
     } else {
       alert("请先勾选同意!");
