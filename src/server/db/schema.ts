@@ -1,10 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { dataTagSymbol } from "@tanstack/react-query";
-import Password from "antd/es/input/Password";
 import { sql } from "drizzle-orm";
-import { date, float } from "drizzle-orm/mysql-core";
 import {
   index,
   pgTableCreator,
@@ -17,9 +14,6 @@ import {
   smallint,
   text,
 } from "drizzle-orm/pg-core";
-import { url } from "inspector";
-import { writer } from "repl";
-import internal from "stream";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -34,10 +28,10 @@ export const post = createTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
+        createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    updatedAt: timestamp("updated_at"),
     readNumber: integer("readNumber"),
     likeCount: integer("likeCount"),
     content: varchar("content"),
@@ -52,19 +46,20 @@ export const post = createTable(
 export const user = createTable(
   "user",
   {
-    id: serial("id").primaryKey(),
+    id: varchar("id",{length: 256}).primaryKey(),
     name: varchar("name", { length: 256 }),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    updatedAt: timestamp("updated_at"),
     phone: integer("phone"),
-    idNumber: integer("idNumber"),
-    Password: integer("password"),
-    logo: text("logo"),
-    idType: varchar("idType"),
-    weChat: varchar("weChat"),
-    enddate: timestamp("enddate"),
+    idNumber: integer("id_number"),
+    password: integer("password"),
+    avatar: text("avatar"),
+    idType: varchar("id_type"),
+    weChat: varchar("we_chat"),
+    endDate: timestamp("end_date"),
+    sex: integer("sex"),
   }
 );
 
@@ -74,10 +69,10 @@ export const column = createTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
+        createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    updatedAt: timestamp("updated_at"),
     distributorship:boolean("distributorship").notNull().default(false),
     intriduce:varchar("intriduce"),
     type:varchar("type"),
@@ -106,10 +101,10 @@ export const order = createTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
+        createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    updatedAt: timestamp("updated_at"),
     price: real("price"),
     ownerID: serial("ownerID"),
     payment: varchar("payment"),
@@ -129,7 +124,7 @@ export const speedUp = createTable(
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt"),
+    updatedAt: timestamp("updated_at"),
     ownerID: serial("ownerID"),
     quantity: integer("quantity"),
     ranking: smallint("ranking"),
@@ -141,6 +136,10 @@ export const wallet = createTable(
   {
     regularIncome: real("regularIncome"),
     freezeIncome: real("regularOutcome"),
+    createdAt: timestamp("created_at")
+          .default(sql`CURRENT_TIMESTAMP`)
+          .notNull(),
+    updatedAt: timestamp("updated_at"),
   }
 );
 
@@ -150,6 +149,10 @@ export const activity = createTable(
     id: serial("id").primaryKey(),
     introduction: varchar("introduction", { length: 256 }),
     url: varchar("url", { length: 256 }),
+    createdAt: timestamp("created_at")
+          .default(sql`CURRENT_TIMESTAMP`)
+          .notNull(),
+    updatedAt: timestamp("updated_at"),
   }
 );
 
@@ -158,9 +161,10 @@ export const coColumn = createTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+      createdAt: timestamp("created_at")
+          .default(sql`CURRENT_TIMESTAMP`)
+          .notNull(),
+      updatedAt: timestamp("updated_at"),
     deadline: timestamp("deadline"),
     subscribers: integer("subscribers"),
     number: integer("number"),
@@ -172,9 +176,10 @@ export const courseRecommendation = createTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+      createdAt: timestamp("created_at")
+          .default(sql`CURRENT_TIMESTAMP`)
+          .notNull(),
+      updatedAt: timestamp("updated_at"),
     deadline: timestamp("deadline"),
     subscribers: integer("subscribers"),
     number: integer("number"),
@@ -186,9 +191,10 @@ export const columnRecommendation = createTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+      createdAt: timestamp("created_at")
+          .default(sql`CURRENT_TIMESTAMP`)
+          .notNull(),
+      updatedAt: timestamp("updated_at"),
     deadline: timestamp("deadline"),
     subscribers: integer("subscribers"),
     number: integer("number"),
