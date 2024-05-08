@@ -3,8 +3,8 @@ import Image from "next/image";
 import { Article } from "@/app/_components/poster/Article";
 
 const Page =()=>{
-    return <div className="relative min-h-screen ">
-        <div className="w-85.75 h-129.5005 bg-[#ffffff]">
+    return <div className="relative min-h-screen bg-[#999999] pt-25.75">
+        <div className="w-85.75 h-129.5005 bg-[#ffffff] ml-4">
             <div className="flex">                 
                 <div>                
                     <div className="flex items-center w-full h-19.375">

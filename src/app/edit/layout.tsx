@@ -8,7 +8,7 @@ const dialogLayout=({children}:{children:React.ReactNode})=>{
             <body>
                 <div>
                     <Compass></Compass>
-                    <div className="w-full h-full bg-[#45E1B8]" >                        
+                    <div className="w-full h-225 bg-#f6f6f6" >                        
                         {children}
                     </div>
                 </div>

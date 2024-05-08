@@ -43,3 +43,5 @@ pnpm-lock.yaml
 *.tsbuildinfo
 
 .idea
+
+pnpm-lock.yaml

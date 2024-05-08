@@ -17,9 +17,17 @@ const Page=()=>{
             setCheckColor("#fff")
         }
     };
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        const inputValue = e.target.value;
+        setName(inputValue);
+    };
+
+    const remainingCharacters =  name.length;
+
+
     return(
         <div className={'w-full h-full mt-16px ml-18px'}>
-            <div className={'w-97% h-90% shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF]'}>
+            <div className={'w-97% shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] pb-35px'}>
 
                 <div className={'w-100% h-100% pt-7 ml-10'}>
                     <div className="text-[#323232]  text-4 font-700 lh-6  w-16 ">专栏设置</div>
@@ -31,11 +39,19 @@ const Page=()=>{
                                 <span style={{ color: 'red' }}>*</span><label className={'text-[rgba(0,0,0,0.85)] text-3.5 font-not-italic font-400 lh-5.5'}>名称：</label>
                             </td>
                             <td style={{ textAlign: 'left' ,paddingTop: '24px'}}>
-                                <input className={'w-117 h-8 shrink-0 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] text-lg pl-3'}
-                                       placeholder="最多输入十五个字"
-                                       style={{ color: '#999',fontSize:'14px'}}
-                                       type="text" value={name} onChange={(e) => setName(e.target.value)} maxLength={15} required/>
-                                <span className={'text-#999 font-14px ml--46px'}>0/15</span>
+                                <div>
+                                    <input
+                                        className="w-117 h-8 shrink-0 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] text-lg pl-3"
+                                        placeholder="最多输入十五个字"
+                                        style={{ color: '#999', fontSize: '14px' }}
+                                        type="text"
+                                        value={name}
+                                        onChange={handleChange}
+                                        maxLength={15}
+                                        required
+                                    />
+                                    <span className="text-#999 font-14px ml--46px">{remainingCharacters}/15</span>
+                                </div>
                             </td>
                         </tr>
                         {/*消费模式*/}
@@ -58,17 +74,28 @@ const Page=()=>{
                         </tr>
                         {/*价格*/}
                         <tr>
-                            <td style={{ textAlign: 'right', paddingTop: '24px'}}>
+                            <td style={{ textAlign: 'right', paddingTop: '24px' }}>
                                 <label className={'text-[rgba(0,0,0,0.85)] text-3.5 font-not-italic font-400 lh-5.5'}>价格：</label>
                             </td>
-                            <td style={{ textAlign: 'left',paddingTop: '24px' }}>
-                                <input className={'w-22 h-8 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] pl-3'}
-                                       placeholder="请输入"
-                                       style={{ color: '#999',fontSize:'14px'}}
-                                    type="text" value={price} onChange={(e) => setPrice(e.target.value)} maxLength={15} required/>
+                            <td style={{ textAlign: 'left', paddingTop: '24px' }}>
+                                <input
+                                    className={'w-22 h-8 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] pl-3'}
+                                    placeholder="请输入"
+                                    style={{ color: '#999', fontSize: '14px' }}
+                                    type="text"
+                                    value={price}
+                                    onChange={(e) => {
+                                        const inputValue = e.target.value.replace(/\D/g, ''); // 只保留数字
+                                        setPrice(inputValue);
+                                    }}
+                                    maxLength={15}
+                                    pattern="[0-9]*" // 只允许输入数字
+                                    required
+                                />
                                 <span className={'text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5 ml-2'}>元</span>
                             </td>
                         </tr>
+
                         {/*简介*/}
                         <tr>
                             <td style={{ textAlign: 'right', verticalAlign: 'top',paddingTop: '24px'}}>
