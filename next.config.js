@@ -6,16 +6,15 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-    // images: {
-    //     remotePatterns: [
-    //         {
-    //             protocol: 'https',
-    //             hostname: 'thirdwx.qlogo.cn',
-    //             port: '',
-    //             pathname: '/login/**',
-    //         },
-    //     ],
-    // },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'thirdwx.qlogo.cn',
+                port: '',
+            },
+        ],
+    },
 };
 
 export default config;

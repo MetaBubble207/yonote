@@ -21,14 +21,18 @@ const Login = () => {
     setModalVisible(false);
   };
 
-  // const appid = "wx5765f3d4b5cb4459";
-  const appid = "wxe2e88a6ba8fcfeba";
-  // const redirect_uri = encodeURIComponent("https://app.yonote.cn/login/callback");
-  const redirect_uri = encodeURIComponent("http://192.168.100.73:3001/login/callback");
-  const auth_url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_userinfo&forcePopup=true&state=STATE#wechat_redirect`;
-  // const aut1_url = `https://open.weixin.qq.com/connect/qrconnect?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect`;
+  //   const appid = "wx5765f3d4b5cb4459";
+  const appid = "wx7b8dfff150d551ab";
+
+  //   const redirect_uri = encodeURIComponent("https://app.yonote.cn/login/callback");
+
   const handleLogin = () => {
-    if (checked) {
+    if (checked && typeof window !== "undefined") {
+      const originURL = window?.location?.origin;
+      const redirect_uri = encodeURIComponent(originURL + "/login/callback");
+
+      const auth_url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_userinfo&forcePopup=true&state=STATE#wechat_redirect`;
+
       // 跳转到微信认证中心
       window.location.href = auth_url;
       // setModalVisible(true);

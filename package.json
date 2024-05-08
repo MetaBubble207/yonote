@@ -7,7 +7,7 @@
     "build": "next build",
     "db:push": "drizzle-kit push:pg",
     "db:studio": "drizzle-kit studio",
-    "dev": "next dev",
+    "dev": "next dev -H 192.16.6.49",
     "lint": "next lint",
     "start": "next start"
   },
