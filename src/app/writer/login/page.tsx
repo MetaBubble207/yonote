@@ -4,11 +4,10 @@ import { useEffect } from "react";
 import { Router } from "next/router";
 
 const Login = () => {
-
   const refreshCode = () => {
     // @ts-ignore
-    var obj = new WxLogin({
-      self_redirect: true,
+    const obj = new WxLogin({
+      self_redirect: false,
       id: "login_container",
       appid: "wx6e3b77c29681a56b",
       scope: "snsapi_login",
@@ -21,15 +20,11 @@ const Login = () => {
 
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js";
+    script.src = "https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js";
     document.body.appendChild(script);
     script.onload = () => {
       refreshCode();
-    }
-    window.addEventListener('message',(e)=>{
-        console.log(e,"message")
-    })
-
+    };
 
     return () => {
       document.body.removeChild(script);

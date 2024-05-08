@@ -14,6 +14,8 @@ const config = {
     "plugin:@typescript-eslint/stylistic-type-checked"
   ],
   "rules": {
+    "@typescript-eslint/ban-ts-comment":"off",
+    "@typescript-eslint/no-unsafe-call":"off",
     "@typescript-eslint/no-unsafe-member-access":"off",
     "@typescript-eslint/array-type": "off",
     'prefer-const':0,

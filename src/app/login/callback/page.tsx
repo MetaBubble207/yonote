@@ -12,11 +12,6 @@ const LoginCallback = () => {
   const res = api.users.getAccessToken.useQuery({
     code:code!
   })
- useEffect(() => {
-    // 获取网页地址
-  const targetOrigin = window.location.origin
-  window.postMessage(code, targetOrigin)
-  }, [code])
 
 
   console.log("res == ",res)
