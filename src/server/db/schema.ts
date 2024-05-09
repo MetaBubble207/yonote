@@ -53,7 +53,7 @@ export const user = createTable(
       .notNull(),
     updatedAt: timestamp("updated_at"),
     phone: integer("phone"),
-    idNumber: integer("id_number"),
+    idNumber: varchar("id_number"),
     password: integer("password"),
     avatar: text("avatar"),
     idType: varchar("id_type"),
