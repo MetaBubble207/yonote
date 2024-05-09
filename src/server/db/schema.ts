@@ -3,17 +3,19 @@
 
 import { sql } from "drizzle-orm";
 import {
-  index,
-  pgTableCreator,
-  serial,
-  timestamp,
-  varchar,
-  boolean,
-  real,
-  integer,
-  smallint,
-  text,
+    index,
+    pgTableCreator,
+    serial,
+    timestamp,
+    varchar,
+    boolean,
+    real,
+    integer,
+    smallint,
+    text,
+    decimal,
 } from "drizzle-orm/pg-core";
+import {black} from "kolorist";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -22,7 +24,19 @@ import {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `yonote_${name}`);
-
+export const subscription_manager = createTable(
+    "subscription_manager",
+    {
+        id: serial("id").primaryKey(),
+        userId: varchar("user_id"),
+        columnId: varchar("column_id"),
+        status: boolean("status"),
+        createdAt: timestamp("created_at")
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
+    }
+);
 export const post = createTable(
   "post",
   {
