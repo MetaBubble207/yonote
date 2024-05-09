@@ -3,7 +3,8 @@ import {z} from "zod";
 import {user} from "@/server/db/schema";
 import {eq} from "drizzle-orm";
 import {getCurrentTime} from "@/tools/getCurrentTime";
-
+import * as process from "process";
+import {getSoleId} from "@/tools/getSoleId";
 export const userRouter = createTRPCRouter({
     getList: publicProcedure
         .input(
@@ -20,7 +21,15 @@ export const userRouter = createTRPCRouter({
                 }
             )
         }),
-
+    getOne: publicProcedure
+        .input(z.object({id: z.string()}))
+        .query(({ctx,input}) => {
+            return ctx.db.query.user.findFirst(
+                {
+                    where: eq(user.id,input.id)
+                }
+            )
+        }),
     create: publicProcedure
         .input(z.object({ name: z.string().min(1) }))
         .mutation( async ({ ctx, input }) => {
@@ -56,9 +65,9 @@ export const userRouter = createTRPCRouter({
         .query(async({ctx,input }) => {
             // 测试使用的appid
             //https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index
-            const appid = "wx7b8dfff150d551ab";
+            const appid = process.env.NEXT_PUBLIC_APP_ID;
             // 测试使用的appsecret
-            const appsecret = "108638f33a60ffa3486d50572c8aa2f3";
+            const appsecret = process.env.NEXT_PUBLIC_APP_SECRET;
             // 获取access_token
             const get_access_token_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${appsecret}&code=${input.code}&grant_type=authorization_code`;
             try {
@@ -86,8 +95,9 @@ export const userRouter = createTRPCRouter({
                         name: userInfoData.nickname,
                         avatar: userInfoData.headimgurl,
                         sex: userInfoData.sex,
+                        idNumber: getSoleId(),
                         updatedAt: getCurrentTime()
-                    }).returning({name: user.name,avatar:user.avatar,sex:user.sex}))[0]
+                    }).returning({id:user.id,name: user.name,avatar:user.avatar,sex:user.sex}))[0]
                 }
                 return getUserDB[0];
 
