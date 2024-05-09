@@ -6,7 +6,7 @@ import Page from "../../_components/subscribe/Navscribr";
 
 const Subscribe = () => {
     return (
-        <div className="min-h-screen relative">
+        <div className="min-h-screen relative pb-10">
             <div className="w-85.75 mt-8 m-auto mb-2">
                 <div className="border-rd-13 h-8.5 bg-[#FFF] flex items-center">
                     <Image src={"/images/subscribe/search.png"} alt="search" width={18} height={18} className="inline  ml-5.25 w-4.5 h-4.5"></Image>
@@ -30,7 +30,7 @@ const Subscribe = () => {
             <div className="bottom-4 justify-center w-full fixed">
                 <Navbar />
             </div>
-            <div className="h-14"></div>
+            {/*<div className="h-14"></div>*/}
         </div >
     )
 }

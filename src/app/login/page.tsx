@@ -1,33 +1,32 @@
-"use client";
-
-import React, {useState} from "react";
+"use client"
+import React from "react";
 import Image from "next/image";
-import GeneralModal from "../_components/dialog/dialog/dialog"; // 引入GeneralModal组件
-import {useRouter} from "next/navigation";
-
+import process from "process";
 const Login = () => {
-  const [checked, setChecked] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false); // 用于管理模态框可见性的状态
-  const router = useRouter();
-
+  // const [checked, setChecked] = useState(false);
+  // const [modalVisible, setModalVisible] = useState(false); // 用于管理模态框可见性的状态
+  // const router = useRouter();
+  let checked = false;
   const handleCancel = () => {
     // 处理模态框取消/关闭的函数
-    setModalVisible(false); // 当取消时隐藏模态框
-    router.back();
+    // setModalVisible(false); // 当取消时隐藏模态框
+    // router.back();
   };
 
   // 定义关闭模态框的函数
-  const closeModal = () => {
-    setModalVisible(false);
-  };
+  // const closeModal = () => {
+  //   setModalVisible(false);
+  // };
 
   // const aut1_url = `https://open.weixin.qq.com/connect/qrconnect?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect`;
   const handleLogin = () => {
-    if (checked && typeof window !== "undefined") {
-      const appid = "wxe2e88a6ba8fcfeba";
-      const originURL = window?.location?.origin;
-      const redirect_uri = encodeURIComponent(originURL + "/login/callback");
+    if (checked && typeof  window !== "undefined") {
+      const appid = process.env.NEXT_PUBLIC_APP_ID;
 
+      const originURL = window?.location?.origin;
+
+      // const redirect_uri = encodeURIComponent(originURL + "/login/callback");
+      const redirect_uri = encodeURIComponent(originURL + "/dashboard/user");
       // 跳转到微信认证中心
       window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_userinfo&forcePopup=true&state=STATE#wechat_redirect`;
       // setModalVisible(true);
@@ -83,27 +82,27 @@ const Login = () => {
         <div className="flex w-67.75 h-6 mt-8.5575 text-3">
           <input
             type="checkbox"
-            checked={checked}
-            onChange={(e) => setChecked(e.target.checked)}
+            // checked={checked}
+            onChange={(e) => checked = e.target.checked}
             className="w-5 h-5"
           />
           <div className="ml-1.5">我已阅读并同意《用户协议》和《隐私协议》</div>
         </div>
       </div>
-      <div>
-        <GeneralModal isOpen={modalVisible} onClick={closeModal}>
-          {/* 这里放入模态框内部的内容 */}
-          <div>
-            <Image
-              src={"/images/writer/image 1.svg"}
-              alt={"erweima"}
-              width={240}
-              height={240}
-              className="w-60 h-60 shrink-0 mt-14.5725 m-auto "
-            ></Image>
-          </div>
-        </GeneralModal>
-      </div>
+      {/*<div>*/}
+      {/*  <GeneralModal isOpen={modalVisible} onClick={closeModal}>*/}
+      {/*    /!* 这里放入模态框内部的内容 *!/*/}
+      {/*    <div>*/}
+      {/*      <Image*/}
+      {/*        src={"/images/writer/image 1.svg"}*/}
+      {/*        alt={"erweima"}*/}
+      {/*        width={240}*/}
+      {/*        height={240}*/}
+      {/*        className="w-60 h-60 shrink-0 mt-14.5725 m-auto "*/}
+      {/*      ></Image>*/}
+      {/*    </div>*/}
+      {/*  </GeneralModal>*/}
+      {/*</div>*/}
     </div>
   );
 };

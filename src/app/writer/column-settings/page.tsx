@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { Switch,ConfigProvider } from 'antd';
+import {api} from "@/trpc/react";
 
 const Page=()=>{
     const [name, setName] = useState('');
@@ -24,9 +25,34 @@ const Page=()=>{
 
     const remainingCharacters =  name.length;
 
+    // 定义了一个修改方法的预设
+    const update = api.column.create.useMutation({
+        onSuccess: (r)=>{
+            console.log(r)
+        },
+        onError: (e)=>{
 
+        }
+    })
+    // 定义了触发修改方法的方法
+    const handleClick = () => {
+        update.mutate({
+            name:name,
+            id: 2,
+        })
+    }
+
+    // 查询
+    const columnData = api.column.getAll.useQuery({
+        id: 1
+    });
+    const hanlder = () => {
+
+    }
+    console.log("columnData ==>>>>>>>>>>>>>>>>>",columnData)
     return(
         <div className={'w-full h-full mt-16px ml-18px'}>
+            <button onClick={handleClick}>确定</button>
             <div className={'w-97% shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] pb-35px'}>
 
                 <div className={'w-100% h-100% pt-7 ml-10'}>
