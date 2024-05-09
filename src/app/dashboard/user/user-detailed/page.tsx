@@ -27,16 +27,16 @@ function User() {
                     {/* 用户名 */}
                     <div className={"flex mt-1.25 items-center"}>
                         <h2 className={"w-10 text-[#252525] text-4.5 font-500 lh-6"}>芋圆</h2>
-                        <Image className={"ml-1.25 w-5 h-5"} src={"images/user/Rank.svg"} alt={"rank"} width={20}
+                        <Image className={"ml-1.25 w-5 h-5"} src={"/images/user/Rank.svg"} alt={"rank"} width={20}
                                height={20}/>
                     </div>
 
                     {/* ID */}
                     <div className={"flex w-16.039 h-6 items-center justify-center"}>
                         <div className={"flex w-3.75"}>
-                            <Image className={"w-1.4775 h-1.86"} src={"images/user/I_logo.svg"} alt={"I"} width={7.44}
+                            <Image className={"w-1.4775 h-1.86"} src={"/images/user/I_logo.svg"} alt={"I"} width={7.44}
                                    height={7.44}/>
-                            <Image className={"w-1.4775 h-1.86"} src={"images/user/D_logo.svg"} alt={"D"} width={7.44}
+                            <Image className={"w-1.4775 h-1.86"} src={"/images/user/D_logo.svg"} alt={"D"} width={7.44}
                                    height={7.44}/>
                         </div>
                         <span className={"ml- w-11.789 text-[#999] text-2.5 font-400 lh-6"}>1317wfa2</span>
@@ -67,6 +67,9 @@ function User() {
                     <div className="w-85.75 h-63.75 border-rd-2.5 bg-#FFF ml-4 pl-4 pt-4 mt-4">
                         {/* 导航区域 */}
                         <div className="flex">
+                            <Link href="#"
+                                  className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">更新</Link>
+
                             <Link href="#"
                                className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">专栏</Link>
                             <div className={"flex-col"}>

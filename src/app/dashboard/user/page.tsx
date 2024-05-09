@@ -7,10 +7,9 @@ import Link from "next/link";
 function User() {
     return (
         // 背景颜色
-        <div className="bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3 w-screen h-screen">
+        <div className="px-4 bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3 w-screen h-screen">
             {/* 顶部 */}
-            <div className="pl-4 pt-9">
-                <div className="flex flex-row items-center">
+            <div className="pt-9 flex flex-row items-center">
                     <Image src="/images/user/avatar.svg" alt="avatar" width={83} height={83} className={"w-20.75 h-20.75 fill-url( stroke-0.25 stroke-[#FFF]"} />
 
                     {/* 用户信息 */}
@@ -37,14 +36,12 @@ function User() {
                         className="w-20 text-[#252525] text-2.5 font-500 lh-6 rounded-xl mr-4 flex flex-row bg-white pl-2.5 items-center ">
                         <Image src="/images/user/icon_edit.png" alt="icon" width={14} height={14}
                             className="w-4 h-4 mr-1" />
-                        <Link href="user-message">编辑资料</Link>
+                        <Link href="user/user-message">编辑资料</Link>
                     </div>
                 </div>
-            </div>
-
 
             {/* 专栏、小课区域 */}
-            <div className="w-85.75 h-63.75 border-rd-2.5 bg-#FFF ml-2 pl-4 pt-4 mt-4">
+            <div className="w-full h-63.75 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4">
                 {/* 导航区域 */}
                 <div className="flex">
                     <Link href="#"
@@ -80,14 +77,14 @@ function User() {
             </div>
 
             {/*  我的服务模块*/}
-            <div className={"w-85.75 h-51.5 border-rd-2.5 bg-[#FFF] ml-2 mt-1.5  pt-4.5 mb-3"}>
+            <div className={"w-full h-51.5 border-rd-2.5 bg-[#FFF] mt-1.5  pt-4.5 mb-3"}>
                 {/*标题*/}
                 <h2 className={"text-[#252525] text-3.5 font-500 lh-6 pl-5.5"}>我的服务</h2>
 
                 <div className="service">
                     <ul className={"flex flex-wrap"}>
                         <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
-                            <Link href="user-detailed" className="flex flex-col items-center">
+                            <Link href="user/user-detailed" className="flex flex-col items-center">
                                 <Image src={'/images/user/HomePage.svg'} alt={"个人主页"} width={"48"} height={"48"}
                                     className={"w-6 h-6"} />
                                 <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>个人主页</p>
@@ -108,7 +105,7 @@ function User() {
                             </Link>
                         </li>
                         <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
-                            <Link href="wallet" className="flex flex-col items-center">
+                            <Link href="../wallet" className="flex flex-col items-center">
                                 <Image src={'/images/user/Income.svg'} alt={"收入提现"} width={"48"} height={"48"}
                                     className={"w-6 h-6"} />
                                 <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>收入提现</p>
@@ -129,7 +126,7 @@ function User() {
                             </Link>
                         </li>
                         <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
-                            <Link href="login" className="flex flex-col items-center">
+                            <Link href="../login" className="flex flex-col items-center">
                                 <Image src={'/images/user/SignOut.svg'} alt={"退出登录"} width={"48"} height={"48"}
                                     className={"w-6 h-6"} />
                                 <p className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}>退出登录</p>

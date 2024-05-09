@@ -1,6 +1,6 @@
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {z} from "zod";
-import { user } from "@/server/db/schema";
+import {user} from "@/server/db/schema";
 import {eq} from "drizzle-orm";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 
@@ -27,14 +27,15 @@ export const userRouter = createTRPCRouter({
 
             await new Promise((resolve) => setTimeout(resolve, 1000));
 
-            return  ctx.db.insert(user).values({
+            return await ctx.db.insert(user).values({
+                id: "123123",
                 name: input.name,
                 updatedAt: getCurrentTime()
             }).returning({name: user.name});
         }),
 
     update: publicProcedure
-        .input(z.object({ id: z.number(), name: z.string().min(1) }))
+        .input(z.object({ id: z.string(), name: z.string().min(1) }))
         .mutation( ({ ctx, input })=>{
             return ctx.db.update(user)
                 .set({
@@ -46,14 +47,53 @@ export const userRouter = createTRPCRouter({
         }),
 
     del: publicProcedure
-        .input(z.object({ id: z.number() }))
+        .input(z.object({ id: z.string() }))
         .mutation(async ({ ctx, input })=>{
           return ctx.db.delete(user).where(eq(user.id, input.id)).returning({name: user.name});
         }),
 
-    getLatest: publicProcedure.query(({ ctx }) => {
-        return ctx.db.query.post.findFirst({
-            orderBy: (post, { desc }) => [desc(post.createdAt)],
-        });
+    login:  publicProcedure.input(z.object({code:z.string()}))
+        .query(async({ctx,input }) => {
+            // 测试使用的appid
+            //https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index
+            const appid = "wx7b8dfff150d551ab";
+            // 测试使用的appsecret
+            const appsecret = "108638f33a60ffa3486d50572c8aa2f3";
+            // 获取access_token
+            const get_access_token_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${appsecret}&code=${input.code}&grant_type=authorization_code`;
+            try {
+                const accessTokenResponse = await fetch(get_access_token_url);
+                if (!accessTokenResponse.ok) {
+                    throw new Error('Failed to fetch access token');
+                }
+
+                const accessTokenData = await accessTokenResponse.json();
+
+                const getUserInfoUrl = `https://api.weixin.qq.com/sns/userinfo?access_token=${accessTokenData.access_token}&openid=${accessTokenData.openid}&lang=zh_CN`;
+
+                const userInfoResponse = await fetch(getUserInfoUrl);
+                if (!userInfoResponse.ok) {
+                    throw new Error('Failed to fetch user info');
+                }
+
+                const userInfoData = await userInfoResponse.json();
+
+                const getUserDB = await ctx.db.select().from(user).where(eq(user.id, userInfoData.openid));
+
+                if(getUserDB === null || getUserDB.length === 0){
+                    return (await ctx.db.insert(user).values({
+                        id: userInfoData.openid,
+                        name: userInfoData.nickname,
+                        avatar: userInfoData.headimgurl,
+                        sex: userInfoData.sex,
+                        updatedAt: getCurrentTime()
+                    }).returning({name: user.name,avatar:user.avatar,sex:user.sex}))[0]
+                }
+                return getUserDB[0];
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+
     }),
 });

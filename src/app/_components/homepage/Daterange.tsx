@@ -5,12 +5,11 @@ import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/zh-cn';
 import data from './imitate.json'
 import Echarts from './Echarts';
-import { log } from 'console';
 
 const Daterange: React.FC = (props,ref) => {
 
     const [selectedDates] = useState<[Date, Date] | null>(null);
-    const [daterange,setdaterange] = useState (0);
+    const [daterange,setdaterange] = useState<[string, string]>(['','']);
     const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings:any) => {
         if (dates) {
             console.log(dateStrings[0], dateStrings[1]);

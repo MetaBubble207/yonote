@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const SubscribeRenew = () => {
     return (
-        <Link href={"/"}>
+        <Link href={"../special-column-content"}>
             <div className="w-85.75 h-42.75 border-rd-5 bg-[#FFF] mb-2">
                 <div className="flex h-27 pl-2.5 pt-2.5">
                     <Image src={"/images/subscribe/cover.png"} alt="cover" width={24} height={24} className="w-20.25 h-27"></Image>

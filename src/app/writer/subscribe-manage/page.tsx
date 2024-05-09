@@ -1,4 +1,5 @@
-import React from 'react';
+'use client'
+import React, {useState} from 'react';
 
 
 import Image from "next/image";
@@ -7,6 +8,97 @@ import MyPagination from "@/app/_components/pagination/page";
 
 
 const Page = () => {
+    interface Item {
+        id: string;
+        avatar: string;
+        userName: string;
+        userID: string;
+        status: string;
+        start: string;
+        end: string;
+    }
+
+    const [items,setItems]  = useState<Item[]>([
+        {
+            id: '1',
+            avatar: '/images/writer/avatar1.svg',
+            userName: '胖头鱼吃瓜',
+            userID: '1239f7.5',
+            status: '订阅中',
+            start: '2017-10-31 23:12:00',
+            end: '2017-10-31 23:12:00'
+        }, {
+            id: '2',
+            avatar: '/images/writer/avatar2.svg',
+            userName: '胖头鱼吃瓜',
+            userID: '1239f7.5',
+            status: '订阅中',
+            start: '2017-10-31 23:12:00',
+            end: '2017-10-31 23:12:00'
+        }, {
+            id: '3',
+            avatar: '/images/writer/avatar3.svg',
+            userName: '胖头鱼吃瓜',
+            userID: '1239f7.5',
+            status: '订阅中',
+            start: '2017-10-31 23:12:00',
+            end: '2017-10-31 23:12:00'
+        }, {
+            id: '4',
+            avatar: '/images/writer/avatar4.svg',
+            userName: '胖头鱼吃瓜',
+            userID: '1239f7.5',
+            status: '订阅中',
+            start: '2017-10-31 23:12:00',
+            end: '2017-10-31 23:12:00'
+        },
+    ])
+
+    const [userIdValue,setUserIdValue] = useState<string>('')
+    const handleUserChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        console.log(`正在查询userID: ${e.target.value}`)
+        setUserIdValue(e.target.value)
+    }
+
+
+    const [status,setStatus] = useState<string>('')
+    const handleStatusChange = (e:React.ChangeEvent<HTMLSelectElement>) =>{
+        console.log(`正在查询status: ${e.target.value}`)
+        setStatus(e.target.value)
+    }
+
+
+    // 表体内容
+    const ItemList: React.FC = () => {
+        return (
+            <tbody className='text-center'>
+            {items.map((item, index) => (
+                <tr key={index}
+                    className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
+                    <td>{item.id}</td>
+                    {/*<td>{item.avatar}</td>*/}
+                    <td className='relative'><Image
+                        className=' w-8 h-8 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shrink-0 border-rd-8'
+                        src={item.avatar} alt={'avatar'} width={32} height={32}/>
+                    </td>
+                    <td>{item.userName}</td>
+                    <td>{item.userID}</td>
+                    <td>{item.status}</td>
+                    <td>{item.start}</td>
+                    <td>{item.end}</td>
+                    <td>
+                        <button
+                            className='text-[#1DB48D] font-"Microsoft YaHei" text-3.5 font-not-italic font-400 lh-5.5'>结束订阅
+                        </button>
+                    </td>
+                </tr>
+            ))}
+
+
+            </tbody>
+        )
+    }
+
     return (
         <div className='w-100% h-100%'>
             {/*<Compass></Compass>*/}
@@ -25,13 +117,13 @@ const Page = () => {
                         <label className='text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5'>用户ID: </label>
                         <input
                             className=' ml-4 w-56 h-8 pl-3.045 shrink-0 border-rd-0.5 border-1 border-solid border-[#D9D9D9] bg-[#FFF] lh-8'
-                            type="text" placeholder="用户ID"/>
+                            type="text" placeholder="用户ID" value={userIdValue} onChange={(e) => handleUserChange(e)}/>
 
 
                         {/*订阅状态*/}
                         <label className='ml-4 text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5'>订阅状态:</label>
-                        <select
-                            className='ml-4 pl-3.045 w-56 h-8 shrink-0 border-rd-0.5 border-1 border-solid border-[#D9D9D9] bg-[#FFF] text-[rgba(0,0,0,0.65)] text-3.5 font-400'>
+                        <select onChange={(e)=>handleStatusChange(e)}
+                                className='ml-4 pl-3.045 w-56 h-8 shrink-0 border-rd-0.5 border-1 border-solid border-[#D9D9D9] bg-[#FFF] text-[rgba(0,0,0,0.65)] text-3.5 font-400'>
                             <option value="订阅中">全部</option>
                             <option value="订阅中">订阅中</option>
                             <option value="已结束">已结束</option>
@@ -111,64 +203,7 @@ const Page = () => {
                             </thead>
 
                             {/*表体*/}
-                            <tbody className='text-center'>
-                                <tr className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
-                                    <td>1</td>
-                                    <td>头像</td>
-                                    <td>1239f7.5</td>
-                                    <td>胖头鱼吃瓜</td>
-                                    <td>订阅中</td>
-                                    <td>2017-10-31 23:12:00</td>
-                                    <td>2017-10-31 23:12:00</td>
-                                    <td>
-                                        <button
-                                            className='text-[#1DB48D] font-"Microsoft YaHei" text-3.5 font-not-italic font-400 lh-5.5'>结束订阅
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
-                                    <td>1</td>
-                                    <td>头像</td>
-                                    <td>1239f7.5</td>
-                                    <td>胖头鱼吃瓜</td>
-                                    <td>订阅中</td>
-                                    <td>2017-10-31 23:12:00</td>
-                                    <td>2017-10-31 23:12:00</td>
-                                    <td>
-                                        <button
-                                            className='text-[#1DB48D] font-"Microsoft YaHei" text-3.5 font-not-italic font-400 lh-5.5'>结束订阅
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
-                                    <td>1</td>
-                                    <td>头像</td>
-                                    <td>1239f7.5</td>
-                                    <td>胖头鱼吃瓜</td>
-                                    <td>订阅中</td>
-                                    <td>2017-10-31 23:12:00</td>
-                                    <td>2017-10-31 23:12:00</td>
-                                    <td>
-                                        <button
-                                            className='text-[#1DB48D] font-"Microsoft YaHei" text-3.5 font-not-italic font-400 lh-5.5'>结束订阅
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
-                                <td>1</td>
-                                <td>头像</td>
-                                <td>1239f7.5</td>
-                                <td>胖头鱼吃瓜</td>
-                                <td>订阅中</td>
-                                <td>2017-10-31 23:12:00</td>
-                                <td>2017-10-31 23:12:00</td>
-                                <td>
-                                    <button
-                                        className='text-[#1DB48D] font-"Microsoft YaHei" text-3.5 font-not-italic font-400 lh-5.5'>结束订阅
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
+                            <ItemList/>
                         </table>
                     </div>
 
