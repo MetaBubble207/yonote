@@ -165,6 +165,7 @@ const Page = () => {
                         {/*    className='ml-4 pl-3.045 w-56 h-8 shrink-0 border-rd-0.5 border-1 border-solid border-[#D9D9D9] bg-[#FFF] text-[rgba(0,0,0,0.65)] text-3.5 font-400'*/}
                         {/*    placeholder="订阅开始时间" />*/}
                         <button
+                            onClick={(e)=>handleSubmit(e)}
                             className='w-16.25 h-8 ml-7 shrink-0 bg-#1DB48D border-rd-2.5 text-[#FFF] text-3.5 font-400 lh-5.5'>查询
                         </button>
                     </div>
