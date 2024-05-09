@@ -67,6 +67,11 @@ const Page = () => {
         setStatus(e.target.value)
     }
 
+    const handleSubmit = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
+        console.log(`正在查询userID为${userIdValue},订阅状态为${status}的信息`)
+    }
+
+
 
     // 表体内容
     const ItemList: React.FC = () => {
