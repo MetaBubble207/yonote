@@ -42,3 +42,5 @@ yarn-error.log*
 *.tsbuildinfo
 
 .idea
+
+pnpm-lock.yaml
