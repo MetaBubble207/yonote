@@ -85,7 +85,7 @@ const Page = () =>  {
                         className="w-20 text-[#252525] text-2.5 font-500 lh-6 rounded-xl mr-4 flex flex-row bg-white pl-2.5 items-center ">
                         <Image src="/images/user/icon_edit.png" alt="icon" width={14} height={14}
                                className="w-4 h-4 mr-1" />
-                        <Link href="/user/user-message">编辑资料</Link>
+                        <Link href="user/user-message">编辑资料</Link>
                     </div>
                 </div>
 
@@ -191,7 +191,9 @@ const Page = () =>  {
 
                 </div>
 
-                <Navbar/>
+                <div className="bottom-4 justify-center w-full fixed">
+                    <Navbar />
+                </div>
             </div>
 
         </Suspense>
