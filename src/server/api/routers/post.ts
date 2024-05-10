@@ -68,8 +68,32 @@ export const postRouter = createTRPCRouter({
             return ctx.db.query.post.findMany({
                 limit: input.limit,
                 offset: input.offset,
-                where: eq(post.columnId, data!.id),
+                where: eq(post.columnId, data.id),
             })
         }),
+    getById: publicProcedure
+        .input(z.object({id:z.string(),chapter:z.number()}))
+        .query(async ({ ctx,input }) => {
+            const c = await ctx.db.query.column.findFirst({where:eq(column.id, input.id)})
+            if (!c) {
+                throw new Error("Column not found");
+            }
+
+
+            const u = await ctx.db.query.user.findFirst({where:eq(user.id,c.userId)})
+
+            if(!u){
+                throw new Error("User not found");
+            }
+            const data = await ctx.db.select().from(post).where(eq(post.columnId, input.id));
+            if (!data?.length) {
+                throw new Error("No data found");
+            }
+            let res = [];
+            data.map(item => {
+                res.push({...item,user:u})
+            })
+            return res[input.chapter-1]
+        })
 
 });

@@ -35,7 +35,9 @@ const Page = () => {
     const Page2 = () => {
         return (
             <div>
-                <SubscribeColumn />
+                {columns && columns.length > 0 && columns.map((column: any) => (
+                    <SubscribeColumn key={column.id} column={column} />
+                ))}
             </div>
 
         )
@@ -43,14 +45,16 @@ const Page = () => {
     const Page3 = () => {
         return (
             <div>
-                <SubscribeColumn />
+                {columns && columns.length > 0 && columns.map((column: any) => (
+                    <SubscribeColumn key={column.id} column={column}/>
+                ))}
             </div>
         );
     }
     const renderContent = (): React.ReactNode => {
         switch (currentPage) {
             case 1:
-                return <Page1 />;
+                return <Page1/>;
             case 2:
                 return <Page2 />;
             case 3:

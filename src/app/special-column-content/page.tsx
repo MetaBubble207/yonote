@@ -1,42 +1,42 @@
-// @ts-nocheck
-
 "use client";
 import Image from "next/image";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
+import {timeToString} from "@/tools/timeToString";
 
 const Page = () => {
-  function formatTime(date: Date) {
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const monthStr = month < 10 ? "0" + month : month;
-    const dayStr = day < 10 ? "0" + day : day;
-    const hoursStr = hours < 10 ? "0" + hours : hours;
-    const minutesStr = minutes < 10 ? "0" + minutes : minutes;
-    return `${monthStr}.${dayStr} ${hoursStr}:${minutesStr}`;
-  }
+  // function formatTime(date: Date) {
+  //   const month = date.getMonth() + 1;
+  //   const day = date.getDate();
+  //   const hours = date.getHours();
+  //   const minutes = date.getMinutes();
+  //   const monthStr = month < 10 ? "0" + month : month;
+  //   const dayStr = day < 10 ? "0" + day : day;
+  //   const hoursStr = hours < 10 ? "0" + hours : hours;
+  //   const minutesStr = minutes < 10 ? "0" + minutes : minutes;
+  //   return `${monthStr}.${dayStr} ${hoursStr}:${minutesStr}`;
+  // }
 
-  function generateDivElements(arr: Array<string>) {
-    // 使用 map 方法遍历数组，并为每个数组元素创建一个 <div> 元素
-    const divElements = arr.map((_, index) => (
-      <div
-        key={index}
-        className={"text-[#1DB48D] text-3 font-not-italic font-400 lh-6"}
-      >
-        # {arr[index]}
-      </div>
-    ));
+  // function generateDivElements(arr: Array<string>) {
+  //   // 使用 map 方法遍历数组，并为每个数组元素创建一个 <div> 元素
+  //   const divElements = arr.map((_, index) => (
+  //     <div
+  //       key={index}
+  //       className={"text-[#1DB48D] text-3 font-not-italic font-400 lh-6"}
+  //     >
+  //       # {arr[index]}
+  //     </div>
+  //   ));
+  //
+  //   return divElements;
+  // }
 
-    return divElements;
-  }
-
-  const router = useRouter();
-
+  const params = useSearchParams()
+  const chapter = parseInt(params.get("c"));
+  const columnId = params.get("id");
   // 点赞
   const [isHeartFilled, setIsHeartFilled] = useState(false);
 
@@ -51,12 +51,11 @@ const Page = () => {
 
   const [token] =   useLocalStorage("token", null);
 
-  const postData = api.post.getAllInUser.useQuery({
-    userId: token!,
-    limit: 1,
-    offset: 0,
-  });
-
+  const postData = api.post.getById.useQuery({
+    id: columnId,
+    chapter: chapter
+  }).data;
+  console.log(postData)
   const [date, setDate] = useState("");
   const [name, setName] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -77,36 +76,38 @@ const Page = () => {
   // })
 
   useEffect(() => {
-    if (postData.data && postData.data[0] && postData.data[0].name) {
-      const postdata = postData.data[0].createdAt;
-      setName(postData.data[0].name);
-      setDate(formatTime(postdata));
-    } else {
-      setDate("");
-      setName("");
-    }
+   if(postData){
+     if (postData.name) {
+       const pubTime = postData.createdAt;
+       setName(postData.name);
+       setDate(timeToString(pubTime));
+     } else {
+       setDate("");
+       setName("");
+     }
 
-    if (postData.data && postData.data[0] && postData.data[0].tag) {
-      setTags(postData.data[0].tag.split(","));
-    } else {
-      setTags([]);
-    }
+     if (postData.tag) {
+       setTags(postData.tag.split(","));
+     } else {
+       setTags([]);
+     }
 
-    if (postData.data && postData.data[0] && postData.data[0].content) {
-      setContent(postData.data[0].content);
-    } else {
-      setContent("");
-    }
+     if (postData.content) {
+       setContent(postData.content);
+     } else {
+       setContent("");
+     }
 
-    if (postData.data && postData.data[0] && postData.data[0].likeCount) {
-      setLikecount(postData.data[0].likeCount);
-    } else {
-      setLikecount(0);
-    }
-  }, [postData.data]);
+     if (postData.likeCount) {
+       setLikecount(postData.likeCount);
+     } else {
+       setLikecount(0);
+     }
+   }
+  }, [postData]);
 
   return (
-    <div className={"relative bg-#F5F7FB h-auto"}>
+    <div className={"relative bg-#F5F7FB min-h-screen pb-10"}>
       <div className={"ml-16px"}>
         {/*上方分享*/}
         <div className={"flex justify-end items-center pt-16px"}>
@@ -131,13 +132,14 @@ const Page = () => {
         <div>{name}</div>
         <div className="flex mt-10px items-center space-y-0 mb-22px">
           {/*左边头像*/}
-          <div className={""}>
+          <div>
             <div>
               <Image
-                src={"/images/special-column/Ellipse 2.png"}
-                alt={"心智与阅读"}
+                src={postData.user.avatar}
+                alt={"avatar"}
                 width={33}
                 height={33}
+                className={"rounded-full"}
               />
             </div>
           </div>
@@ -149,7 +151,7 @@ const Page = () => {
                   "text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"
                 }
               >
-                芋圆
+                {postData.user.name}
               </div>
               <div>
                 <Image

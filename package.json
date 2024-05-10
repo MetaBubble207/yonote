@@ -7,7 +7,7 @@
     "build": "next build",
     "db:push": "drizzle-kit push:pg",
     "db:studio": "drizzle-kit studio",
-    "dev": "next dev -h",
+    "dev": "next dev",
     "lint": "next lint",
     "start": "next start"
   },
@@ -55,5 +55,5 @@
   "ct3aMetadata": {
     "initVersion": "7.30.0"
   },
-  "packageManager": "pnpm@9.0.6"
+  "packageManager": "pnpm@9.0.5"
 }

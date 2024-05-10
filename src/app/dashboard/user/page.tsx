@@ -30,7 +30,7 @@ const Page = () => {
   }
 
   const logout = () => {
-    // localStorage.removeItem("token");
+    localStorage.removeItem("token");
     setToken(null);
   };
   return (
