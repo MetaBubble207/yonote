@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const SubscribeColumn = () => {
     return (
-        <Link href={'/'}>
+        <Link href={'../special-column-content'}>
             <div className="h-29.25 mt-4 flex">
                 <div className="relative h-18">
                     <Image src={"/images/subscribe/user1.png"} alt="user_image" width={24} height={24} className="w-11.25 h-11.25 mt-4"></Image>

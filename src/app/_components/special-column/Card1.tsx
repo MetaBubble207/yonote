@@ -1,12 +1,19 @@
 "use client"
 import Image from "next/image";
 import {useRouter} from "next/navigation";
+import React, {useState} from "react";
 export const Card1 = () => {
     const router = useRouter();
+    // 点赞
+    const [isHeartFilled, setIsHeartFilled] = useState(false);
+
+    const handleClick = () => {
+        setIsHeartFilled(!isHeartFilled);
+    };
     return(
-        <div className={"w-91.5%  mt-20px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-10px"} onClick={() => router.push('/special-column/content')}>
+        <div className={"w-91.5%  mt-20px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-10px"} >
             {/*上边*/}
-            <div className={"flex mt-25.5px items-center w-full"}>
+            <div className={"flex mt-25.5px items-center w-full"} onClick={() => router.push('/special-column/content')}>
                 {/*左边图片*/}
                 <div className={"border-rd-2 w-30%"}>
                     <Image src={"/images/special-column/Cardpc.png"} alt={"小专栏图片"} width={85} height={74.5} className={"rounded-6px"} style={{width: "100%"}}/>
@@ -47,14 +54,18 @@ export const Card1 = () => {
                 {/*右方点赞数量*/}
                 <div className="ml-auto flex items-center space-y-0">
                     <div>
-                        <Image src={"/images/special-column/heart 2.png"} alt={"爱心"} width={18} height={18} objectFit="none"/>
+                        <Image
+                            src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 2.png"}
+                            onClick={handleClick}
+                            alt={"爱心"} width={18} height={18} objectFit="none"/>
                     </div>
                     <div className={"text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-4px"}>1.2k</div>
                 </div>
                 {/*右方浏览数量*/}
                 <div className="ml-24px flex items-center space-y-0">
                     <div>
-                        <Image src={"/images/special-column/Preview-open (预览-打开).png"} alt={"爱心"} width={18} height={18} objectFit="none"/>
+                        <Image src={"/images/special-column/Preview-open (预览-打开).png"} alt={"爱心"} width={18}
+                               height={18} objectFit="none"/>
                     </div>
                     <div className={"text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-4px"}>1.2k</div>
                 </div>

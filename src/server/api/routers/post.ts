@@ -14,14 +14,20 @@ export const postRouter = createTRPCRouter({
     }),
 
   create: publicProcedure
-    .input(z.object({ name: z.string().min(1) }))
+    .input(z.object({ name: z.string().min(1),   
+      content: z.string(),
+      tag: z.string(),
+      status: z.boolean(),}))
     .mutation( async ({ ctx, input }) => {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
       ctx.db.select().from(post).where(eq(post.name, input.name))
       return await ctx.db.insert(post).values({
         name: input.name,
-      }).returning({name: post.name});
+        content: input.content,
+        tag: input.tag,
+        status: true,
+      }).returning({name: post.name,content:post.content,tag:post.tag,status:post.status});
     }),
 
 
@@ -34,4 +40,10 @@ export const postRouter = createTRPCRouter({
       orderBy: (post, { desc }) => [desc(post.createdAt)],
     });
   }),
+
+  getAll: publicProcedure
+  .query(({ ctx})=>{
+  return ctx.db.select().from(post)
+  }),
+
 });
