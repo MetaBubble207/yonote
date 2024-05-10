@@ -4,11 +4,19 @@ import { Switch,ConfigProvider } from 'antd';
 import {api} from "@/trpc/react";
 
 const Page=()=>{
-    const [name, setName] = useState('');
+    let data;
+    if(typeof window !== 'undefined'){
+        const token = window.localStorage.getItem('token');
+        if(token){
+            data = api.column.getColumn.useQuery({userId:token}).data
+            console.log(data)
+        }
+    }
+    const [name, setName] = useState(data?.name);
     const [mode, setMode] = useState('');
     const [format, setFormat] = useState('');
-    const [price, setPrice] = useState('');
-    const [intro, setIntro] = useState('');
+    const [price, setPrice] = useState(data?.price);
+    const [intro, setIntro] = useState(data?.introduce);
     const [description, setDescription] = useState('');
     const [checkColor,setCheckColor] = useState("#1DB48D")
     const onChange = (checked: boolean) => {
@@ -18,41 +26,24 @@ const Page=()=>{
             setCheckColor("#fff")
         }
     };
+
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
         setName(inputValue);
     };
 
-    const remainingCharacters =  name.length;
-
-    // 定义了一个修改方法的预设
-    const update = api.column.create.useMutation({
-        onSuccess: (r)=>{
-            console.log(r)
-        },
-        onError: (e)=>{
-
+    const remainingCharacters =  name?.length;
+    const updateApi = api.column.update.useMutation({
+        onSuccess: (data) => {
+            console.log(data)
         }
     })
-    // 定义了触发修改方法的方法
-    const handleClick = () => {
-        update.mutate({
-            name:name,
-            id: 2,
-        })
-    }
 
-    // 查询
-    const columnData = api.column.getAll.useQuery({
-        id: 1
-    });
-    const hanlder = () => {
-
+    const handleNameChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        setName( e.target.value)
     }
-    console.log("columnData ==>>>>>>>>>>>>>>>>>",columnData)
     return(
         <div className={'w-full h-full mt-16px ml-18px'}>
-            <button onClick={handleClick}>确定</button>
             <div className={'w-97% shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] pb-35px'}>
 
                 <div className={'w-100% h-100% pt-7 ml-10'}>
@@ -69,10 +60,10 @@ const Page=()=>{
                                     <input
                                         className="w-117 h-8 shrink-0 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] text-lg pl-3"
                                         placeholder="最多输入十五个字"
-                                        style={{ color: '#999', fontSize: '14px' }}
+                                        style={{ fontSize: '14px' }}
                                         type="text"
-                                        value={name}
-                                        onChange={handleChange}
+                                        value={name ?? data?.name ?? ""}
+                                        onChange={(e) => handleNameChange(e)}
                                         maxLength={15}
                                         required
                                     />
@@ -101,24 +92,25 @@ const Page=()=>{
                         {/*价格*/}
                         <tr>
                             <td style={{ textAlign: 'right', paddingTop: '24px' }}>
-                                <label className={'text-[rgba(0,0,0,0.85)] text-3.5 font-not-italic font-400 lh-5.5'}>价格：</label>
+                                <label className={' text-3.5 font-not-italic font-400 lh-5.5'}>价格：</label>
                             </td>
                             <td style={{ textAlign: 'left', paddingTop: '24px' }}>
                                 <input
                                     className={'w-22 h-8 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] pl-3'}
                                     placeholder="请输入"
-                                    style={{ color: '#999', fontSize: '14px' }}
+                                    style={{    fontSize: '14px' }}
                                     type="text"
-                                    value={price}
+                                    value={price ?? data?.price ?? 0}
                                     onChange={(e) => {
                                         const inputValue = e.target.value.replace(/\D/g, ''); // 只保留数字
-                                        setPrice(inputValue);
+                                        // setPrice(inputValue);
+                                        setPrice(parseFloat(inputValue));
                                     }}
                                     maxLength={15}
                                     pattern="[0-9]*" // 只允许输入数字
                                     required
                                 />
-                                <span className={'text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5 ml-2'}>元</span>
+                                <span className={' text-3.5 font-not-italic font-400 lh-5.5 ml-2'}>元</span>
                             </td>
                         </tr>
 
@@ -130,8 +122,8 @@ const Page=()=>{
                             <td style={{ textAlign: 'left' ,paddingTop: '24px'}}>
                                 <textarea className={'w-117 h-22 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] pl-3'}
                                           placeholder="请输入简介"
-                                          style={{ resize: 'none',color: '#999',fontSize:'14px'}}
-                                    value={intro} onChange={(e) => setIntro(e.target.value)} />
+                                          style={{ resize: 'none',fontSize:'14px'}}
+                                    value={intro ?? data?.introduce ?? ""} onChange={(e) => setIntro(e.target.value)} />
                             </td>
                         </tr>
                         {/*专栏介绍*/}
@@ -141,8 +133,8 @@ const Page=()=>{
                             </td>
                             <td style={{display:'flex',justifyContent: 'space-between' ,textAlign: 'left' ,paddingTop: '24px'}}>
                                 <span className={'text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5'} style={{ textAlign: 'left' }}>编辑专栏介绍</span>
-                                <span className={'text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5'} style={{ textAlign: 'right' }}
-                                      onClick={() => { setName(''); setMode(''); setFormat(''); setPrice(''); setIntro(''); setDescription(''); }}>清除</span>
+                                <span className={' text-3.5 font-not-italic font-400 lh-5.5'} style={{ textAlign: 'right' }}
+                                      onClick={() => { setName(''); setMode(''); setFormat(''); setPrice(0); setIntro(''); setDescription(''); }}>清除</span>
                             </td>
                         </tr>
                         {/*禁止复制*/}
@@ -168,6 +160,20 @@ const Page=()=>{
                         </tr>
                         </tbody>
                     </table>
+                    <button className={"ml-20 mt-5 w-65px h-32px bg-#DAF9F1 text-#1DB48D"} onClick={()=> {
+                        // updateApi.mutate({
+                        //     id: data!.id!,
+                        //     name:data!.name ?? "",
+                        //     price:data!.price ?? 0,
+                        //     introduce:data!.introduce ?? "",
+                        // })
+                        updateApi.mutate({
+                            id: data!.id!,
+                            name:name ?? data!.name ?? "",
+                            price:price ?? data!.price ?? 0,
+                            introduce:intro ?? data!.introduce ?? "",
+                        })
+                    } }>提交</button>
                 </div>
 
             </div>

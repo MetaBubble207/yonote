@@ -1,26 +1,50 @@
-import { z } from "zod";
+import {z} from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {column} from "@/server/db/schema";
 import {eq} from "drizzle-orm";
 
 export const columnRouter = createTRPCRouter({
 
-  create: publicProcedure.input(z.object({
-    id:z.number(),
-    name: z.string()
-  })).mutation(({ctx,input}) => {
+    create: publicProcedure.input(z.object({
+        id:z.string(),
+        name: z.string(),
+        price:z.number(),
+        userId:z.string()
+    })).mutation(({ctx,input}) => {
 
-   return  ctx.db.insert(column).values({
-      id: input.id,
-      name: input.name
-    }).returning({id:column.id,name:column.name})
-  }),
+        return  ctx.db.insert(column).values({
+            id: input.id,
+            name: input.name,
+            price: input.price,
+            userId: input.userId,
+        }).returning({id:column.id,name:column.name,price:column.price})
+    }),
 
-    getAll: publicProcedure
-        .input(z.object({id:z.number()}))
-        .query(({ctx,input})=>{
-            console.log(input.id)
-        return ctx.db.select().from(column).where(eq(column.id,input.id))
-    })
+    // getAll: publicProcedure
+    //     .input(z.object({id:z.number()}))
+    //     .query(({ctx,input})=>{
+    //         console.log(input.id)
+    //     return ctx.db.select().from(column).where(eq(column.id,input.id))
+    // }),
+    getColumnId: publicProcedure
+        .input(z.object({userId:z.string()}))
+        .query(async({ ctx,input }) => {
+                const data = await ctx.db.query.column.findFirst({where:eq(column.userId,input.userId)})
+            return data?.id;
+        }),
+    getColumn: publicProcedure
+        .input(z.object({userId:z.string()}))
+        .query(async({ ctx,input }) => {
+            return ctx.db.query.column.findFirst({where: eq(column.userId, input.userId)});
+        }),
+    update: publicProcedure
+        .input(z.object({id:z.string(),name:z.string(),price:z.number(),introduce:z.string()}))
+        .mutation( async ({ ctx,input }) => {
+            return ctx.db.update(column).set({
+                name: input.name,
+                price:input.price,
+                introduce:input.introduce,
+            })
+        })
 });

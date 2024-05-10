@@ -15,7 +15,6 @@ import {
     text,
     decimal,
 } from "drizzle-orm/pg-core";
-import {black} from "kolorist";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -38,23 +37,26 @@ export const subscription_manager = createTable(
     }
 );
 export const post = createTable(
-  "post",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
+    "post",
+    {
+        id: serial("id").primaryKey(),
+        name: varchar("name", { length: 256 }),
         createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at"),
-    readNumber: integer("readNumber"),
-    likeCount: integer("likeCount"),
-    content: varchar("content"),
-    tag: varchar("tag"),
-    status: boolean("status"),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
+        readNumber: integer("readNumber"),
+        likeCount: integer("likeCount"),
+        content: varchar("content"),
+        tag: varchar("tag"),
+        columnId: varchar("column_id"),
+        isTop: boolean("is_top").default(false),
+        isFree: boolean("is_free").default(false),
+        status: boolean("status"),
+    },
+    (example) => ({
+        nameIndex: index("name_idx").on(example.name),
+    })
 );
 
 export const user = createTable(
@@ -79,24 +81,24 @@ export const user = createTable(
 
 
 export const column = createTable(
-  "column",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
+    "column",
+    {
+        id: varchar("id").primaryKey(),
+        name: varchar("name", { length: 256 }),
         createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at"),
-    distributorship:boolean("distributorship").notNull().default(false),
-    intriduce:varchar("intriduce"),
-    type:varchar("type"),
-    price:real("price"),
-    logo:text("logo"),
-    description:varchar("description"),
-    payment:varchar("payment"),
-  }
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
+        distributorship:boolean("distributorship").notNull().default(false),
+        introduce:varchar("introduce"),
+        type:varchar("type"),
+        price:real("price"),
+        logo:text("logo"),
+        description:varchar("description"),
+        payment:varchar("payment"),
+        userId:varchar("user_id"),
+    }
 );
-
 export const distributorshipDetail = createTable(
   "distributorshipDetail",
   {

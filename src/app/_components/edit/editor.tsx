@@ -32,6 +32,7 @@ function MyEditor() {
       content: "这是一个测试内容",
       tag: "test1",
       status: false,
+      columnId: columnId ?? 1
     })
   }
 
@@ -62,7 +63,12 @@ function MyEditor() {
     })
   }
 
-
+  const token = localStorage.getItem('token');
+  let columnId:string;
+  if(token){
+    columnId = api.column.getColumnId.useQuery({userId:token}).data!
+    console.log(columnId)
+  }
 
 
   const [editor, setEditor] = useState<IDomEditor | null>(null);
@@ -92,6 +98,7 @@ function MyEditor() {
       content: html, // 使用 HTML 内容作为草稿的内容
       tag: tags.join(','), // 将标签列表转换为逗号分隔的字符串
       status: false,
+      columnId: columnId ?? "1"
     });
     router.push("/writer/content-management")
   };
