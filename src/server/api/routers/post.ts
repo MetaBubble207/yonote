@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import {post, user} from "@/server/db/schema";
+import {column, post, user} from "@/server/db/schema";
 import {eq} from "drizzle-orm";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 
@@ -59,6 +59,16 @@ export const postRouter = createTRPCRouter({
                 limit: input.limit,
                 offset: input.offset,
                 where: eq(post.columnId, input.columnId),
+            })
+        }),
+    getAllInUser: publicProcedure
+        .input(z.object({userId:z.string(),limit:z.number(),offset:z.number()}))
+        .query(async ({ ctx,input})=>{
+            const data = await ctx.db.query.column.findFirst({where:eq(column.userId,input.userId)})
+            return ctx.db.query.post.findMany({
+                limit: input.limit,
+                offset: input.offset,
+                where: eq(post.columnId, data!.id),
             })
         }),
 

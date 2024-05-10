@@ -33,7 +33,7 @@ const Page = () => {
   }
 
   const router = useRouter();
-  
+
   // 点赞
   const [isHeartFilled, setIsHeartFilled] = useState(false);
 
@@ -46,9 +46,12 @@ const Page = () => {
     }
   };
 
+  const token = localStorage.getItem("token");
 
-  const postData = api.post.getAll.useQuery({
-    id: 17,
+  const postData = api.post.getAllInUser.useQuery({
+    userId: token!,
+    limit: 1,
+    offset: 0,
   });
 
   const [date, setDate] = useState("");
@@ -56,7 +59,7 @@ const Page = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [content, setContent] = useState("");
   const [likecount, setLikecount] = useState(0);
-  
+
   const update = api.post.create.useMutation({
     onSuccess: (r)=>{
         console.log('123' + r)
