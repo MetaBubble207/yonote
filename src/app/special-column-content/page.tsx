@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
-import { any, string } from "zod";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   function formatTime(date: Date) {
@@ -17,6 +17,7 @@ const Page = () => {
     const minutesStr = minutes < 10 ? "0" + minutes : minutes;
     return `${monthStr}.${dayStr} ${hoursStr}:${minutesStr}`;
   }
+
   function generateDivElements(arr: Array<string>) {
     // 使用 map 方法遍历数组，并为每个数组元素创建一个 <div> 元素
     const divElements = arr.map((_, index) => (
@@ -30,6 +31,14 @@ const Page = () => {
 
     return divElements;
   }
+
+  const router = useRouter();
+  // 点赞
+  const [isHeartFilled, setIsHeartFilled] = useState(false);
+
+  const handleClick = () => {
+    setIsHeartFilled(!isHeartFilled);
+  };
 
   const postData = api.post.getAll.useQuery({
     id: 17,
@@ -54,7 +63,7 @@ const Page = () => {
     if (postData.data && postData.data[0] && postData.data[0].tag) {
       setTags(postData.data[0].tag.split(","));
     } else {
-      setTags([]); // 这里也应该设置为空数组，而不是单独的一个空字符串
+      setTags([]);
     }
 
     if (postData.data && postData.data[0] && postData.data[0].content) {
@@ -282,5 +291,4 @@ const Page = () => {
     </div>
   );
 };
-
 export default Page;

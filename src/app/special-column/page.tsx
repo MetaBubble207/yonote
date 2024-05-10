@@ -33,9 +33,7 @@ const Page = () => {
                         <Image src={"/images/special-column/Group 225.png"} alt={"心智与阅读"} width={12} height={12} className={"lh-0"} style={{ objectFit: "none", marginLeft:"5px"}}/>
                     </div>
                 </div>
-
             </div>
-
             <div>
 
                 {/*下方白色内容*/}
@@ -57,10 +55,6 @@ const Page = () => {
                         订阅
                     </div>
                 </div>
-
-
-
-
             </div>
 
         </div>
