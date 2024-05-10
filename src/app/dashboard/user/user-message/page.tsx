@@ -1,9 +1,10 @@
 "use client"
 import Image from "next/image";
 import {api} from "@/trpc/react";
+import useLocalStorage from "@/tools/useStore";
 const UserMessage = () => {
     let userInfo;
-    const token = localStorage.getItem("token");
+    const [token] =   useLocalStorage("token", null);
     if (token) {
         userInfo = api.users.getOne.useQuery({id:token}).data
     }

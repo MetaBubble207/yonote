@@ -14,11 +14,11 @@ export const ContentForm=()=>{
     //     { title: '标题2', isTop: false, isFree: true, label: '免费', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
     //     { title: '标题3', isTop: false, isFree: true, label: '全部', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
     // ];
-    let contentData;
+    let contentData: any;
     const [data,setData] = useState([])
     // const [data,setData] = useState<ArticleProp[]>(options)
     if(typeof window !== 'undefined'){
-        const token = localStorage.getItem('token');
+        const [token] = localStorage.getItem('token');
         if(token){
             // userId = api.column.getColumnId.useQuery({userId:token}).data
             const columnId = api.column.getColumnId.useQuery({
@@ -135,7 +135,7 @@ export const ContentForm=()=>{
                 </tr>
                 </thead>
                 <tbody>
-                {contentData?.map((option, index) => (
+                {contentData?.map((option:any, index:any) => (
                     <tr key={index} className={'h-52px'}>
                         <td className="px-4 pl-63px pr-2 text-left text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{option?.name}</td>
                         <td className={`px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5 ${option.isTop ? 'text-[#1DB48D]' : ''} ${option.isFree ? 'text-[#1DB48D]' : ''}`}>{option.isTop ? '置顶' : ''} {option.isFree ? '免费' : ''}</td>

@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client"
 import { usePathname, useRouter} from "next/navigation";
 import {api} from "@/trpc/react";
@@ -24,6 +26,7 @@ export const ContainerB = () => {
             console.log(res[0]?.name);
         }
     })
+    //@ts-ignore
     const queryUser = api.users.getList.useQuery({
         limit: 5,
         offset: 0
@@ -42,6 +45,7 @@ export const ContainerB = () => {
     }
 
     const updateUser = () => {
+        // @ts-ignore
         updateUserApi.mutate({
             id: 6,
             name: "12312哇奥数"

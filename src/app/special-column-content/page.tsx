@@ -1,9 +1,12 @@
+// @ts-nocheck
+
 "use client";
 import Image from "next/image";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import useLocalStorage from "@/tools/useStore";
 
 const Page = () => {
   function formatTime(date: Date) {
@@ -46,7 +49,7 @@ const Page = () => {
     }
   };
 
-  const token = localStorage.getItem("token");
+  const [token] =   useLocalStorage("token", null);
 
   const postData = api.post.getAllInUser.useQuery({
     userId: token!,

@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import { Switch,ConfigProvider } from 'antd';
 import {api} from "@/trpc/react";
+import useLocalStorage from '@/tools/useStore';
 
 const Page=()=>{
     let data;
     if(typeof window !== 'undefined'){
-        const token = window.localStorage.getItem('token');
+        const [token] =   useLocalStorage("token", null);
         if(token){
             data = api.column.getColumn.useQuery({userId:token}).data
             console.log(data)
