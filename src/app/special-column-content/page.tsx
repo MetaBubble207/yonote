@@ -33,12 +33,19 @@ const Page = () => {
   }
 
   const router = useRouter();
+  
   // 点赞
   const [isHeartFilled, setIsHeartFilled] = useState(false);
 
   const handleClick = () => {
     setIsHeartFilled(!isHeartFilled);
+    if (isHeartFilled) {
+      setLikecount(likecount - 1);
+    }else{
+      setLikecount(likecount + 1);
+    }
   };
+
 
   const postData = api.post.getAll.useQuery({
     id: 17,
@@ -49,6 +56,19 @@ const Page = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [content, setContent] = useState("");
   const [likecount, setLikecount] = useState(0);
+  
+  const update = api.post.create.useMutation({
+    onSuccess: (r)=>{
+        console.log('123' + r)
+    },
+    onError: (e)=>{
+
+    }
+  })
+  // update.mutate({
+  //   name:name,
+  //   id: 16,
+  // })
 
   useEffect(() => {
     if (postData.data && postData.data[0] && postData.data[0].name) {
@@ -80,7 +100,7 @@ const Page = () => {
   }, [postData.data]);
 
   return (
-    <div className={"relative bg-#F5F7FB h-screen"}>
+    <div className={"relative bg-#F5F7FB h-auto"}>
       <div className={"ml-16px"}>
         {/*上方分享*/}
         <div className={"flex justify-end items-center pt-16px"}>
@@ -179,9 +199,9 @@ const Page = () => {
               </span>
             );
           })}
-          <div className="flex">
+          <div className="flex" onClick={handleClick}>
             <Image
-              src={"/images/special-column/heart 1.png"}
+              src={isHeartFilled?"/images/special-column/heart red.png":"/images/special-column/heart 1.png"}
               alt={"爱心"}
               width={18}
               height={18}
