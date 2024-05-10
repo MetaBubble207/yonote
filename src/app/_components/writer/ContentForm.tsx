@@ -5,7 +5,6 @@ import {index} from "drizzle-orm/pg-core";
 import {api} from "@/trpc/react";
 import {timeToString} from "@/tools/timeToString";
 
-
 export const ContentForm=()=>{
 
     // const options = [
@@ -14,7 +13,7 @@ export const ContentForm=()=>{
     //     { title: '标题2', isTop: false, isFree: true, label: '免费', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
     //     { title: '标题3', isTop: false, isFree: true, label: '全部', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
     // ];
-    let contentData: any;
+    let contentData:any;
     const [data,setData] = useState([])
     // const [data,setData] = useState<ArticleProp[]>(options)
     if(typeof window !== 'undefined'){
@@ -135,7 +134,7 @@ export const ContentForm=()=>{
                 </tr>
                 </thead>
                 <tbody>
-                {contentData?.map((option:any, index:any) => (
+                {contentData?.map((option:any, index:number) => (
                     <tr key={index} className={'h-52px'}>
                         <td className="px-4 pl-63px pr-2 text-left text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{option?.name}</td>
                         <td className={`px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5 ${option.isTop ? 'text-[#1DB48D]' : ''} ${option.isFree ? 'text-[#1DB48D]' : ''}`}>{option.isTop ? '置顶' : ''} {option.isFree ? '免费' : ''}</td>
