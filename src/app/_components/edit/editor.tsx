@@ -16,13 +16,13 @@ function MyEditor() {
     }
   });
   const router = useRouter();
-  const draftQuery = api.draft.getAll.useQuery();
-  const [example, setExample] = useState(draftQuery);
+  // const draftQuery = api.draft.getAll.useQuery();
+  // const [example, setExample] = useState(draftQuery);
   const b = api.draft.create.useMutation({
     onSuccess: (r) => {
       console.log(r);
       console.log("保存草稿成功!");
-      setExample(api.draft.getAll.useQuery());
+      // setExample(api.draft.getAll.useQuery());
     },
   });
 
@@ -44,13 +44,13 @@ function MyEditor() {
       console.log(r)
     }
   });
-  const postQuery = api.post.getAll.useQuery();
-  const [example2, setExample2] = useState(postQuery);
+  // const postQuery = api.post.getAll.useQuery();
+  // const [example2, setExample2] = useState(postQuery);
   const createpost = api.post.create.useMutation({
     onSuccess: (r) => {
       console.log(r);
       console.log("发布成功!");
-      setExample(api.post.getAll.useQuery());
+      // setExample(api.post.getAll.useQuery());
     },
   });
 
