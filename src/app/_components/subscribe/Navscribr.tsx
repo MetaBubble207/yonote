@@ -1,13 +1,15 @@
 "use client";
-'use strict';
 import SubscribeColumn from './SubscribeColumn';
 import SubscribeRenew from './SubscribeRenew';
 import SubscribeManage from './SubscribeManage';
 import Image from 'next/image';
-import React, { useState } from "react"
+import React, {Suspense, useState} from "react"
+import {api} from "@/trpc/react";
 
 
 const Page = () => {
+    const columns = api.column.getAll.useQuery().data;
+
     // 按钮选中状态
     const [selectedButton, setSelectedButton] = useState<number | null>(1); // 追踪选中的按钮
     const handleButtonClick = (button: number) => {
@@ -23,14 +25,16 @@ const Page = () => {
     const Page1 = () => {
         return (
             <div>
-                <SubscribeRenew />
-                <SubscribeRenew />
-            </div>)
+                {columns && columns.length > 0 && columns.map((column: any) => (
+                    <SubscribeRenew key={column.id} column={column} />
+                ))}
+            </div>
+        );
+
     };
     const Page2 = () => {
         return (
             <div>
-                <SubscribeColumn />
                 <SubscribeColumn />
             </div>
 
@@ -39,8 +43,6 @@ const Page = () => {
     const Page3 = () => {
         return (
             <div>
-                <SubscribeColumn />
-                <SubscribeColumn />
                 <SubscribeColumn />
             </div>
         );
@@ -82,7 +84,10 @@ const Page = () => {
 
                 <SubscribeManage></SubscribeManage>
             </div>
-            {renderContent()}
+            <Suspense>
+                {renderContent()}
+
+            </Suspense>
         </div>
     );
 };

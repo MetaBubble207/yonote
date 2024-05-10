@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column} from "@/server/db/schema";
+import {column, user} from "@/server/db/schema";
 import {eq} from "drizzle-orm";
 
 export const columnRouter = createTRPCRouter({
@@ -46,5 +46,16 @@ export const columnRouter = createTRPCRouter({
                 price:input.price,
                 introduce:input.introduce,
             })
+        }),
+    getAll: publicProcedure
+        .query(async ({ ctx }) => {
+            const columns = await ctx.db.select().from(column);
+            const promises = columns.map(async item => {
+                const u = await ctx.db.query.user.findFirst({ where: eq(user.id, item.userId)});
+                return { ...item, user: u };
+            });
+            const res = await Promise.all(promises);
+            console.log(res)
+            return res;
         })
 });

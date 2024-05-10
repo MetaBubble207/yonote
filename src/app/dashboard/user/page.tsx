@@ -36,7 +36,7 @@ const Page = () => {
   return (
     <Suspense>
       {/* 背景颜色*/}
-      <div className="px-4 bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3 w-screen h-screen">
+      <div className="pb-15 px-4 bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3 w-screen min-h-screen">
         {/* 顶部 */}
         <div className="pt-9 flex flex-row items-center">
           {token ? (
@@ -319,10 +319,9 @@ const Page = () => {
             </ul>
           </div>
         </div>
-
-        <div className="bottom-4 justify-center w-full fixed">
-          <Navbar />
-        </div>
+      </div>
+      <div className="bottom-4 justify-center w-full fixed">
+        <Navbar />
       </div>
     </Suspense>
   );

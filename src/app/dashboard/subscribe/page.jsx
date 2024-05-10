@@ -5,8 +5,9 @@ import Page from "../../_components/subscribe/Navscribr";
 
 
 const Subscribe = () => {
+
     return (
-        <div className="min-h-screen relative pt-8 pb-10 bg-#F5F7FB">
+        <div className="min-h-screen relative pt-8 pb-15 bg-#F5F7FB">
             <div className="w-85.75 m-auto mb-2">
                 <div className="border-rd-13 h-8.5 bg-[#FFF] flex items-center">
                     <Image src={"/images/subscribe/search.png"} alt="search" width={18} height={18} className="inline  ml-5.25 w-4.5 h-4.5"></Image>
