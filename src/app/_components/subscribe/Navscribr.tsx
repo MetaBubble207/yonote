@@ -69,7 +69,7 @@ const Page = () => {
 
     return (
         <div>
-            <div className='mt-6 mb-3 flex justify-between items-center'>
+            <div className='mt-6 mb-3 flex justify-between items-center '>
                 <div className='flex w-43 justify-between'>
                     <button onClick={() => setCurrentPage(1)} onClickCapture={() => handleButtonClick(1)} className={` ${selectedButton === 1 ? ' text-black' : 'text-[#B5B5B5]'}`}>更新
                         <div className={`w-2.75 h-1 m-auto border-rd-2 bg-[#45E1B8] ${selectedButton === 1 ? 'bg-#45E1B8' : 'bg-#f5f7fb'}`}></div>
@@ -79,7 +79,7 @@ const Page = () => {
                     <button onClick={() => setCurrentPage(3)} onClickCapture={() => handleButtonClick(3)} className={` ${selectedButton === 3 ? ' text-black' : 'text-[#B5B5B5]'}`}>小课
                         <div className={`w-2.75 h-1 m-auto border-rd-2 bg-[#45E1B8] ${selectedButton === 3 ? 'bg-#45E1B8' : 'bg-#f5f7fb'}`}></div></button>
                 </div>
-                
+
                 <SubscribeManage></SubscribeManage>
             </div>
             {renderContent()}

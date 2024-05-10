@@ -1,8 +1,8 @@
 "use client"
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import React, { useState, useEffect, ChangeEvent } from 'react'
+import React, { useState, useEffect, type ChangeEvent } from 'react'
 import { Editor, Toolbar } from '@wangeditor/editor-for-react'
-import { IDomEditor, IEditorConfig, IToolbarConfig, DomEditor } from '@wangeditor/editor'
+import { type IDomEditor, type IEditorConfig, type IToolbarConfig, DomEditor } from '@wangeditor/editor'
 import Preview from "@/app/_components/writer/preview";
 import TagInput from "../../_components/edit/tag";
 import { api } from "@/trpc/react";
@@ -93,7 +93,7 @@ function MyEditor() {
       tag: tags.join(','), // 将标签列表转换为逗号分隔的字符串
       status: false,
     });
-    router.push("/")
+    router.push("/writer/content-management")
   };
 
 
