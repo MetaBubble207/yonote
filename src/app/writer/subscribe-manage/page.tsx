@@ -5,6 +5,7 @@ import React, {useState} from 'react';
 import Image from "next/image";
 import Date from '../../_components/datarange/Date'
 import MyPagination from "@/app/_components/pagination/page";
+import {api} from "@/trpc/react";
 
 
 const Page = () => {
@@ -17,7 +18,28 @@ const Page = () => {
         start: string;
         end: string;
     }
-
+    // const a = api.post.deletePost.useMutation({
+    //     onSuccess: (r) => {
+    //         console.log(r)
+    //     }
+    // });
+    //
+    // const testQuery = api.test.getAll.useQuery();
+    // const [data,setData] = useState(testQuery)
+    // const testCreate = api.test.create.useMutation({
+    //     onSuccess: (r) => {
+    //         console.log(r)
+    //         setData(api.test.getAll.useQuery());
+    //     }
+    // })
+    //
+    // const clickButton = () => {
+    //     testCreate.mutate({
+    //         id: 1,
+    //         name: '123',
+    //         content: "213"
+    //     })
+    // }
     const [items,setItems]  = useState<Item[]>([
         {
             id: '1',
@@ -61,10 +83,24 @@ const Page = () => {
     }
 
 
+
+
     const [status,setStatus] = useState<string>('')
     const handleStatusChange = (e:React.ChangeEvent<HTMLSelectElement>) =>{
         console.log(`正在查询status: ${e.target.value}`)
         setStatus(e.target.value)
+    }
+
+    const handleSubmit = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
+        console.log(`正在查询userID为${userIdValue},订阅状态为${status}的信息`)
+    }
+
+
+    const handleDelete = (index:number)=>{
+        const newData = [...items]
+        newData.splice(index,1)
+        setItems(newData)
+        console.log('即将删除')
     }
 
 
@@ -88,6 +124,7 @@ const Page = () => {
                     <td>{item.end}</td>
                     <td>
                         <button
+                            onClick={(e)=>{handleDelete(index)}}
                             className='text-[#1DB48D] font-"Microsoft YaHei" text-3.5 font-not-italic font-400 lh-5.5'>结束订阅
                         </button>
                     </td>
@@ -138,6 +175,7 @@ const Page = () => {
                         {/*    className='ml-4 pl-3.045 w-56 h-8 shrink-0 border-rd-0.5 border-1 border-solid border-[#D9D9D9] bg-[#FFF] text-[rgba(0,0,0,0.65)] text-3.5 font-400'*/}
                         {/*    placeholder="订阅开始时间" />*/}
                         <button
+                            onClick={(e)=>handleSubmit(e)}
                             className='w-16.25 h-8 ml-7 shrink-0 bg-#1DB48D border-rd-2.5 text-[#FFF] text-3.5 font-400 lh-5.5'>查询
                         </button>
                     </div>

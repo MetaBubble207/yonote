@@ -2,7 +2,7 @@ import Image from "next/image";
 import {AnswerQuestion} from "@/app/_components/special-column/AnswerQuestion";
 
 const Page = () => {
-    return <div className={"relative bg-#F5F7FB h-screen"}>
+    return <div className={"relative bg-#F5F7FB min-h-screen"}>
         <div className={"ml-16px mb-50px"}>
             {/*上方分享*/}
             <div className={"flex justify-end items-center pt-16px"}>

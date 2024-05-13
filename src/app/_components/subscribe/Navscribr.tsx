@@ -1,13 +1,15 @@
 "use client";
-'use strict';
 import SubscribeColumn from './SubscribeColumn';
 import SubscribeRenew from './SubscribeRenew';
 import SubscribeManage from './SubscribeManage';
 import Image from 'next/image';
-import React, { useState } from "react"
+import React, {Suspense, useState} from "react"
+import {api} from "@/trpc/react";
 
 
 const Page = () => {
+    const columns = api.column.getAll.useQuery().data;
+
     // 按钮选中状态
     const [selectedButton, setSelectedButton] = useState<number | null>(1); // 追踪选中的按钮
     const handleButtonClick = (button: number) => {
@@ -23,15 +25,19 @@ const Page = () => {
     const Page1 = () => {
         return (
             <div>
-                <SubscribeRenew />
-                <SubscribeRenew />
-            </div>)
+                {columns && columns.length > 0 && columns.map((column: any) => (
+                    <SubscribeRenew key={column.id} column={column} />
+                ))}
+            </div>
+        );
+
     };
     const Page2 = () => {
         return (
             <div>
-                <SubscribeColumn />
-                <SubscribeColumn />
+                {columns && columns.length > 0 && columns.map((column: any) => (
+                    <SubscribeColumn key={column.id} column={column} />
+                ))}
             </div>
 
         )
@@ -39,16 +45,16 @@ const Page = () => {
     const Page3 = () => {
         return (
             <div>
-                <SubscribeColumn />
-                <SubscribeColumn />
-                <SubscribeColumn />
+                {columns && columns.length > 0 && columns.map((column: any) => (
+                    <SubscribeColumn key={column.id} column={column}/>
+                ))}
             </div>
         );
     }
     const renderContent = (): React.ReactNode => {
         switch (currentPage) {
             case 1:
-                return <Page1 />;
+                return <Page1/>;
             case 2:
                 return <Page2 />;
             case 3:
@@ -69,7 +75,7 @@ const Page = () => {
 
     return (
         <div>
-            <div className='mt-6 mb-3 flex justify-between items-center'>
+            <div className='mt-6 mb-3 flex justify-between items-center '>
                 <div className='flex w-43 justify-between'>
                     <button onClick={() => setCurrentPage(1)} onClickCapture={() => handleButtonClick(1)} className={` ${selectedButton === 1 ? ' text-black' : 'text-[#B5B5B5]'}`}>更新
                         <div className={`w-2.75 h-1 m-auto border-rd-2 bg-[#45E1B8] ${selectedButton === 1 ? 'bg-#45E1B8' : 'bg-#f5f7fb'}`}></div>
@@ -79,10 +85,13 @@ const Page = () => {
                     <button onClick={() => setCurrentPage(3)} onClickCapture={() => handleButtonClick(3)} className={` ${selectedButton === 3 ? ' text-black' : 'text-[#B5B5B5]'}`}>小课
                         <div className={`w-2.75 h-1 m-auto border-rd-2 bg-[#45E1B8] ${selectedButton === 3 ? 'bg-#45E1B8' : 'bg-#f5f7fb'}`}></div></button>
                 </div>
-                
+
                 <SubscribeManage></SubscribeManage>
             </div>
-            {renderContent()}
+            <Suspense>
+                {renderContent()}
+
+            </Suspense>
         </div>
     );
 };

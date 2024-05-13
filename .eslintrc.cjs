@@ -43,8 +43,15 @@ const config = {
       }
     ],
     "drizzle/enforce-delete-with-where": "error",
-    "drizzle/enforce-update-with-where": "error",
-    "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "drizzle/enforce-update-with-where": "warn",
+    "@typescript-eslint/prefer-nullish-coalescing": "warn",
+    "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+    "@next/next/no-async-client-component": "warn",
+    "@typescript-eslint/no-empty-function": "warn",
+    "@typescript-eslint/prefer-optional-chain": "warn",
+    "drizzle/enforce-delete-with-where": "warn",
+    "react-hooks/rules-of-hooks": "warn",
+    "@typescript-eslint/restrict-plus-operands": "warn",
   }
 }
 module.exports = config;

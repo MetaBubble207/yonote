@@ -3,16 +3,17 @@
 
 import { sql } from "drizzle-orm";
 import {
-  index,
-  pgTableCreator,
-  serial,
-  timestamp,
-  varchar,
-  boolean,
-  real,
-  integer,
-  smallint,
-  text,
+    index,
+    pgTableCreator,
+    serial,
+    timestamp,
+    varchar,
+    boolean,
+    real,
+    integer,
+    smallint,
+    text,
+    decimal,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -22,25 +23,40 @@ import {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `yonote_${name}`);
-
-export const post = createTable(
-  "post",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
+export const subscription_manager = createTable(
+    "subscription_manager",
+    {
+        id: serial("id").primaryKey(),
+        userId: varchar("user_id"),
+        columnId: varchar("column_id"),
+        status: boolean("status"),
         createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at"),
-    readNumber: integer("readNumber"),
-    likeCount: integer("likeCount"),
-    content: varchar("content"),
-    tag: varchar("tag"),
-    status: boolean("status"),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
+    }
+);
+export const post = createTable(
+    "post",
+    {
+        id: serial("id").primaryKey(),
+        name: varchar("name", { length: 256 }),
+        createdAt: timestamp("created_at")
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
+        readNumber: integer("readNumber"),
+        likeCount: integer("likeCount"),
+        content: varchar("content"),
+        tag: varchar("tag"),
+        columnId: varchar("column_id"),
+        isTop: boolean("is_top").default(false),
+        isFree: boolean("is_free").default(false),
+        status: boolean("status"),
+    },
+    (example) => ({
+        nameIndex: index("name_idx").on(example.name),
+    })
 );
 
 export const user = createTable(
@@ -53,7 +69,7 @@ export const user = createTable(
       .notNull(),
     updatedAt: timestamp("updated_at"),
     phone: integer("phone"),
-    idNumber: integer("id_number"),
+    idNumber: varchar("id_number"),
     password: integer("password"),
     avatar: text("avatar"),
     idType: varchar("id_type"),
@@ -65,24 +81,24 @@ export const user = createTable(
 
 
 export const column = createTable(
-  "column",
-  {
-    id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
+    "column",
+    {
+        id: varchar("id").primaryKey(),
+        name: varchar("name", { length: 256 }),
         createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at"),
-    distributorship:boolean("distributorship").notNull().default(false),
-    intriduce:varchar("intriduce"),
-    type:varchar("type"),
-    price:real("price"),
-    logo:text("logo"),
-    description:varchar("description"),
-    payment:varchar("payment"),
-  }
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
+        distributorship:boolean("distributorship").notNull().default(false),
+        introduce:varchar("introduce"),
+        type:varchar("type"),
+        price:real("price"),
+        logo:text("logo"),
+        description:varchar("description"),
+        payment:varchar("payment"),
+        userId:varchar("user_id"),
+    }
 );
-
 export const distributorshipDetail = createTable(
   "distributorshipDetail",
   {
