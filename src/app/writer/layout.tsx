@@ -2,14 +2,14 @@ import React from "react";
 import "./writer.css";
 import Compass from "@/app/_components/writer/compass";
 import LeftCompass from "@/app/_components/writer/left_compass";
-import Script from "next/script";
-import Head from "next/head";
 import useLocalStorage from "@/tools/useStore";
 
 const dialogLayout = ({ children }: { children: React.ReactNode }) => {
-  const [token] = useLocalStorage("token", null);
-  if(!token && typeof window !== 'undefined'){
-    window.location.href = "/writer/login"
+  if(typeof window !== 'undefined'){
+    const [token] = useLocalStorage("token", null);
+    if(!token){
+      window.location.href = "/writer/login"
+    }
   }
   return (
     <html>

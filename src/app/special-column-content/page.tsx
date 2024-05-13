@@ -5,7 +5,7 @@ import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
-import {timeToString} from "@/tools/timeToString";
+import {timeToDateString} from "@/tools/timeToString";
 
 const Page = () => {
   // function formatTime(date: Date) {
@@ -55,7 +55,6 @@ const Page = () => {
     id: columnId,
     chapter: chapter
   }).data;
-  console.log(postData)
   const [date, setDate] = useState("");
   const [name, setName] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -80,7 +79,7 @@ const Page = () => {
      if (postData.name) {
        const pubTime = postData.createdAt;
        setName(postData.name);
-       setDate(timeToString(pubTime));
+       setDate(timeToDateString(pubTime));
      } else {
        setDate("");
        setName("");
@@ -135,7 +134,7 @@ const Page = () => {
           <div>
             <div>
               <Image
-                src={postData.user.avatar}
+                src={postData?.user.avatar}
                 alt={"avatar"}
                 width={33}
                 height={33}
@@ -151,7 +150,7 @@ const Page = () => {
                   "text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"
                 }
               >
-                {postData.user.name}
+                {postData?.user.name}
               </div>
               <div>
                 <Image

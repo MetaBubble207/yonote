@@ -1,9 +1,9 @@
 "use client"
 import Image from "next/image";
 import React, {useState} from "react";
-import {index} from "drizzle-orm/pg-core";
 import {api} from "@/trpc/react";
-import {timeToString} from "@/tools/timeToString";
+import {timeToDateString} from "@/tools/timeToString";
+import useLocalStorage from "@/tools/useStore";
 
 export const ContentForm=()=>{
 
@@ -15,10 +15,13 @@ export const ContentForm=()=>{
     // ];
     let contentData:any;
     const [data,setData] = useState([])
+    const [token, setToken] = useLocalStorage("token",null);
     // const [data,setData] = useState<ArticleProp[]>(options)
     if(typeof window !== 'undefined'){
-        const [token] = localStorage.getItem('token');
+        // const token = JSON.parse(localStorage.getItem("token"));
+        console.log(token)
         if(token){
+            console.log("token===========",token)
             // userId = api.column.getColumnId.useQuery({userId:token}).data
             const columnId = api.column.getColumnId.useQuery({
                 userId:token
@@ -139,8 +142,8 @@ export const ContentForm=()=>{
                         <td className="px-4 pl-63px pr-2 text-left text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{option?.name}</td>
                         <td className={`px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5 ${option.isTop ? 'text-[#1DB48D]' : ''} ${option.isFree ? 'text-[#1DB48D]' : ''}`}>{option.isTop ? '置顶' : ''} {option.isFree ? '免费' : ''}</td>
                         <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{option.tag}</td>
-                        <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{timeToString(option.createdAt)}</td>
-                        <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{timeToString(option.updatedAt)}</td>
+                        <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{timeToDateString(option.createdAt)}</td>
+                        <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{timeToDateString(option.updatedAt)}</td>
                         <td className="px-4 py-2">
                             <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={handleEdit}>编辑</button>
                             <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={()=> handleToggleTop(index)}>{option.isTop ? '取消置顶' : '置顶'}</button>
