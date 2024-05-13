@@ -1,7 +1,6 @@
 
 import React from 'react';
 import MyPagination from '@/app/_components/pagination/page';
-import Image from "next/image";
 import Date from "@/app/_components/datarange/Date";
 import {ContentForm} from "@/app/_components/writer/ContentForm";
 import Link from 'next/link';

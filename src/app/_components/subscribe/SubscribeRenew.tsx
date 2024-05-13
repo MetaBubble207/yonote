@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {useState} from "react";
-import {timeToString} from "@/tools/timeToString";
+import {timeToDateString} from "@/tools/timeToString";
 
 const SubscribeRenew = (prop) => {
     // 点赞
@@ -33,7 +33,7 @@ const SubscribeRenew = (prop) => {
                                     <div className="text-[#999] text-2.75 lh-4">{column.user.name}</div>
                                     <Image src={"/images/subscribe/vip.svg"} alt="cover" width={24} height={24} className="w-3 h-3 ml-1.2"></Image>
                                 </div>
-                                <div className="text-[#B5B5B5] text-2.75 lh-4">{timeToString(column.createdAt)}发布</div>
+                                <div className="text-[#B5B5B5] text-2.75 lh-4">{timeToDateString(column.createdAt)}发布</div>
                             </div>
                             <div className="flex-1 flex items-center">
                                 <div>

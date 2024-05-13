@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
-import {timeToString} from "@/tools/timeToString";
+import {timeToDateString} from "@/tools/timeToString";
 
 const SubscribeColumn = (prop) => {
     console.log(prop)
@@ -17,7 +17,7 @@ const SubscribeColumn = (prop) => {
                     <div className="text-center text-[#999]  font-500 lh-9.6">{column.user.name}</div>
                 </div>
                 <div className="flex-1">
-                    <div className="text-2.75 lh-4 text-[#B5B5B5] ml-2.6">{timeToString(column.createdAt)}发布</div>
+                    <div className="text-2.75 lh-4 text-[#B5B5B5] ml-2.6">{timeToDateString(column.createdAt)}发布</div>
                     <div className="border-rd-[2px_16px_16px_16px] bg-[#FFF] h-24 mt-1 ml-2 flex items-center">
                         <div className="w-49.75 pl-2.5 ">
                             <div className="text-[#252525] text-3.75 font-500 lh-6">{column.name}</div>

@@ -1,6 +1,7 @@
 "use client"
+
 import React, { useState } from 'react';
-import { Switch,ConfigProvider } from 'antd';
+import { Switch } from 'antd';
 import {api} from "@/trpc/react";
 import useLocalStorage from '@/tools/useStore';
 

@@ -55,7 +55,6 @@ export const columnRouter = createTRPCRouter({
                 return { ...item, user: u };
             });
             const res = await Promise.all(promises);
-            console.log(res)
             return res;
         })
 });
