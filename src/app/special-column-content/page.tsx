@@ -55,11 +55,25 @@ const Page = () => {
     id: columnId,
     chapter: chapter
   }).data;
+  const prepost = api.post.getById.useQuery({
+    id: columnId,
+    chapter: chapter-1
+  }).data;
+  const nextpost = api.post.getById.useQuery({
+    id: columnId,
+    chapter: chapter+1
+  }).data;
+  const numData = api.post.getNumById.useQuery({
+    id: columnId,
+  }).data;
+  
   const [date, setDate] = useState("");
   const [name, setName] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [content, setContent] = useState("");
   const [likecount, setLikecount] = useState(0);
+  const [pretitle, setPretitle] = useState(null);
+  const [nexttitle, setNexttitle] = useState(null);
 
   const update = api.post.create.useMutation({
     onSuccess: (r) => {
@@ -75,6 +89,8 @@ const Page = () => {
   // })
 
 
+
+ 
   useEffect(() => {
     if (postData) {
       if (postData.name) {
@@ -103,7 +119,20 @@ const Page = () => {
       } else {
         setLikecount(0);
       }
+      
+      if (chapter > 1 && prepost) {
+        setPretitle(prepost.name);
+      }else {
+        setPretitle("已经是第一篇了");
+      }
+      if (chapter <= numData && nextpost) {
+        setNexttitle(nextpost.name);    
+      }else {
+        setNexttitle("已经是末篇了");
+      }
+      
     }
+    
   }, [postData]);
 
   return (
@@ -194,7 +223,7 @@ const Page = () => {
             dangerouslySetInnerHTML={{ __html: content }}
           ></div>
         </div>
-        <div className="flex flex-row justify-between pt-2">
+        <div className="flex flex-row justify-between pt-2 relative h-7">
           {tags.map((item, index) => {
             return (
               <span
@@ -207,7 +236,7 @@ const Page = () => {
               </span>
             );
           })}
-          <div className="flex" onClick={handleClick}>
+          <div className="flex absolute right-2" onClick={handleClick}>
             <Image
               src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 1.png"}
               alt={"爱心"}
@@ -311,12 +340,12 @@ const Page = () => {
                         "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6"
                       }
                     >
-                      回忆·后来的我们毕业了
+                      {pretitle}
                     </div>
                   </Link>
                 )}
-
-              <Link className="flex flex-col ml-auto " href={`../special-column-content?c=${chapter + 1}&id=${columnId}`}>
+              {numData <= chapter ? (
+                <div className="flex flex-col ml-auto">
                 <div className={"flex items-center justify-end"}>
                   <div
                     className={
@@ -339,9 +368,40 @@ const Page = () => {
                     "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
                   }
                 >
-                  回忆·后来的我们毕业了
+                  已经是末篇了
+                </div>
+              </div>
+              ):
+              (
+                <Link className="flex flex-col ml-auto " href={`../special-column-content?c=${chapter + 1}&id=${columnId}`}>
+                <div className={"flex items-center justify-end"}>
+                  <div
+                    className={
+                      "text-[#333] text-3 font-not-italic font-400 lh-6 "
+                    }
+                  >
+                    下一篇
+                  </div>
+                  <div>
+                    <Image
+                      src={"/images/special-column/Double-left (双右) .png"}
+                      alt={"心智与阅读"}
+                      width={14}
+                      height={14}
+                    />
+                  </div>
+                </div>
+                <div
+                  className={
+                    "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
+                  }
+                >
+                  {nexttitle}
                 </div>
               </Link>
+              )
+              }
+              
             </div>
           </div>
         </div>
