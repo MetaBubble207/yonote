@@ -13,6 +13,11 @@ const config = {
                 hostname: 'yo-note.oss-cn-shenzhen.aliyuncs.com',
                 port: '',
             },
+            {
+                protocol: 'https',
+                hostname: 'thirdwx.qlogo.cn',
+                port: '',
+            }
         ],
     },
 };
