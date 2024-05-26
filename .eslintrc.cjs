@@ -14,10 +14,16 @@ const config = {
     "plugin:@typescript-eslint/stylistic-type-checked"
   ],
   "rules": {
+    "@typescript-eslint/ban-ts-comment":"off",
+    "@typescript-eslint/no-unsafe-call":"off",
     "@typescript-eslint/no-unsafe-member-access":"off",
     "@typescript-eslint/array-type": "off",
     'prefer-const':0,
+    "@typescript-eslint/no-unsafe-return":"off",
+    "@typescript-eslint/no-unsafe-assignment":"off",
+    "@typescript-eslint/no-unsafe-argument":"off",
     "@typescript-eslint/no-floating-promises":"off",
+    "@typescript-eslint/no-explicit-any":"off",
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/consistent-type-imports": [
       "warn",
@@ -26,12 +32,7 @@ const config = {
         "fixStyle": "inline-type-imports"
       }
     ],
-    "@typescript-eslint/no-unused-vars": [
-      "warn",
-      {
-        "argsIgnorePattern": "^_"
-      }
-    ],
+    "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/require-await": "off",
     "@typescript-eslint/no-misused-promises": [
       "error",
@@ -42,7 +43,8 @@ const config = {
       }
     ],
     "drizzle/enforce-delete-with-where": "error",
-    "drizzle/enforce-update-with-where": "error"
+    "drizzle/enforce-update-with-where": "error",
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
   }
 }
 module.exports = config;

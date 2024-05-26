@@ -5,6 +5,7 @@ import React, {useState} from 'react';
 import Image from "next/image";
 import Date from '../../_components/datarange/Date'
 import MyPagination from "@/app/_components/pagination/page";
+import {api} from "@/trpc/react";
 
 
 const Page = () => {
@@ -17,7 +18,28 @@ const Page = () => {
         start: string;
         end: string;
     }
+    const a = api.post.deletePost.useMutation({
+        onSuccess: (r) => {
+            console.log(r)
+        }
+    });
 
+    const testQuery = api.test.getAll.useQuery();
+    const [data,setData] = useState(testQuery)
+    const testCreate = api.test.create.useMutation({
+        onSuccess: (r) => {
+            console.log(r)
+            setData(api.test.getAll.useQuery());
+        }
+    })
+
+    const clickButton = () => {
+        testCreate.mutate({
+            id: 1,
+            name: '123',
+            content: "213"
+        })
+    }
     const [items,setItems]  = useState<Item[]>([
         {
             id: '1',

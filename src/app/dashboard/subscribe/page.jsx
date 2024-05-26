@@ -6,7 +6,7 @@ import Page from "../../_components/subscribe/Navscribr";
 
 const Subscribe = () => {
     return (
-        <div className="min-h-screen relative">
+        <div className="min-h-screen relative pb-10">
             <div className="w-85.75 mt-8 m-auto mb-2">
                 <div className="border-rd-13 h-8.5 bg-[#FFF] flex items-center">
                     <Image src={"/images/subscribe/search.png"} alt="search" width={18} height={18} className="inline  ml-5.25 w-4.5 h-4.5"></Image>
@@ -19,7 +19,7 @@ const Subscribe = () => {
                         <div className="text-3 text-[#252525] font-500 pb-1.5 lh-6">「显示不够的话开播的第3年，P人沉...」</div>
                         <div className="text-2.5 text-[#666] lh-3 pl-1">显示多少然后开始了...</div>
                     </div>
-                    <Link href={"/"} className="w-18.25 h-7.75 text-3 bg-[#daf9f1] text-[#1db48d] lh-7.75 text-center border-rd-12 absolute right-2.5 bottom-2.5">继续阅读</Link>
+                    <Link href={"../special-column-content"} className="w-18.25 h-7.75 text-3 bg-[#daf9f1] text-[#1db48d] lh-7.75 text-center border-rd-12 absolute right-2.5 bottom-2.5">继续阅读</Link>
                 </div>
 
                 <div>
@@ -30,7 +30,7 @@ const Subscribe = () => {
             <div className="bottom-4 justify-center w-full fixed">
                 <Navbar />
             </div>
-            <div className="h-14"></div>
+            {/*<div className="h-14"></div>*/}
         </div >
     )
 }
