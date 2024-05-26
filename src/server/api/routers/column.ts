@@ -1,8 +1,8 @@
 import {z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column, user} from "@/server/db/schema";
-import {and, eq, like, or} from "drizzle-orm";
+import {column, order, user} from "@/server/db/schema";
+import {and, desc, eq, like, or} from "drizzle-orm";
 import {uniqueArray} from "@/tools/uniqueArray";
 
 export const columnRouter = createTRPCRouter({
@@ -92,5 +92,15 @@ export const columnRouter = createTRPCRouter({
 
         }),
 
+    getCreateAt: publicProcedure
+        .query(async({ctx})=>{
+            const columns = await ctx.db.select().from(column).orderBy(desc(column.createdAt))
+            const promises = columns.map(async item => {
+                const u = await ctx.db.query.user.findFirst({ where: eq(user.id, item.userId)});
+                return { ...item, user: u };
+            });
+            const res = await Promise.all(promises);
+            return res;
 
+        })
 });
