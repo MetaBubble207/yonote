@@ -9,8 +9,8 @@ const config = {
     images: {
         remotePatterns: [
             {
-                protocol: 'https',
-                hostname: 'thirdwx.qlogo.cn',
+                protocol: 'http',
+                hostname: 'yo-note.oss-cn-shenzhen.aliyuncs.com',
                 port: '',
             },
         ],

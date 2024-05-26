@@ -106,4 +106,15 @@ export const userRouter = createTRPCRouter({
             }
 
     }),
+
+    updateAvatar: publicProcedure.input(z.object({ id: z.string(), avatar: z.string().min(1)}))
+        .mutation(({ctx,input})=>{
+            return ctx.db.update(user)
+                .set({
+                    avatar: input.avatar,
+                    updatedAt: getCurrentTime()
+                    })
+                .where(eq(user.id,input.id))
+                .returning({avatar:user.avatar})
+        })
 });
