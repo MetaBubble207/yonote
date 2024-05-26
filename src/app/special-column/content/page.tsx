@@ -3,12 +3,12 @@ import {SpecialColumnContentBottom} from "@/app/_components/special-column/Speci
 
 const Page=()=>{
 
-    return <div className={"relative bg-#F5F7FB h-screen"}>
-        <div className={"ml-16px mb-50px"}>
+    return <div className={"relative bg-#F5F7FB min-h-screen px-4"}>
+        <div className={" mb-50px"}>
             {/*上方分享*/}
             <div className={"flex justify-end items-center pt-16px"}>
                 <div className={"inline-block w-14.25 h-6 text-[#252525] shrink-0 bg-#5CE5C1 text-2.5 font-500 lh-6 text-center rounded-10px"}>加速计划</div>
-                <div className={"inline-block ml-10px mr-16px"}>
+                <div className={"inline-block ml-10px"}>
                     <Image src={"/images/special-column/Share-black.png"} alt={"心智与阅读"} width={12} height={12}/>
                 </div>
             </div>

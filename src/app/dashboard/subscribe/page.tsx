@@ -5,9 +5,10 @@ import Page from "../../_components/subscribe/Navscribr";
 
 
 const Subscribe = () => {
+
     return (
-        <div className="min-h-screen relative pb-10">
-            <div className="w-85.75 mt-8 m-auto mb-2">
+        <div className="min-h-screen relative pt-8 pb-15 bg-#F5F7FB">
+            <div className="w-85.75 m-auto mb-2">
                 <div className="border-rd-13 h-8.5 bg-[#FFF] flex items-center">
                     <Image src={"/images/subscribe/search.png"} alt="search" width={18} height={18} className="inline  ml-5.25 w-4.5 h-4.5"></Image>
                     <input type="search" name="" id="" placeholder="仅支持搜索专栏和作者" className="text-3.25 text-[#999] lh-8.5 ml-1.6 justify-center outline-none w-full h-8.5 pl-1.6 border-rd-13 " ></input>

@@ -16,9 +16,9 @@ export const AnswerQuestion = () => {
     };
 
     return (
-        <div>
+        <div className={"pb-50px"}>
             {/*答题*/}
-            <div className="mx-16px pb-50px">
+            <div className="mx-16px">
                 <div className="shrink-0 text-[#252525] text-3.75 font-not-italic font-500 lh-6 mb-16px">
                     题目内容是这个的那我随便打一下，选择题，字数多了你就下去吧...
                 </div>
@@ -34,6 +34,7 @@ export const AnswerQuestion = () => {
                     </div>
                 ))}
             </div>
+            <div className={"mt-5 text-[#B5B5B5] text-center text-3.5 font-not-italic font-400 lh-[120%]"}>选择正确后继续阅读</div>
         </div>
     );
 };
