@@ -1,60 +1,62 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import {column, post, user} from "@/server/db/schema";
-import {eq} from "drizzle-orm";
-import {getCurrentTime} from "@/tools/getCurrentTime";
+import { column, post, user } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
+import { getCurrentTime } from "@/tools/getCurrentTime";
 
 export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
-
-  create: publicProcedure
-    .input(z.object({ name: z.string().min(1),
-      content: z.string(),
-      tag: z.string(),
-      status: z.boolean(),}))
-    .mutation( async ({ ctx, input }) => {
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      ctx.db.select().from(post).where(eq(post.name, input.name))
-      return await ctx.db.insert(post).values({
-        name: input.name,
-        content: input.content,
-        tag: input.tag,
-        status: true,
-          updatedAt: getCurrentTime()
-      }).returning({name: post.name,content:post.content,tag:post.tag,status:post.status});
-    }),
-
-    updateIsTop:publicProcedure
-        .input(z.object({id:z.number(),isTop:z.boolean()}))
-        .mutation( async ({ ctx, input }) => {
-            return ctx.db.update(post).set({isTop:input.isTop}).where(eq(post.id,input.id));
+    hello: publicProcedure
+        .input(z.object({ text: z.string() }))
+        .query(({ input }) => {
+            return {
+                greeting: `Hello ${input.text}`,
+            };
         }),
-    updateIsFree:publicProcedure
-        .input(z.object({id:z.number(),isFree:z.boolean()}))
-        .mutation( async ({ ctx, input }) => {
-            return ctx.db.update(post).set({isFree:input.isFree}).where(eq(post.id,input.id));
+
+    create: publicProcedure
+        .input(z.object({
+            name: z.string().min(1),
+            content: z.string(),
+            tag: z.string(),
+            status: z.boolean(),
+        }))
+        .mutation(async ({ ctx, input }) => {
+
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            ctx.db.select().from(post).where(eq(post.name, input.name))
+            return await ctx.db.insert(post).values({
+                name: input.name,
+                content: input.content,
+                tag: input.tag,
+                status: true,
+                updatedAt: getCurrentTime()
+            }).returning({ name: post.name, content: post.content, tag: post.tag, status: post.status });
         }),
-  deletePost:publicProcedure.input(z.object({id:z.number()}))
-      .mutation(({ctx,input})=>{
-          ctx.db.delete(post).where(eq(post.id,input.id))
-      }),
-  getLatest: publicProcedure.query(async({ ctx }) => {
-    return await ctx.db.query.post.findFirst({
-      orderBy: (post, { desc }) => [desc(post.createdAt)],
-    });
-  }),
+
+    updateIsTop: publicProcedure
+        .input(z.object({ id: z.number(), isTop: z.boolean() }))
+        .mutation(async ({ ctx, input }) => {
+            return ctx.db.update(post).set({ isTop: input.isTop }).where(eq(post.id, input.id));
+        }),
+    updateIsFree: publicProcedure
+        .input(z.object({ id: z.number(), isFree: z.boolean() }))
+        .mutation(async ({ ctx, input }) => {
+            return ctx.db.update(post).set({ isFree: input.isFree }).where(eq(post.id, input.id));
+        }),
+    deletePost: publicProcedure.input(z.object({ id: z.number() }))
+        .mutation(({ ctx, input }) => {
+            ctx.db.delete(post).where(eq(post.id, input.id))
+        }),
+    getLatest: publicProcedure.query(async ({ ctx }) => {
+        return await ctx.db.query.post.findFirst({
+            orderBy: (post, { desc }) => [desc(post.createdAt)],
+        });
+    }),
 
     getAll: publicProcedure
-        .input(z.object({columnId:z.string(),limit:z.number(),offset:z.number()}))
-        .query(async ({ ctx,input})=>{
+        .input(z.object({ columnId: z.string(), limit: z.number(), offset: z.number() }))
+        .query(async ({ ctx, input }) => {
             return ctx.db.query.post.findMany({
                 limit: input.limit,
                 offset: input.offset,
@@ -62,9 +64,9 @@ export const postRouter = createTRPCRouter({
             })
         }),
     getAllInUser: publicProcedure
-        .input(z.object({userId:z.string(),limit:z.number(),offset:z.number()}))
-        .query(async ({ ctx,input})=>{
-            const data = await ctx.db.query.column.findFirst({where:eq(column.userId,input.userId)})
+        .input(z.object({ userId: z.string(), limit: z.number(), offset: z.number() }))
+        .query(async ({ ctx, input }) => {
+            const data = await ctx.db.query.column.findFirst({ where: eq(column.userId, input.userId) })
             return ctx.db.query.post.findMany({
                 limit: input.limit,
                 offset: input.offset,
@@ -72,17 +74,17 @@ export const postRouter = createTRPCRouter({
             })
         }),
     getById: publicProcedure
-        .input(z.object({id:z.string(),chapter:z.number()}))
-        .query(async ({ ctx,input }) => {
-            const c = await ctx.db.query.column.findFirst({where:eq(column.id, input.id)})
+        .input(z.object({ id: z.string(), chapter: z.number() }))
+        .query(async ({ ctx, input }) => {
+            const c = await ctx.db.query.column.findFirst({ where: eq(column.id, input.id) })
             if (!c) {
                 throw new Error("Column not found");
             }
 
 
-            const u = await ctx.db.query.user.findFirst({where:eq(user.id,c.userId)})
+            const u = await ctx.db.query.user.findFirst({ where: eq(user.id, c.userId) })
 
-            if(!u){
+            if (!u) {
                 throw new Error("User not found");
             }
             const data = await ctx.db.select().from(post).where(eq(post.columnId, input.id));
@@ -91,10 +93,10 @@ export const postRouter = createTRPCRouter({
             }
             let res = [];
             data.map(item => {
-                res.push({...item,user:u})
+                res.push({ ...item, user: u })
             })
-            console.log("data=>>>>",data)
-            return res[input.chapter-1]
+            console.log("data=>>>>", data)
+            return res[input.chapter - 1]
         }),
     getNumById: publicProcedure
         .input(z.object({ id: z.string() }))
@@ -104,5 +106,5 @@ export const postRouter = createTRPCRouter({
             })
             // 返回所有根据 id 查询的数据
             return data.length;
-    })
+        })
 });
