@@ -7,12 +7,17 @@ const Activities =()=>{
     const [data, setData] = useState(null);
 
     // 使用 useQuery 钩子获取数据
-    const { data: queryData, isLoading, isError } = api.activity.getAll.useQuery();
+    const { data: queryData} = api.activity.getAll.useQuery();
 
     // 在数据加载完成时更新状态
     useEffect(() => {
         if (queryData) {
-            setData(queryData);
+            //排列数据，让进行中的活动排列靠前
+            const sortedData = [...queryData].sort((a, b) => {
+                if (a.isEnd === b.isEnd) return 0;
+                return a.isEnd ? 1 : -1; // 进行中的活动排在前面
+            });
+            setData(sortedData);
         }
     }, [queryData]);
 
