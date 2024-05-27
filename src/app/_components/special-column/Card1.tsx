@@ -39,7 +39,7 @@ export const Card1 = () => {
 
 
     const link = () => {
-        router.push(`/special-column/content?c=${number+1}&id=${columnId}`)
+        router.push(`/special-column-content?c=${number+1}&id=${columnId}`)
     };
 
     return (
