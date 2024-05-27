@@ -7,6 +7,7 @@ import { draftRouter } from "./routers/draft";
 import { postLikeRouter } from "./routers/postLike";
 import { walletRouter } from "./routers/wallet";
 import { orderRouter } from "./routers/order";
+import { activityRouter } from "./routers/activity";
 
 /**
  * This is the primary router for your server.
@@ -22,6 +23,7 @@ export const appRouter = createTRPCRouter({
   like: postLikeRouter,
   wallet:walletRouter,
   order:orderRouter,
+  activity:activityRouter,
 });
 
 // export type definition of API
