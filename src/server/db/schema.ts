@@ -124,6 +124,7 @@ export const order = createTable(
       .notNull(),
     updatedAt: timestamp("updated_at"),
     price: real("price"),
+    buyerID:serial("buyerID"),
     ownerID: serial("ownerID"),
     payment: varchar("payment"),
     endStatus: boolean("status"),
@@ -152,6 +153,7 @@ export const speedUp = createTable(
 export const wallet = createTable(
   "wallet",
   {
+    userId: varchar("user_id").notNull(),
     regularIncome: real("regularIncome"),
     freezeIncome: real("regularOutcome"),
     createdAt: timestamp("created_at")
