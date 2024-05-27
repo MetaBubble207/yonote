@@ -3,7 +3,7 @@ import { api } from "@/trpc/react";
 import React, { useState, useEffect } from "react";
 import { timeToDateString } from "@/tools/timeToString";
 
-export const SubscriptionQueryColumn = () => {
+export const CreateAtQueryColumn = () => {
     const [data, setData] = useState(null);
 
     // 使用 useQuery 钩子获取数据
@@ -15,7 +15,7 @@ export const SubscriptionQueryColumn = () => {
             setData(queryData);
         }
     }, [queryData]);
-    
+
 
     return (
         <div>
