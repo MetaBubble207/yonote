@@ -5,6 +5,7 @@ import { api } from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 
 const Column = () => {
+
   // 限制输入框 “专栏ID” 输入为英文或数字
   const [name, setName] = useState("");
   const [columnID, setColumnID] = useState("");
@@ -44,6 +45,26 @@ const Column = () => {
       userId: token,
     });
   };
+
+  const createcolumn = api.column.create.useMutation({
+    onSuccess: (r) => {
+      console.log(r);
+      console.log("success")
+    },
+    onError: (e) => {
+      console.log("error");
+      
+    }
+  });
+
+  const a = () => {
+    createcolumn.mutate({
+      id: columnID,
+      name: name,
+      price: parseInt(price),
+      userId: token,
+    })
+  }
 
   return (
     <div className="relative w-286.75 h-195 border-rd-[0px_0px_10px_10px] bg-[#FFF] mt-16px ml-18px pt-25.75">
@@ -164,7 +185,7 @@ const Column = () => {
         </div>
       </div>
 
-      <button className="w-16.25 h-8 ml-65.75 mt-20" onClick={handleSubmit}>
+      <button className="w-16.25 h-8 ml-65.75 mt-20" onClick={handleSubmit && a}>
         <Image
           src={"/images/writer/co-author/submit.svg"}
           alt="submit"

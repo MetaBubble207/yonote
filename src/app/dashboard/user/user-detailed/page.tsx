@@ -1,10 +1,18 @@
- // page.tsx
+"use client"
+// page.tsx
+import { api } from "@/trpc/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 function User() {
+    const user = api.post.getAllInUser.useQuery({
+        userId: "1",
+        limit: 1,
+        offset: 0,
+    });
     const ImageURL = "/images/user/avatar.svg"
+
     return (
         <div>
             {/*顶部*/}
@@ -26,7 +34,13 @@ function User() {
 
                     {/* 用户名 */}
                     <div className={"flex mt-1.25 items-center"}>
-                        <h2 className={"w-10 text-[#252525] text-4.5 font-500 lh-6"}>芋圆</h2>
+                        <h2 className={"w-10 text-[#252525] text-4.5 font-500 lh-6"}>
+                        {user && user.data && user.data.map((user, index) => (
+                            <div key={index}>
+                                <p>{user.name}</p>
+                            </div>
+                        ))}
+                        </h2>
                         <Image className={"ml-1.25 w-5 h-5"} src={"/images/user/Rank.svg"} alt={"rank"} width={20}
                                height={20}/>
                     </div>

@@ -102,5 +102,17 @@ export const columnRouter = createTRPCRouter({
             const res = await Promise.all(promises);
             return res;
 
-        })
+        }),
+
+    getContentNumber: publicProcedure
+        .query(async({ctx})=>{
+            const columns = await ctx.db.select().from(column).orderBy(desc(column.introduce))
+            const promises = columns.map(async item => {
+                const u = await ctx.db.query.user.findFirst({ where: eq(user.id, item.userId)});
+                return { ...item, user: u };
+            });
+            const res = await Promise.all(promises);
+            return res;
+
+        }),
 });

@@ -1,12 +1,10 @@
 "use client"
 import Image from "next/image";
-import {useState} from "react";
-import {api} from "@/trpc/react";
-import {YonoteCourse} from "@/app/_components/recommend/YonoteCourse";
-import {CoCreate} from "@/app/_components/recommend/CoCreate";
+import {useState} from "react"
 import {SubscriptionQueryColumn} from "@/app/_components/recommend/SubscriptionQueryColumn";
-import DefaultLayout from "next/dist/client/components/default-layout";
 import {DefaultColumn} from "@/app/_components/recommend/DefaultColumn";
+import {CreateAtQueryColumn} from "@/app/_components/recommend/CreateAtQueryColumn";
+import {ContentNumberQueryColumn} from "@/app/_components/recommend/ContentNumberQueryColumn";
 
 
 export const SpecialColumn = () => {
@@ -25,8 +23,10 @@ export const SpecialColumn = () => {
                 return <DefaultColumn/>;
             case "订阅量":
                 return <SubscriptionQueryColumn/>;
-            case "":
-                return <CoCreate/>;
+            case "内容量":
+                return <ContentNumberQueryColumn/>;
+            case "创作时间":
+                return <CreateAtQueryColumn/>;
 
         }
     }
