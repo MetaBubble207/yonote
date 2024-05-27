@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import { Image } from"antd";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
@@ -8,7 +8,6 @@ import useLocalStorage from "@/tools/useStore";
 import { timeToDateString } from "@/tools/timeToString";
 import { post } from "@/server/db/schema";
 import { create } from "domain";
-
 
 const Page = () => {
   const router = useRouter();
@@ -223,7 +222,7 @@ const Page = () => {
             加速计划
           </div>
           <div className={"inline-block ml-10px mr-16px"}>
-            <Image
+            <img
               src={"/images/special-column/Share-black.png"}
               alt={"心智与阅读"}
               width={12}
@@ -238,7 +237,7 @@ const Page = () => {
           {/*左边头像*/}
           <div>
             <div>
-              <Image
+              <img
                 src={postData?.user.avatar}
                 alt={"avatar"}
                 width={33}
@@ -258,7 +257,7 @@ const Page = () => {
                 {postData?.user.name}
               </div>
               <div>
-                <Image
+                <img
                   src={"/images/special-column/Group 225.png"}
                   alt={"心智与阅读"}
                   width={12}
@@ -312,12 +311,11 @@ const Page = () => {
             );
           })}
           <div className="flex absolute right-2">
-            <Image
+            <img
               src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 1.png"}
               alt={"爱心"}
               width={18}
               height={18}
-              objectFit="none"
               className="w-5 h-5"
               onClick={likehandle}
             />
@@ -353,7 +351,7 @@ const Page = () => {
                   心智与阅读•目录
                 </div>
                 <div className={"ml-5px"}>
-                  <Image
+                  <img
                     src={"/images/special-column/Sort-one (排序1).png"}
                     alt={"心智与阅读"}
                     width={14}
@@ -369,7 +367,7 @@ const Page = () => {
               {chapter === 1 ? (
                 <div className={"flex flex-col"}>
                   <div className={"flex items-center"}>
-                    <Image
+                    <img
                       src={"/images/special-column/Double-left (双左).png"}
                       alt={"心智与阅读"}
                       width={14}
@@ -396,7 +394,7 @@ const Page = () => {
                   <Link className="flex flex-col" href={`../special-column-content?c=${chapter - 1}&id=${columnId}`}>
                     <div className={"flex items-center"}>
                       <div>
-                        <Image
+                        <img
                           src={"/images/special-column/Double-left (双左).png"}
                           alt={"心智与阅读"}
                           width={14}
@@ -431,7 +429,7 @@ const Page = () => {
                     下一篇
                   </div>
                   <div>
-                    <Image
+                    <img
                       src={"/images/special-column/Double-left (双右) .png"}
                       alt={"心智与阅读"}
                       width={14}
@@ -459,7 +457,7 @@ const Page = () => {
                     下一篇
                   </div>
                   <div>
-                    <Image
+                    <img
                       src={"/images/special-column/Double-left (双右) .png"}
                       alt={"心智与阅读"}
                       width={14}
