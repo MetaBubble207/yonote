@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { SpecialColumnContent } from "@/app/_components/special-column/SpecialColumnContent";
 import { api } from "@/trpc/react";
+import useLocalStorage from "@/tools/useStore";
 
 const Page = () => {
 
@@ -12,13 +13,13 @@ const Page = () => {
         limit: 10000,
         offset: 0,
     });
-    
+    const [token] = useLocalStorage("token",null);
     const user = api.post.getAllInUser.useQuery({
-        userId: "1",
+        userId: token,
         limit: 1,
         offset: 0,
     })
-    
+
 
     return <div className={"w-full bg-[#F5F7FB] relative"}>
         {/*顶部*/}

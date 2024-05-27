@@ -63,9 +63,9 @@ export const Card1 = () => {
                         <span className={" shrink-0 border-rd-0.5 bg-[#FDB069] shrink-0 text-[#000]  text-2.5 font-not-italic font-500 lh-6 px-7px py-3px ml-10px"}>
                             {/* 使用 post.data.map 遍历所有文章 */}
                             {post.data && post.data.length > 0 && (
-                                <div>
-                                    <p>{post.data[number]?.tag}</p>
-                                </div>
+                                <span>
+                                    {post.data[number]?.tag}
+                                </span>
                             )}
 
                         </span>
