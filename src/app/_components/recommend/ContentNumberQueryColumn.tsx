@@ -3,11 +3,11 @@ import { api } from "@/trpc/react";
 import React, { useState, useEffect } from "react";
 import { timeToDateString } from "@/tools/timeToString";
 
-export const SubscriptionQueryColumn = () => {
+export const ContentNumberQueryColumn = () => {
     const [data, setData] = useState(null);
 
     // 使用 useQuery 钩子获取数据
-    const { data: queryData, isLoading, isError } = api.column.getCreateAt.useQuery();
+    const { data: queryData, isLoading, isError } = api.column.getContentNumber.useQuery();
 
     // 在数据加载完成时更新状态
     useEffect(() => {
@@ -15,7 +15,7 @@ export const SubscriptionQueryColumn = () => {
             setData(queryData);
         }
     }, [queryData]);
-    
+
 
     return (
         <div>
