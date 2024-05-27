@@ -26,10 +26,10 @@ const SubscribeRenew = (prop) => {
                     </div>
                 </Link>
                 <div className="mt-3.5 ml-3 flex w-full h-9.5 items-center flex-shrink-0">
-                    <Image src={column.user.avatar} alt="user_image" width={24} height={24} className="rounded-full w-5.75 h-5.75"></Image>
+                    <Image src={column.user?.avatar} alt="user_image" width={24} height={24} className="rounded-full w-5.75 h-5.75"></Image>
                     <div className="ml-1 w-43">
                         <div className="flex items-center">
-                            <div className="text-[#999] text-2.75 lh-4">{column.user.name}</div>
+                            <div className="text-[#999] text-2.75 lh-4">{column.user?.name}</div>
                             <Image src={"/images/subscribe/vip.svg"} alt="cover" width={24} height={24} className="w-3 h-3 ml-1.2"></Image>
                         </div>
                         <div className="text-[#B5B5B5] text-2.75 lh-4">{timeToDateString(column.createdAt)}发布</div>
