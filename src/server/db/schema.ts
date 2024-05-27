@@ -70,7 +70,7 @@ export const user = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at"),
-    phone: integer("phone"),
+    phone: varchar("phone"),
     idNumber: varchar("id_number"),
     password: integer("password"),
     avatar: text("avatar"),
