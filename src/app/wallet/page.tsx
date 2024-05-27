@@ -1,21 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Image from "next/image";
 import { api } from "@/trpc/react";
+import useLocalStorage from "@/tools/useStore";
+
 
 interface WalletData {
     balance: number;
     frozenAmount: number;
     cashableAmount: number;
-}
+};
+
+interface OrderData {
+    id: number;
+    price: number;
+    buyerID: number;
+    ownerID: number;
+    name: string;
+    createdAt: string;
+};
 
 const Wallet = () => {
-    const { data, isLoading, isError } = api.wallet.getBalance.useQuery<WalletData>();
+    const [walletInfo, setWalletInfo] = useState(null);
+    const [token] = useLocalStorage("token",null);
+    const [transactions, setTransactions] = useState<OrderData[]>([]);
+    
+    const [selectedButton, setSelectedButton] = useState(1);
 
     const [payments, setPayments] = useState<Array<{ name: string; date: string; time: string; sign: string; amount: number }>>([]);
     const [transactionType, setTransactionType] = useState("expenditure");
-    const [selectedButton, setSelectedButton] = useState(1);
+
 
     const handleButtonClick = (button: number, type: string) => {
         if (selectedButton !== button) {
@@ -24,15 +39,29 @@ const Wallet = () => {
         }
     };
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+   
+    // 使用 useEffect 在组件加载时获取钱包信息
+    useEffect(() => {
+        //定义异步函数来获取钱包信息
+        const fetchWalletInfo = async () => {
+            // 确保 token 存在
+            if (token) {
+                try {
+                    // 通过 API 获取钱包信息
+                    const walletData = await api.wallet.getBalance.useQuery({ id: token }).data;
+ 
+                    // 更新钱包信息状态
+                    setWalletInfo(walletData);
+                } catch (error) {
+                    console.error("获取钱包数据时出错:", error);
+                }
+            }
+        };
+        // 调用获取钱包信息的函数
+        fetchWalletInfo();
+    }, [token]); // 当 token 发生变化时重新获取钱包信息
 
-    if (isError || !data) {
-        return <div>Error loading data</div>;
-    }
 
-    const { balance, frozenAmount, cashableAmount } = data;
 
     return (
         <div>
@@ -45,14 +74,14 @@ const Wallet = () => {
                                 账户余额
                             </div>
                             <div className="w-25 text-[#FFF] font-D-DIN text-6 font-not-italic font-700 lh-6 ml-6 mt-2">
-                                ¥{balance}
+                                ¥{walletInfo.balance}
                             </div>
                             <div className="flex flex-wrap h-6 shrink-0 text-[#FFF]">
                                 <div className="ml-6 mt-9">
-                                    冻结中 <span>¥{frozenAmount}</span>
+                                    冻结中 <span>¥{walletInfo.frozenAmount}</span>
                                 </div>
                                 <div className="ml-11.75 mt-9">
-                                    可提现 <span>¥{cashableAmount}</span>
+                                    可提现 <span>¥{walletInfo.cashableAmount}</span>
                                 </div>
                             </div>
                             <div className="w-7.5 text-[#252525] text-3 font-500 lh-6 ml-73.75 mt--8">

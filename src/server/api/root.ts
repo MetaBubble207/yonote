@@ -6,6 +6,7 @@ import { columnRouter } from "@/server/api/routers/column";
 import { draftRouter } from "./routers/draft";
 import { postLikeRouter } from "./routers/postLike";
 import { walletRouter } from "./routers/wallet";
+import { orderRouter } from "./routers/order";
 
 /**
  * This is the primary router for your server.
@@ -20,6 +21,7 @@ export const appRouter = createTRPCRouter({
   draft: draftRouter,
   like: postLikeRouter,
   wallet:walletRouter,
+  order:orderRouter,
 });
 
 // export type definition of API
