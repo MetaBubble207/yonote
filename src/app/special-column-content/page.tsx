@@ -11,6 +11,7 @@ import { create } from "domain";
 
 
 const Page = () => {
+  const router = useRouter();
   // function formatTime(date: Date) {
   //   const month = date.getMonth() + 1;
   //   const day = date.getDate();
@@ -204,6 +205,10 @@ const Page = () => {
       }
     
   }
+  // 目录跳转
+  const link = () => {
+    router.push(`/special-column?c=1&id=${columnId}`);
+  }
   
   return (
     <div className={"relative bg-#F5F7FB min-h-screen pb-10"}>
@@ -338,7 +343,7 @@ const Page = () => {
 
           <div className={"mx-16px"}>
             {/*目录*/}
-            <Link href={"/special-column"}>
+            <div onClick={link}>
               <div className={"flex items-center mt-2"}>
                 <div
                   className={
@@ -356,7 +361,7 @@ const Page = () => {
                   />
                 </div>
               </div>
-            </Link>
+            </div>
 
             {/*上一篇下一篇*/}
             <div className="flex mt-8px">
