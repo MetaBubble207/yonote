@@ -121,24 +121,24 @@ const Page = () => {
                   </p>
                 </Link>
               </li>
+              {/*<li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>*/}
+              {/*  <Link href="#" className="flex flex-col items-center">*/}
+              {/*    <Image*/}
+              {/*      src={"/images/user/KnowledgePlanet.svg"}*/}
+              {/*      alt={"知识星球"}*/}
+              {/*      width={"48"}*/}
+              {/*      height={"48"}*/}
+              {/*      className={"w-6 h-6"}*/}
+              {/*    />*/}
+              {/*    <p*/}
+              {/*      className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}*/}
+              {/*    >*/}
+              {/*      知识星球*/}
+              {/*    </p>*/}
+              {/*  </Link>*/}
+              {/*</li>*/}
               <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
-                <Link href="#" className="flex flex-col items-center">
-                  <Image
-                    src={"/images/user/KnowledgePlanet.svg"}
-                    alt={"知识星球"}
-                    width={"48"}
-                    height={"48"}
-                    className={"w-6 h-6"}
-                  />
-                  <p
-                    className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}
-                  >
-                    知识星球
-                  </p>
-                </Link>
-              </li>
-              <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
-                <Link href="#" className="flex flex-col items-center">
+                <Link href="https://eahu7fmu6k6.feishu.cn/wiki/JtU0wJWhfiBygNkEoCBc2VUIndb?from=from_copylink" className="flex flex-col items-center">
                   <Image
                     src={"/images/user/Usage.svg"}
                     alt={"使用说明"}
@@ -170,7 +170,7 @@ const Page = () => {
                 </Link>
               </li>
               <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
-                <Link href="#" className="flex flex-col items-center">
+                <Link href="https://eahu7fmu6k6.feishu.cn/share/base/form/shrcnM3bJTp21SwwwwAcZ39Q2EL" className="flex flex-col items-center">
                   <Image
                     src={"/images/user/Feedback.svg"}
                     alt={"意见反馈"}
@@ -186,7 +186,7 @@ const Page = () => {
                 </Link>
               </li>
               <li className={"flex flex-col items-center w-1/4 mt-4.5 mb-2.5"}>
-                <Link href="#" className="flex flex-col items-center">
+                <Link href="https://work.weixin.qq.com/kfid/kfcef6edb33788c7a32" className="flex flex-col items-center">
                   <Image
                     src={"/images/user/Contact.svg"}
                     alt={"联系客服"}
