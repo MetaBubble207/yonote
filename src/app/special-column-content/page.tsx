@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import { timeToDateString } from "@/tools/timeToString";
+import { post } from "@/server/db/schema";
+import { create } from "domain";
+
 
 const Page = () => {
   // function formatTime(date: Date) {
@@ -37,17 +40,16 @@ const Page = () => {
   const params = useSearchParams()
   const chapter = parseInt(params.get("c"));
   const columnId = params.get("id");
-  // 点赞
-  const [isHeartFilled, setIsHeartFilled] = useState(false);
 
-  const handleClick = () => {
-    setIsHeartFilled(!isHeartFilled);
-    if (isHeartFilled) {
-      setLikecount(likecount - 1);
-    } else {
-      setLikecount(likecount + 1);
-    }
-  };
+
+  // const handleClick = () => {
+  //   setIsHeartFilled(!isHeartFilled);
+  //   if (isHeartFilled) {
+  //     setLikecount(likecount - 1);
+  //   } else {
+  //     setLikecount(likecount + 1);
+  //   }
+  // };
 
   const [token] = useLocalStorage("token", null);
 
@@ -71,26 +73,24 @@ const Page = () => {
   const [name, setName] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [content, setContent] = useState("");
-  const [likecount, setLikecount] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
   const [pretitle, setPretitle] = useState(null);
   const [nexttitle, setNexttitle] = useState(null);
+  const [isHeartFilled, setIsHeartFilled] = useState(false);
 
-  const update = api.post.create.useMutation({
-    onSuccess: (r) => {
-      console.log('123' + r)
-    },
-    onError: (e) => {
-
-    }
+  const postId = api.like.getPostId.useQuery({
+    id: columnId,
+    chapter: chapter,
   })
-  // update.mutate({
-  //   name:name,
-  //   id: 16,
-  // })
-
-
-
- 
+  const likeList = api.like.getLikeList.useQuery({
+    postId: postId.data,
+    userId: "ockxo6uf2GzwXxVHGBsPQleFbm0E"
+  }).data;
+  
+  const getLikeCount = api.like.getLikeCount.useQuery({
+    postId: postId.data,
+  }).data;
+  
   useEffect(() => {
     if (postData) {
       if (postData.name) {
@@ -114,11 +114,6 @@ const Page = () => {
         setContent("");
       }
 
-      if (postData.likeCount) {
-        setLikecount(postData.likeCount);
-      } else {
-        setLikecount(0);
-      }
       
       if (chapter > 1 && prepost) {
         setPretitle(prepost.name);
@@ -132,9 +127,84 @@ const Page = () => {
       }
       
     }
+    // console.log(likeList);
+    // if(likeList.){
+    //   console.log(likeList);
+    // }else{
+    //   setIsHeartFilled(false);
+    // }
+    
     
   }, [postData]);
+   // 修改点赞状态
+   const updateLike = api.like.updateLike.useMutation({
+    onSuccess: (r) => {
+      console.log('点赞状况更改成功')
+    },
+    onError: (e) => {
+    }
+  })
+  // const c = () => {updateLike.mutate({
+  //   postId: postId.data,
+  //   userId: "ockxo6uf2GzwXxVHGBsPQleFbm0E",
+  //   isLike: !isHeartFilled
+  // })}
+  const createlike = api.like.create.useMutation({
+  onSuccess: (r) => {
+    console.log('点赞成功')
+  
+    }
+  })
+  const uptime = api.like.uptime.useMutation({
+    onSuccess: (r) => {
+      console.log('更新时间成功')
+    },
+    onError: (e) => {
+    }
+  })
 
+  // 点赞
+  useEffect(() => {
+    if (likeList) {
+      likeList.length === 0 ? setIsHeartFilled(false) : setIsHeartFilled(likeList[0].isLike);
+  } else {
+      setIsHeartFilled(false);
+  }
+  // 点赞总数
+    setLikeCount(getLikeCount ?? 0)
+  }, [likeList]);
+
+
+ 
+  const likehandle = () => {
+      if (likeList.length === 0) {
+        createlike.mutate({
+          postId: postId.data,
+          userId: "ockxo6uf2GzwXxVHGBsPQleFbm0E",
+          isLike: true
+        },
+        
+      )
+      } else {
+        updateLike.mutate({
+          postId: postId.data,
+          userId: "ockxo6uf2GzwXxVHGBsPQleFbm0E",
+          isLike: !isHeartFilled
+        }),
+        uptime.mutate({
+          postId: postId.data,
+          userId: "ockxo6uf2GzwXxVHGBsPQleFbm0E",
+        })
+    }
+    setIsHeartFilled(!isHeartFilled);
+      if (isHeartFilled) {
+        setLikeCount(likeCount - 1);
+      } else {
+        setLikeCount(likeCount + 1);
+      }
+    
+  }
+  
   return (
     <div className={"relative bg-#F5F7FB min-h-screen pb-10"}>
       <div className={"ml-16px"}>
@@ -236,7 +306,7 @@ const Page = () => {
               </span>
             );
           })}
-          <div className="flex absolute right-2" onClick={handleClick}>
+          <div className="flex absolute right-2">
             <Image
               src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 1.png"}
               alt={"爱心"}
@@ -244,13 +314,14 @@ const Page = () => {
               height={18}
               objectFit="none"
               className="w-5 h-5"
+              onClick={likehandle}
             />
             <div
               className={
                 "text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-2.5 mr-4"
               }
             >
-              {likecount}
+              {likeCount}
             </div>
           </div>
         </div>
