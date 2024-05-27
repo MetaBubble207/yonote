@@ -115,7 +115,7 @@ function User() {
                     </div>
                     <div className={"flex justify-center mt-18"}>
                         <div className={"w-26 h-7 pl-3.44 shrink-0 border-rd-9 bg-[#DAF9F1]"}>
-                            <Link href="#"
+                            <Link href="../find"
                                className={"w-19.12225 h-6.25 shrink-0 text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
                         </div>
                     </div>
