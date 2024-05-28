@@ -2,14 +2,13 @@
 import SubscribeColumn from './SubscribeColumn';
 import SubscribeRenew from './SubscribeRenew';
 import SubscribeManage from './SubscribeManage';
-import React, {Suspense, useState} from "react"
+import React, {Suspense, useState, useContext} from "react"
 import {api} from "@/trpc/react";
 
 
 const Page = () => {
 
     const columns = api.column.getAll.useQuery().data;
-
 
     // 按钮选中状态
     const [selectedButton, setSelectedButton] = useState<number | null>(1); // 追踪选中的按钮
@@ -95,7 +94,7 @@ const Page = () => {
     };
 
     return (
-        <div>
+        <div> 
             <div className='mt-6 mb-3 flex justify-between items-center '>
                 <div className='flex w-43 justify-between'>
                     {renderButtons()}

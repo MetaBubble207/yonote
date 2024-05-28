@@ -4,6 +4,7 @@ import Image from "next/image";
 import { SpecialColumnContent } from "@/app/_components/special-column/SpecialColumnContent";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
+import { useState } from "react";
 
 const Page = () => {
 
@@ -20,6 +21,10 @@ const Page = () => {
         offset: 0,
     })
 
+    const [subscribe, setSubscribe] = useState(false)
+    if(subscribe){
+
+    }
 
     return <div className={"w-full bg-[#F5F7FB] relative"}>
         {/*顶部*/}
@@ -76,9 +81,9 @@ const Page = () => {
                     <SpecialColumnContent></SpecialColumnContent>
 
                     {/*按钮*/}
-                    <div className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500"}>
+                    <button className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500"}>
                         订阅
-                    </div>
+                    </button>
                 </div>
             </div>
 
