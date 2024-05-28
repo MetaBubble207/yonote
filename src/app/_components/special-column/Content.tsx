@@ -44,11 +44,7 @@ export const Content=()=>{
         
     }
     
-    console.log("post"+postInfo);
-    console.log();
     
-    
-
     const renderContent = (): React.ReactNode => {
         if (currentPage) {
             return (

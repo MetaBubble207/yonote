@@ -123,4 +123,10 @@ export const columnRouter = createTRPCRouter({
             return userId[0].userId;
         }),
 
+    getColumnDetail: publicProcedure
+    .input(z.object({ columnId: z.string() }))
+    .query(async ({ ctx, input }) => {
+        const columnDetail = await ctx.db.select().from(column).where(and(eq(column.id, input.columnId)))
+        return columnDetail[0];
+    })
 });
