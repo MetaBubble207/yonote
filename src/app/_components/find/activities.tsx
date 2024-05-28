@@ -12,14 +12,6 @@ const Activities =()=>{
 
     // 在数据加载完成时更新状态
     useEffect(() => {
-    //     if (queryData) {
-    //         //排列数据，让进行中的活动排列靠前
-    //         const sortedData = [...queryData].sort((a, b) => {
-    //             if (a.isEnd === b.isEnd) return 0;
-    //             return a.isEnd ? 1 : -1; // 进行中的活动排在前面
-    //         });
-    //         setData(sortedData);
-    //     }
         if (queryData){
             const currentTime = getCurrentTime();
             //过滤为截止的活动

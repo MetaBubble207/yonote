@@ -26,7 +26,7 @@ export const orderRouter = createTRPCRouter({
     }),
 
   // 获取所有订单
-  getAllOrders: publicProcedure
+  getOrder: publicProcedure
     .input(z.object({ limit: z.number().optional(), offset: z.number().optional() }))
     .query(async ({ ctx, input }) => {
       const orders = await ctx.db.query.order.findMany({
