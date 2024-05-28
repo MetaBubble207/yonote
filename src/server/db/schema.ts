@@ -174,7 +174,8 @@ export const activity = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at"),
-    isEnd:boolean("isEnd")
+    isEnd:boolean("isEnd"),
+    enddate: timestamp("enddate"),
   }
 );
 
@@ -236,5 +237,20 @@ export const postLike = createTable(
     isLike: boolean("isLike"),
   }
 );
+
+export const postRead = createTable(
+  "postRead",
+  {
+    id: serial("id").primaryKey(),
+    postId: integer("postId"),
+    userId: varchar("userId"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at"),
+    readCount: integer("readCount"),
+  }
+) 
+
 
 export type User = typeof user.$inferInsert
