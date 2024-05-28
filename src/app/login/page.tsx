@@ -35,22 +35,6 @@ const Login = () => {
     }
   };
 
-  // const [scanning, setScanning] = useState(false);
-  // const handleScanLogin = () => {
-  //      // 在此处可以触发后端请求，以获取微信用户的授权信息
-  //     // 这里只是演示，在实际应用中需要与后端进行交互
-
-  //     // 模拟扫码登录的过程，设置扫码状态为 true
-  //     setScanning(true);
-
-  //     // 模拟扫码登录的延时
-  //     setTimeout(() => {
-  //         // 扫码登录完成后，设置扫码状态为 false
-  //         setScanning(false);
-  //         // 这里可以执行其他操作，例如跳转页面等
-  //         console.log("扫码登录成功！");
-  //     }, 3000); // 模拟3秒钟后扫码登录完成
-  // }
 
   return (
     <div>

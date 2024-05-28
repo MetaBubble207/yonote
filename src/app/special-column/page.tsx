@@ -6,6 +6,8 @@ import { api } from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { check } from "drizzle-orm/mysql-core";
+import Reserved from "@/app/_components/dialog/dialog/reserved"
 
 const Page = () => {
     const params = useSearchParams();
@@ -26,17 +28,17 @@ const Page = () => {
         id: userid.data,
     })
 
-
     const column = api.column.getColumnDetail.useQuery({
         columnId: columnId,
     })
 
-    const [subscribe, setSubscribe] = useState(false)
-    if(subscribe){
-
+    const [subscribe, setSubscribe] = useState(false);
+    const Click = () => {
+            setSubscribe(!subscribe);
     }
 
-    return <div className={"w-full bg-[#F5F7FB] relative"}>
+    return(
+    <div className={"w-full bg-[#F5F7FB] relative"}>
         {/*顶部*/}
         {/*<div className={"flex w-100% h-22 shrink-0 bg-[#D9D9D9] absolute top-0 z-2"}>*/}
         {/*    /!*<div className={"w-6 h-6 shrink-0 text-center text-2xl mt-12 ml-4 lh-6"}>*!/*/}
@@ -89,9 +91,12 @@ const Page = () => {
                     <SpecialColumnContent></SpecialColumnContent>
 
                     {/*按钮*/}
-                    <button className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500"}>
+                    <button className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500"} onClick={Click}>
                         订阅
                     </button>
+                    <div className="fixed top-200px p-auto">
+                        {subscribe && <Reserved onClose={() => setSubscribe(false)}></Reserved>}
+                    </div>
                 </div>
             </div>
 
@@ -101,6 +106,7 @@ const Page = () => {
             <div className="absolute inset-0 bg-black opacity-20"></div>
         </div>
     </div>
+    )
 }
 
 export default Page;
