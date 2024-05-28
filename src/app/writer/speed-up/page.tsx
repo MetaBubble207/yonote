@@ -4,9 +4,47 @@ import React, {useState} from "react";
 import MySlider from "@/app/_components/slider/page";
 import Date from '../../_components/datarange/Date'
 import MyPagination from "@/app/_components/pagination/page";
+import { Slider } from 'antd';
+import type { SliderSingleProps } from 'antd';
+import type { MenuProps } from 'antd';
+import { Dropdown, Space } from 'antd';
 
-
+import type { CollapseProps } from 'antd';
+import { Collapse } from 'antd';
 const Page = () => {
+    const distribution: SliderSingleProps['marks'] = {
+        0: '0%',
+        10: '10%',
+        20: '20%',
+        30: '30%',
+        40: '40%',
+        50: '50%',
+        60: '60%',
+        70: '70%',
+      };
+    const acceleration: SliderSingleProps['marks'] = {
+        0: '0%',
+        10: '10%',
+        20: '20%',
+        30: '30%',
+    }
+    const onChange = (key: string | string[]) => {
+        console.log(key);
+      };
+
+
+    const item: CollapseProps['items'] = [
+    {
+        key: '1',
+        label: '分销激励',
+        children: <Slider marks={distribution} step={null} defaultValue={37} max={70} />,
+    },
+    {
+        key: '2',
+        label: '加速激励',
+        children: <Slider marks={acceleration} step={null} defaultValue={37} max={30} />,
+    },
+    ];
     interface Item {
         ranking: number;
         avatar: string;
@@ -15,7 +53,8 @@ const Page = () => {
         acceleration: number;
         totalAmount: number;
     }
-
+   
+     
     const items: Item[] = [
         {
             ranking: 1,
@@ -91,13 +130,14 @@ const Page = () => {
                     <div className=' w-271.75 h-126.605 shrink-0 '>
                         <h3 className='text-[#323232] text-4 font-700 lh-6'>加速计划</h3>
                         {/*加速激励*/}
+                        
                         <div className='pl-2 mt-6.0525'>
-                            <h4 className='w-17.66225 h-5.5 shrink-0 text-[rgba(0,0,0,0.85)] text-4 font-400 lh-6'>加速激励</h4>
+                            {/* <h4 className='w-17.66225 h-5.5 shrink-0 text-[rgba(0,0,0,0.85)] text-4 font-400 lh-6'>加速激励</h4> */}
                             {/*输出条*/}
-                            <div className='ml-11.25'>
-                                <MySlider/>
-                            </div>
-
+                            {/* <div className='ml-11.25'> */}
+                                {/* <Slider marks={marks} step={null} defaultValue={37} /> */}
+                            {/* </div> */}
+                            <Collapse items={item} defaultActiveKey={['1']} onChange={onChange} />
                             {/*激励榜单*/}
                             <div className='mt-8'>
                                 <h3 className='w-17.75 h-5.5 shrink-0 text-[rgba(0,0,0,0.85)] text-4 font-400 lh-6'>激励榜单</h3>
