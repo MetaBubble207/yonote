@@ -174,7 +174,8 @@ export const activity = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at"),
-    isEnd:boolean("isEnd")
+    isEnd:boolean("isEnd"),
+    enddate: timestamp("enddate"),
   }
 );
 
