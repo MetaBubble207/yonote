@@ -8,6 +8,7 @@ import { postLikeRouter } from "./routers/postLike";
 import { walletRouter } from "./routers/wallet";
 import { orderRouter } from "./routers/order";
 import { activityRouter } from "./routers/activity";
+import { readRouter } from "./routers/read";
 
 /**
  * This is the primary router for your server.
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   wallet:walletRouter,
   order:orderRouter,
   activity:activityRouter,
+  read: readRouter,
 });
 
 // export type definition of API
