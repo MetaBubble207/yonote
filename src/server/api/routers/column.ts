@@ -58,7 +58,11 @@ export const columnRouter = createTRPCRouter({
             const res = await Promise.all(promises);
             return res;
         }),
-
+    getAllByUserId: publicProcedure
+        .input(z.object({ userId: z.string() }))
+        .query(async ({ ctx, input }) => {
+            return ctx.db.query.column.findMany({ where: eq(column.userId, input.userId) });
+        }),
     getColumnName: publicProcedure
         .input(z.object({ searchValue: z.string() }))
         .query(async ({ ctx, input }) => {

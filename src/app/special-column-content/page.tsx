@@ -12,18 +12,6 @@ import { create } from "domain";
 
 const Page = () => {
   const router = useRouter();
-  // function formatTime(date: Date) {
-  //   const month = date.getMonth() + 1;
-  //   const day = date.getDate();
-  //   const hours = date.getHours();
-  //   const minutes = date.getMinutes();
-  //   const monthStr = month < 10 ? "0" + month : month;
-  //   const dayStr = day < 10 ? "0" + day : day;
-  //   const hoursStr = hours < 10 ? "0" + hours : hours;
-  //   const minutesStr = minutes < 10 ? "0" + minutes : minutes;
-  //   return `${monthStr}.${dayStr} ${hoursStr}:${minutesStr}`;
-  // }
-
   // function generateDivElements(arr: Array<string>) {
   //   // 使用 map 方法遍历数组，并为每个数组元素创建一个 <div> 元素
   //   const divElements = arr.map((_, index) => (
@@ -53,9 +41,6 @@ const Page = () => {
   // };
 
   const [token] = useLocalStorage("token", null);
-
-
-
 
 
   const postData = api.post.getById.useQuery({

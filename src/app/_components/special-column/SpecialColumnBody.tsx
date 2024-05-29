@@ -1,20 +1,22 @@
 "use client"
 import Image from "next/image";
 import React, { useState } from 'react';
-import {SpecialColumnContent} from "@/app/_components/special-column/SpecialColumnContent";
+import {SpecialColumnList} from "@/app/_components/special-column/SpecialColumnList";
 import {SpecialColumnIntroduce} from "@/app/_components/special-column/SpecialColumnIntroduce";
 import {api} from "@/trpc/react";
 import Reserved from "@/app/_components/dialog/dialog/reserved";
+import {useSearchParams} from "next/navigation";
 
 
-export const SpecialColumnBody = (props) => {
-    const {columnId} = props;
+export const SpecialColumnBody = () => {
+    const params = useSearchParams();
+    const columnId = params.get("id");
     const [currentContent, setCurrentContent ] = useState<number>(1);
     const active = "text-[#252525] font-500 border-b-3 border-[#45E1B8]";
     const renderContent = () => {
         switch (currentContent){
             case 1:
-                return <SpecialColumnContent></SpecialColumnContent>;
+                return <SpecialColumnList></SpecialColumnList>;
             case 2:
                 return <SpecialColumnIntroduce></SpecialColumnIntroduce>;
 

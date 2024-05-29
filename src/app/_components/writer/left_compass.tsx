@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import {usePathname, useSearchParams} from "next/navigation";
 import Link from "next/link";
 import Column from "./column";
 import { Router } from "next/router";
@@ -10,7 +10,8 @@ import { Router } from "next/router";
 const LeftCompass = () => {
   const pathname = usePathname();
   const [column, setColumn] = useState(pathname === "/writer/homepage");
-
+  const params = useSearchParams();
+  const columnId = params.get("columnId");
   useEffect(() => {
     setColumn(pathname === "/writer/homepage");
   }, [pathname]);
@@ -40,7 +41,7 @@ const LeftCompass = () => {
                   height={24.03}
                   className={`w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89`}
                 ></Image>
-                <Link href="/writer/homepage" passHref>
+                <Link href={`/writer/homepage?columnId=${columnId}`} passHref>
                   <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">
                     主页看板
                   </div>
@@ -64,7 +65,7 @@ const LeftCompass = () => {
                   height={24.03}
                   className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89 "
                 ></Image>
-                <Link href="/writer/content-management" passHref>
+                <Link href={`/writer/content-management?columnId=${columnId}`} passHref>
                   <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">
                     内容管理
                   </div>
@@ -88,7 +89,7 @@ const LeftCompass = () => {
                   height={24.03}
                   className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"
                 ></Image>
-                <Link href="/writer/subscribe-manage" passHref>
+                <Link href={`/writer/subscribe-manage?columnId=${columnId}`} passHref>
                   <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">
                     订阅管理
                   </div>
@@ -112,7 +113,7 @@ const LeftCompass = () => {
                   height={24.03}
                   className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"
                 ></Image>
-                <Link href="/writer/column-settings" passHref>
+                <Link href={`/writer/column-settings?columnId=${columnId}`} passHref>
                   <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">
                     专栏设置
                   </div>
@@ -136,7 +137,7 @@ const LeftCompass = () => {
                   height={24.03}
                   className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"
                 ></Image>
-                <Link href="/writer/co-author" passHref>
+                <Link href={`/writer/co-author?columnId=${columnId}`} passHref>
                   <div className="w-14 h-6.00625 shrink-0 text-3.5  font-400 lh-6 ml-2.07 mt-2.89">
                     共创作者
                   </div>
@@ -160,7 +161,7 @@ const LeftCompass = () => {
                   height={24.03}
                   className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"
                 ></Image>
-                <Link href="/writer/speed-up" passHref>
+                <Link href={`/writer/speed-up`} passHref>
                   <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">
                     加速计划
                   </div>
