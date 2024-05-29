@@ -22,7 +22,7 @@ const Page = () => {
 
     // 导航栏返回相应页面
     const [currentPage, setCurrentPage] = React.useState<number>(1);
-    const Page1 = () => {
+    const Update = () => {
         return (
             <div>
                 {columns && columns.length > 0 && columns.map((column: any) => (
@@ -32,7 +32,7 @@ const Page = () => {
         );
     };
 
-    const Page2 = () => {
+    const Column = () => {
         return (
             <div>
                 {columns && columns.length > 0 && columns.map((column: any) => (
@@ -43,7 +43,7 @@ const Page = () => {
         )
     };
 
-    const Page3 = () => {
+    const Course = () => {
         return (
             <div>
                 {columns && columns.length > 0 && columns.map((column: any) => (
@@ -56,11 +56,11 @@ const Page = () => {
     const renderContent = (): React.ReactNode => {
         switch (currentPage) {
             case 1:
-                return <Page1/>;
+                return <Update/>;
             case 2:
-                return <Page2 />;
+                return <Column/>;
             case 3:
-                return <Page3 />;
+                return <Course/>;
         }
     };
 
