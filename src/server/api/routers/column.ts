@@ -48,6 +48,13 @@ export const columnRouter = createTRPCRouter({
                 introduce: input.introduce,
             })
         }),
+    updateCover: publicProcedure
+        .input(z.object({id:z.string(),cover:z.string()}))
+        .mutation(async ({ ctx, input }) => {
+            return ctx.db.update(column).set({
+                logo: input.cover,
+            }).where(eq(column.id,input.id))
+        }),
     getAll: publicProcedure
         .query(async ({ ctx }) => {
             const columns = await ctx.db.select().from(column)

@@ -11,13 +11,12 @@ const Homepagedata = () => {
     const columns = api.column.getAllByUserId.useQuery({
         userId: token
     }).data;
-    console.log(columns)
     const params = useSearchParams();
     const router = useRouter()
 
     useEffect(()=>{
         const columnId = params.get("columnId");
-        if(!columnId && columns){
+        if((!columnId || columnId === "null") && columns){
             router.push("/writer/homepage?columnId="+columns[0]?.id)
         }
 
