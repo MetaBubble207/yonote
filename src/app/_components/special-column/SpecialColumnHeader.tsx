@@ -1,8 +1,11 @@
+"use client"
 import Image from "next/image";
 import {api} from "@/trpc/react";
+import {useSearchParams} from "next/navigation";
 
-export const SpecialColumnHeader = (props) => {
-    const {columnId} = props
+export const SpecialColumnHeader = () => {
+    const params = useSearchParams();
+    const columnId = params.get("id");
     const userid = api.column.getUserId.useQuery({
         id: columnId,
     })

@@ -1,28 +1,23 @@
 "use client"
-import { column } from "@/server/db/schema";
 import Image from "next/image";
-import { useRouter, } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import {timeToDateString} from "@/tools/timeToString";
 
 
-export const Card1 = (props) => {
-    const [date, setDate] = useState("");
-
-    const { item,user } = props;
-    const [number, setNumber] = useState(0);
+export const SpecialColumnCard = (props) => {
+    const { item,user,index } = props;
 
     const router = useRouter();
     // 点赞
-    const [isHeartFilled, setIsHeartFilled] = useState(false);
+    const [isLike, setIsLike] = useState(false);
 
     const handleClick = () => {
-        setIsHeartFilled(!isHeartFilled);
-        setNumber((prevNumber) => prevNumber + 1);
+        setIsLike(!isLike);
     };
 
     const link = () => {
-        router.push(`/special-column-content?c=${number + 1}&id=${item.columnId}`)
+        router.push(`/special-column-content?c=${index+1}&id=${item.columnId}`)
     };
 
     return (
@@ -85,7 +80,7 @@ export const Card1 = (props) => {
                     <div className="ml-auto flex items-center space-y-0">
                         <div>
                             <Image
-                                src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 2.png"}
+                                src={isLike ? "/images/special-column/heart red.png" : "/images/special-column/heart 2.png"}
                                 onClick={handleClick}
                                 alt={"爱心"} width={18} height={18} objectFit="none" />
                         </div>

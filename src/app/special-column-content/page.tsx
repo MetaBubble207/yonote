@@ -55,9 +55,6 @@ const Page = () => {
   const [token] = useLocalStorage("token", null);
 
 
-
-
-
   const postData = api.post.getById.useQuery({
     id: columnId,
     chapter: chapter
