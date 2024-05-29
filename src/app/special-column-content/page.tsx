@@ -9,6 +9,7 @@ import { timeToDateString } from "@/tools/timeToString";
 import { post } from "@/server/db/schema";
 import { create } from "domain";
 
+
 const Page = () => {
   const router = useRouter();
   // function formatTime(date: Date) {
@@ -53,6 +54,10 @@ const Page = () => {
 
   const [token] = useLocalStorage("token", null);
 
+
+
+
+
   const postData = api.post.getById.useQuery({
     id: columnId,
     chapter: chapter
@@ -68,6 +73,15 @@ const Page = () => {
   const numData = api.post.getNumById.useQuery({
     id: columnId,
   }).data;
+
+  const readList = api.read.getReadList.useMutation({
+    onSuccess: () => {
+      console.log("success");
+    }
+  })
+
+
+
 
   const [date, setDate] = useState("");
   const [name, setName] = useState("");
@@ -91,7 +105,9 @@ const Page = () => {
     postId: postId.data,
   }).data;
 
+
   useEffect(() => {
+
     if (postData) {
       if (postData.name) {
         const pubTime = postData.createdAt;
@@ -126,6 +142,12 @@ const Page = () => {
         setNexttitle("已经是末篇了");
       }
 
+      readList.mutate({
+        id: columnId,
+        userId: token,
+        chapter: chapter
+      })
+
     }
     // console.log(likeList);
     // if(likeList.){
@@ -133,6 +155,27 @@ const Page = () => {
     // }else{
     //   setIsHeartFilled(false);
     // }
+
+    // const createRead = api.read.create.useMutation({
+    //   onSuccess: (r) => {
+    //     console.log('阅读记录创建成功');
+    //   }
+    // })
+    // if (readList.data) {
+    //   if (readList.data.length === 0 && readList.data) {
+    //     createRead.mutate({
+    //       postId: postId.data,
+    //       userId: token,
+    //     })
+    //   } else {
+    //     console.log("已经阅读过");
+    //     console.log(readList.data.length);
+
+    //   }
+    // } else {
+    //   console.log("已经阅读过");
+    // }
+
 
 
   }, [postData]);
@@ -144,12 +187,13 @@ const Page = () => {
     onError: (e) => {
     }
   })
+
   // const c = () => {updateLike.mutate({
   //   postId: postId.data,
   //   userId: "ockxo6uf2GzwXxVHGBsPQleFbm0E",
   //   isLike: !isHeartFilled
   // })}
-  const createlike = api.like.create.useMutation({
+  const createLike = api.like.create.useMutation({
     onSuccess: (r) => {
       console.log('点赞成功')
 
@@ -178,7 +222,7 @@ const Page = () => {
 
   const likehandle = () => {
     if (likeList.length === 0) {
-      createlike.mutate({
+      createLike.mutate({
         postId: postId.data,
         userId: token,
         isLike: true

@@ -1,36 +1,41 @@
-"use client"
-import Image from "next/image";
-import React, { useState } from 'react';
-import {Content} from "@/app/_components/special-column/Content";
-import {Card2} from "@/app/_components/special-column/Card2";
+import {SortLabel} from "@/app/_components/special-column/SortLabel";
+import {Card1} from "@/app/_components/special-column/Card1";
+import { api } from "@/trpc/react";
+import { useSearchParams } from "next/navigation";
+import React, {Suspense} from "react";
 
 
-export const SpecialColumnContent = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const [currentContent, setCurrentContent ] = useState<number>(1);
-    const active = "text-[#252525] font-500 border-b-3 border-[#45E1B8]";
-    const renderContent = () => {
-        switch (currentContent){
-            case 1:
-                return <Content></Content>;
-            case 2:
-                return <Card2></Card2>;
+export const SpecialColumnContent=()=>{
 
-        }
+    const params = useSearchParams();
+    const columnId = params.get("id");
+    const userId = api.column.getUserId.useQuery({ id: columnId }).data;
+    const user = api.users.getOne.useQuery({ id: userId }).data;
+    const postInfo = api.post.getAll.useQuery({
+        columnId: columnId,
+        limit: 100000,
+        offset: 0,
+    }).data;
+    console.log(user)
+    const SpecialColumnList = () => {
+        return <>
+                <Suspense>
+                    {postInfo && postInfo.length > 0
+                        && postInfo.map((item: any,index) => (
+
+                            <div key={index}>
+                                <Card1 key={item.id} item={item} user={user}/>
+                            </div>)
+
+                        )}
+                </Suspense>
+            </>
     }
+
     return(
         <div>
-            <div className="flex mt-11px items-center ml-16px">
-                <div className={currentContent === 2 ? active:"text-[#B5B5B5] text-3.5 font-not-italic font-400 lh-6 " } onClick={() => setCurrentContent(2)} style={{marginRight:'40px'}}>介绍</div>
-                <div className={currentContent === 1 ? active:"text-[#B5B5B5] text-3.5 font-not-italic font-400 lh-6 "} onClick={() => setCurrentContent(1)} >内容</div>
-                <div className="ml-auto mr-24px">
-                    <Image src={"/images/special-column/Magnifying glass.png"} alt={"心智与阅读"} width={18} height={18}/>
-                </div>
-                <div className={"mr-16px"}>
-                    <Image src={"/images/special-column/Sort.png"} alt={"心智与阅读"} width={18} height={18}/>
-                </div>
-            </div>
-            {renderContent()}
+            <SortLabel/>
+            <SpecialColumnList />
         </div>
     )
 }
