@@ -111,7 +111,7 @@ const Page = () => {
             {items.map((item, index) => (
                 <tr key={index}
                     className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
-                    <td>{item.id}</td>
+                    <td>{index+1}</td>
                     {/*<td>{item.avatar}</td>*/}
                     <td className='relative'><Image
                         className=' w-8 h-8 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shrink-0 border-rd-8'
