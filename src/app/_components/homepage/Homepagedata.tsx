@@ -1,6 +1,27 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
+import {api} from "@/trpc/react";
+import useLocalStorage from "@/tools/useStore";
+import {useEffect} from "react";
+import {useRouter, useSearchParams} from "next/navigation";
 const Homepagedata = () => {
+    const [token] = useLocalStorage("token", null);
+    console.log(token)
+    const columns = api.column.getAllByUserId.useQuery({
+        userId: token
+    }).data;
+    console.log(columns)
+    const params = useSearchParams();
+    const router = useRouter()
+
+    useEffect(()=>{
+        const columnId = params.get("columnId");
+        if(!columnId && columns){
+            router.push("/writer/homepage?columnId="+columns[0]?.id)
+        }
+
+    },[columns])
     return (
         <div className="w-full h-82 pl-32px r-16px bg-[#FFF] border-rd-2.5">
             <div className="flex items-center pt-34px">
@@ -30,8 +51,6 @@ const Homepagedata = () => {
                     </div>
                 </div>
 
-
-
                 <div className="w-87 h-52 shrink-0 border-rd-2.5 border-1 border-solid border-[#ECECEC] bg-[#FFF] ml-18px">
                     <ul className="flex items-center text-center mt-60.7px text-4 font-700 lh-6 text-[rgba(0,0,0,0.65)]">
                         <li className="flex-1 text-[#323232] text-3.5 font-400">订阅量</li>
@@ -51,9 +70,6 @@ const Homepagedata = () => {
                         <span className="text-[#4CC5A6] text-3 font-700 lh-6 ml-10.48px">-0.19%相较昨天</span>
                     </div>
                 </div>
-
-
-
 
                 <div className="w-87 h-52 shrink-0 border-rd-2.5 border-1 border-solid border-[#ECECEC] bg-[#FFF] ml-18px">
                     <ul className="flex items-center text-center mt-60.7px text-4 font-700 lh-6 text-[rgba(0,0,0,0.65)]">
