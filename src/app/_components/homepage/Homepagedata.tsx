@@ -21,8 +21,8 @@ const Homepagedata = () => {
                     <ul className="flex text-center text-[rgba(153,153,153,0.60)] text-3.5 lh-6">
                         <Image src={"/images/homepage/readding.svg"} alt={"accelerate"} width={53} height={53} className="inline-block ml-13.77px mr-15px"></Image>
                         <li className="flex-1">昨日(次)</li>
-                        <li className="flex-1">昨日(次)</li>
-                        <li className="flex-1">昨日(次)</li>
+                        <li className="flex-1">一周内(次)</li>
+                        <li className="flex-1">一月内(次)</li>
                     </ul>
                     <div className="relative top--5px left-113.26px flex items-center">
                         <Image src={"/images/homepage/Arrow-left-down.svg"} alt="arrow" width={20} height={20}></Image>
@@ -43,8 +43,8 @@ const Homepagedata = () => {
                     <ul className="flex text-center text-[rgba(153,153,153,0.60)] text-3.5 lh-6">
                         <Image src={"/images/homepage/subscribe.svg"} alt={"accelerate"} width={53} height={53} className="inline-block ml-13.77px mr-15px"></Image>
                         <li className="flex-1">昨日(次)</li>
-                        <li className="flex-1">昨日(次)</li>
-                        <li className="flex-1">昨日(次)</li>
+                        <li className="flex-1">一周内(次)</li>
+                        <li className="flex-1">一月内(次)</li>
                     </ul>
                     <div className="relative top--5px left-113.26px flex items-center">
                         <Image src={"/images/homepage/Arrow-left-down.svg"} alt="arrow" width={20} height={20}></Image>
@@ -65,8 +65,8 @@ const Homepagedata = () => {
                     <ul className="flex text-center text-[rgba(153,153,153,0.60)] text-3.5 lh-6">
                         <Image src={"/images/homepage/accelerate.svg"} alt={"accelerate"} width={53} height={53} className="inline-block ml-13.77px mr-15px"></Image>
                         <li className="flex-1">昨日(次)</li>
-                        <li className="flex-1">昨日(次)</li>
-                        <li className="flex-1">昨日(次)</li>
+                        <li className="flex-1">一周内(次)</li>
+                        <li className="flex-1">一月内(次)</li>
                     </ul>
                     <div className="relative top--5px left-113.26px flex items-center">
                         <Image src={"/images/homepage/Arrow-right-up.svg"} alt="arrow" width={20} height={20}></Image>
