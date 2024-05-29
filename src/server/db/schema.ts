@@ -24,8 +24,8 @@ import {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `yonote_${name}`);
-export const subscription_manager = createTable(
-  "subscription_manager",
+export const subscription = createTable(
+  "subscription",
   {
     id: serial("id").primaryKey(),
     userId: varchar("user_id"),
