@@ -1,61 +1,16 @@
 "use client"
 import { column } from "@/server/db/schema";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { api } from "@/trpc/react";
-import { timeToDateString } from "@/tools/timeToString";
-import useLocalStorage from "@/tools/useStore";
+import { useRouter, } from "next/navigation";
+import React, { useState } from "react";
+import {timeToDateString} from "@/tools/timeToString";
 
 
 export const Card1 = (props) => {
-
-
-    const params = useSearchParams();
-    const columnId = params.get("id");
-    const chapter = parseInt(params.get("c"));
-
     const [date, setDate] = useState("");
-    const [name1, setName] = useState("");
 
-    const { item } = props;
-
-    console.log(item);
-
-
-    const userid = api.column.getUserId.useQuery({
-        id: columnId,
-    })
-
-    const user = api.users.getOne.useQuery({
-        id: userid.data,
-    })
-
-    const postData = api.post.getById.useQuery({
-        id: columnId,
-        chapter: chapter
-    }).data;
-
-    useEffect(() => {
-        if (postData) {
-            if (postData.name) {
-                const pubTime = postData.createdAt;
-                setName(postData.name);
-                setDate(timeToDateString(pubTime));
-            } else {
-                setDate("");
-                setName("");
-            }
-        }
-    }, [postData]);
-
-
+    const { item,user } = props;
     const [number, setNumber] = useState(0);
-    useEffect(() => {
-        if (item.data && item.data.length > 0) {
-            setNumber(0);
-        }
-    }, [item.data]);
 
     const router = useRouter();
     // 点赞
@@ -66,16 +21,12 @@ export const Card1 = (props) => {
         setNumber((prevNumber) => prevNumber + 1);
     };
 
-
     const link = () => {
-        router.push(`/special-column-content?c=${number + 1}&id=${columnId}`)
+        router.push(`/special-column-content?c=${number + 1}&id=${item.columnId}`)
     };
 
-    // console.log(user)
-
     return (
-        <div>
-            <div className={"w-91.5%  mt-20px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-10px"} >
+            <div className={"w-91.5%  mt-8px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-12px pb-10px"} >
                 {/*上边*/}
                 <div className={"flex mt-25.5px items-center w-full"} onClick={link}>
                     {/*左边图片*/}
@@ -109,30 +60,27 @@ export const Card1 = (props) => {
                 </div>
 
                 {/*下方图标*/}
-                <div className="flex mt-18px items-center space-y-0 mb-22px">
-
-                    {/*左边头像*/}
-                    <div className={""}>
+                <div className="flex mt-18px items-center space-y-0 ">
+                    {user && <>
+                        {/*左边头像*/}
                         <div>
-                            <Image src={user.data?.avatar} alt={"心智与阅读"} width={23} height={23} />
+                            <Image src={user.avatar} alt={"心智与阅读"} width={23} height={23} className={"rounded-full"} />
                         </div>
-                    </div>
-                    {/*昵称，日期，VIP*/}
-                    <div>
-                        <div className={"flex items-center"}>
+                        {/*昵称，日期，VIP*/}
+                        <div>
+                            <div className={"flex items-center"}>
+                                <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
+                                    {user.name}
+                                </div>
+                                <div>
+                                    <Image src={"/images/special-column/Group 225.png"} alt={"心智与阅读"} width={12} height={12} className={"lh-0"} style={{ marginLeft: "2.5px" }} />
+                                </div>
+                            </div>
                             <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
-                                {user.data?.name}
-                            </div>
-                            <div>
-                                <Image src={"/images/special-column/Group 225.png"} alt={"心智与阅读"} width={12} height={12} className={"lh-0"} style={{ marginLeft: "2.5px" }} />
+                                {timeToDateString(item.updatedAt)}发布
                             </div>
                         </div>
-                        <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
-                            {date}发布
-                        </div>
-
-                    </div>
-
+                    </>}
                     {/*右方点赞数量*/}
                     <div className="ml-auto flex items-center space-y-0">
                         <div>
@@ -153,6 +101,5 @@ export const Card1 = (props) => {
                     </div>
                 </div>
             </div>
-        </div>
     )
 }

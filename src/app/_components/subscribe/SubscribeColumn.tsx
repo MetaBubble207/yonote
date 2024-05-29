@@ -10,11 +10,11 @@ const SubscribeColumn = (prop) => {
         <Link href={`../special-column-content?c=1&id=${column.id}`}>
             <div className="h-29.25 mt-4 flex">
                 <div className="relative h-18">
-                    <Image src={column.user.avatar} alt="avatar" width={24} height={24} className="rounded-full w-11.25 h-11.25 mt-4"></Image>
+                    <Image src={column.user?.avatar} alt="avatar" width={24} height={24} className="rounded-full w-11.25 h-11.25 mt-4"></Image>
                     <div className="bottom-2 right-1 absolute">
                         <Image src={"/images/subscribe/vip.svg"} alt="vip" width={12} height={12} className="w-3 h-3"></Image>
                     </div>
-                    <div className="text-center text-[#999]  font-500 lh-9.6">{column.user.name}</div>
+                    <div className="text-center text-[#999]  font-500 lh-9.6">{column.user?.name}</div>
                 </div>
                 <div className="flex-1">
                     <div className="text-2.75 lh-4 text-[#B5B5B5] ml-2.6">{timeToDateString(column.createdAt)}发布</div>

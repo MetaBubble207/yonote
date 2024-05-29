@@ -3,7 +3,7 @@ import { api } from "@/trpc/react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
-export const Card2 = () => {
+export const SpecialColumnIntroduce = () => {
     const params = useSearchParams();
     const columnId = params.get("id");
     const column = api.column.getColumnDetail.useQuery({

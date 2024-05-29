@@ -95,7 +95,6 @@ export const postRouter = createTRPCRouter({
             data.map(item => {
                 res.push({ ...item, user: u })
             })
-            console.log("data=>>>>", data)
             return res[input.chapter - 1]
         }),
     getNumById: publicProcedure
