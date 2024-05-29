@@ -4,8 +4,18 @@ import { api } from "@/trpc/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import useLocalStorage from "@/tools/useStore";
 
 function User() {
+    let userInfo
+    const [token] = useLocalStorage("token", null)
+    if (token) {
+        userInfo = api.users.getOne.useQuery({id: token}).data
+    }
+
+
+
+
     const user = api.post.getAllInUser.useQuery({
         userId: "1",
         limit: 1,
@@ -20,7 +30,9 @@ function User() {
             {/*背景图片*/}
             <div className="blur-24 relative h-28.25 w-full overflow-hidden">
                 {/*<img src={ImageURL} className="absolute inset-0 object-cover w-full h-full"/>*/}
-                <Image src={'/images/user/avatar.svg'} alt={"头像"} width={124} height={124}
+                {/*<Image src={'/images/user/avatar.svg'} alt={"头像"} width={124} height={124}*/}
+                {/*       className={"absolute inset-0 object-cover w-full h-full"}/>*/}
+                <Image src={userInfo?.avatar} alt={"头像"} width={124} height={124}
                        className={"absolute inset-0 object-cover w-full h-full"}/>
             </div>
 
@@ -29,17 +41,22 @@ function User() {
                 <div className={"absolute top--10.375 mb-10.375 w-31 h-31 flex flex-col justify-center items-center"}>
 
                     {/*头像*/}
-                    <Image src={'/images/user/avatar.svg'} alt={"头像"} width={83} height={83}
-                           className={"w-20.75 h-20.75"}/>
+                    {/*<Image src={'/images/user/avatar.svg'} alt={"头像"} width={83} height={83}*/}
+                    {/*       className={"w-20.75 h-20.75"}/>*/}
+                    <Image src={userInfo?.avatar} alt={"头像"} width={83} height={83}
+                           className={"w-20.75 h-20.75 rounded-full"}/>
 
                     {/* 用户名 */}
                     <div className={"flex mt-1.25 items-center"}>
-                        <h2 className={"w-10 text-[#252525] text-4.5 font-500 lh-6"}>
-                        {user && user.data && user.data.map((user, index) => (
-                            <div key={index}>
-                                <p>{user.name}</p>
+                        <h2 className={" text-[#252525] text-4.5 font-500 lh-6"}>
+                            {/*{user && user.data && user.data.map((user, index) => (*/}
+                            {/*    <div key={index}>*/}
+                            {/*        <p>{user.name}</p>*/}
+                            {/*    </div>*/}
+                            {/*))}*/}
+                            <div>
+                                <p>{userInfo?.name}</p>
                             </div>
-                        ))}
                         </h2>
                         <Image className={"ml-1.25 w-5 h-5"} src={"/images/user/Rank.svg"} alt={"rank"} width={20}
                                height={20}/>
@@ -47,13 +64,20 @@ function User() {
 
                     {/* ID */}
                     <div className={"flex w-16.039 h-6 items-center justify-center"}>
-                        <div className={"flex w-3.75"}>
+                        {/*<div className={"flex w-3.75"}>*/}
+                        {/*    <Image className={"w-1.4775 h-1.86"} src={"/images/user/I_logo.svg"} alt={"I"} width={7.44}*/}
+                        {/*           height={7.44}/>*/}
+                        {/*    <Image className={"w-1.4775 h-1.86"} src={"/images/user/D_logo.svg"} alt={"D"} width={7.44}*/}
+                        {/*           height={7.44}/>*/}
+                        {/*</div>*/}
+                        <span className={"ml-  text-[#999] text-2.5 font-400 lh-6 flex items-center"}>
+                            <div className={"flex w-3.75"}>
                             <Image className={"w-1.4775 h-1.86"} src={"/images/user/I_logo.svg"} alt={"I"} width={7.44}
                                    height={7.44}/>
                             <Image className={"w-1.4775 h-1.86"} src={"/images/user/D_logo.svg"} alt={"D"} width={7.44}
                                    height={7.44}/>
                         </div>
-                        <span className={"ml- w-11.789 text-[#999] text-2.5 font-400 lh-6"}>1317wfa2</span>
+                            {userInfo?.idNumber}</span>
                     </div>
                 </div>
 
@@ -85,10 +109,10 @@ function User() {
                                   className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">更新</Link>
 
                             <Link href="#"
-                               className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">专栏</Link>
+                                  className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">专栏</Link>
                             <div className={"flex-col"}>
                                 <Link href="#"
-                                   className="text-[#252525] text-3.5 font-500 lh-6">小课</Link>
+                                      className="text-[#252525] text-3.5 font-500 lh-6">小课</Link>
                                 <div className={"ml-2.25 mt-1 w-2.75 h-1 border-rd-2 bg-[#45E1B8]"}></div>
                             </div>
                         </div>
@@ -116,7 +140,7 @@ function User() {
                     <div className={"flex justify-center mt-18"}>
                         <div className={"w-26 h-7 pl-3.44 shrink-0 border-rd-9 bg-[#DAF9F1]"}>
                             <Link href="../find"
-                               className={"w-19.12225 h-6.25 shrink-0 text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
+                                  className={"w-19.12225 h-6.25 shrink-0 text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
                         </div>
                     </div>
                 </div>
