@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { api } from "@/trpc/react";
+import { useSearchParams } from 'next/navigation';
 
 interface CarouselProps {
   images: string[];
@@ -10,7 +11,19 @@ interface CarouselProps {
 const ColumnPopup: React.FC<CarouselProps> = ({ images, onImageClick }) => {
   const [currentIndices, setCurrentIndices] = useState([0, 1, 2, 3]);
   const [columnData, setColumnData] = useState<{ id: string; name: string; }[]>([]);
+
+  const params = useSearchParams();
+  const columnId = params.get("id");
+
+  // Fetch column data
   const { data: queryData } = api.column.getAll.useQuery();
+
+  // Fetch posts related to the specific column
+  const { data: postData } = api.post.getAll.useQuery({
+    columnId: columnId || '',
+    limit: 10000,
+    offset: 0,
+  });
 
   useEffect(() => {
     if (queryData) {
@@ -65,26 +78,25 @@ const ColumnPopup: React.FC<CarouselProps> = ({ images, onImageClick }) => {
 };
 
 export default ColumnPopup;
-
-// import React, {useEffect, useState } from 'react';
+// import React, { useEffect, useState } from 'react';
 // import Image from 'next/image';
 // import { api } from "@/trpc/react";
-
+// import {useSearchParams} from "next/navigation";
 
 // interface CarouselProps {
 //   images: string[];
-//   onImageClick: (index: number) => void;
+//   onImageClick: (index: number, column: { id: string; name: string; }) => void;
 // }
 
 // const ColumnPopup: React.FC<CarouselProps> = ({ images, onImageClick }) => {
 //   const [currentIndices, setCurrentIndices] = useState([0, 1, 2, 3]);
-//   const [columnName, setColumnName] =useState<string[]>([]);
-//   const {data: queryData} = api.column.getAll.useQuery();
+//   const [columnData, setColumnData] = useState<{ id: string; name: string; }[]>([]);
+  
+//   const { data: queryData } = api.column.getAll.useQuery();
 
 //   useEffect(() => {
 //     if (queryData) {
-//       const names = queryData.map((column: { name: string }) => column.name);
-//       setColumnName(names);
+//       setColumnData(queryData.map((column: { id: string; name: string; }) => ({ id: column.id, name: column.name })));
 //     }
 //   }, [queryData]);
 
@@ -103,7 +115,7 @@ export default ColumnPopup;
 //   };
 
 //   const handleImageClick = (index: number) => {
-//     onImageClick(index);
+//     onImageClick(index, columnData[index]);
 //   };
 
 //   return (
@@ -122,9 +134,8 @@ export default ColumnPopup;
 //               className='block'
 //             />
 //             <span className='mt-2'>
-//               {columnName[index]}
+//               {columnData[index]?.name || 'Loading...'}
 //             </span>
-            
 //           </button>
 //         ))}
 //       </div>
@@ -136,6 +147,5 @@ export default ColumnPopup;
 // };
 
 // export default ColumnPopup;
-
 
 
