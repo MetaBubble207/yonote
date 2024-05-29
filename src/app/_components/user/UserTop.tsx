@@ -82,7 +82,7 @@ export const UserTop = () => {
                         />
                     </div>
                     <span className="ml-1 w-18 text-[#999] font-Source Han Sans SC text-2.5 font-not-italic font-400 lh-6 items-center">
-                1317wfa2
+                {userInfo?.idNumber}
               </span>
                 </div>
             </div>
