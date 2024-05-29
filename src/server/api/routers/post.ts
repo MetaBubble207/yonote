@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { column, post, user } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import {and, eq} from "drizzle-orm";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 
 export const postRouter = createTRPCRouter({
@@ -63,6 +63,17 @@ export const postRouter = createTRPCRouter({
                 where: eq(post.columnId, input.columnId),
             })
         }),
+    // 专栏详情页展示有序的章节数
+    getAllInOrder: publicProcedure.input(z.object({ columnId: z.string(), limit: z.number(), offset: z.number() }))
+        .query(async ({ ctx, input }) => {
+            const postNoTop = ctx.db.select().from(post)
+                .where(and(eq(post.columnId, input.columnId),eq(post.isTop,false)))
+                .orderBy(post.createdAt);
+            const postIsTop = ctx.db.select().from(post)
+                .where(and(eq(post.columnId, input.columnId),eq(post.isTop,true)))
+                .orderBy(post.createdAt);
+            return [...(await postIsTop), ...(await postNoTop)]
+        }),
     getAllInUser: publicProcedure
         .input(z.object({ userId: z.string(), limit: z.number(), offset: z.number() }))
         .query(async ({ ctx, input }) => {
@@ -91,6 +102,7 @@ export const postRouter = createTRPCRouter({
             if (!data?.length) {
                 throw new Error("No data found");
             }
+            //改变排序方式
             let res = [];
             data.map(item => {
                 res.push({ ...item, user: u })

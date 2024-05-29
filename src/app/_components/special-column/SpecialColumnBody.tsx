@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
 import React, { useState } from 'react';
-import {SpecialColumnContent} from "@/app/_components/special-column/SpecialColumnContent";
+import {SpecialColumnList} from "@/app/_components/special-column/SpecialColumnList";
 import {SpecialColumnIntroduce} from "@/app/_components/special-column/SpecialColumnIntroduce";
 import {api} from "@/trpc/react";
 import Reserved from "@/app/_components/dialog/dialog/reserved";
@@ -16,7 +16,7 @@ export const SpecialColumnBody = () => {
     const renderContent = () => {
         switch (currentContent){
             case 1:
-                return <SpecialColumnContent></SpecialColumnContent>;
+                return <SpecialColumnList></SpecialColumnList>;
             case 2:
                 return <SpecialColumnIntroduce></SpecialColumnIntroduce>;
 

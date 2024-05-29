@@ -5,20 +5,19 @@ import { useSearchParams } from "next/navigation";
 import React, {Suspense} from "react";
 
 
-export const SpecialColumnContent=()=>{
+export const SpecialColumnList=()=>{
 
     const params = useSearchParams();
     const columnId = params.get("id");
     const userId = api.column.getUserId.useQuery({ id: columnId }).data;
     const user = api.users.getOne.useQuery({ id: userId }).data;
 
-    const postInfo = api.post.getAll.useQuery({
+    const postInfo = api.post.getAllInOrder.useQuery({
         columnId: columnId,
         limit: 100000,
         offset: 0,
     }).data;
-
-    const SpecialColumnList = () => {
+    const Body = () => {
         return <>
                 <Suspense>
                     {postInfo && postInfo.length > 0
@@ -33,7 +32,7 @@ export const SpecialColumnContent=()=>{
     return(
         <div>
             <SortLabel/>
-            <SpecialColumnList />
+            <Body />
         </div>
     )
 }
