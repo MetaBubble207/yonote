@@ -8,9 +8,12 @@ import {useSearchParams} from "next/navigation";
 
 const Page = () => {
     // const statusClassName = `px-2 py-1 rounded-full ${isTop ? 'bg-yellow-500' : 'bg-transparent'} ${isFree ? 'text-white bg-green-500' : 'text-gray-700 bg-gray-200'}`;
-    const params = useSearchParams();
-    const columnId = params.get("columnId")
-    console.log(columnId)
+    let columnId;
+
+    if(typeof window !== "undefined") {
+        const params = useSearchParams();
+        columnId = params.get("columnId");
+    }
     // 表格内容
     return (
         <div className={'w-full h-full mt-16px ml-18px'}>

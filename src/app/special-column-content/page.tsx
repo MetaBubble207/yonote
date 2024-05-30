@@ -6,8 +6,6 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import { timeToDateString } from "@/tools/timeToString";
-import { post } from "@/server/db/schema";
-import { create } from "domain";
 
 
 const Page = () => {
@@ -26,10 +24,13 @@ const Page = () => {
   //   return divElements;
   // }
 
-  const params = useSearchParams()
-  const chapter = parseInt(params.get("c"));
-  const columnId = params.get("id");
-
+  let chapter;
+  let columnId;
+  if(typeof window !== "undefined") {
+    const params = useSearchParams();
+    chapter = parseInt(params.get("c"));
+    columnId = params.get("id");
+  }
 
   // const handleClick = () => {
   //   setIsHeartFilled(!isHeartFilled);

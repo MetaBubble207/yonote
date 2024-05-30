@@ -1,7 +1,5 @@
 "use client";
-import Head from "next/head";
 import { useEffect } from "react";
-import { Router } from "next/router";
 
 const Login = () => {
   const refreshCode = () => {

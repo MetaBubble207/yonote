@@ -1,5 +1,5 @@
 "use client"
-import React,{useState,ChangeEvent, use, useEffect} from "react";
+import React,{useState,ChangeEvent} from "react";
 import Image from "next/image";
 
 const Payment = () => {
