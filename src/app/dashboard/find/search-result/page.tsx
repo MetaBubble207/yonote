@@ -27,6 +27,10 @@ const Page = () => {
         }
     }, [searchValue, refetch]);
 
+    const handleButtonClick = async () => {
+            router.push(`/dashboard/find`);
+        };
+
 
     return (
         <Suspense>
@@ -36,7 +40,7 @@ const Page = () => {
                     {/*搜索框*/}
                     <div className={"flex items-center justify-between"}>
                         <SearchColumn SearchValue={searchValue}></SearchColumn>
-                        <div className={"w-50px ml-20px"}>取消</div>
+                        <button className={"w-50px ml-20px"} onClick={handleButtonClick}>取消</button>
                     </div>
 
                     {data?.map(item => (
