@@ -21,7 +21,7 @@ const LeftCompass = () => {
       {pathname !== "/writer/login" && (
         <div>
           <div className="fixed top-17.5 w-64.77925 h-screen shrink-0 bg-[#FFF] z-100">
-            <div className="w-65.25 h-72.4785 shrink-0 flex items-center flex-col pt-4.27">
+            <div className="w-65.25 h-72.4785 shrink-0 flex flex-col mt-10">
               {column && <Column />}
               <div
                 className={`w-65.25 h-12.4705 shrink-0 flex mt-35px ${

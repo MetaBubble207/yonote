@@ -24,13 +24,13 @@ const Page=()=>{
     if(columnId){
         data = api.column.getColumnDetail.useQuery({columnId:columnId}).data
     }
-    const [name, setName] = useState(data.name);
+    const [name, setName] = useState(data?.name);
     const [mode, setMode] = useState('');
     const [format, setFormat] = useState('');
-    const [price, setPrice] = useState(data.price);
-    const [intro, setIntro] = useState(data.introduce);
-    const [cover, setCover] = useState(data.logo);
-    const [description, setDescription] = useState(data.description);
+    const [price, setPrice] = useState(data?.price);
+    const [intro, setIntro] = useState(data?.introduce);
+    const [cover, setCover] = useState(data?.logo);
+    const [description, setDescription] = useState(data?.description);
     const [checkColor,setCheckColor] = useState("#1DB48D")
     const onChange = (checked: boolean) => {
         if(checked){

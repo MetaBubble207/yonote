@@ -6,24 +6,23 @@ import useLocalStorage from "@/tools/useStore";
 import {useEffect} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 const Homepagedata = () => {
-    // const [token] = useLocalStorage("token", null);
-    // console.log(token)
-    // const columns = api.column.getAllByUserId.useQuery({
-    //     userId: token
-    // }).data;
-    // const params = useSearchParams();
-    // const router = useRouter()
+    const [token] = useLocalStorage("token", null);
+    console.log(token)
+    const columns = api.column.getAllByUserId.useQuery({
+        userId: token
+    }).data;
+    const params = useSearchParams();
+    const router = useRouter()
 
-    // useEffect(()=>{
-    //     const columnId = params.get("columnId");
-    //     if((!columnId || columnId === "null") && columns){
-    //         router.push("/writer/homepage?columnId="+columns[0]?.id)
-    //     }
+    useEffect(()=>{
+        const columnId = params.get("columnId");
+        if((!columnId || columnId === "null") && columns){
+            router.push("/writer/homepage?columnId="+columns[0]?.id)
+        }
 
-    // },[columns])
-    
-    // const params = useSearchParams;
-    
+    },[columns])
+
+
 
 
     return (
