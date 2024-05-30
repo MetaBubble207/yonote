@@ -15,7 +15,7 @@ interface CarouselProps {
 }
 
 const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
-  const [currentIndices, setCurrentIndices] = useState([0, 1, 2, 3]);
+  const [currentIndices, setCurrentIndices] = useState<number[]>([]);
   const router = useRouter();
   const params = useSearchParams();
 
@@ -26,16 +26,22 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
     }
   }, [columns, params, router]);
 
+  useEffect(() => {
+    if (columns.length) {
+      setCurrentIndices(columns.slice(0, 4).map((_, index) => index));
+    }
+  }, [columns]);
+
   const goToNextImage = () => {
     setCurrentIndices((prevIndices) => {
-      const nextIndices = prevIndices.map((index) => (index + 4) % columns.length);
+      const nextIndices = prevIndices.map((index) => (index + 1) % columns.length);
       return nextIndices;
     });
   };
 
   const goToPrevImage = () => {
     setCurrentIndices((prevIndices) => {
-      const updatedIndices = prevIndices.map((index) => (index - 4 + columns.length) % columns.length);
+      const updatedIndices = prevIndices.map((index) => (index - 1 + columns.length) % columns.length);
       return updatedIndices;
     });
   };
@@ -48,7 +54,7 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
 
   return (
     <div className='w-213.34 h-94.7 bg-white border-0.5 border-solid border-#D9D9D9 border-rd-2 flex items-center'>
-      <button onClick={goToPrevImage} className='ml-6.6'>
+      <button onClick={goToPrevImage} className='ml-6.6' disabled={columns.length <= 4}>
         <Image src={'/images/writer/edit/left-c.svg'} alt={'left-c'} width={24} height={24} />
       </button>
       <div className='flex justify-between w-full px-8.2'>
@@ -67,7 +73,7 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
           </button>
         ))}
       </div>
-      <button onClick={goToNextImage} className='mr-6.6'>
+      <button onClick={goToNextImage} className='mr-6.6' disabled={columns.length <= 4}>
         <Image src={'/images/writer/edit/right-c.svg'} alt={'right-c'} width={24} height={24} />
       </button>
     </div>
@@ -75,3 +81,4 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
 };
 
 export default ColumnPopup;
+
