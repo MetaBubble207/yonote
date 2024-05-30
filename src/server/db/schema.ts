@@ -55,6 +55,7 @@ export const post = createTable(
     isTop: boolean("is_top").default(false),
     isFree: boolean("is_free").default(false),
     status: boolean("status"),
+    logo: text("logo"),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),

@@ -29,7 +29,7 @@ export const SpecialColumnHeader = () => {
         </div>
         <div className={"flex mb--50px mt-10px w-full"}>
             <div className={"ml-20px mt--10px w-30%"}>
-                <Image src={"/images/special-column/Mask group.png"} alt={"心智与阅读"} width={140} height={160}
+                <Image src={column.data?.logo} alt={"心智与阅读"} width={140} height={160}
                        style={{width: "100%"}}/>
             </div>
             <div className={"flex flex-col ml-10px space-y-0 "}>
