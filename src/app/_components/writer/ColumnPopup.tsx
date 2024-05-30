@@ -16,9 +16,8 @@ interface CarouselProps {
 
 const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
   const [currentIndices, setCurrentIndices] = useState([0, 1, 2, 3]);
-
-  const params = useSearchParams();
   const router = useRouter();
+  const params = useSearchParams();
 
   useEffect(() => {
     const columnId = params.get("columnId");
@@ -42,7 +41,9 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
   };
 
   const handleImageClick = (index: number) => {
-    onImageClick(index, columns[index]);
+    const selectedColumn = columns[index];
+    onImageClick(index, selectedColumn);
+    router.push("/writer/homepage?columnId=" + selectedColumn.id);
   };
 
   return (
@@ -55,7 +56,7 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
           <button key={index} onClick={() => handleImageClick(index)} className='flex flex-col items-center w-1/4'>
             <img
               src={columns[index]?.logo}
-              alt={`无图片`}
+              alt={`图片${index + 1}`}
               width={160}
               height={51.5}
               className='block'
@@ -74,6 +75,3 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
 };
 
 export default ColumnPopup;
-
-
-

@@ -3,6 +3,7 @@ import Image from "next/image";
 import ColumnPopup from "./ColumnPopup";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
+import { useRouter } from 'next/router';
 
 interface ColumnData {
   id: string;
@@ -26,7 +27,6 @@ const Column = () => {
 
   useEffect(() => {
     if (columnData) {
-      // 过滤出 userId 对应的 column 数据，并按 createdAt 排序
       const filteredAndSortedColumns = columnData
         .filter(column => column.userId === token)
         .map(column => ({
