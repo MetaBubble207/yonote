@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { order } from "@/server/db/schema"; 
+import { column, order } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
 export const orderRouter = createTRPCRouter({
@@ -36,5 +36,51 @@ export const orderRouter = createTRPCRouter({
       return orders;
     }),
 
- 
+// 创建订单
+  createOrder: publicProcedure
+    .input(z.object({
+      ownerID: z.string(),
+      name: z.string(),
+      price: z.number(),
+      payment: z.string(),
+      status: z.boolean(),
+      buyerID: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // 查询订单是否已存在
+        const existingOrder = await ctx.db.select().from(order).where(eq(order.name, input.name));
+
+        // 如果订单不存在，则插入新订单
+        if (existingOrder.length === 0) {
+          const insertedOrder = await ctx.db.insert(order).values({
+            ownerID: input.ownerID,
+            name: input.name,
+            price: input.price,
+            payment: input.payment,
+            status: input.status,
+            buyerID: input.buyerID,
+          }).returning({
+            id: order.id,
+            ownerID: order.ownerID,
+            name: order.name,
+            price: order.price,
+            payment: order.payment,
+            status: order.status,
+            buyerID: order.buyerID,
+          });
+
+          return insertedOrder[0]; // 返回插入的订单对象
+        } else {
+          throw new Error("Order already exists!"); // 如果订单已存在，则抛出异常
+        }
+      } catch (error) {
+        console.error("Error creating order:", error);
+        throw error; // 抛出异常，让上层处理
+      }
+    })
+
+
 });
