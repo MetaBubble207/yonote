@@ -30,9 +30,14 @@ export const SpecialColumnBody = () => {
     });
 
     const [isSubscribe, setIsSubscribe] = useState(false);
-    const subscribeFn = () => {
+    
+    const [check, setCheck] = useState(false);
+
+    const setting = () => {
         setIsSubscribe(!isSubscribe);
+        setCheck(!check);
     }
+
     return(
         <div className={" w-full  bg-#fff rounded-t-30px lh-6 mt-20px"}>
             {/*订阅栏*/}
@@ -65,11 +70,11 @@ export const SpecialColumnBody = () => {
             {/*按钮*/}
             <button
                 className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500"}
-                onClick={subscribeFn}>
+                onClick={setting}>
                 订阅
             </button>
             <div className="fixed top-200px p-auto">
-                {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)}></Reserved>}
+                {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}
             </div>
         </div>
     )
