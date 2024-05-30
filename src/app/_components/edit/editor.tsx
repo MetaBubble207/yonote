@@ -11,7 +11,7 @@ import {
 import Preview from "@/app/_components/writer/preview";
 import TagInput from "../../_components/edit/tag";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 
 function MyEditor() {
@@ -26,7 +26,6 @@ function MyEditor() {
   const b = api.draft.create.useMutation({
     onSuccess: (r) => {
       console.log(r);
-      console.log("保存草稿成功!");
       // setExample(api.draft.getAll.useQuery());
     },
   });
@@ -51,26 +50,21 @@ function MyEditor() {
   const createpost = api.post.create.useMutation({
     onSuccess: (r) => {
       console.log(r);
-      console.log("发布成功!");
       // setExample(api.post.getAll.useQuery());
     },
   });
 
-  const c2 = () => {
-    createpost.mutate({
-      name: "test2",
-      content: "这是一个发布测试内容",
-      tag: "test2",
-      status: true,
-    });
-  };
+  // const c2 = () => {
+  //   createpost.mutate({
+  //     name: "test2",
+  //     content: "这是一个发布测试内容",
+  //     tag: "test2",
+  //     status: true,
+  //   });
+  // };
 
-  const [token] = useLocalStorage("token", null);
-  let columnId: string;
-  if (token) {
-    columnId = api.column.getColumnId.useQuery({ userId: token }).data!;
-    console.log(columnId);
-  }
+  const params = useSearchParams();
+  const columnId = params.get("columnId")
 
   const [editor, setEditor] = useState<IDomEditor | null>(null);
   const [html, setHtml] = useState("<p>hello</p>");
@@ -99,9 +93,9 @@ function MyEditor() {
       content: html, // 使用 HTML 内容作为草稿的内容
       tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
       status: false,
-      columnId: columnId ?? "1",
+      columnId: columnId,
     });
-    router.push("/writer/content-management");
+    router.push(`/writer/content-management?columnId=${columnId}`);
   };
 
   // 发布的函数
@@ -112,8 +106,9 @@ function MyEditor() {
       content: html, // 使用 HTML 内容作为草稿的内容
       tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
       status: true,
+      columnId: columnId
     });
-    router.push("/");
+    router.push(`/writer/content-management?columnId=${columnId}`);
   };
 
   const toolbarConfig: Partial<IToolbarConfig> = {}; // 工具栏配置

@@ -20,18 +20,20 @@ export const postRouter = createTRPCRouter({
             content: z.string(),
             tag: z.string(),
             status: z.boolean(),
+            columnId: z.string()
         }))
         .mutation(async ({ ctx, input }) => {
 
             await new Promise((resolve) => setTimeout(resolve, 1000));
             ctx.db.select().from(post).where(eq(post.name, input.name))
-            return await ctx.db.insert(post).values({
+            return ctx.db.insert(post).values({
                 name: input.name,
                 content: input.content,
                 tag: input.tag,
                 status: true,
-                updatedAt: getCurrentTime()
-            }).returning({ name: post.name, content: post.content, tag: post.tag, status: post.status });
+                updatedAt: getCurrentTime(),
+                columnId: input.columnId
+            }).returning({name: post.name, content: post.content, tag: post.tag, status: post.status, columnId: post.columnId});
         }),
 
     updateIsTop: publicProcedure

@@ -1,13 +1,16 @@
-
+"use client"
 import React from 'react';
 import MyPagination from '@/app/_components/pagination/page';
 import Date from "@/app/_components/datarange/Date";
 import {ContentForm} from "@/app/_components/writer/ContentForm";
 import Link from 'next/link';
+import {useSearchParams} from "next/navigation";
 
 const Page = () => {
     // const statusClassName = `px-2 py-1 rounded-full ${isTop ? 'bg-yellow-500' : 'bg-transparent'} ${isFree ? 'text-white bg-green-500' : 'text-gray-700 bg-gray-200'}`;
-
+    const params = useSearchParams();
+    const columnId = params.get("columnId")
+    console.log(columnId)
     // 表格内容
     return (
         <div className={'w-full h-full mt-16px ml-18px'}>
@@ -15,7 +18,7 @@ const Page = () => {
                 <div className={'flex items-center pt-51px '}>
                     <div className="text-[#323232] text-4 font-not-italic font-700 lh-6 ml-32.5px">内容管理</div>
                     {/*发布*/}
-                    <Link href={'../edit/edit'} className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+ 发布</Link>
+                    <Link href={`../edit/edit?columnId=${columnId}`} className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+ 发布</Link>
                 </div>
 
                 {/*justify-between*/}

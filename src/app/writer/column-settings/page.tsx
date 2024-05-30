@@ -220,6 +220,7 @@ const Page=()=>{
                             name: name ?? data!.name ?? "",
                             price: price ?? data!.price ?? 0,
                             introduce: intro ?? data!.introduce ?? "",
+                            description: description ?? data!.description ?? ""
                         })
                     }}>提交
                     </button>

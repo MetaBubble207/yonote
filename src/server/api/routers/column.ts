@@ -40,13 +40,14 @@ export const columnRouter = createTRPCRouter({
             return ctx.db.query.column.findFirst({ where: eq(column.userId, input.userId) });
         }),
     update: publicProcedure
-        .input(z.object({ id: z.string(), name: z.string(), price: z.number(), introduce: z.string() }))
+        .input(z.object({ id: z.string(), name: z.string(), price: z.number(), introduce: z.string(),description: z.string() }))
         .mutation(async ({ ctx, input }) => {
             return ctx.db.update(column).set({
                 name: input.name,
                 price: input.price,
                 introduce: input.introduce,
-            })
+                description: input.description,
+            }).where(eq(column.id, input.id));
         }),
     updateCover: publicProcedure
         .input(z.object({id:z.string(),cover:z.string()}))
