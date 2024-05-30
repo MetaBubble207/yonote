@@ -18,7 +18,7 @@ const Find=()=>{
                 <Image src={"/images/subscribe/underline.svg"} alt="underline" width={11} height={4} className="w-2.75 h-1 ml-9 mt-0.75"></Image>
 
 
-                {/*活动列表-已结束*/}
+                {/*活动列表*/}
                 <Activities/>
             </div>
 
