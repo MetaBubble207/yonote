@@ -8,7 +8,6 @@ import Link from "next/link";
 const Activities =()=>{
     const [data, setData] = useState(null);
 
-    // 使用 useQuery 钩子获取数据
     const { data: queryData} = api.activity.getAll.useQuery();
 
     // 在数据加载完成时更新状态
@@ -20,6 +19,9 @@ const Activities =()=>{
                 const endDate = new Date(item.enddate);
                 return endDate > currentTime;
             });
+
+            //
+            goingData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
             setData(goingData);
             // setData(queryData)
         }
