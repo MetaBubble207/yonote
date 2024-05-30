@@ -1,16 +1,22 @@
 "use client"
-import React from "react";
+import React, {useEffect} from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import useLocalStorage from "@/tools/useStore";
+import {api} from "@/trpc/react";
 
 const Compass= () => {
-    const name = "我的昵称"
     const router = useRouter();
 
     const handleLogout = () => {
+        setToken(null)
         router.push("/edit/login");
     }
+    const [token,setToken] = useLocalStorage("token",null)
 
+    const user = api.users.getOne.useQuery({
+        id: token ?? "",
+    }).data
     return (
         <div>
             <div className="fixed top-0 w-100% h-17.5 shrink-0 bg-[#FFF] flex items-center justify-between pr-23px z-101">
@@ -43,10 +49,10 @@ const Compass= () => {
                 </div>
                 {/*右半边信息区*/}
                 <div className={"flex items-center"}>
-                    <Image src={"/images/writer/touxiang.svg"} alt="Ellipse 7" width={44} height={44}
+                    <Image src={user?.avatar ?? "/images/user/Loading.svg"} alt="avatar" width={44} height={44}
                            className="w-11 h-11 shrink-0 border-rd-11"></Image>
                     <div className="ml-3.4275">
-                        {name}
+                        {user?.name ?? "您还未登录"}
                     </div>
                     <div>
                         <select name="" id="" onChange={handleLogout}>

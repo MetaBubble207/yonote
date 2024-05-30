@@ -24,6 +24,9 @@ export const userRouter = createTRPCRouter({
     getOne: publicProcedure
         .input(z.object({id: z.string()}))
         .query(({ctx,input}) => {
+            if(input.id === ""){
+                return null
+            }
             return ctx.db.query.user.findFirst(
                 {
                     where: eq(user.id,input.id)
