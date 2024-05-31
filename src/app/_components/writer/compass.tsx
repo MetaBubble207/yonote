@@ -18,7 +18,7 @@ const Compass = () => {
     id: token ?? "",
   }).data;
 
-  if (!user?.name) {
+  if (!user?.name && typeof window !== "undefined") {
     router.push("/writer/login");
   }
 
