@@ -1,10 +1,11 @@
 import Course from "@/app/_components/writer/create/course";
+import {Suspense} from "react";
 
 const Page =()=>{
     return(
-        <div>
+        <Suspense>
             <Course/>
-        </div>
+        </Suspense>
     )
 }
 export default Page;

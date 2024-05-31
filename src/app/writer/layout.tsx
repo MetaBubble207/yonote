@@ -3,13 +3,13 @@ import "./writer.css";
 import Compass from "@/app/_components/writer/compass";
 import LeftCompass from "@/app/_components/writer/left_compass";
 import useLocalStorage from "@/tools/useStore";
-
 const dialogLayout = ({ children }: { children: React.ReactNode }) => {
-  if(typeof window !== 'undefined'){
+  if(typeof window !== 'undefined') {
     const [token] = useLocalStorage("token", null);
-    if(!token){
+    if (!token) {
       window.location.href = "/writer/login"
     }
+
   }
   return (
     <html>

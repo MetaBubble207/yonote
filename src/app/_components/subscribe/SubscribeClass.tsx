@@ -3,12 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import {timeToDateString} from "@/tools/timeToString";
 
-const SubscribeColumn = (prop) => {
-    console.log(prop)
-    const column = prop.column;
+const SubscribeClass = (prop) => {
+    // console.log(prop)
+    const column = prop?.column;
     return (
         <Link href={`../special-column-content?c=1&id=${column.id}`}>
-            <div className="h-29.25 mt-4 flex">
+            暂时还没有数据哦~~
+            {/* <div className="h-29.25 mt-4 flex">
                 <div className="relative h-18">
                     <Image src={column.user?.avatar} alt="avatar" width={24} height={24} className="rounded-full w-11.25 h-11.25 mt-4"></Image>
                     <div className="bottom-2 right-1 absolute">
@@ -26,9 +27,9 @@ const SubscribeColumn = (prop) => {
                         <Image src={"/images/subscribe/cover.png"} alt="cover" width={24} height={24} className="w-15.5 h-19 ml-3"></Image>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </Link>
 
     )
 }
-export default SubscribeColumn;
+export default SubscribeClass;

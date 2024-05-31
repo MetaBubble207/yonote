@@ -1,10 +1,11 @@
 import Payment from "@/app/_components/writer/create/payment";
+import {Suspense} from "react";
 
 const Page =()=>{
     return(
-        <div>
+        <Suspense>
             <Payment/>
-        </div>
+        </Suspense>
     ) 
 };
 

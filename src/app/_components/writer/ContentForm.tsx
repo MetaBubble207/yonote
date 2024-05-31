@@ -1,9 +1,10 @@
 "use client"
 import Image from "next/image";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {api} from "@/trpc/react";
 import {timeToDateString} from "@/tools/timeToString";
 import useLocalStorage from "@/tools/useStore";
+import {useSearchParams} from "next/navigation";
 
 export const ContentForm=()=>{
 
@@ -13,27 +14,18 @@ export const ContentForm=()=>{
     //     { title: '标题2', isTop: false, isFree: true, label: '免费', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
     //     { title: '标题3', isTop: false, isFree: true, label: '全部', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
     // ];
-    let contentData:any;
+    const params = useSearchParams();
+    const columnId = params.get("columnId")
+    let contentData =  api.post.getAll.useQuery({
+        limit: 5,
+        offset: 0,
+        columnId:columnId
+    }).data;
+    useEffect(() => {
+
+    }, [contentData]);
     const [data,setData] = useState([])
-    const [token, setToken] = useLocalStorage("token",null);
-    // const [data,setData] = useState<ArticleProp[]>(options)
-    if(typeof window !== 'undefined'){
-        // const token = JSON.parse(localStorage.getItem("token"));
-        console.log(token)
-        if(token){
-            console.log("token===========",token)
-            // userId = api.column.getColumnId.useQuery({userId:token}).data
-            const columnId = api.column.getColumnId.useQuery({
-                userId:token
-            }).data!
-            console.log(columnId,token)
-            contentData = api.post.getAll.useQuery({
-                limit: 5,
-                offset: 0,
-                columnId:columnId
-            }).data
-        }
-    }
+
     const updateIsTopApi = api.post.updateIsTop.useMutation({
         onSuccess: (r) => {
             console.log(r)

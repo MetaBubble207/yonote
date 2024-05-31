@@ -24,8 +24,8 @@ import {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `yonote_${name}`);
-export const subscription_manager = createTable(
-  "subscription_manager",
+export const subscription = createTable(
+  "subscription",
   {
     id: serial("id").primaryKey(),
     userId: varchar("user_id"),
@@ -55,6 +55,7 @@ export const post = createTable(
     isTop: boolean("is_top").default(false),
     isFree: boolean("is_free").default(false),
     status: boolean("status"),
+    logo: text("logo"),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
@@ -70,7 +71,7 @@ export const user = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at"),
-    phone: integer("phone"),
+    phone: varchar("phone"),
     idNumber: varchar("id_number"),
     password: integer("password"),
     avatar: text("avatar"),
@@ -95,7 +96,7 @@ export const column = createTable(
     introduce: varchar("introduce"),
     type: varchar("type"),
     price: real("price"),
-    logo: text("logo"),
+    logo: text("logo").default("http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png"),
     description: varchar("description"),
     payment: varchar("payment"),
     userId: varchar("user_id"),
@@ -118,16 +119,18 @@ export const order = createTable(
   "order",
   {
     id: serial("id").primaryKey(),
+    columnID: varchar("columnID"),
     name: varchar("name", { length: 256 }),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at"),
     price: real("price"),
-    ownerID: serial("ownerID"),
+    buyerID:varchar("buyerID"),
+    ownerID: varchar("ownerID"),
     payment: varchar("payment"),
-    endStatus: boolean("status"),
-    recommendationID: serial("recommendationID"),
+    endStatus: boolean("endstatus"),
+    recommendationID: varchar("recommendationID"),
     status: boolean("status"),
     type: varchar("type"),
     enddate: timestamp("enddate"),
@@ -152,6 +155,7 @@ export const speedUp = createTable(
 export const wallet = createTable(
   "wallet",
   {
+    userId: varchar("user_id").notNull(),
     regularIncome: real("regularIncome"),
     freezeIncome: real("regularOutcome"),
     createdAt: timestamp("created_at")
@@ -165,12 +169,15 @@ export const activity = createTable(
   "activity",
   {
     id: serial("id").primaryKey(),
+    name:varchar("name",{length:256}),
     introduction: varchar("introduction", { length: 256 }),
     url: varchar("url", { length: 256 }),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at"),
+    isEnd:boolean("isEnd"),
+    enddate: timestamp("enddate"),
   }
 );
 
@@ -232,5 +239,20 @@ export const postLike = createTable(
     isLike: boolean("isLike"),
   }
 );
+
+export const postRead = createTable(
+  "postRead",
+  {
+    id: serial("id").primaryKey(),
+    postId: integer("postId"),
+    userId: varchar("userId"),
+    createdAt: timestamp("created_at")
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at"),
+    readCount: integer("readCount"),
+  }
+) 
+
 
 export type User = typeof user.$inferInsert

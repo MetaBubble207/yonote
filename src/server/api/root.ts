@@ -5,6 +5,11 @@ import { testRouter } from "@/server/api/routers/test";
 import { columnRouter } from "@/server/api/routers/column";
 import { draftRouter } from "./routers/draft";
 import { postLikeRouter } from "./routers/postLike";
+import { walletRouter } from "./routers/wallet";
+import { orderRouter } from "./routers/order";
+import { activityRouter } from "./routers/activity";
+import { readRouter } from "./routers/read";
+import {subscriptionRouter} from "@/server/api/routers/subscription";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +23,12 @@ export const appRouter = createTRPCRouter({
   column: columnRouter,
   draft: draftRouter,
   like: postLikeRouter,
+  wallet:walletRouter,
+  order:orderRouter,
+  activity:activityRouter,
+  read: readRouter,
+  subscription: subscriptionRouter,
+
 });
 
 // export type definition of API

@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import { Image } from "antd";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
@@ -7,19 +7,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import { timeToDateString } from "@/tools/timeToString";
 
-const Page = () => {
-  // function formatTime(date: Date) {
-  //   const month = date.getMonth() + 1;
-  //   const day = date.getDate();
-  //   const hours = date.getHours();
-  //   const minutes = date.getMinutes();
-  //   const monthStr = month < 10 ? "0" + month : month;
-  //   const dayStr = day < 10 ? "0" + day : day;
-  //   const hoursStr = hours < 10 ? "0" + hours : hours;
-  //   const minutesStr = minutes < 10 ? "0" + minutes : minutes;
-  //   return `${monthStr}.${dayStr} ${hoursStr}:${minutesStr}`;
-  // }
 
+const Page = () => {
+  const router = useRouter();
   // function generateDivElements(arr: Array<string>) {
   //   // 使用 map 方法遍历数组，并为每个数组元素创建一个 <div> 元素
   //   const divElements = arr.map((_, index) => (
@@ -34,22 +24,25 @@ const Page = () => {
   //   return divElements;
   // }
 
-  const params = useSearchParams()
-  const chapter = parseInt(params.get("c"));
-  const columnId = params.get("id");
-  // 点赞
-  const [isHeartFilled, setIsHeartFilled] = useState(false);
+  let chapter;
+  let columnId;
+  if(typeof window !== "undefined") {
+    const params = useSearchParams();
+    chapter = parseInt(params.get("c"));
+    columnId = params.get("id");
+  }
 
-  const handleClick = () => {
-    setIsHeartFilled(!isHeartFilled);
-    if (isHeartFilled) {
-      setLikecount(likecount - 1);
-    } else {
-      setLikecount(likecount + 1);
-    }
-  };
+  // const handleClick = () => {
+  //   setIsHeartFilled(!isHeartFilled);
+  //   if (isHeartFilled) {
+  //     setLikecount(likecount - 1);
+  //   } else {
+  //     setLikecount(likecount + 1);
+  //   }
+  // };
 
   const [token] = useLocalStorage("token", null);
+
 
   const postData = api.post.getById.useQuery({
     id: columnId,
@@ -57,41 +50,50 @@ const Page = () => {
   }).data;
   const prepost = api.post.getById.useQuery({
     id: columnId,
-    chapter: chapter-1
+    chapter: chapter - 1
   }).data;
   const nextpost = api.post.getById.useQuery({
     id: columnId,
-    chapter: chapter+1
+    chapter: chapter + 1
   }).data;
   const numData = api.post.getNumById.useQuery({
     id: columnId,
   }).data;
-  
+
+  const readList = api.read.getReadList.useMutation({
+    onSuccess: () => {
+      console.log("success");
+    }
+  })
+
+
+
+
   const [date, setDate] = useState("");
   const [name, setName] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [content, setContent] = useState("");
-  const [likecount, setLikecount] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
   const [pretitle, setPretitle] = useState(null);
   const [nexttitle, setNexttitle] = useState(null);
+  const [isHeartFilled, setIsHeartFilled] = useState(false);
 
-  const update = api.post.create.useMutation({
-    onSuccess: (r) => {
-      console.log('123' + r)
-    },
-    onError: (e) => {
-
-    }
+  const postId = api.like.getPostId.useQuery({
+    id: columnId,
+    chapter: chapter,
   })
-  // update.mutate({
-  //   name:name,
-  //   id: 16,
-  // })
+  const likeList = api.like.getLikeList.useQuery({
+    postId: postId.data,
+    userId: token
+  }).data;
+
+  const getLikeCount = api.like.getLikeCount.useQuery({
+    postId: postId.data,
+  }).data;
 
 
-
- 
   useEffect(() => {
+
     if (postData) {
       if (postData.name) {
         const pubTime = postData.createdAt;
@@ -114,26 +116,128 @@ const Page = () => {
         setContent("");
       }
 
-      if (postData.likeCount) {
-        setLikecount(postData.likeCount);
-      } else {
-        setLikecount(0);
-      }
-      
+
       if (chapter > 1 && prepost) {
         setPretitle(prepost.name);
-      }else {
+      } else {
         setPretitle("已经是第一篇了");
       }
       if (chapter <= numData && nextpost) {
-        setNexttitle(nextpost.name);    
-      }else {
+        setNexttitle(nextpost.name);
+      } else {
         setNexttitle("已经是末篇了");
       }
-      
+
+      readList.mutate({
+        id: columnId,
+        userId: token,
+        chapter: chapter
+      })
+
     }
-    
+    // console.log(likeList);
+    // if(likeList.){
+    //   console.log(likeList);
+    // }else{
+    //   setIsHeartFilled(false);
+    // }
+
+    // const createRead = api.read.create.useMutation({
+    //   onSuccess: (r) => {
+    //     console.log('阅读记录创建成功');
+    //   }
+    // })
+    // if (readList.data) {
+    //   if (readList.data.length === 0 && readList.data) {
+    //     createRead.mutate({
+    //       postId: postId.data,
+    //       userId: token,
+    //     })
+    //   } else {
+    //     console.log("已经阅读过");
+    //     console.log(readList.data.length);
+
+    //   }
+    // } else {
+    //   console.log("已经阅读过");
+    // }
+
+
+
   }, [postData]);
+  // 修改点赞状态
+  const updateLike = api.like.updateLike.useMutation({
+    onSuccess: (r) => {
+      console.log('点赞状况更改成功')
+    },
+    onError: (e) => {
+    }
+  })
+
+  // const c = () => {updateLike.mutate({
+  //   postId: postId.data,
+  //   userId: "ockxo6uf2GzwXxVHGBsPQleFbm0E",
+  //   isLike: !isHeartFilled
+  // })}
+  const createLike = api.like.create.useMutation({
+    onSuccess: (r) => {
+      console.log('点赞成功')
+
+    }
+  })
+  const uptime = api.like.uptime.useMutation({
+    onSuccess: (r) => {
+      console.log('更新时间成功')
+    },
+    onError: (e) => {
+    }
+  })
+
+  // 点赞
+  useEffect(() => {
+    if (likeList) {
+      likeList.length === 0 ? setIsHeartFilled(false) : setIsHeartFilled(likeList[0].isLike);
+    } else {
+      setIsHeartFilled(false);
+    }
+    // 点赞总数
+    setLikeCount(getLikeCount ?? 0)
+  }, [likeList]);
+
+
+
+  const likehandle = () => {
+    if (likeList.length === 0) {
+      createLike.mutate({
+        postId: postId.data,
+        userId: token,
+        isLike: true
+      },
+
+      )
+    } else {
+      updateLike.mutate({
+        postId: postId.data,
+        userId: token,
+        isLike: !isHeartFilled
+      }),
+        uptime.mutate({
+          postId: postId.data,
+          userId: token,
+        })
+    }
+    setIsHeartFilled(!isHeartFilled);
+    if (isHeartFilled) {
+      setLikeCount(likeCount - 1);
+    } else {
+      setLikeCount(likeCount + 1);
+    }
+
+  }
+  // 目录跳转
+  const link = () => {
+    router.push(`/special-column?c=1&id=${columnId}`);
+  }
 
   return (
     <div className={"relative bg-#F5F7FB min-h-screen pb-10"}>
@@ -148,7 +252,7 @@ const Page = () => {
             加速计划
           </div>
           <div className={"inline-block ml-10px mr-16px"}>
-            <Image
+            <img
               src={"/images/special-column/Share-black.png"}
               alt={"心智与阅读"}
               width={12}
@@ -163,7 +267,7 @@ const Page = () => {
           {/*左边头像*/}
           <div>
             <div>
-              <Image
+              <img
                 src={postData?.user.avatar}
                 alt={"avatar"}
                 width={33}
@@ -183,7 +287,7 @@ const Page = () => {
                 {postData?.user.name}
               </div>
               <div>
-                <Image
+                <img
                   src={"/images/special-column/Group 225.png"}
                   alt={"心智与阅读"}
                   width={12}
@@ -236,21 +340,21 @@ const Page = () => {
               </span>
             );
           })}
-          <div className="flex absolute right-2" onClick={handleClick}>
-            <Image
+          <div className="flex absolute right-2">
+            <img
               src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 1.png"}
               alt={"爱心"}
               width={18}
               height={18}
-              objectFit="none"
               className="w-5 h-5"
+              onClick={likehandle}
             />
             <div
               className={
                 "text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-2.5 mr-4"
               }
             >
-              {likecount}
+              {likeCount}
             </div>
           </div>
         </div>
@@ -267,7 +371,7 @@ const Page = () => {
 
           <div className={"mx-16px"}>
             {/*目录*/}
-            <Link href={"/special-column"}>
+            <div onClick={link}>
               <div className={"flex items-center mt-2"}>
                 <div
                   className={
@@ -277,7 +381,7 @@ const Page = () => {
                   心智与阅读•目录
                 </div>
                 <div className={"ml-5px"}>
-                  <Image
+                  <img
                     src={"/images/special-column/Sort-one (排序1).png"}
                     alt={"心智与阅读"}
                     width={14}
@@ -285,7 +389,7 @@ const Page = () => {
                   />
                 </div>
               </div>
-            </Link>
+            </div>
 
             {/*上一篇下一篇*/}
             <div className="flex mt-8px">
@@ -293,7 +397,7 @@ const Page = () => {
               {chapter === 1 ? (
                 <div className={"flex flex-col"}>
                   <div className={"flex items-center"}>
-                    <Image
+                    <img
                       src={"/images/special-column/Double-left (双左).png"}
                       alt={"心智与阅读"}
                       width={14}
@@ -320,7 +424,7 @@ const Page = () => {
                   <Link className="flex flex-col" href={`../special-column-content?c=${chapter - 1}&id=${columnId}`}>
                     <div className={"flex items-center"}>
                       <div>
-                        <Image
+                        <img
                           src={"/images/special-column/Double-left (双左).png"}
                           alt={"心智与阅读"}
                           width={14}
@@ -346,62 +450,62 @@ const Page = () => {
                 )}
               {numData <= chapter ? (
                 <div className="flex flex-col ml-auto">
-                <div className={"flex items-center justify-end"}>
+                  <div className={"flex items-center justify-end"}>
+                    <div
+                      className={
+                        "text-[#333] text-3 font-not-italic font-400 lh-6 "
+                      }
+                    >
+                      下一篇
+                    </div>
+                    <div>
+                      <img
+                        src={"/images/special-column/Double-left (双右) .png"}
+                        alt={"心智与阅读"}
+                        width={14}
+                        height={14}
+                      />
+                    </div>
+                  </div>
                   <div
                     className={
-                      "text-[#333] text-3 font-not-italic font-400 lh-6 "
+                      "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
                     }
                   >
-                    下一篇
-                  </div>
-                  <div>
-                    <Image
-                      src={"/images/special-column/Double-left (双右) .png"}
-                      alt={"心智与阅读"}
-                      width={14}
-                      height={14}
-                    />
+                    已经是末篇了
                   </div>
                 </div>
-                <div
-                  className={
-                    "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
-                  }
-                >
-                  已经是末篇了
-                </div>
-              </div>
-              ):
-              (
-                <Link className="flex flex-col ml-auto " href={`../special-column-content?c=${chapter + 1}&id=${columnId}`}>
-                <div className={"flex items-center justify-end"}>
-                  <div
-                    className={
-                      "text-[#333] text-3 font-not-italic font-400 lh-6 "
-                    }
-                  >
-                    下一篇
-                  </div>
-                  <div>
-                    <Image
-                      src={"/images/special-column/Double-left (双右) .png"}
-                      alt={"心智与阅读"}
-                      width={14}
-                      height={14}
-                    />
-                  </div>
-                </div>
-                <div
-                  className={
-                    "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
-                  }
-                >
-                  {nexttitle}
-                </div>
-              </Link>
-              )
+              ) :
+                (
+                  <Link className="flex flex-col ml-auto " href={`../special-column-content?c=${chapter + 1}&id=${columnId}`}>
+                    <div className={"flex items-center justify-end"}>
+                      <div
+                        className={
+                          "text-[#333] text-3 font-not-italic font-400 lh-6 "
+                        }
+                      >
+                        下一篇
+                      </div>
+                      <div>
+                        <img
+                          src={"/images/special-column/Double-left (双右) .png"}
+                          alt={"心智与阅读"}
+                          width={14}
+                          height={14}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className={
+                        "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
+                      }
+                    >
+                      {nexttitle}
+                    </div>
+                  </Link>
+                )
               }
-              
+
             </div>
           </div>
         </div>

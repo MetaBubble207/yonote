@@ -1,10 +1,11 @@
 import Column from "@/app/_components/writer/create/column";
+import {Suspense} from "react";
 
 const Page =()=>{
     return(
-        <div>
+        <Suspense>
             <Column/>
-        </div>
+        </Suspense>
     )
 }
 

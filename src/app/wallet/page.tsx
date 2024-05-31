@@ -4,15 +4,23 @@ import { time } from "console";
 import Image from "next/image"
 import React, {useState, useEffect} from "react"
 import { string } from "zod";
+import { api } from "@/trpc/react";
+
+interface WalletData {
+    balance: number;
+    frozenAmount: number;
+    cashableAmount: number;}
 
 const Wallet = () => {
-    let count = 1234.01;
-    let frozen = 1234.22;
-    let cashable = 12349.8;
-
+    const {  data, isLoading, isError } = api.wallet.getBalance.useQuery<WalletData>();
     const [payments, setPayments] = useState<Array<{ name: string; date: string; time:string; sign:string; amount: number }>>([]);
     const [transactionType, setTransactionType] = useState("expenditure"); // 跟踪交易类型
 
+    const balance = data?.balance ?? 0;
+    const frozenAmount = data?.frozenAmount ?? 0;
+    const cashableAmount = data?.cashableAmount ?? 0;
+
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -44,6 +52,7 @@ const Wallet = () => {
       setTimeout(() => {
         // 模拟从数据库中获取的数据
         const data = [
+            //     const { data, isLoading, isError } = api.wallet.getBalance.useQuery<WalletData>();
           { name: '《xx》加速计划', date: '2024-09-09', time:'14: 32', sign:'-¥', amount: 1234.01 },
           { name: '《xx》加速计划', date: '2024-09-09', time:'14: 32', sign:'-¥', amount: 1234.02 },
           { name: '《xx》加速计划', date: '2024-09-09', time:'14: 32', sign:'-¥', amount: 1234.03 },
@@ -67,7 +76,14 @@ const Wallet = () => {
         } 
     };
 
+    
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
+    if (isError || !data) {
+        return <div>Error loading data</div>;
+    }
 
     return (
         <div>
@@ -80,14 +96,14 @@ const Wallet = () => {
                             账户余额
                         </div>
                         <div className="w-25 text-[#FFF] font-D-DIN text-6 font-not-italic font-700 lh-6 ml-6 mt-2">
-                            ¥{count}
+                            ¥{balance}
                         </div>
                         <div className="flex flex-wrap  h-6 shrink-0 text-[#FFF]">
                             <div className="ml-6 mt-9">
-                                冻结中 <span>¥{frozen}</span>
+                                冻结中 <span>¥{frozenAmount}</span>
                             </div>
                             <div className="ml-11.75 mt-9">
-                                可提现 <span>¥{cashable}</span>
+                                可提现 <span>¥{cashableAmount}</span>
                             </div>
                         </div>
                         <div className="w-7.5 text-[#252525] text-3 font-500 lh-6 ml-73.75 mt--8">

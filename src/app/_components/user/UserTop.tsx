@@ -5,7 +5,7 @@ import React from "react";
 import useLocalStorage from "@/tools/useStore";
 import {useRouter, useSearchParams} from "next/navigation";
 import {api} from "@/trpc/react";
-export const UserTop = () => {
+export const  UserTop = () => {
     let userInfo;
     const [token, setToken] = useLocalStorage("token", null);
     const router = useRouter();
@@ -82,7 +82,7 @@ export const UserTop = () => {
                         />
                     </div>
                     <span className="ml-1 w-18 text-[#999] font-Source Han Sans SC text-2.5 font-not-italic font-400 lh-6 items-center">
-                1317wfa2
+                {userInfo?.idNumber}
               </span>
                 </div>
             </div>

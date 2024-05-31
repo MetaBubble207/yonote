@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { ConfigProvider, DatePicker, Space } from 'antd';
 import locale from 'antd/locale/zh_CN';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 import 'dayjs/locale/zh-cn';
-import data from './imitate.json'
 import Echarts from './Echarts';
 
 const Daterange: React.FC = (props,ref) => {
@@ -18,7 +17,7 @@ const Daterange: React.FC = (props,ref) => {
             console.log('Clear');
         }
     };
-    
+
 
     const disabledDate = (time: any) => {
         const today = new Date();

@@ -2,13 +2,21 @@
 import SubscribeColumn from './SubscribeColumn';
 import SubscribeRenew from './SubscribeRenew';
 import SubscribeManage from './SubscribeManage';
-import React, {Suspense, useState} from "react"
-import {api} from "@/trpc/react";
+import React, { Suspense, useState, useContext } from "react"
+import { api } from "@/trpc/react";
+import useLocalStorage from '@/tools/useStore';
+import SubscribeClass from './SubscribeClass';
 
 
 const Page = () => {
+    const token = useLocalStorage('token', '')
 
     const columns = api.column.getAll.useQuery().data;
+    const orders = api.order.getUserOrder.useQuery({
+        userID: token[0],
+    }).data;
+
+    console.log(orders);
 
 
     // 按钮选中状态
@@ -23,33 +31,60 @@ const Page = () => {
 
     // 导航栏返回相应页面
     const [currentPage, setCurrentPage] = React.useState<number>(1);
-    const Page1 = () => {
+    const Update = () => {
         return (
             <div>
-                {columns && columns.length > 0 && columns.map((column: any) => (
-                    <SubscribeRenew key={column.id} column={column} />
-                ))}
+                {orders && orders.length > 0 && (
+                    <div>
+                        {columns && columns.length > 0 && columns.map((column: any) => (
+                            // 检查当前 column 是否在 orders 中存在
+                            orders.some(order => order.name === column.id) && (
+                                <SubscribeRenew key={column.id} column={column} />
+                            )
+                        ))}
+                    </div>
+                )}
             </div>
         );
     };
 
-    const Page2 = () => {
+    const Column = () => {
         return (
             <div>
-                {columns && columns.length > 0 && columns.map((column: any) => (
+                {orders && orders.length > 0 && (
+                    <div>
+                        {columns && columns.length > 0 && columns.map((column: any) => (
+                            // 检查当前 column 是否在 orders 中存在
+                            orders.some(order => order.name === column.id) && (
+                                <SubscribeColumn key={column.id} column={column} />
+                            )
+                        ))}
+                    </div>
+                )}
+                {/* {columns && columns.length > 0 && columns.map((column: any) => (
                     <SubscribeColumn key={column.id} column={column} />
-                ))}
+                ))} */}
             </div>
 
         )
     };
 
-    const Page3 = () => {
+    const Course = () => {
         return (
             <div>
-                {columns && columns.length > 0 && columns.map((column: any) => (
-                    <SubscribeColumn key={column.id} column={column}/>
-                ))}
+                {orders && orders.length > 0 && (
+                    <div>
+                        {columns && columns.length > 0 && columns.map((column: any) => (
+                            // 检查当前 column 是否在 orders 中存在
+                            orders.some(order => order.name === column.id) && (
+                                <SubscribeClass key={column.id} column={column} />
+                            )
+                        ))}
+                    </div>
+                )}
+                {/* {columns && columns.length > 0 && columns.map((column: any) => (
+                    <SubscribeColumn key={column.id} column={column} />
+                ))} */}
             </div>
         );
     }
@@ -57,11 +92,11 @@ const Page = () => {
     const renderContent = (): React.ReactNode => {
         switch (currentPage) {
             case 1:
-                return <Page1/>;
+                return <Update />;
             case 2:
-                return <Page2 />;
+                return <Column />;
             case 3:
-                return <Page3 />;
+                return <Course />;
         }
     };
 

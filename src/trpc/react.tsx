@@ -59,6 +59,6 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 
 function getBaseUrl() {
   if (typeof window !== "undefined") return window.location.origin;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  if (process.env.NODE_ENV === "production") return `https://app.yonote.net`;
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }

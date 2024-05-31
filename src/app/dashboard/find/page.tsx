@@ -1,14 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import Navbar from "../../_components/common/Navbar"
-import ActivityEnd from "@/app/_components/find/activityEnd";
-import ActivityGoing from "@/app/_components/find/activityGoing";
+import Activities from "@/app/_components/find/activities";
 import {SearchColumn} from "@/app/_components/common/SearchColumn";
-import {api} from "@/trpc/react";
+
 
 const Find=()=>{
-
-
     return (
         <div className="min-h-screen relative bg-#F5F7FB">
             <div className="w-85.75 m-auto pt-8">
@@ -21,22 +18,14 @@ const Find=()=>{
                 <Image src={"/images/subscribe/underline.svg"} alt="underline" width={11} height={4} className="w-2.75 h-1 ml-9 mt-0.75"></Image>
 
 
-                {/*活动列表-已结束*/}
-                <ActivityEnd/>
-
-                {/*活动列表-进行中*/}
-                <ActivityGoing/>
-
+                {/*活动列表*/}
+                <Activities/>
             </div>
 
             <div className="bottom-4 justify-center w-full fixed">
                 <Navbar/>
             </div>
-
         </div>
     )
 }
-
-
-
 export default Find;
