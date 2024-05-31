@@ -3,19 +3,29 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import {timeToDateString} from "@/tools/timeToString";
-
+import { api } from "@/trpc/react";
 
 export const SpecialColumnCard = (props) => {
     const { item,user,index } = props;
 
     const router = useRouter();
     // 点赞
-    const [isLike, setIsLike] = useState(false);
+    // const [isLike, setIsLike] = useState(false);
 
-    const handleClick = () => {
-        setIsLike(!isLike);
-    };
+    // const handleClick = () => {
+    //     setIsLike(!isLike);
+    // };
 
+    
+    // 获取点赞数量
+    const likeCount = api.like.getLikeCount.useQuery({
+        postId: item.id,
+      }).data;
+    
+      // 获取阅读量
+      const readCount = api.read.getPostRead.useQuery({
+          postId: item.id,
+      }).data
     const link = () => {
         router.push(`/special-column-content?c=${index+1}&id=${item.columnId}`)
     };
@@ -48,8 +58,10 @@ export const SpecialColumnCard = (props) => {
                         </span> */}
                         </div>
 
-                        <div className={"text-[#666]  text-3.25 font-400 lh-[120%] pt-5px"}>
-                            {item.content}
+                        <div 
+                            className={"text-[#666]  text-3.25 font-400 lh-[120%] pt-5px"}
+                            dangerouslySetInnerHTML={{ __html: item.content }}>
+                            {/* {item.content} */}
                         </div>
                     </div>
                 </div>
@@ -80,11 +92,12 @@ export const SpecialColumnCard = (props) => {
                     <div className="ml-auto flex items-center space-y-0">
                         <div>
                             <Image
-                                src={isLike ? "/images/special-column/heart red.png" : "/images/special-column/heart 2.png"}
-                                onClick={handleClick}
+                                // src={isLike ? "/images/special-column/heart red.png" : "/images/special-column/heart 2.png"}
+                                src={"/images/special-column/heart 2.png"}
+                                // onClick={handleClick}
                                 alt={"爱心"} width={18} height={18} objectFit="none" />
                         </div>
-                        <div className={"text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-4px"}>1.2k</div>
+                        <div className={"text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-4px"}>{likeCount}</div>
                     </div>
                     {/*右方浏览数量*/}
                     <div className="ml-24px flex items-center space-y-0">
@@ -92,7 +105,7 @@ export const SpecialColumnCard = (props) => {
                             <Image src={"/images/special-column/Preview-open (预览-打开).png"} alt={"爱心"} width={18}
                                 height={18} objectFit="none" />
                         </div>
-                        <div className={"text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-4px"}>1.2k</div>
+                        <div className={"text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-4px"}>{readCount}</div>
                     </div>
                 </div>
             </div>

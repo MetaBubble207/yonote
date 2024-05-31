@@ -49,7 +49,7 @@ export const postLikeRouter = createTRPCRouter({
             return data;
         }),
 
-    // 获取点赞数量
+    // 获取文章点赞数量
     getLikeCount: publicProcedure
         .input(z.object({postId: z.number()}))
         .query(async ({ ctx, input }) => {
@@ -72,4 +72,46 @@ export const postLikeRouter = createTRPCRouter({
         .mutation( async ({ ctx, input }) => {
                 return ctx.db.update(postLike).set({updatedAt:getCurrentTime()}).where(and(eq(postLike.userId, input.userId), eq(postLike.postId, input.postId)))
             }),
+
+    // 获取专栏点赞量
+    getColumnLike: publicProcedure
+        .input(z.object({columnId:z.string()}))
+        .query( async ({ ctx, input }) => {
+            const postList = await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
+            // let likeCount = 0;
+            // postList.map(async item => {
+            //     const postId = item.id;
+            //     const data = await ctx.db.select().from(postLike).where(and(eq(postLike.postId, postId),eq(postLike.isLike,true)));
+            //     likeCount = data.length;
+                 
+            // })
+        
+            // if(postList?.length == 0){
+            //     return 0
+            // }else{
+            //     let likeCount;
+            //     let res = []
+            //     postList.map(item => {
+            //             const postId = item.id;
+            //             const data = ctx.db.select().from(postLike).where(and(eq(postLike.postId, postId),eq(postLike.isLike,true)));
+            //             // likeCount += data.length;
+            //             // console.log("-----"+data);   
+            //             res.push({ ...data})                    
+            //         })
+            //     return res;
+                
+            // }
+            if (postList?.length === 0) {
+                return 0;
+            } else {
+                let res = 0;
+                for (const item of postList) {
+                    const postId = item.id;
+                    const data = await ctx.db.select().from(postLike).where(and(eq(postLike.postId, postId), eq(postLike.isLike, true)));
+                    res += data.length;
+                }
+                return res;
+            }
+            
+        })
 });
