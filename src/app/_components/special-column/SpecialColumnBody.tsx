@@ -30,7 +30,7 @@ export const SpecialColumnBody = () => {
     });
 
     const [isSubscribe, setIsSubscribe] = useState(false);
-    
+
     const [check, setCheck] = useState(false);
 
     const setting = () => {
@@ -73,7 +73,7 @@ export const SpecialColumnBody = () => {
                 onClick={setting}>
                 订阅
             </button>
-            <div className="fixed top-200px p-auto">
+            <div className="fixed  top-200px   w-full">
                 {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}
             </div>
         </div>
