@@ -55,7 +55,7 @@ export const readRouter = createTRPCRouter({
                         const data = await ctx.db.select().from(postRead).where(eq(postRead.postId, postId));
                         // const data = await ctx.db.query.postRead.findFirst({ where: eq(postRead.postId, postId) })                        
                         data.map((item) => {
-                            res += item.readCount;s
+                            res += item.readCount;
                         })
                     }
                     
