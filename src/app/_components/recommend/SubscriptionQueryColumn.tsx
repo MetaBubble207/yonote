@@ -2,6 +2,7 @@ import Image from "next/image";
 import { api } from "@/trpc/react";
 import React, { useState, useEffect } from "react";
 import { timeToDateString } from "@/tools/timeToString";
+import Link from "next/link";
 
 export const SubscriptionQueryColumn = () => {
     const [data, setData] = useState(null);
@@ -15,13 +16,14 @@ export const SubscriptionQueryColumn = () => {
             setData(queryData);
         }
     }, [queryData]);
-    
+
 
     return (
         <div>
             {data?.map(item => (
                 <div className="mt-4 ml-4" key={item.id}>
-                    <div className="w-85.75 h-33.75 border-rd-5 bg-[#FFF]">
+                    <Link href={`/special-column?id=${item.id}`}>
+                        <div className="w-85.75 h-33.75 border-rd-5 bg-[#FFF]">
                         <div className="flex h-19 pl-2.5 pt-2">
                             <Image src={item.logo ?? "/images/user/Loading.svg"} alt="cover" width={24} height={24} className="w-15.5 h-19"></Image>
                             <div className="w-64.25 h-16 mt-1 ml-3">
@@ -43,6 +45,7 @@ export const SubscriptionQueryColumn = () => {
                             </div>
                         </div>
                     </div >
+                    </Link>
                 </div>
             ))}
         </div>

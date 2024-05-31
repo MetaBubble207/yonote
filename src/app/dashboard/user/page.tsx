@@ -4,11 +4,29 @@ import Navbar from "@/app/_components/common/Navbar";
 import Link from "next/link";
 import {UserTop} from "@/app/_components/user/UserTop";
 import Display from "@/app/_components/user/Display";
+import useLocalStorage from "@/tools/useStore";
+import {api} from "@/trpc/react";
 
 const Page = () => {
     const logout = () => {
         localStorage.removeItem("token");
     };
+    let userInfo
+    const [token] = useLocalStorage("token", null)
+    if (token) {
+        userInfo = api.users.getOne.useQuery({id: token}).data
+    }
+
+
+    // 检测当前用户ID是否有专栏，如果没有，display组件就不渲染
+    // const tempID = 'oqWsn6dZt5znIwVE_LrkREZ0NzT4'
+    // const ColumnInfo = api.column.getAllByUserId.useQuery({userId:tempID }).data
+    const ColumnInfo = api.column.getAllByUserId.useQuery({userId:userInfo?.id }).data
+    // console.log("ColumnInfo======================>",ColumnInfo);
+    // console.log("ColumnID=====================>",Column.id);
+    // console.log("ColumnId==================>",ColumnId)
+
+
     return (
         <div>
             {/* 背景颜色*/}
@@ -17,17 +35,24 @@ const Page = () => {
                 {/* 顶部 */}
                 <UserTop/>
 
+
                 {/* 专栏、小课区域 */}
-                <div className="w-full h-63.75 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4">
-
-                    {/* 内容区域 */}
-                    <Display></Display>
-
-                </div>
+                {ColumnInfo ?
+                    (
+                        <>
+                            {/* 内容区域 */}
+                            <Display token={token} ColumnInfo={ColumnInfo}></Display>
+                        </>
+                    ) :
+                    (
+                        <div>
+                        </div>
+                    )}
+                {/*<Display></Display>*/}
 
                 {/*  我的服务模块*/}
                 <div className={"w-full h-51.5 border-rd-2.5 bg-[#FFF] mt-1.5  pt-4.5 mb-3"}>
-                    {/*标题*/}
+                {/*标题*/}
                     <h2 className={"text-[#252525] text-3.5 font-500 lh-6 pl-5.5"}>
                         我的服务
                     </h2>
