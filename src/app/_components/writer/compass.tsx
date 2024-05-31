@@ -10,7 +10,7 @@ const Compass = () => {
 
   const handleLogout = () => {
     setToken(null);
-    router.push("/edit/login");
+    router.push("/writer/login");
   };
   const [token, setToken] = useLocalStorage("token", null);
 
