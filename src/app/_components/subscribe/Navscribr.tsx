@@ -5,6 +5,7 @@ import SubscribeManage from './SubscribeManage';
 import React, { Suspense, useState, useContext } from "react"
 import { api } from "@/trpc/react";
 import useLocalStorage from '@/tools/useStore';
+import SubscribeClass from './SubscribeClass';
 
 
 const Page = () => {
@@ -31,10 +32,6 @@ const Page = () => {
     // 导航栏返回相应页面
     const [currentPage, setCurrentPage] = React.useState<number>(1);
     const Update = () => {
-
-        const Select = () => {
-
-        }
         return (
             <div>
                 {orders && orders.length > 0 && (
@@ -54,9 +51,19 @@ const Page = () => {
     const Column = () => {
         return (
             <div>
-                {columns && columns.length > 0 && columns.map((column: any) => (
+                {orders && orders.length > 0 && (
+                    <div>
+                        {columns && columns.length > 0 && columns.map((column: any) => (
+                            // 检查当前 column 是否在 orders 中存在
+                            orders.some(order => order.name === column.id) && (
+                                <SubscribeColumn key={column.id} column={column} />
+                            )
+                        ))}
+                    </div>
+                )}
+                {/* {columns && columns.length > 0 && columns.map((column: any) => (
                     <SubscribeColumn key={column.id} column={column} />
-                ))}
+                ))} */}
             </div>
 
         )
@@ -65,9 +72,19 @@ const Page = () => {
     const Course = () => {
         return (
             <div>
-                {columns && columns.length > 0 && columns.map((column: any) => (
+                {orders && orders.length > 0 && (
+                    <div>
+                        {columns && columns.length > 0 && columns.map((column: any) => (
+                            // 检查当前 column 是否在 orders 中存在
+                            orders.some(order => order.name === column.id) && (
+                                <SubscribeClass key={column.id} column={column} />
+                            )
+                        ))}
+                    </div>
+                )}
+                {/* {columns && columns.length > 0 && columns.map((column: any) => (
                     <SubscribeColumn key={column.id} column={column} />
-                ))}
+                ))} */}
             </div>
         );
     }
