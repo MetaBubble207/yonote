@@ -25,6 +25,8 @@ export const SpecialColumn = () => {
                 return <SubscriptionQueryColumn/>;
             case "内容量":
                 return <ContentNumberQueryColumn/>;
+            case "发布时间":
+                return <CreateAtQueryColumn/>;
             case "创作时间":
                 return <CreateAtQueryColumn/>;
 
@@ -76,10 +78,10 @@ export const SpecialColumn = () => {
                                 </div>
                                 <div
                                     className="h-6 shrink-0 ml-5px text-center text-[#999] text-3.25 font-not-italic font-400 lh-6 border-rd-1 px-9px"
-                                    onClick={() => handleCategoryClick("最近发布")}
-                                    style={getCategoryStyle("最近发布")}
+                                    onClick={() => handleCategoryClick("发布时间")}
+                                    style={getCategoryStyle("发布时间")}
                                 >
-                                    最近发布
+                                    发布时间
                                 </div>
                                 <div
                                     className="h-6 shrink-0 ml-5px text-center text-[#999] text-3.25 font-not-italic font-400 lh-6 border-rd-1 px-9px"
