@@ -18,7 +18,7 @@ const SubscribeRenew = (prop) => {
             <div>
                 <Link href={`../special-column?id=${column.id}`}>
                     <div className="flex h-27 pl-2.5 pt-2.5">
-                        <Image src={"/images/subscribe/cover.png"} alt="cover" width={24} height={24} className="w-20.25 h-27"></Image>
+                        <Image src={column?.logo ?? "/images/user/Loading.svg"} alt="cover" width={81} height={108}></Image>
                         <div className="w-57.5 h-21.25 mt-2 ml-3">
                             <div className="text-[#252525] text-3.75 font-500 lh-6 ">{column.name}</div>
                             <div className="text-[#666] text-3.25 font-400 lh-[120%]">{column.introduce}</div>
