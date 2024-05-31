@@ -80,7 +80,17 @@ export const orderRouter = createTRPCRouter({
         console.error("Error creating order:", error);
         throw error; // 抛出异常，让上层处理
       }
-    })
+    }),
 
+    getColumnOrder: publicProcedure
+    .input(z.object({
+      columnID: z.string(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const orderData = await ctx.db.query.order.findMany({
+        where:  eq(order.name, input.columnID ),
+      });
+      return orderData;
+    }),
 
 });

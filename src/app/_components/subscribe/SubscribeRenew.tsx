@@ -21,6 +21,8 @@ const SubscribeRenew = (prop) => {
         columnId: column.id,
     }).data
 
+    const [exist, setExist] = useState(false);
+
     return (
         <div className="w-85.75 h-42.75 border-rd-5 bg-[#FFF] mb-2">
             <div>

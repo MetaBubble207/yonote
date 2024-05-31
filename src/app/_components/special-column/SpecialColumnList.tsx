@@ -11,6 +11,7 @@ export const SpecialColumnList=()=>{
     const columnId = params.get("id");
     const userId = api.column.getUserId.useQuery({ id: columnId }).data;
     const user = api.users.getOne.useQuery({ id: userId }).data;
+    const columnDetail = api.column.getColumnDetail.useQuery({ columnId: columnId }).data;
 
     const postInfo = api.post.getAllInOrder.useQuery({
         columnId: columnId,
