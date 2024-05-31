@@ -58,20 +58,24 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
         <Image src={'/images/writer/edit/left-c.svg'} alt={'left-c'} width={24} height={24} />
       </button>
       <div className='flex justify-between w-full px-8.2'>
-        {currentIndices.map((index) => (
-          <button key={index} onClick={() => handleImageClick(index)} className='flex flex-col items-center w-1/4'>
-            <img
-              src={columns[index]?.logo}
-              alt={`图片${index + 1}`}
-              width={160}
-              height={51.5}
-              className='block'
-            />
-            <span className='mt-2'>
-              {columns[index]?.name || ' '}
-            </span>
-          </button>
-        ))}
+        {columns.length > 0 ? (
+          currentIndices.map((index) => (
+            <button key={index} onClick={() => handleImageClick(index)} className='flex flex-col items-center w-1/4'>
+              <img
+                src={columns[index]?.logo}
+                alt={`图片${index + 1}`}
+                width={160}
+                height={51.5}
+                className='block'
+              />
+              <span className='mt-2'>
+                {columns[index]?.name || ' '}
+              </span>
+            </button>
+          ))
+        ) : (
+          <div className="text-gray-500">暂无数据哦~</div>
+        )}
       </div>
       <button onClick={goToNextImage} className='mr-6.6' disabled={columns.length <= 4}>
         <Image src={'/images/writer/edit/right-c.svg'} alt={'right-c'} width={24} height={24} />
@@ -81,4 +85,3 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
 };
 
 export default ColumnPopup;
-
