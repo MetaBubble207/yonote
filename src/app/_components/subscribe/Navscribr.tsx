@@ -12,7 +12,7 @@ const Page = () => {
     const token = useLocalStorage('token', '')
 
     const columns = api.column.getAll.useQuery().data;
-    console.log(token,"token")
+    console.log(token,"")
     const orders = api.order.getUserOrder.useQuery({
         userID: token[0],
     }).data;
@@ -111,7 +111,7 @@ const Page = () => {
     //     )
     // }
     const buttonData = [
-        // { id: 1, label: '更新' },
+        { id: 1, label: '更新' },
         { id: 2, label: '专栏' },
         // { id: 3, label: '小课' },
     ];
