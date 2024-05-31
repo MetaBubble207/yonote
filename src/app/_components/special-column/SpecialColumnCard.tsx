@@ -16,12 +16,12 @@ export const SpecialColumnCard = (props) => {
     //     setIsLike(!isLike);
     // };
 
-    
+
     // 获取点赞数量
     const likeCount = api.like.getLikeCount.useQuery({
         postId: item.id,
       }).data;
-    
+
       // 获取阅读量
       const readCount = api.read.getPostRead.useQuery({
           postId: item.id,
@@ -44,11 +44,14 @@ export const SpecialColumnCard = (props) => {
                             <span>
                             {item.name}
                             </span>
-                            <span className={" shrink-0 border-rd-0.5 bg-[#FDB069] shrink-0 text-[#000]  text-2.5 font-not-italic font-500 lh-6 px-7px py-3px ml-10px"}>
+                            { item.tag &&
+                                <span
+                                    className={" shrink-0 border-rd-0.5 bg-[#FDB069] shrink-0 text-[#000]  text-2.5 font-not-italic font-500 lh-6 px-7px py-3px ml-10px"}>
                                 <span>
                                 {item.tag}
                                 </span>
                             </span>
+                            }
                             {/* <span className={" shrink-0 border-rd-0.5 bg-[#75C3EE] shrink-0 text-[#000]  text-2.5 font-not-italic font-500 lh-6 px-7px py-3px ml-10px"}>
                             {item.data && item.data.length > 0 && (
                                 <div>
@@ -58,7 +61,7 @@ export const SpecialColumnCard = (props) => {
                         </span> */}
                         </div>
 
-                        <div 
+                        <div
                             className={"text-[#666]  text-3.25 font-400 lh-[120%] pt-5px"}
                             dangerouslySetInnerHTML={{ __html: item.content }}>
                             {/* {item.content} */}
