@@ -17,7 +17,6 @@ export const SpecialColumnHeader = () => {
     const column = api.column.getColumnDetail.useQuery({
         columnId: columnId,
     })
-    console.log(column)
     return <>
         <div className={"flex justify-end items-center mt-16px"}>
             <div
