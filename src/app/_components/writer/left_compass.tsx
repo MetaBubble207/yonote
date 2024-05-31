@@ -5,7 +5,6 @@ import Image from "next/image";
 import {usePathname, useSearchParams} from "next/navigation";
 import Link from "next/link";
 import Column from "./column";
-import { Router } from "next/router";
 
 const LeftCompass = () => {
   const pathname = usePathname();
@@ -15,6 +14,7 @@ const LeftCompass = () => {
   useEffect(() => {
     setColumn(pathname === "/writer/homepage");
   }, [pathname]);
+
 
   return (
     <>

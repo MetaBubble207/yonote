@@ -1,30 +1,24 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {api} from "@/trpc/react";
-import useLocalStorage from "@/tools/useStore";
 import {useEffect} from "react";
-import {useRouter, useSearchParams} from "next/navigation";
+import useLocalStorage from "@/tools/useStore";
 const Homepagedata = () => {
     const [token] = useLocalStorage("token", null);
-    console.log(token)
+    const router = useRouter();
+    const pathname = usePathname();
+    const params = useSearchParams();
     const columns = api.column.getAllByUserId.useQuery({
         userId: token
     }).data;
-    const params = useSearchParams();
-    const router = useRouter()
-
-    useEffect(()=>{
+    useEffect(() => {
         const columnId = params.get("columnId");
         if((!columnId || columnId === "null") && columns){
-            router.push("/writer/homepage?columnId="+columns[0]?.id)
+            router.push(`/writer${pathname.split("/writer")[1]}?columnId=`+columns[0]?.id)
         }
-
-    },[columns])
-
-
-
-
+    }, [columns]);
     return (
         <div className="w-full h-82 pl-32px r-16px bg-[#FFF] border-rd-2.5">
             <div className="flex items-center pt-34px">
