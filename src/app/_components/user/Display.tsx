@@ -5,7 +5,6 @@ import React, {useState} from "react";
 import {api} from "@/trpc/react";
 
 const Display = (props) => {
-
     const {token, ColumnInfo} = props
     // console.log("token============>",token);
     // console.log("ColumnInfo",ColumnInfo);
@@ -54,7 +53,7 @@ const Display = (props) => {
     const renderColumn = () => {
         return ColumnInfo.length > 0 && (
                 ColumnInfo.slice(0,ColumnInfo.length>1?2:1).map((item, index) => (
-                    <div className="flex h-14 mb-8">
+                    <Link href={`/special-column?id=${item.id}`} className="flex h-14 mb-8">
                         <Image
                             // src="/images/user/cover.svg"
                             // src={Column.logo}
@@ -84,7 +83,7 @@ const Display = (props) => {
                             </p>
                         </div>
 
-                    </div>
+                    </Link>
                 ))
             )
         }
