@@ -1,8 +1,9 @@
 "use client";
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, type ChangeEvent } from "react";
 import Image from "next/image";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
+import {useRouter} from "next/navigation";
 
 const Column = () => {
 
@@ -21,11 +22,12 @@ const Column = () => {
   const handleChangePrice = (event: ChangeEvent<HTMLInputElement>) => {
     setPrice(event.target.value);
   };
-
+  const router = useRouter()
   // 提交表单时检查价格输入值
   const createApi = api.column.create.useMutation({
     onSuccess: (data) => {
       console.log(data);
+      router.push(`/writer/homepage?columnId=${columnID}`)
     },
   });
   const [token] = useLocalStorage("token", null);
@@ -49,11 +51,11 @@ const Column = () => {
   const createcolumn = api.column.create.useMutation({
     onSuccess: (r) => {
       console.log(r);
-      console.log("success")
+      router.push(`/writer/homepage?columnId=${columnID}`)
     },
     onError: (e) => {
       console.log("error");
-      
+
     }
   });
 
