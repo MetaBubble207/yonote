@@ -37,12 +37,12 @@ export const CreateAtQueryColumn = () => {
                                 <div className="flex text-[#999] text-2.75 lh-4">{item.user?.name}</div>
                                 <div className="text-[#B5B5B5] text-2.75 lh-4">{timeToDateString(item.createdAt)}发布</div>
                             </div>
-                            <div className="flex-1 flex items-center">
+                            {/* <div className="flex-1 flex items-center">
                                 <Image src={"/images/recommend/rss.svg"} alt="rss" width={5} height={5} className="w-4.5 h-4.5 "></Image>
                                 <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">1.2k</div>
                                 <Image src={"/images/recommend/open.svg"} alt="open" width={5} height={5} className=" w-4.5 h-4.5 ml-7"></Image>
                                 <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">1.2k</div>
-                            </div>
+                            </div> */}
                         </div>
                     </div >
                     </Link>
