@@ -1,30 +1,31 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
-import {api} from "@/trpc/react";
-import {useEffect} from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { api } from "@/trpc/react";
+import { useEffect } from "react";
 import useLocalStorage from "@/tools/useStore";
 const Homepagedata = () => {
     const [token] = useLocalStorage("token", null);
     const router = useRouter();
     const pathname = usePathname();
     const params = useSearchParams();
+    const columnId = params.get("columnId");
     const columns = api.column.getAllByUserId.useQuery({
         userId: token
     }).data;
     useEffect(() => {
         const columnId = params.get("columnId");
-        if((!columnId || columnId === "null") && columns){
-            router.push(`/writer${pathname.split("/writer")[1]}?columnId=`+columns[0]?.id)
+        if ((!columnId || columnId === "null") && columns) {
+            router.push(`/writer${pathname.split("/writer")[1]}?columnId=` + columns[0]?.id)
         }
     }, [columns]);
     return (
         <div className="w-full h-82 pl-32px r-16px bg-[#FFF] border-rd-2.5">
             <div className="flex items-center pt-34px">
                 <span className="text-[#323232] text-4 font-700 lh-6">主板看板</span>
-                <Link href={'../edit/edit'} className="flex w-20.5 h-9 color-[#1db48d] bg-[#dbf9f1] ml-32px">
-                   <span className="m-auto">+发布</span>
+                <Link href={`../edit/edit?columnId=${columnId}`} className="flex w-20.5 h-9 color-[#1db48d] bg-[#dbf9f1] ml-32px">
+                    <span className="m-auto">+发布</span>
                 </Link>
             </div>
 

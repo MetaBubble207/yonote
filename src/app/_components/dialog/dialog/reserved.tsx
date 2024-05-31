@@ -16,6 +16,9 @@ const Reserved = ({ onClose, check }) => {
         onSuccess: (r) => {
             onClose();
             console.log(r);
+            if(typeof window !== undefined){
+                window.location.reload();
+            }
             console.log("订阅成功");
         },
         onError: (e) => {
