@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { postLike, user, post, column, postRead } from "@/server/db/schema";
+import { postLike, user, post, column, postRead} from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 import { and } from "drizzle-orm";
+import { getRedirectStatusCodeFromError } from "next/dist/client/components/redirect";
 export const readRouter = createTRPCRouter({
     create: publicProcedure.input(z.object({
         postId: z.number(),
@@ -39,7 +40,34 @@ export const readRouter = createTRPCRouter({
             } else {
                 return list;
             }
-
-
         }),
+        // 获取专栏阅读量
+        getColumnRead: publicProcedure
+            .input(z.object({ columnId:z.string() }))
+            .query(async ({ ctx, input }) => {
+                const readList = await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
+                if (readList?.length === 0) {
+                    return 0;
+                } else {
+                    let res = 0;
+                    for (const item of readList) {
+                        const postId = item.id;
+                        const data = await ctx.db.select().from(postRead).where(eq(postRead.postId, postId));
+                        // const data = await ctx.db.query.postRead.findFirst({ where: eq(postRead.postId, postId) })                        
+                        data.map((item) => {
+                            res += item.readCount;s
+                        })
+                    }
+                    
+                    return res;
+                }
+            }),
+        // 获取文章阅读量
+        getPostRead: publicProcedure
+            .input(z.object({ postId: z.number()}))
+            .query(async ({ ctx, input }) => {
+                const data = await ctx.db.select().from(postRead).where(eq(postRead.postId, input.postId));
+                return data?.length;
+            })
+
 });

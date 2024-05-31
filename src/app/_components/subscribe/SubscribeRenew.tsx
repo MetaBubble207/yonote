@@ -1,17 +1,25 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
+import { api } from "@/trpc/react";
 import { useContext, useState } from "react";
 import { timeToDateString } from "@/tools/timeToString";
 
+
 const SubscribeRenew = (prop) => {
     // 点赞
-    const [isHeartFilled, setIsHeartFilled] = useState(false);
+    // const [isHeartFilled, setIsHeartFilled] = useState(false);
 
-    const handleClick = () => {
-        setIsHeartFilled(!isHeartFilled);
-    };
+    // const handleClick = () => {
+    //     setIsHeartFilled(!isHeartFilled);
+    // };
     const column = prop.column;
+    const columnLike = api.like.getColumnLike.useQuery({
+        columnId: column.id,
+    }).data
+    const columnRead = api.read.getColumnRead.useQuery({
+        columnId: column.id,
+    }).data
 
     return (
         <div className="w-85.75 h-42.75 border-rd-5 bg-[#FFF] mb-2">
@@ -37,14 +45,13 @@ const SubscribeRenew = (prop) => {
                     <div className="flex-1 flex items-center">
                         <div>
                             <Image
-                                src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 2.png"}
-                                onClick={handleClick}
+                                src={"/images/special-column/heart 2.png"}
                                 alt={"爱心"} width={18} height={18} objectFit="none" />
                         </div>
-                        <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">1.2k</div>
-                        <Image src={"/images/subscribe/see.svg"} alt="leke" width={5} height={5}
+                        <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">{columnLike}</div>
+                        <Image src={"/images/subscribe/see.svg"} alt="like" width={5} height={5}
                             className=" w-4.5 h-4.5 ml-7"></Image>
-                        <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">1.2k</div>
+                        <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">{columnRead}</div>
                     </div>
                 </div>
             </div>
