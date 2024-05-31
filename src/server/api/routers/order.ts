@@ -45,7 +45,6 @@ export const orderRouter = createTRPCRouter({
       payment: z.string(),
       status: z.boolean(),
       buyerID: z.string(),
-      columnID: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
       try {
@@ -63,7 +62,6 @@ export const orderRouter = createTRPCRouter({
             payment: input.payment,
             status: input.status,
             buyerID: input.buyerID,
-            columnID: input.columnID,
           }).returning({
             id: order.id,
             ownerID: order.ownerID,
@@ -72,7 +70,6 @@ export const orderRouter = createTRPCRouter({
             payment: order.payment,
             status: order.status,
             buyerID: order.buyerID,
-            columnID: order.columnID,
           });
 
           return insertedOrder[0]; // 返回插入的订单对象
@@ -91,7 +88,7 @@ export const orderRouter = createTRPCRouter({
     }))
     .query(async ({ ctx, input }) => {
       const orderData = await ctx.db.query.order.findMany({
-        where:  eq(order.columnID, input.columnID ),
+        where:  eq(order.name, input.columnID ),
       });
       return orderData;
     }),
