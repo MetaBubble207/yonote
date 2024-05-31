@@ -15,7 +15,7 @@ const Display = (props) => {
 
     const buttonInfos = [
         { id: 1, label: '专栏' },
-        { id: 2, label: '小课' }
+        // { id: 2, label: '小课' }
     ]
 
     const renderContent = () => {
