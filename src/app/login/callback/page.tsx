@@ -15,7 +15,8 @@ const LoginCallback = () => {
     const searchParams = useSearchParams();
     //这个地址是提前给微信登录接口重定向，默认微信那边会传回code和state两个query参数，通过useSearchParams可以拿到
     const code = searchParams.get("code");
-    if (code && token === null) {
+    console.log(code,"the code")
+    if (code) {
       userInfo = api.users.login.useQuery({
         code: code,
       }).data;
