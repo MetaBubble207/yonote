@@ -6,9 +6,9 @@ import useLocalStorage from "@/tools/useStore";
 const dialogLayout = ({ children }: { children: React.ReactNode }) => {
   if(typeof window !== 'undefined') {
     const [token] = useLocalStorage("token", null);
-    if (!token) {
-      window.location.href = "/writer/login"
-    }
+    // if (!token) {
+    //   window.location.href = "/writer/login"
+    // }
 
   }
   return (
