@@ -84,6 +84,7 @@ const Reserved = ({ onClose, check }) => {
                 </div>
             </div>
         </div>
+
     );
 }
 
