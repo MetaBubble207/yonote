@@ -96,7 +96,7 @@ export const column = createTable(
     introduce: varchar("introduce"),
     type: varchar("type"),
     price: real("price"),
-    logo: text("logo"),
+    logo: text("logo").default("http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png"),
     description: varchar("description"),
     payment: varchar("payment"),
     userId: varchar("user_id"),
@@ -119,6 +119,7 @@ export const order = createTable(
   "order",
   {
     id: serial("id").primaryKey(),
+    columnID: varchar("columnID"),
     name: varchar("name", { length: 256 }),
     createdAt: timestamp("created_at")
       .default(sql`CURRENT_TIMESTAMP`)

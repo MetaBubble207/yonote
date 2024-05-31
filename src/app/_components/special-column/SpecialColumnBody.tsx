@@ -12,6 +12,9 @@ export const SpecialColumnBody = () => {
     const params = useSearchParams();
     const columnId = params.get("id");
     const [currentContent, setCurrentContent ] = useState<number>(1);
+    const order = api.order.getColumnOrder.useQuery({
+        columnID: columnId,
+    })
     const active = "text-[#252525] font-500 border-b-3 border-[#45E1B8]";
     const renderContent = () => {
         switch (currentContent){
@@ -43,7 +46,7 @@ export const SpecialColumnBody = () => {
             {/*订阅栏*/}
             <div className={"ml-37.8% text-[#999] text-3 font-not-italic font-400 lh-6 pt-10px"}>
                 <span
-                    className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6 mr-5px"}>1090</span>
+                    className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6 mr-5px"}>{order.data?.length}</span>
                 订阅
                 <span
                     className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6 mr-5px ml-20px"}>{read.data?.length}</span>
