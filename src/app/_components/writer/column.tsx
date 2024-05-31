@@ -75,7 +75,7 @@ const Column = () => {
               <Image src={"/images/writer/edit/Switch.svg"} alt={""} width={14.09} height={14} className={"w-3.52225 h-3.5 shrink-0 ml-2"}></Image>
             </button>
             <div className=" text-[#323232] text-3.5 font-not-italic font-400  ml-2">
-              {currentColumn?.name}
+              {currentColumn?.name ? currentColumn.name : "暂无数据哦~"}
             </div>
           </div>
       </div>
