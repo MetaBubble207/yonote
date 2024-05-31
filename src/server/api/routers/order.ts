@@ -51,7 +51,7 @@ export const orderRouter = createTRPCRouter({
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // 查询订单是否已存在
-        const existingOrder = await ctx.db.select().from(order).where(eq(order.name, input.name));
+        const existingOrder = await ctx.db.select().from(order).where(and(eq(order.name, input.name),eq(order.buyerID,input.buyerID)));
 
         // 如果订单不存在，则插入新订单
         if (existingOrder.length === 0) {
