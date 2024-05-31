@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { column, order } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { eq , and} from "drizzle-orm";
 
 export const orderRouter = createTRPCRouter({
   hello: publicProcedure
@@ -82,6 +82,7 @@ export const orderRouter = createTRPCRouter({
       }
     }),
 
+    // 同一订单的信息
     getColumnOrder: publicProcedure
     .input(z.object({
       columnID: z.string(),
@@ -92,5 +93,14 @@ export const orderRouter = createTRPCRouter({
       });
       return orderData;
     }),
+
+    getUserOrder: publicProcedure
+    .input(z.object({
+      userID: z.string(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const orderData = await ctx.db.select().from(order).where(and(eq(order.buyerID, input.userID), eq(order.status, true)))
+      return orderData;
+    })
 
 });
