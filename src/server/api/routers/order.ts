@@ -93,4 +93,16 @@ export const orderRouter = createTRPCRouter({
       return orderData;
     }),
 
+    getColumnByBuyer: publicProcedure
+        .input(z.object({
+            BuyerID: z.string(),
+        }))
+        .query(async ({ ctx, input }) => {
+            const orderData = await ctx.db.query.order.findMany({
+                where:  eq(order.buyerID, input.BuyerID ),
+            });
+            return orderData;
+        }),
+
+
 });
