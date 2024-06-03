@@ -17,11 +17,11 @@ const Page = () => {
     // 表格内容
     return (
         <div className={'w-full h-full mt-16px ml-18px'}>
-            <div className={'w-97% shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] relative pb-120px'}>
+            <div className={'w-92% min-h-155 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] relative pb-120px'}>
                 <div className={'flex items-center pt-51px '}>
                     <div className="text-[#323232] text-4 font-not-italic font-700 lh-6 ml-32.5px">内容管理</div>
                     {/*发布*/}
-                    <Link href={`../edit/edit?columnId=${columnId}`} className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+ 发布</Link>
+                    <Link href={`/edit/edit?columnId=${columnId}`} className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+ 发布</Link>
                 </div>
 
                 {/*justify-between*/}
@@ -50,7 +50,7 @@ const Page = () => {
                 <ContentForm></ContentForm>
 
                 {/*底部分页*/}
-                <div className={'absolute bottom-55px right-100px'}>
+                <div className={'absolute bottom-10 left-60 flex justify-center items-center'}>
                     <MyPagination></MyPagination>
                 </div>
             </div>
