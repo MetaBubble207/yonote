@@ -34,7 +34,7 @@ const Page = () => {
                     <div>
                         {columns && columns.length > 0 && columns.map((column: any) => (
                             // 检查当前 column 是否在 orders 中存在
-                            orders.some(order => order.name === column.id) && (
+                            orders.some(order => order.columnID === column.id) && (
                                 <SubscribeRenew key={column.id} column={column} />
                             )
                         ))}
