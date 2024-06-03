@@ -13,6 +13,7 @@ import TagInput from "../../_components/edit/tag";
 import { api } from "@/trpc/react";
 import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
+import {W100H50Modal} from "@/app/_components/common/W100H50Modal";
 
 function MyEditor() {
   const a = api.draft.delete.useMutation({
@@ -45,8 +46,7 @@ function MyEditor() {
       console.log(r);
     },
   });
-  // const postQuery = api.post.getAll.useQuery();
-  // const [example2, setExample2] = useState(postQuery);
+
   const createpost = api.post.create.useMutation({
     onSuccess: (r) => {
       console.log(r);
@@ -70,11 +70,10 @@ function MyEditor() {
   const [html, setHtml] = useState("<p>hello</p>");
   const [title, setTitle] = useState("");
   const [preview, setPreview] = useState(false);
-  const toolbar = DomEditor.getToolbar(editor!);
+  const toolbar = DomEditor.getToolbar(editor);
   const [tags, setTags] = useState<string[]>([]);
-
+  const [publishModal,setPublishModal] = useState(false);
   const curToolbarConfig = toolbar?.getConfig();
-  console.log(curToolbarConfig?.toolbarKeys); // 当前菜单排序和分组
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newTitle = event.target.value.slice(0, 64); // 限制标题长度为64个字符
@@ -84,7 +83,31 @@ function MyEditor() {
   const togglePreview = () => {
     setPreview(!preview);
   };
-
+  const Modal = () => {
+    return <W100H50Modal>
+        <div className={"text-6"}>是否确认要发布</div>
+        <div className={"space-x-10 mt-5"}>
+          <button
+              className="w-22 h-8 shrink-0 bg-[#eea1a1ff] text-[#eb172fff] b-1 b-rd-1 ml-28 mt-1 text-3.5  font-400 lh-5.5 ml-4 mt-1"
+              onClick={() => setPublishModal(false)}
+          >
+            取消
+          </button>
+          <button
+              className="w-22 h-8 shrink-0 bg-[#e8e6a2ff] b-1 b-rd-1 ml-28 mt-1 text-[#595508ff] font-Abel text-3.5 font-not-italic font-400 lh-5.5 ml-4 mt-1"
+              onClick={saveDraft}
+          >
+            保存草稿
+          </button>
+          <button
+              className="w-22 h-8 shrink-0 bg-#DAF9F1 b-1 b-rd-1 ml-28 mt-1 text-[#1DB48D] font-Abel text-3.5 font-not-italic font-400 lh-5.5 ml-4 mt-1"
+              onClick={publish}
+          >
+            确认发布
+          </button>
+        </div>
+    </W100H50Modal>
+  }
   // 保存草稿的函数
   const saveDraft = () => {
     // 调用保存草稿的 API 请求，并传递标题、HTML 内容和标签
@@ -97,9 +120,7 @@ function MyEditor() {
     });
     router.push(`/writer/content-management?columnId=${columnId}`);
   };
-
-  // 发布的函数
-  const save = () => {
+  const publish = () => {
     // 调用保存草稿的 API 请求，并传递标题、HTML 内容和标签
     createpost.mutate({
       name: title, // 使用标题作为草稿的名称
@@ -109,6 +130,10 @@ function MyEditor() {
       columnId: columnId
     });
     router.push(`/writer/content-management?columnId=${columnId}`);
+  }
+  // 发布的函数
+  const handleClickPublish = () => {
+    setPublishModal(true)
   };
 
   const toolbarConfig: Partial<IToolbarConfig> = {}; // 工具栏配置
@@ -160,8 +185,6 @@ function MyEditor() {
 
     // 继续配置其他菜单...
   ];
-  // console.log("123",toolbarConfig)
-  // console.log( toolbarConfig.toolbarKeys )
   const editorConfig: Partial<IEditorConfig> = {
     placeholder: "请输入内容...",
     maxLength: 1000,
@@ -201,14 +224,14 @@ function MyEditor() {
                 </button>
               </div>
               <div
-                className={`b-1 b-rd-1 w-22 h-8 shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9]  mt-1 ml-1.5 ${
+                className={`b-1 b-rd-1 w-22 h-8 shrink-0 fill-#FFF flex items-center justify-center stroke-0.25 stroke-[#D9D9D9]  mt-1 ml-1.5 ${
                   preview ? "bg-#1db48d" : ""
                 }`}
               >
                 <button
                   className={`${
                     preview ? "text-#ffffff" : "text-[rgba(0,0,0,0.65)]"
-                  } text-3.5 font-not-italic font-400 lh-5.5 ml-4 mt-1`}
+                  } text-3.5 font-not-italic font-400 `}
                   onClick={togglePreview}
                 >
                   {preview ? "取消预览" : "预览"}
@@ -217,7 +240,7 @@ function MyEditor() {
               <div className="b-1 b-rd-1 w-16.25 h-8 shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-1 ml-1.5">
                 <button
                   className="text-[rgba(0,0,0,0.65)] font-Abel text-3.5 font-not-italic font-400 lh-5.5 ml-4 mt-1"
-                  onClick={save}
+                  onClick={handleClickPublish}
                 >
                   发布
                 </button>
@@ -284,6 +307,9 @@ function MyEditor() {
           </div>
         </div>
       </div>
+      {
+        publishModal && (<Modal></Modal>)
+      }
     </div>
   );
 }

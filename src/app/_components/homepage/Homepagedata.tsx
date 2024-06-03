@@ -24,7 +24,7 @@ const Homepagedata = () => {
         <div className="w-full h-82 pl-32px r-16px bg-[#FFF] border-rd-2.5">
             <div className="flex items-center pt-34px">
                 <span className="text-[#323232] text-4 font-700 lh-6">主板看板</span>
-                <Link href={`../edit/edit?columnId=${columnId}`} className="flex w-20.5 h-9 color-[#1db48d] bg-[#dbf9f1] ml-32px">
+                <Link href={`/edit/edit?columnId=${columnId}`} className="flex w-20.5 h-9 color-[#1db48d] bg-[#dbf9f1] ml-32px">
                    <span className="m-auto">+发布</span>
                 </Link>
             </div>
