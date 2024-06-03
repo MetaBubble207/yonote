@@ -161,7 +161,7 @@ const LeftCompass = () => {
                   height={24.03}
                   className="w-6 h-6.00625 shrink-0 ml-10.555 mt-2.89"
                 ></Image>
-                <Link href={`/writer/speed-up`} passHref>
+                <Link href={`/writer/speed-up?columnId=${columnId}`} passHref>
                   <div className="w-14 h-6.00625 shrink-0 text-3.5 font-400 lh-6 ml-2.07 mt-2.89">
                     加速计划
                   </div>
