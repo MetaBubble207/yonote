@@ -40,11 +40,12 @@ export const orderRouter = createTRPCRouter({
   createOrder: publicProcedure
     .input(z.object({
       ownerID: z.string(),
-      name: z.string(),
+      columnID: z.string(),
       price: z.number(),
       payment: z.string(),
       status: z.boolean(),
       buyerID: z.string(),
+      name: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
       try {
@@ -58,6 +59,7 @@ export const orderRouter = createTRPCRouter({
           const insertedOrder = await ctx.db.insert(order).values({
             ownerID: input.ownerID,
             name: input.name,
+            columnID: input.columnID,
             price: input.price,
             payment: input.payment,
             status: input.status,
@@ -70,6 +72,7 @@ export const orderRouter = createTRPCRouter({
             payment: order.payment,
             status: order.status,
             buyerID: order.buyerID,
+            columnID: order.columnID,
           });
 
           return insertedOrder[0]; // 返回插入的订单对象
