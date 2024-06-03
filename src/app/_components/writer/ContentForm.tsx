@@ -5,26 +5,23 @@ import {api} from "@/trpc/react";
 import {timeToDateString} from "@/tools/timeToString";
 import useLocalStorage from "@/tools/useStore";
 import {useSearchParams} from "next/navigation";
+import {W100H50Modal} from "@/app/_components/common/W100H50Modal";
 
 export const ContentForm=()=>{
 
-    // const options = [
-    //     { title: '文章内容标题', isTop: true, isFree: true, label: '免费 全部', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
-    //     { title: '标题1', isTop: true, isFree: false, label: '全部', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
-    //     { title: '标题2', isTop: false, isFree: true, label: '免费', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
-    //     { title: '标题3', isTop: false, isFree: true, label: '全部', updatedAt: '2017-10-31 23:12:00', publishedAt: '2017-10-31 23:12:00' },
-    // ];
     const params = useSearchParams();
     const columnId = params.get("columnId")
-    let contentData =  api.post.getAll.useQuery({
+    const [showDeleteModal,setShowDeleteModal]=useState(false);
+    const [currentDeleteId,setCurrentDeleteId]=useState(0);
+    const [contentData,setContentData] = useState( api.post.getAll.useQuery({
         limit: 5,
         offset: 0,
         columnId:columnId
-    }).data;
-    useEffect(() => {
+    }).data);
 
+    useEffect(() => {
+        console.log(contentData)
     }, [contentData]);
-    const [data,setData] = useState([])
 
     const updateIsTopApi = api.post.updateIsTop.useMutation({
         onSuccess: (r) => {
@@ -36,9 +33,11 @@ export const ContentForm=()=>{
             console.log(r)
         }
     })
-    if(contentData){
-        // setData(contentData)
-    }
+    const deleteApi = api.post.deletePost.useMutation({
+        onSuccess: (r) => {
+            console.log(r)
+        }
+    })
     const handleEdit = () => {
         // 编辑文章逻辑
     };
@@ -46,47 +45,61 @@ export const ContentForm=()=>{
     const handleToggleTop = (index:number) => {
         // 切换置顶状态逻辑
         const newData=[...contentData]
-        newData[index]!.isTop=!newData[index]!.isTop
+        newData[index].isTop=!newData[index].isTop
 
-        contentData = newData
+        setContentData(newData)
         updateIsTopApi.mutate({
-            id:newData[index]!.id,
-            isTop:newData[index]!.isTop
+            id:newData[index].id,
+            isTop:newData[index].isTop
         })
-        console.log(contentData)
-        console.log("置顶")
 
     };
 
     const handleToggleFree = (index:number) => {
         // 切换免费状态逻辑
         const newData=[...contentData]
-        newData[index]!.isFree=!newData[index]!.isFree
-        contentData = newData
+        newData[index].isFree=!newData[index].isFree
+        setContentData(newData)
         updateIsFreeApi.mutate({
-            id:newData[index]!.id,
-            isFree:newData[index]!.isFree
+            id:newData[index].id,
+            isFree:newData[index].isFree
         })
-        console.log(contentData)
     };
-
-    const handleDelete = (index:number) => {
+    const deletePost = () => {
+        const newData = [...contentData];
+        setContentData(newData.filter(item => item.id !== currentDeleteId))
         // 删除文章逻辑
-        const newData = [...data];
-        newData.splice(index, 1);
-        setData(newData);
-    };
-
-    interface ArticleProp{
-        title:string,
-        isTop:boolean,
-        isFree:boolean,
-        label:string,
-        updatedAt:string,
-        publishedAt:string
+        deleteApi.mutate({
+            id: currentDeleteId
+        })
+        setShowDeleteModal(false)
     }
 
-    return(
+    const DeleteModal = () => {
+        return <W100H50Modal>
+            <div className={"text-6"}>是否确认要删除</div>
+            <div className={"space-x-10 mt-5"}>
+                <button
+                    className="w-22 h-8 shrink-0 bg-[#eea1a1ff] text-[#eb172fff] b-1 b-rd-1 ml-28 mt-1 text-3.5  font-400 lh-5.5 ml-4 mt-1"
+                    onClick={() => setShowDeleteModal(false)}
+                >
+                    取消
+                </button>
+                <button
+                    className="w-22 h-8 shrink-0 bg-#DAF9F1 b-1 b-rd-1 ml-28 mt-1 text-[#1DB48D] font-Abel text-3.5 font-not-italic font-400 lh-5.5 ml-4 mt-1"
+                    onClick={deletePost}
+                >
+                    确认
+                </button>
+            </div>
+        </W100H50Modal>
+    }
+    const handleClickDelete = (index: number) => {
+        setCurrentDeleteId(index);
+
+        setShowDeleteModal(true)
+    };
+    return (
         <div>
             {/*表格*/}
             <table className="w-94% mt-22px mx-35px pl-63px ">
@@ -97,7 +110,8 @@ export const ContentForm=()=>{
                         <div className={'flex items-center '}>
                             <span>状态</span>
                             <span className={'ml-8px'}>
-                                    <Image src={"/images/writer/management/state.png"} alt={"状态图标"} width={10} height={10}/>
+                                    <Image src={"/images/writer/management/state.png"} alt={"状态图标"} width={10}
+                                           height={10}/>
                                 </span>
                         </div>
                     </th>
@@ -129,7 +143,7 @@ export const ContentForm=()=>{
                 </tr>
                 </thead>
                 <tbody>
-                {contentData?.map((option:any, index:number) => (
+                {contentData?.map((option, index) => (
                     <tr key={index} className={'h-52px'}>
                         <td className="px-4 pl-63px pr-2 text-left text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{option?.name}</td>
                         <td className={`px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5 ${option.isTop ? 'text-[#1DB48D]' : ''} ${option.isFree ? 'text-[#1DB48D]' : ''}`}>{option.isTop ? '置顶' : ''} {option.isFree ? '免费' : ''}</td>
@@ -140,12 +154,13 @@ export const ContentForm=()=>{
                             <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={handleEdit}>编辑</button>
                             <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={()=> handleToggleTop(index)}>{option.isTop ? '取消置顶' : '置顶'}</button>
                             <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={()=> handleToggleFree(index)}>{option.isFree ? '取消免费' : '免费'} </button>
-                            <button className={'mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5'} onClick={()=> handleDelete(index)}>删除</button>
+                            <button className={'mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5'} onClick={()=> handleClickDelete(option.id)}>删除</button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
+            {showDeleteModal && (<DeleteModal/>)}
         </div>
 
 )
