@@ -1,10 +1,36 @@
+"use client"
 import Navbar from "../../_components/common/Navbar"
 import Image from "next/image";
 import Link from "next/link";
 import Page from "../../_components/subscribe/Navscribr";
+import { api } from "@/trpc/react";
+import useLocalStorage from "@/tools/useStore";
+import { useEffect, useState } from "react";
 
 
 const Subscribe = () => {
+    const [token] = useLocalStorage("token", null)
+    const recentRead = api.read.getRecentRead.useQuery({
+        userId: token,
+    }).data;
+    // const recentColumn = api.post.getColumnbyPost.useQuery({
+    //     postId: recentRead?.id,
+    // })
+
+    const [readContent, setReadContent] = useState("");
+
+    const recentColumn = api.column.getColumnDetail.useQuery({
+        columnId: recentRead?.columnId,
+    }).data
+
+
+    useEffect(() => {
+        if (recentRead && recentRead.content.length > 10) {
+            setReadContent(recentRead.content = recentRead.content.substring(0, 20) + "...");
+        } else {
+            setReadContent(recentRead?.content + "...")
+        }
+    }, [recentRead])
 
     return (
         <div className="min-h-screen relative pt-8 pb-15 bg-#F5F7FB">
@@ -15,10 +41,17 @@ const Subscribe = () => {
                 </div>
 
                 <div className="h-20.5 w-full mt-8 border-rd-2.5 bg-[#FFF] flex items-center relative">
-                    <Image src={"/images/subscribe/cover.png"} alt="cover" width={18.2} height={24.8} className="w-11.375 h-15.5 ml-4"></Image>
+                    <Image src={recentColumn?.logo} alt="cover" width={18.2} height={24.8} className="w-11.375 h-15.5 ml-4"></Image>
                     <div className="pl-2 relative h-23 pt-3">
-                        <div className="text-3 text-[#252525] font-500 pb-1.5 lh-6">「显示不够的话开播的第3年，P人沉...」</div>
-                        <div className="text-2.5 text-[#666] lh-3 pl-1">显示多少然后开始了...</div>
+                        {
+                            recentRead && (
+                                <>
+                                    <div className="text-3 text-[#252525] font-500 pb-1.5 lh-6">{recentRead.name}</div>
+                                    <div className="text-2.5 text-[#666] lh-3 pl-1" dangerouslySetInnerHTML={{ __html: readContent }}></div>
+
+                                </>
+                            )
+                        }
                     </div>
                     <Link href={"../special-column-content"} className="w-18.25 h-7.75 text-3 bg-[#daf9f1] text-[#1db48d] lh-7.75 text-center border-rd-12 absolute right-2.5 bottom-2.5">继续阅读</Link>
                 </div>

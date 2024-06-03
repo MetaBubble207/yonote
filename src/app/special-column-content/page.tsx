@@ -26,7 +26,7 @@ const Page = () => {
 
   let chapter;
   let columnId;
-  if(typeof window !== "undefined") {
+  if (typeof window !== "undefined") {
     const params = useSearchParams();
     chapter = parseInt(params.get("c"));
     columnId = params.get("id");
@@ -327,12 +327,12 @@ const Page = () => {
             dangerouslySetInnerHTML={{ __html: content }}
           ></div>
         </div>
-        <div className="flex flex-row justify-between pt-2 relative h-7">
+        <div className="flex flex-row pt-2 relative">
           {tags.map((item, index) => {
             return (
               <span
                 className={
-                  "text-[#1DB48D] text-3 font-not-italic font-400 lh-6"
+                  "text-[#1DB48D] text-3 font-not-italic font-400 lh-6 mr-2"
                 }
                 key={index}
               >
