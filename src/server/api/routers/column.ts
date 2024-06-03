@@ -140,5 +140,20 @@ export const columnRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
         const columnDetail = await ctx.db.select().from(column).where(and(eq(column.id, input.columnId)))
         return columnDetail[0];
-    })
+    }),
+
+    getOrderColumn: publicProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+        const orders = await ctx.db.select().from(order).where(eq(order.buyerID, input.userId))
+        
+        const promises = orders.map(async order => {
+            const columnData = await ctx.db.select().from(column).where(eq(column.id, order.columnID))
+            return columnData[0];
+        })
+        const res = await Promise.all(promises);
+            
+        return res;
+        
+    }),
 });

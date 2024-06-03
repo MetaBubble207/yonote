@@ -2,9 +2,17 @@
 import Image from "next/image"
 import { Checkbox } from 'antd';
 import {useEffect, useState} from "react";
+import useLocalStorage from "@/tools/useStore";
+import { api } from "@/trpc/react";
 
 
 const ManagementColumn = (props) => {
+
+    const token = useLocalStorage("token", '');
+    const order = api.order.getUserOrder.useQuery({
+        userID: token[0],
+    });
+    const column = api.column.getOrderColumn.useQuery({userId: token[0]});
     const [array, setArray] = useState([]);
     const [checkSate, setCheckSate] = useState(props.manage); // 控制多选框是否可用
 
@@ -31,37 +39,10 @@ const ManagementColumn = (props) => {
                         <Checkbox.Group onChange={outputValue} disabled={!checkSate}>
                         <Checkbox value={1}>
                             <div className={"flex"}>
-                                <Image src={"/images/subscribe/cover.png"} width={100} height={100} alt={"cover"} className="w-11.375 h-15.478"></Image>
+                                <Image src={column.data ? column.data[0].logo : ''} width={100} height={100} alt={"cover"} className="w-11.375 h-15.478"></Image>
                                 <div className="ml-3 mt-3 flex-1">
-                                    <h3 className="text-[#252525] text-3 font-500 lh-6">「专栏不够的话开播的第3年，P人沉...」</h3>
-                                    <h4 className="text-[#666] text-2.5 lh-[120%] mt-1">显示多少然后开始了...</h4>
-                                </div> 
-                            </div>
-                        </Checkbox>
-                        <Checkbox value={2}>
-                            <div className={"flex"}>
-                                <Image src={"/images/subscribe/cover.png"} width={100} height={100} alt={"cover"} className="w-11.375 h-15.478"></Image>
-                                <div className="ml-3 mt-3 flex-1">
-                                    <h3 className="text-[#252525] text-3 font-500 lh-6">「专栏不够的话开播的第3年，P人沉...」</h3>
-                                    <h4 className="text-[#666] text-2.5 lh-[120%] mt-1">显示多少然后开始了...</h4>
-                                </div>
-                            </div>
-                        </Checkbox>
-                        <Checkbox value={3}>
-                            <div className={"flex"}>
-                                <Image src={"/images/subscribe/cover.png"} width={100} height={100} alt={"cover"} className="w-11.375 h-15.478"></Image>
-                                <div className="ml-3 mt-3 flex-1">
-                                    <h3 className="text-[#252525] text-3 font-500 lh-6">「专栏不够的话开播的第3年，P人沉...」</h3>
-                                    <h4 className="text-[#666] text-2.5 lh-[120%] mt-1">显示多少然后开始了...</h4>
-                                </div>
-                            </div>
-                        </Checkbox>
-                        <Checkbox value={4}>
-                            <div className={"flex"}>
-                                <Image src={"/images/subscribe/cover.png"} width={100} height={100} alt={"cover"} className="w-11.375 h-15.478"></Image>
-                                <div className="ml-3 mt-3 flex-1">
-                                    <h3 className="text-[#252525] text-3 font-500 lh-6">「专栏不够的话开播的第3年，P人沉...」</h3>
-                                    <h4 className="text-[#666] text-2.5 lh-[120%] mt-1">显示多少然后开始了...</h4>
+                                    <h3 className="text-[#252525] text-3 font-500 lh-6">{column.data?.map((column) => column.name)}</h3>
+                                    <h4 className="text-[#666] text-2.5 lh-[120%] mt-1">{column.data?.map((column) => column.description)}</h4>
                                 </div>
                             </div>
                         </Checkbox>
