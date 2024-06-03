@@ -7,6 +7,7 @@ import useLocalStorage from '@/tools/useStore';
 import Image from "next/image";
 import {useSearchParams} from "next/navigation";
 import OSS from "ali-oss";
+import {W100H50Modal} from "@/app/_components/common/W100H50Modal";
 
 let client = new OSS({
     region: 'oss-cn-shenzhen',
@@ -18,34 +19,28 @@ let client = new OSS({
 });
 const Page=()=>{
     let data;
-    const [token] = useLocalStorage("token", null);
-    let columnId;
-    if(typeof window !== "undefined") {
-        const params = useSearchParams();
-        columnId = params.get("columnId");
-    }
+    const params = useSearchParams();
+    const columnId = params.get("columnId");
     if(columnId){
         data = api.column.getColumnDetail.useQuery({columnId:columnId}).data
     }
     const [name, setName] = useState(data?.name);
-    const [mode, setMode] = useState('');
-    const [format, setFormat] = useState('');
     const [price, setPrice] = useState(data?.price);
     const [intro, setIntro] = useState(data?.introduce);
+    //记录初始专栏简介，用于判断专栏是否被修改
+    const [initIntro, setInitIntro] = useState(data?.introduce);
+
     const [cover, setCover] = useState(data?.logo);
     const [description, setDescription] = useState(data?.description);
     const [checkColor,setCheckColor] = useState("#1DB48D")
+
+    const [showConfirmSubmitModal,setShowConfirmSubmitModal] = useState(false)
     const onChange = (checked: boolean) => {
         if(checked){
             setCheckColor("#1DB48D")
         }else{
             setCheckColor("#fff")
         }
-    };
-
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-        const inputValue = e.target.value;
-        setName(inputValue);
     };
 
     const remainingCharacters =  name?.length;
@@ -77,11 +72,53 @@ const Page=()=>{
         }
     };
     // 触发文件输入框
-    const handleButtonClick = () => {
+    const changeCover = () => {
         fileInputRef.current.click();
     };
-
-    return(
+    const submit = () => {
+        updateApi.mutate({
+            id: data!.id!,
+            name: name ?? data!.name ?? "",
+            price: price ?? data!.price ?? 0,
+            introduce: intro ?? data!.introduce ?? "",
+            description: description ?? data!.description ?? ""
+        })
+        setInitIntro(intro)
+        setShowConfirmSubmitModal(false)
+    }
+    const handleClickSubmit = () => {
+        if(initIntro === intro){
+            updateApi.mutate({
+                id: data!.id!,
+                name: name ?? data!.name ?? "",
+                price: price ?? data!.price ?? 0,
+                introduce: intro ?? data!.introduce ?? "",
+                description: description ?? data!.description ?? ""
+            })
+        }else{
+            setShowConfirmSubmitModal(true)
+        }
+    }
+    const ConfirmSubmitModal = () => {
+        return <W100H50Modal>
+            <div className={"text-6"}>是否确认更改专栏简介</div>
+            <div className={"space-x-10 mt-5"}>
+                <button
+                    className="w-22 h-8 shrink-0 bg-[#eea1a1ff] text-[#eb172fff] b-1 b-rd-1 ml-28 mt-1 text-3.5  font-400 lh-5.5 ml-4 mt-1"
+                    onClick={() => setShowConfirmSubmitModal(false)}
+                >
+                    取消
+                </button>
+                <button
+                    className="w-22 h-8 shrink-0 bg-#DAF9F1 b-1 b-rd-1 ml-28 mt-1 text-[#1DB48D] font-Abel text-3.5 font-not-italic font-400 lh-5.5 ml-4 mt-1"
+                    onClick={submit}
+                >
+                    确认
+                </button>
+            </div>
+        </W100H50Modal>
+    }
+    return (
         <Suspense>
             <div className={'w-full h-full mt-16px ml-18px'}>
                 <div className={'w-97% flex items-center shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] pb-35px'}>
@@ -212,27 +249,11 @@ const Page=()=>{
                             </tr>
                             </tbody>
                         </table>
-                        <button className={"ml-20 mt-5 w-65px h-32px bg-#DAF9F1 text-#1DB48D"} onClick={() => {
-                            // updateApi.mutate({
-                            //     id: data!.id!,
-                            //     name:data!.name ?? "",
-                            //     price:data!.price ?? 0,
-                            //     introduce:data!.introduce ?? "",
-                            // })
-                            updateApi.mutate({
-                                id: data!.id!,
-                                name: name ?? data!.name ?? "",
-                                price: price ?? data!.price ?? 0,
-                                introduce: intro ?? data!.introduce ?? "",
-                                description: description ?? data!.description ?? ""
-                            })
-                        }}>提交
+                        <button className={"ml-20 mt-5 w-65px h-32px bg-#DAF9F1 text-#1DB48D"} onClick={handleClickSubmit}>提交
                         </button>
                         <button className={' ml-5 mt-5 w-65px h-32px bg-[#eaececff] text-[#7d7f7dff]'}
                                 onClick={() => {
                                     setName('');
-                                    setMode('');
-                                    setFormat('');
                                     setPrice(0);
                                     setIntro('');
                                     setDescription('');
@@ -248,7 +269,7 @@ const Page=()=>{
                                    width={"10"}
                                    height={"10"}/>
                             <button className="w-10 ml-1.25 text-[#252525] text-2.5 font-500 lh-6"
-                                    onClick={handleButtonClick}>
+                                    onClick={changeCover}>
                                 修改封面
                             </button>
                             <input
@@ -260,7 +281,7 @@ const Page=()=>{
                         </div>
                     </div>
                 </div>
-
+                {showConfirmSubmitModal && (<ConfirmSubmitModal/>)}
             </div>
         </Suspense>
     )
