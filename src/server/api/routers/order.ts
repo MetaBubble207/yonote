@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { column, order } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { eq , and} from "drizzle-orm";
 
 export const orderRouter = createTRPCRouter({
   hello: publicProcedure
@@ -51,7 +51,7 @@ export const orderRouter = createTRPCRouter({
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // 查询订单是否已存在
-        const existingOrder = await ctx.db.select().from(order).where(eq(order.name, input.name));
+        const existingOrder = await ctx.db.select().from(order).where(and(eq(order.name, input.name),eq(order.buyerID,input.buyerID)));
 
         // 如果订单不存在，则插入新订单
         if (existingOrder.length === 0) {
@@ -82,6 +82,7 @@ export const orderRouter = createTRPCRouter({
       }
     }),
 
+    // 同一订单的信息
     getColumnOrder: publicProcedure
     .input(z.object({
       columnID: z.string(),
@@ -93,16 +94,13 @@ export const orderRouter = createTRPCRouter({
       return orderData;
     }),
 
-    getColumnByBuyer: publicProcedure
-        .input(z.object({
-            BuyerID: z.string(),
-        }))
-        .query(async ({ ctx, input }) => {
-            const orderData = await ctx.db.query.order.findMany({
-                where:  eq(order.buyerID, input.BuyerID ),
-            });
-            return orderData;
-        }),
-
+    getUserOrder: publicProcedure
+    .input(z.object({
+      userID: z.string(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const orderData = await ctx.db.select().from(order).where(and(eq(order.buyerID, input.userID), eq(order.status, true)))
+      return orderData;
+    })
 
 });

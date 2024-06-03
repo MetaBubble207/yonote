@@ -9,7 +9,7 @@ export const SearchColumn = (props) => {
     const {SearchValue} = props
     const router = useRouter();
 
-    const [searchValue, setSearchValue] = useState('');
+    const [searchValue, setSearchValue] = useState(SearchValue || '');
     const [queryName, setQueryName] = useState(null);
 
 
