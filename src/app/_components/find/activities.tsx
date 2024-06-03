@@ -8,15 +8,14 @@ import Link from "next/link";
 const Activities =()=>{
     const [data, setData] = useState(null);
 
-    const { data: queryData} = api.activity.getAll.useQuery();
-
+    const  queryData  = api.activity.getAll.useQuery().data;
     // 在数据加载完成时更新状态
     useEffect(() => {
         if (queryData){
             const currentTime = getCurrentTime();
             //过滤未截止的活动
             const goingData = queryData.filter(item => {
-                const endDate = new Date(item.enddate);
+                const endDate = new Date(item.endDate);
                 return endDate > currentTime;
             });
 
@@ -48,7 +47,7 @@ const Activities =()=>{
                                         {item.introduction}
                                 </div>
                            </div>
-                           <Image src={"/images/subscribe/acti-cover.svg"} alt="acti-cover" width={16} height={12}
+                           <Image src={item.cover ?? "/images/user/Loading.svg"} alt="acti-cover" width={16} height={12}
                                   className="border-rd=4 w-41 h-31.25 absolute top-2.5 left-2.5 "/>
 
                            <div

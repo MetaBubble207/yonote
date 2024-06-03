@@ -29,11 +29,12 @@ const Reserved = ({ onClose, check }) => {
             // 在组件渲染完成后执行订阅订单操作
             subscribeOrder.mutate({
                 ownerID: columnUserId.data,
-                name: columnID,
+                columnID: columnID,
                 price: 10,
                 payment: "alipay",
                 status: check,
                 buyerID: token[0],
+                name: column.name,
             });
         };
     }
