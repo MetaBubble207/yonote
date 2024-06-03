@@ -42,7 +42,7 @@ export const SpecialColumnBody = () => {
     }
 
     return (
-        <div className={" w-full  bg-#fff rounded-t-30px lh-6 mt-20px"}>
+        <div className={" w-full  bg-#fff rounded-t-30px lh-6 "}>
             {/*订阅栏*/}
             <div className={"ml-37.8% text-[#999] text-3 font-not-italic font-400 lh-6 pt-10px"}>
                 <span
