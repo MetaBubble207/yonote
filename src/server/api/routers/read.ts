@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { postLike, user, post, column, postRead} from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { postLike, user, post, column, postRead } from "@/server/db/schema";
+import { eq, desc } from "drizzle-orm";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 import { and } from "drizzle-orm";
 import { getRedirectStatusCodeFromError } from "next/dist/client/components/redirect";
@@ -38,36 +38,53 @@ export const readRouter = createTRPCRouter({
                     readCount: 1,
                 }).returning({ postId: postRead.postId, userId: postRead.userId, postRead: postRead.readCount })
             } else {
-                return list;
+                // return list;
+                return ctx.db.update(postRead).set({
+                    updatedAt: getCurrentTime(),
+                }).where(and(eq(postRead.postId, postId), eq(postRead.userId, input.userId)))
             }
         }),
-        // 获取专栏阅读量
-        getColumnRead: publicProcedure
-            .input(z.object({ columnId:z.string() }))
-            .query(async ({ ctx, input }) => {
-                const readList = await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
-                if (readList?.length === 0) {
-                    return 0;
-                } else {
-                    let res = 0;
-                    for (const item of readList) {
-                        const postId = item.id;
-                        const data = await ctx.db.select().from(postRead).where(eq(postRead.postId, postId));
-                        // const data = await ctx.db.query.postRead.findFirst({ where: eq(postRead.postId, postId) })                        
-                        data.map((item) => {
-                            res += item.readCount;
-                        })
-                    }
-                    
-                    return res;
+    // 获取专栏阅读量
+    getColumnRead: publicProcedure
+        .input(z.object({ columnId: z.string() }))
+        .query(async ({ ctx, input }) => {
+            const readList = await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
+            if (readList?.length === 0) {
+                return 0;
+            } else {
+                let res = 0;
+                for (const item of readList) {
+                    const postId = item.id;
+                    const data = await ctx.db.select().from(postRead).where(eq(postRead.postId, postId));
+                    // const data = await ctx.db.query.postRead.findFirst({ where: eq(postRead.postId, postId) })                        
+                    data.map((item) => {
+                        res += item.readCount;
+                    })
                 }
-            }),
-        // 获取文章阅读量
-        getPostRead: publicProcedure
-            .input(z.object({ postId: z.number()}))
-            .query(async ({ ctx, input }) => {
-                const data = await ctx.db.select().from(postRead).where(eq(postRead.postId, input.postId));
-                return data?.length;
-            })
+
+                return res;
+            }
+        }),
+    // 获取文章阅读量
+    getPostRead: publicProcedure
+        .input(z.object({ postId: z.number() }))
+        .query(async ({ ctx, input }) => {
+            const data = await ctx.db.select().from(postRead).where(eq(postRead.postId, input.postId));
+            return data?.length;
+        }),
+
+    // 获取最近阅读
+    getRecentRead: publicProcedure
+        .input(z.object({ userId: z.string() }))
+        .query(async ({ ctx, input }) => {
+            // const recent = await ctx.db.select().from(postRead).where(eq(postRead.userId, input.userId)).orderBy(postRead.updatedAt).limit(1);
+            const recent = await ctx.db.select().from(postRead).where(eq(postRead.userId, input.userId)).orderBy(desc(postRead.updatedAt));
+            // return recent;
+            const data = await ctx.db.query.post.findFirst({
+                where:
+                    eq(post.id, recent[0].postId)
+            });
+            return data;
+        })
 
 });
