@@ -40,24 +40,26 @@ export const orderRouter = createTRPCRouter({
   createOrder: publicProcedure
     .input(z.object({
       ownerID: z.string(),
-      name: z.string(),
+      columnID: z.string(),
       price: z.number(),
       payment: z.string(),
       status: z.boolean(),
       buyerID: z.string(),
+      name: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
       try {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // 查询订单是否已存在
-        const existingOrder = await ctx.db.select().from(order).where(eq(order.name, input.name));
+        const existingOrder = await ctx.db.select().from(order).where(and(eq(order.name, input.name),eq(order.buyerID,input.buyerID)));
 
         // 如果订单不存在，则插入新订单
         if (existingOrder.length === 0) {
           const insertedOrder = await ctx.db.insert(order).values({
             ownerID: input.ownerID,
             name: input.name,
+            columnID: input.columnID,
             price: input.price,
             payment: input.payment,
             status: input.status,
@@ -70,6 +72,7 @@ export const orderRouter = createTRPCRouter({
             payment: order.payment,
             status: order.status,
             buyerID: order.buyerID,
+            columnID: order.columnID,
           });
 
           return insertedOrder[0]; // 返回插入的订单对象

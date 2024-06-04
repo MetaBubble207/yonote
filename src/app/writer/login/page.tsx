@@ -9,12 +9,11 @@ const Login = () => {
       id: "login_container",
       appid: "wx6e3b77c29681a56b",
       scope: "snsapi_login",
-      redirect_uri: encodeURIComponent("https://app.yonote.net/login/callback"),
+      redirect_uri: "https://app.yonote.net/login/callback",
       state: "state",
       style: "black",
       href: "",
     });
-    // sandbox
   };
 
   useEffect(() => {

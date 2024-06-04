@@ -44,8 +44,8 @@ export const SpecialColumnCard = (props) => {
                             <span>
                             {item.name}
                             </span>
-                            { item.tag &&
-                                <span
+                            {
+                                item.tag && <span
                                     className={" shrink-0 border-rd-0.5 bg-[#FDB069] shrink-0 text-[#000]  text-2.5 font-not-italic font-500 lh-6 px-7px py-3px ml-10px"}>
                                 <span>
                                 {item.tag}

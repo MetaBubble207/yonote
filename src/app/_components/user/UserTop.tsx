@@ -5,7 +5,7 @@ import React from "react";
 import useLocalStorage from "@/tools/useStore";
 import {useRouter, useSearchParams} from "next/navigation";
 import {api} from "@/trpc/react";
-export const  UserTop = () => {
+export const UserTop = () => {
     let userInfo;
     const [token, setToken] = useLocalStorage("token", null);
     const router = useRouter();

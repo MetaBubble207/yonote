@@ -29,11 +29,12 @@ const Reserved = ({ onClose, check }) => {
             // 在组件渲染完成后执行订阅订单操作
             subscribeOrder.mutate({
                 ownerID: columnUserId.data,
-                name: columnID,
+                columnID: columnID,
                 price: 10,
                 payment: "alipay",
                 status: check,
                 buyerID: token[0],
+                name: column.name,
             });
         };
     }
@@ -51,14 +52,14 @@ const Reserved = ({ onClose, check }) => {
     };
 
     return (
-        <div className="flex items-center w-full h-full bg-[#8b8a8a] bg-opacity-50 z-1 fixed bottom-0">
-            <div className="flex flex-col w-full items-center justify-center  b-white bg-#fff rounded-t-10 pb-10 absolute bottom-0">
-                <Image src={"/images/dialog/Close-small.png"} alt="close" width={20} height={20} className="w-20px h-20px mt-5 ml-335px" onClick={onClose}></Image>
+        <div className="flex items-center w-full h-full z-1">
+            <div className="flex flex-col w-full items-center justify-center b-white fixed top-60 bg-#fff b-r-10 pb-10">
+                <Image src={"/images/dialog/Close-small.png"} alt="close" width={20} height={20} className="w-20px h-20px ml-335px" onClick={onClose}></Image>
                 <div className="w-36.75 text-[#252525] text-3.75 font-500 lh-6  mt-2">「{column.name}」</div>
                 <div className="mt-6">
                     <button className={`w-84.25 h-10 shrink-0 border-rd-1.25 border-1 border-solid bg-[#F5F7FB] justify-center ${selectedButton === 1 ? 'border-[#45E1B8]' : ''}`} onClick={() => handleButtonClick(1)}>
                         <div className="flex ml-2.5 items-center ">
-                            <div className="shrink-0 text-[#252525] text-3.5 font-700 lh-6">¥{column.price}</div>
+                            <div className="shrink-0 text-[#252525] font-700 lh-6">¥{column.price}</div>
                             <div className="w-29.25 ml-1 h-6.158 shrink-0 text-[#B5B5B5] text-3 font-500 lh-6">一次购买，永久有效</div>
                             {selectedButton === 1 && (
                                 <Image src="/images/dialog/check.png" alt="check" width={20} height={20} className="right-8 absolute w-5 h-5" />
@@ -84,7 +85,6 @@ const Reserved = ({ onClose, check }) => {
                 </div>
             </div>
         </div>
-
     );
 }
 

@@ -43,7 +43,7 @@ function User() {
         {/* 导航区域 */}
         <div className="flex">
           <a href="#" className="w-7 h-14 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">专栏</a>
-          {/* <a href="#" className="w-8 h-14 text-gray-900 font-source-han-sans-sc text-base font-medium leading-6 ">小课</a> */}
+          <a href="#" className="w-8 h-14 text-gray-900 font-source-han-sans-sc text-base font-medium leading-6 ">小课</a>
         </div>
 
         {/* 内容区域 */}

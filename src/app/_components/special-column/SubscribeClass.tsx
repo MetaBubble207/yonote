@@ -4,8 +4,8 @@ import Link from "next/link";
 import {timeToDateString} from "@/tools/timeToString";
 
 const SubscribeClass = (prop) => {
-    // console.log(prop)
-    const column = prop?.column;
+    console.log(prop)
+    const column = prop.column;
     return (
         <Link href={`../special-column-content?c=1&id=${column.id}`}>
             暂时还没有数据哦~~

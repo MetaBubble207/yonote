@@ -30,7 +30,7 @@ export const ComponentJump = () => {
                 )}
             </div>
 
-            {/* <div>
+            <div>
                 <button onClick={() => setCurrentContent(2)}
                         className={`flex ml-10 w-14 h-6 text-[#B5B5B5] text-3.5 font-400 lh-6 ${currentContent === 2 ? active : ""}`}>有记小课</button>
                 {currentContent === 2 && (
@@ -45,7 +45,7 @@ export const ComponentJump = () => {
                     <div className="ml-16 w-2.75 h-1 shrink-0 border-rd-2 bg-[#45E1B8]"></div>
                 )}
             </div>
-             */}
+            
 
         </div>
         {renderContent()}

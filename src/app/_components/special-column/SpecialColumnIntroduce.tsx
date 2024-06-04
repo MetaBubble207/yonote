@@ -9,8 +9,16 @@ export const SpecialColumnIntroduce = () => {
     const column = api.column.getColumnDetail.useQuery({
         columnId: columnId,
     })
+
+    const router = useRouter();
+    // 点赞
+    const [isHeartFilled, setIsHeartFilled] = useState(false);
+
+    const handleClick = () => {
+        setIsHeartFilled(!isHeartFilled);
+    };
     return (
-        <div className={"w-91.5% min-h-55vh mt-20px ml-16px bg-[#FFF] px-10px"} >
+        <div className={"w-91.5% mt-20px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-10px"} >
             {/*上方文字*/}
             {/* <div onClick={() => router.push('/special-column/content')}>
                 <p className={"text-[#252525] text-3.75 font-not-italic font-500 lh-6 text-3.75 pt-16.5px"}>「开播的第3年，P人沉浸于J人的世界时间我是乱打的」</p>

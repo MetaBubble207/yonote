@@ -21,21 +21,17 @@ export const SpecialColumnList=()=>{
     const Body = () => {
         return <>
                 <Suspense>
-                    {
-                        postInfo?.length > 0
-                        ?
-                            postInfo.map((item: any,index) => (
-                                <SpecialColumnCard key={item.id} index={index} item={item} user={user}/>
-                            ))
-                        :
-                            <div className={"text-center mt-30"}>目前暂无数据噢~</div>
+                    {postInfo && postInfo.length > 0
+                        && postInfo.map((item: any,index) => (
+                            <SpecialColumnCard key={item.id} index={index} item={item} user={user}/>
+                        ))
                     }
                 </Suspense>
             </>
     }
 
     return(
-        <div className={"min-h-55vh"}>
+        <div>
             <SortLabel/>
             <Body />
         </div>

@@ -47,8 +47,8 @@ export const postRouter = createTRPCRouter({
             return ctx.db.update(post).set({ isFree: input.isFree }).where(eq(post.id, input.id));
         }),
     deletePost: publicProcedure.input(z.object({ id: z.number() }))
-        .mutation(({ ctx, input }) => {
-            ctx.db.delete(post).where(eq(post.id, input.id))
+        .mutation(async ({ ctx, input }) => {
+            return await ctx.db.delete(post).where(eq(post.id, input.id))
         }),
     getLatest: publicProcedure.query(async ({ ctx }) => {
         return await ctx.db.query.post.findFirst({
