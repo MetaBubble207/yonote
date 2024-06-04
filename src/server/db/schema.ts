@@ -128,10 +128,10 @@ export const order = createTable(
         buyerId: varchar("buyer_id"),
         ownerId: varchar("owner_id"),
         payment: varchar("payment"),
-        endStatus: boolean("endstatus"),
+        endStatus: boolean("end_status"),
         recommendationId: varchar("recommendation_id"),
         status: boolean("status"),
-        enddate: timestamp("enddate"),
+        endDate: timestamp("end_date"),
     }
 );
 

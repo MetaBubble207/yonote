@@ -13,7 +13,7 @@ export const SpecialColumnBody = () => {
     const columnId = params.get("id");
     const [currentContent, setCurrentContent] = useState<number>(1);
     const order = api.order.getColumnOrder.useQuery({
-        columnID: columnId,
+        columnId: columnId,
     })
     const active = "text-[#252525] font-500 border-b-3 border-[#45E1B8]";
     const renderContent = () => {

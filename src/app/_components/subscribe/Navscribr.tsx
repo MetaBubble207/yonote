@@ -12,7 +12,7 @@ const Page = () => {
     const token = useLocalStorage('token', '')
     const columns = api.column.getAll.useQuery().data;
     const orders = api.order.getUserOrder.useQuery({
-        userID: token[0],
+        userId: token[0],
     }).data;
 
     // 按钮选中状态
@@ -34,7 +34,7 @@ const Page = () => {
                     <div>
                         {columns && columns.length > 0 && columns.map((column: any) => (
                             // 检查当前 column 是否在 orders 中存在
-                            orders.some(order => order.columnID === column.id) && (
+                            orders.some(order => order.columnId === column.id) && (
                                 <SubscribeRenew key={column.id} column={column} />
                             )
                         ))}
@@ -51,7 +51,7 @@ const Page = () => {
                     <div>
                         {columns && columns.length > 0 && columns.map((column: any) => (
                             // 检查当前 column 是否在 orders 中存在
-                            orders.some(order => order.name === column.id) && (
+                            orders.some(order => order.columnId === column.id) && (
                                 <SubscribeColumn key={column.id} column={column} />
                             )
                         ))}
@@ -72,7 +72,7 @@ const Page = () => {
                     <div>
                         {columns && columns.length > 0 && columns.map((column: any) => (
                             // 检查当前 column 是否在 orders 中存在
-                            orders.some(order => order.name === column.id) && (
+                            orders.some(order => order.columnId === column.id) && (
                                 <SubscribeClass key={column.id} column={column} />
                             )
                         ))}
