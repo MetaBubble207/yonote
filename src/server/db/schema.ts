@@ -119,20 +119,17 @@ export const order = createTable(
     "order",
     {
         id: serial("id").primaryKey(),
-        columnID: varchar("columnID"),
-        name: varchar("name", {length: 256}),
+        columnId: varchar("column_id"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
-        updatedAt: timestamp("updated_at"),
         price: real("price"),
-        buyerID: varchar("buyerID"),
-        ownerID: varchar("ownerID"),
+        buyerId: varchar("buyer_id"),
+        ownerId: varchar("owner_id"),
         payment: varchar("payment"),
         endStatus: boolean("endstatus"),
-        recommendationID: varchar("recommendationID"),
+        recommendationId: varchar("recommendation_id"),
         status: boolean("status"),
-        type: varchar("type"),
         enddate: timestamp("enddate"),
     }
 );
