@@ -1,6 +1,6 @@
 "use client"
-import React, {Suspense, useEffect} from "react";
-import { api } from "@/trpc/react";
+import React, {Suspense, useEffect, useState} from "react";
+import {api} from "@/trpc/react";
 import {useRouter, useSearchParams} from "next/navigation";
 import {SearchColumn} from "@/app/_components/common/SearchColumn";
 import Image from "next/image";
@@ -8,28 +8,27 @@ import Navbar from "@/app/_components/common/Navbar";
 import {timeToDateString} from "@/tools/timeToString";
 
 const Page = () => {
-    let searchValue;
-    if(typeof window !== "undefined") {
-        const params = useSearchParams();
-        searchValue = params.get('query');
+    const params = useSearchParams();
+    const searchValue = params.get('query');
 
-    }
     const router = useRouter();
 
-    const { data, refetch } = api.column.getColumnName.useQuery(
-        { searchValue: searchValue },
-        { enabled: !!searchValue } // Enable query if searchValue is present
-    );
+    // const { data, refetch } = api.column.getColumnName.useQuery(
+    //     { searchValue: searchValue },
+    //     { enabled: !!searchValue } // Enable query if searchValue is present
+    // );
+    const initData = api.column.getColumnName.useQuery(
+        {searchValue: searchValue}
+    ).data
+    const [data, setData] = useState([]);
 
     useEffect(() => {
-        if (searchValue) {
-            refetch();
-        }
-    }, [searchValue, refetch]);
+        setData(initData)
+    }, [initData]);
 
-    const handleButtonClick = async () => {
-            router.push(`/dashboard/find`);
-        };
+    const handleButtonClick = () => {
+        router.push(`/dashboard/find`);
+    };
 
 
     return (
@@ -52,7 +51,8 @@ const Page = () => {
                                      onClick={() => router.push('/special-column/content')}>
                                     {/*左边图片*/}
                                     <div className={"border-rd-2 w-25% flex items-start flex-grow"}>
-                                        <Image src={"/images/subscribe/cover.png"} alt={"小专栏图片"} width={85}
+                                        <Image src={item.logo ?? "/images/user/Loading.svg"} alt={"小专栏图片"}
+                                               width={85}
                                                height={74.5} className={"rounded-6px"} style={{width: "100%"}}/>
                                     </div>
                                     {/*右边文字*/}
