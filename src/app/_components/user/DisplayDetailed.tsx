@@ -19,7 +19,8 @@ const DisplayDetailed = (props) => {
 
 
     // 订阅数量
-    const subscribeInfos = api.order.getColumnByBuyer.useQuery({BuyerID:token}).data
+    // const subscribeInfos = api.order.getColumnByBuyer.useQuery({BuyerID:token}).data
+    const subscribeInfos = api.order.getUserOrder.useQuery({userID:token}).data
 
 
     const postLength = api.post.getNumById.useQuery({id:userInfo?.id}).data
