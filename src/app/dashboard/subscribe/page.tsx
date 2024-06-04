@@ -6,9 +6,11 @@ import Page from "../../_components/subscribe/Navscribr";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 
 const Subscribe = () => {
+    const router = useRouter();
     const [token] = useLocalStorage("token", null)
     const recentRead = api.read.getRecentRead.useQuery({
         userId: token,
@@ -16,7 +18,10 @@ const Subscribe = () => {
     // const recentColumn = api.post.getColumnbyPost.useQuery({
     //     postId: recentRead?.id,
     // })
-
+    const link = () => {
+        router.push(`/special-column-content?c=${recentRead?.chapter}&id=${recentRead?.columnId}`);
+      }
+    
     const [readContent, setReadContent] = useState("");
 
     const recentColumn = api.column.getColumnDetail.useQuery({
@@ -53,7 +58,7 @@ const Subscribe = () => {
                             )
                         }
                     </div>
-                    <Link href={"../special-column-content"} className="w-18.25 h-7.75 text-3 bg-[#daf9f1] text-[#1db48d] lh-7.75 text-center border-rd-12 absolute right-2.5 bottom-2.5">继续阅读</Link>
+                    <div onClick={link} className="w-18.25 h-7.75 text-3 bg-[#daf9f1] text-[#1db48d] lh-7.75 text-center border-rd-12 absolute right-2.5 bottom-2.5">继续阅读</div>
                 </div>
 
                 <div>

@@ -20,11 +20,13 @@ export const postRouter = createTRPCRouter({
             content: z.string(),
             tag: z.string(),
             status: z.boolean(),
-            columnId: z.string()
+            columnId: z.string(),
         }))
         .mutation(async ({ ctx, input }) => {
 
             await new Promise((resolve) => setTimeout(resolve, 1000));
+            const record = ctx.db.select().from(post).where(eq(post.columnId, input.columnId))
+            const chapter = (await record).length + 1;
             ctx.db.select().from(post).where(eq(post.name, input.name))
             return ctx.db.insert(post).values({
                 name: input.name,
@@ -32,8 +34,9 @@ export const postRouter = createTRPCRouter({
                 tag: input.tag,
                 status: true,
                 updatedAt: getCurrentTime(),
-                columnId: input.columnId
-            }).returning({name: post.name, content: post.content, tag: post.tag, status: post.status, columnId: post.columnId});
+                columnId: input.columnId,
+                chapter: chapter,
+            }).returning({name: post.name, content: post.content, tag: post.tag, status: post.status, columnId: post.columnId, chapter: post.chapter, createdAt: post.createdAt, updatedAt: post.updatedAt, isTop: post.isTop, isFree: post.isFree});
         }),
 
     updateIsTop: publicProcedure
