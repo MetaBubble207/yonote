@@ -56,6 +56,7 @@ export const post = createTable(
         isFree: boolean("is_free").default(false),
         status: boolean("status"),
         logo: text("logo"),
+        chapter: integer("chapter"),
     },
     (example) => ({
         nameIndex: index("name_idx").on(example.name),
