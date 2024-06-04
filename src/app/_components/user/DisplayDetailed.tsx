@@ -55,8 +55,8 @@ const DisplayDetailed = (props) => {
     const Update = () => {
         return (
             columnInfos?.length > 0 && (
-                columnInfos.map((item, index) => (
-                    <Link href={`/special-column?id=${item.id}`} className="flex h-14 mb-8">
+                columnInfos?.map((item, index) => (
+                    <Link href={`/special-column?id=${item?.id}`} className="flex h-14 mb-8" key={item.id}>
                         <Image
                             // src="/images/user/cover.svg"
                             // src={Column.logo}
@@ -151,8 +151,8 @@ const DisplayDetailed = (props) => {
 
     const Column = () => {
         return columnInfos.length > 0 && (
-            columnInfos.map((item, index) => (
-                <Link href={`/special-column?id=${item.id}`} className="flex h-14 mb-8">
+            columnInfos?.map((item, index) => (
+                <Link href={`/special-column?id=${item?.id}`} className="flex h-14 mb-8" key={item.id}>
                     <Image
                         // src="/images/user/cover.svg"
                         // src={Column.logo}
