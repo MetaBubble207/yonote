@@ -39,40 +39,37 @@ export const orderRouter = createTRPCRouter({
 // 创建订单
   createOrder: publicProcedure
     .input(z.object({
-      ownerID: z.string(),
-      columnID: z.string(),
+      ownerId: z.string(),
+      columnId: z.string(),
       price: z.number(),
       payment: z.string(),
       status: z.boolean(),
-      buyerID: z.string(),
-      name: z.string(),
+      buyerId: z.string(),
     }))
     .mutation(async ({ ctx, input }) => {
       try {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // 查询订单是否已存在
-        const existingOrder = await ctx.db.select().from(order).where(and(eq(order.name, input.name),eq(order.buyerID,input.buyerID)));
+        const existingOrder = await ctx.db.select().from(order).where(and(eq(order.columnId, input.columnId),eq(order.buyerId,input.buyerId)));
 
         // 如果订单不存在，则插入新订单
         if (existingOrder.length === 0) {
           const insertedOrder = await ctx.db.insert(order).values({
-            ownerID: input.ownerID,
-            name: input.name,
-            columnID: input.columnID,
+            ownerId: input.ownerId,
+            columnId: input.columnId,
             price: input.price,
             payment: input.payment,
             status: input.status,
-            buyerID: input.buyerID,
+            buyerId: input.buyerId,
           }).returning({
             id: order.id,
-            ownerID: order.ownerID,
-            name: order.name,
+            ownerId: order.ownerId,
             price: order.price,
             payment: order.payment,
             status: order.status,
-            buyerID: order.buyerID,
-            columnID: order.columnID,
+            buyerId: order.buyerId,
+            columnId: order.columnId,
           });
 
           return insertedOrder[0]; // 返回插入的订单对象
@@ -88,21 +85,21 @@ export const orderRouter = createTRPCRouter({
     // 同一订单的信息
     getColumnOrder: publicProcedure
     .input(z.object({
-      columnID: z.string(),
+      columnId: z.string(),
     }))
     .query(async ({ ctx, input }) => {
       const orderData = await ctx.db.query.order.findMany({
-        where:  eq(order.name, input.columnID ),
+        where:  eq(order.columnId, input.columnId ),
       });
       return orderData;
     }),
 
     getUserOrder: publicProcedure
     .input(z.object({
-      userID: z.string(),
+      userId: z.string(),
     }))
     .query(async ({ ctx, input }) => {
-      const orderData = await ctx.db.select().from(order).where(and(eq(order.buyerID, input.userID), eq(order.status, true)))
+      const orderData = await ctx.db.select().from(order).where(and(eq(order.buyerId, input.userId), eq(order.status, true)))
       return orderData;
     })
 

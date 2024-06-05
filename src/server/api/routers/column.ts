@@ -145,10 +145,10 @@ export const columnRouter = createTRPCRouter({
     getOrderColumn: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
-        const orders = await ctx.db.select().from(order).where(eq(order.buyerID, input.userId))
+        const orders = await ctx.db.select().from(order).where(eq(order.buyerId, input.userId))
         
         const promises = orders.map(async order => {
-            const columnData = await ctx.db.select().from(column).where(eq(column.id, order.columnID))
+            const columnData = await ctx.db.select().from(column).where(eq(column.id, order.columnId))
             return columnData[0];
         })
         const res = await Promise.all(promises);

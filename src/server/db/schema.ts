@@ -101,6 +101,7 @@ export const column = createTable(
         description: varchar("description"),
         payment: varchar("payment"),
         userId: varchar("user_id"),
+        isVisable: boolean("is_visable"),
     }
 );
 export const distributorshipDetail = createTable(
@@ -128,10 +129,10 @@ export const order = createTable(
         buyerId: varchar("buyer_id"),
         ownerId: varchar("owner_id"),
         payment: varchar("payment"),
-        endStatus: boolean("endstatus"),
+        endStatus: boolean("end_status"),
         recommendationId: varchar("recommendation_id"),
         status: boolean("status"),
-        enddate: timestamp("enddate"),
+        endDate: timestamp("end_date"),
     }
 );
 

@@ -8,10 +8,10 @@ import { useSearchParams } from "next/navigation";
 
 const Reserved = ({ onClose, check }) => {
     const params = useSearchParams();
-    const columnID = params.get("id");
+    const columnId = params.get("id");
     const token = useLocalStorage("token", null);
-    const column = api.column.getColumnDetail.useQuery({ columnId: columnID }).data;
-    const columnUserId = api.column.getUserId.useQuery({ id: columnID });
+    const column = api.column.getColumnDetail.useQuery({ columnId: columnId }).data;
+    const columnUserId = api.column.getUserId.useQuery({ id: columnId });
     const subscribeOrder = api.order.createOrder.useMutation({
         onSuccess: (r) => {
             onClose();
@@ -28,13 +28,12 @@ const Reserved = ({ onClose, check }) => {
         if (check) {
             // 在组件渲染完成后执行订阅订单操作
             subscribeOrder.mutate({
-                ownerID: columnUserId.data,
-                columnID: columnID,
+                ownerId: columnUserId.data,
+                columnId: columnId,
                 price: 10,
                 payment: "alipay",
                 status: check,
-                buyerID: token[0],
-                name: column.name,
+                buyerId: token[0],
             });
         };
     }
