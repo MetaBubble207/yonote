@@ -40,7 +40,7 @@ const ManagementColumn = (props) => {
                 <div className={"flex w-100%"}>
                     <Checkbox.Group onChange={outputValue} disabled={!checkSate} className={"flex-col flex"}>
                         {column.data && column.data.map((item,index) => (
-                            <Checkbox value={index} className={'mb-2 flex flex-row'}>
+                            <Checkbox value={index} className={'mb-2 flex flex-row'} key={item?.id}>
                                    <div className={"flex"}>
                                        <Image src={item ? item.logo : ''} width={100} height={100}
                                               alt={"cover"} className="w-11.375 h-15.478 rounded inline-block"></Image>
