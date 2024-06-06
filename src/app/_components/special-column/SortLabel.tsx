@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 
-export const Categories = () => {
+export const SortLabel = () => {
     const [activeCategory, setActiveCategory] = useState<string>("全部");
 
     const handleCategoryClick = (category:string) => {
