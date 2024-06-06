@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import {usePathname, useSearchParams} from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Column from "./column";
 
@@ -22,20 +22,19 @@ const LeftCompass = () => {
         <div>
           <div className="fixed top-17.5 w-64.77925 h-screen shrink-0 bg-[#FFF] z-100">
             <div className="w-65.25 h-72.4785 shrink-0 flex flex-col mt-10">
-              {column && <Column />}
+              {/* {column && <Column />} */}
+              <Column />
               <div
-                className={`w-65.25 h-12.4705 shrink-0 flex mt-35px ${
-                  pathname === "/writer/homepage"
+                className={`w-65.25 h-12.4705 shrink-0 flex mt-35px ${pathname === "/writer/homepage"
                     ? "text-[#4CC5A6] bg-[#DAF9F1] "
                     : "text-[#999] bg-[#FFF]"
-                }`}
+                  }`}
               >
                 <Image
-                  src={`${
-                    pathname === "/writer/homepage"
+                  src={`${pathname === "/writer/homepage"
                       ? "/images/writer/edit/Monitor1.svg"
                       : "/images/writer/edit/Monitor-one.svg"
-                  }`}
+                    }`}
                   alt="Monitor1"
                   width={24}
                   height={24.03}
@@ -48,18 +47,16 @@ const LeftCompass = () => {
                 </Link>
               </div>
               <div
-                className={`w-65.25 h-12.4705 shrink-0 flex ${
-                  pathname === "/writer/content-management"
+                className={`w-65.25 h-12.4705 shrink-0 flex ${pathname === "/writer/content-management"
                     ? "text-[#4CC5A6] bg-[#DAF9F1] "
                     : "text-[#999] bg-[#FFF]"
-                }`}
+                  }`}
               >
                 <Image
-                  src={`${
-                    pathname === "/writer/content-management"
+                  src={`${pathname === "/writer/content-management"
                       ? "/images/writer/edit/Rocket2 copy.svg"
                       : "/images/writer/edit/Rocket2.svg"
-                  }`}
+                    }`}
                   alt="Monitor1"
                   width={24}
                   height={24.03}
@@ -72,18 +69,16 @@ const LeftCompass = () => {
                 </Link>
               </div>
               <div
-                className={`w-65.25 h-12.4705 shrink-0 flex ${
-                  pathname === "/writer/subscribe-manage"
+                className={`w-65.25 h-12.4705 shrink-0 flex ${pathname === "/writer/subscribe-manage"
                     ? "text-[#4CC5A6] bg-[#DAF9F1] "
                     : "text-[#999] bg-[#FFF]"
-                }`}
+                  }`}
               >
                 <Image
-                  src={`${
-                    pathname === "/writer/subscribe-manage"
+                  src={`${pathname === "/writer/subscribe-manage"
                       ? "/images/writer/edit/Rocket3 copy.svg"
                       : "/images/writer/edit/Rocket3.svg"
-                  }`}
+                    }`}
                   alt="Monitor1"
                   width={24}
                   height={24.03}
@@ -96,18 +91,16 @@ const LeftCompass = () => {
                 </Link>
               </div>
               <div
-                className={`w-65.25 h-12.4705 shrink-0 flex ${
-                  pathname === "/writer/column-settings"
+                className={`w-65.25 h-12.4705 shrink-0 flex ${pathname === "/writer/column-settings"
                     ? "text-[#4CC5A6] bg-[#DAF9F1] "
                     : "text-[#999] bg-[#FFF]"
-                }`}
+                  }`}
               >
                 <Image
-                  src={`${
-                    pathname === "/writer/column-settings"
+                  src={`${pathname === "/writer/column-settings"
                       ? "/images/writer/edit/Rocket4 copy.svg"
                       : "/images/writer/edit/Rocket4.svg"
-                  }`}
+                    }`}
                   alt="Monitor1"
                   width={24}
                   height={24.03}
@@ -120,18 +113,16 @@ const LeftCompass = () => {
                 </Link>
               </div>
               <div
-                className={`w-65.25 h-12.4705 shrink-0 flex ${
-                  pathname === "/writer/co-author"
+                className={`w-65.25 h-12.4705 shrink-0 flex ${pathname === "/writer/co-author"
                     ? "text-[#4CC5A6] bg-[#DAF9F1] "
                     : "text-[#999] bg-[#FFF]"
-                }`}
+                  }`}
               >
                 <Image
-                  src={`${
-                    pathname === "/writer/co-author"
+                  src={`${pathname === "/writer/co-author"
                       ? "/images/writer/edit/Rocket5 copy.svg"
                       : "/images/writer/edit/Rocket5.svg"
-                  }`}
+                    }`}
                   alt="Monitor1"
                   width={24}
                   height={24.03}
@@ -144,18 +135,16 @@ const LeftCompass = () => {
                 </Link>
               </div>
               <div
-                className={`w-65.25 h-12.4705 shrink-0 flex ${
-                  pathname === "/writer/speed-up"
+                className={`w-65.25 h-12.4705 shrink-0 flex ${pathname === "/writer/speed-up"
                     ? "text-[#4CC5A6] bg-[#DAF9F1] "
                     : "text-[#999] bg-[#FFF]"
-                }`}
+                  }`}
               >
                 <Image
-                  src={`${
-                    pathname === "/writer/speed-up"
+                  src={`${pathname === "/writer/speed-up"
                       ? "/images/writer/edit/Rocket6 copy.svg"
                       : "/images/writer/edit/Rocket6.svg"
-                  }`}
+                    }`}
                   alt="Monitor1"
                   width={24}
                   height={24.03}
