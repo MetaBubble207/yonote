@@ -72,7 +72,7 @@ export const SpecialColumnBody = () => {
             {renderContent()}
             {/*按钮*/}
             <button
-                className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500"}
+                className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-8"}
                 onClick={setting}>
                 订阅
             </button>
