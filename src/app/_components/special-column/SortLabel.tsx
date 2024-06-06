@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 export const SortLabel = () => {
-    const [activeCategory, setActiveCategory] = useState<string | null>(null);
+    const [activeCategory, setActiveCategory] = useState<string>("全部");
 
     const handleCategoryClick = (category:string) => {
         setActiveCategory(category);

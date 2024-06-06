@@ -4,6 +4,7 @@ import Link from "next/link";
 import { api } from "@/trpc/react";
 import { useContext, useState } from "react";
 import { timeToDateString } from "@/tools/timeToString";
+import * as console from "console";
 
 
 const SubscribeRenew = (prop) => {
@@ -20,6 +21,8 @@ const SubscribeRenew = (prop) => {
     const columnRead = api.read.getColumnRead.useQuery({
         columnId: column.id,
     }).data
+
+
 
     const [exist, setExist] = useState(false);
 

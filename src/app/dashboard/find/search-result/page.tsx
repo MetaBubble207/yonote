@@ -6,6 +6,7 @@ import {SearchColumn} from "@/app/_components/common/SearchColumn";
 import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
 import {timeToDateString} from "@/tools/timeToString";
+import Link from "next/link";
 
 const Page = () => {
     const params = useSearchParams();
@@ -44,11 +45,11 @@ const Page = () => {
 
                     {data?.map(item => (
                         <div key={item.id}>
+                            <Link href={`../../special-column?id=${item.id}`}>
                             <div
                                 className={"w-100%  mt-10px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-10px"}>
                                 {/*上边*/}
-                                <div className={"flex items-start mt-10px items-center w-full"}
-                                     onClick={() => router.push('/special-column/content')}>
+                                <div className={"flex items-start mt-10px items-center w-full"}>
                                     {/*左边图片*/}
                                     <div className={"border-rd-2 w-25% flex items-start flex-grow"}>
                                         <Image src={item.logo ?? "/images/user/Loading.svg"} alt={"小专栏图片"}
@@ -89,6 +90,7 @@ const Page = () => {
                                     </div>
                                 </div>
                             </div>
+                            </Link>
                         </div>
                     ))}
 
