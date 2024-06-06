@@ -17,6 +17,7 @@ const Reserved = ({ onClose, check }) => {
             onClose();
             console.log(r);
             console.log("订阅成功");
+            window.location.reload();
         },
         onError: (e) => {
             console.log(e);
