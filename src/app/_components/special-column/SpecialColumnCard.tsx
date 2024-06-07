@@ -7,7 +7,7 @@ import { api } from "@/trpc/react";
 import { useEffect } from "react";
 
 export const SpecialColumnCard = (props) => {
-    const { item, user, index } = props;
+    const { item, user, index, data } = props;
 
     const router = useRouter();
     // 点赞
@@ -17,7 +17,8 @@ export const SpecialColumnCard = (props) => {
     //     setIsLike(!isLike);
     // };
 
-
+    console.log("============>"+data);
+    
     // 获取点赞数量
     const likeCount = api.like.getLikeCount.useQuery({
         postId: item.id,
@@ -30,6 +31,9 @@ export const SpecialColumnCard = (props) => {
     const link = () => {
         router.push(`/special-column-content?c=${index + 1}&id=${item.columnId}`)
     };
+    const alertMessage = () =>{
+        alert("请先购买专栏")
+    }
     const [postContent, setPostContent] = useState("");
     useEffect(() => {
         if (item.content && item.content.length > 30) {
@@ -41,7 +45,8 @@ export const SpecialColumnCard = (props) => {
     return (
         <div className={"w-91.5%  mt-8px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-12px pb-10px"} >
             {/*上边*/}
-            <div className={"flex mt-25.5px items-center w-full"} onClick={link}>
+            <div className={"flex mt-25.5px items-center w-full"} onClick={data?link:alertMessage}>
+            {/* {status?:<div className={"flex mt-25.5px items-center w-full"} onClick={alertMessage}>} */}
                 {/*左边图片*/}
                 <div className={"border-rd-2 w-30%"}>
                     <Image src={"/images/special-column/Cardpc.png"} alt={"小专栏图片"} width={85} height={74.5} className={"rounded-6px"} style={{ width: "100%" }} />

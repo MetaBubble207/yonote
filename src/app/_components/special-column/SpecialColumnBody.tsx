@@ -28,7 +28,7 @@ export const SpecialColumnBody = () => {
     const renderContent = () => {
         switch (currentContent) {
             case 1:
-                return <SpecialColumnList></SpecialColumnList>;
+                return <SpecialColumnList data={status}></SpecialColumnList>;
             case 2:
                 return <SpecialColumnIntroduce></SpecialColumnIntroduce>;
 
@@ -80,13 +80,8 @@ export const SpecialColumnBody = () => {
             </div>
             {renderContent()}
             {/*按钮*/}
-<<<<<<< HEAD
             {status?<div></div>:<button
                 className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-2"}
-=======
-            <button
-                className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-8"}
->>>>>>> 1b97681979ff43a64addd2d14e3135863b9bcb61
                 onClick={setting}>
                 订阅
             </button>}
