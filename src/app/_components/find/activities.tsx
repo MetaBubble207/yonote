@@ -29,10 +29,9 @@ const Activities =()=>{
     }, [queryData]);
 
     if(loading){
-        return <div className="flex justify-center mt-40">
-                <Loading/>
-            </div>
-    }
+        return (
+            <Loading/>
+    )}
 
     return(
         <div>
