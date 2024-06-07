@@ -33,7 +33,7 @@ export const SpecialColumnHeader = () => {
                 </div>
             </div>
             <div className={"flex  mt-10px w-full"}>
-                <div className={"ml-20px  w-30%"}>
+                <div className={"ml-20px  w-28.5 h-30 overflow-hidden"}>
                     <Image src={column.data?.logo} alt={"心智与阅读"} width={140} height={160}
                            style={{width: "100%"}}/>
                 </div>
