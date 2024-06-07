@@ -80,7 +80,12 @@ const Column = () => {
           </div>
       </div>
       <div className="left-308px top-59px absolute">
-        {showColumnPopup && <ColumnPopup columns={columns} onImageClick={handleImageClick} />}
+        {showColumnPopup && 
+        <div>
+          <button className="absolute right-4 top-2" onClick={() => setShowColumnPopup(!showColumnPopup)}>X</button>
+           <ColumnPopup columns={columns} onImageClick={handleImageClick} />
+        </div>
+       }
       </div>
     </>
   );
