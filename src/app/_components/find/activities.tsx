@@ -29,7 +29,9 @@ const Activities =()=>{
     }, [queryData]);
 
     if(loading){
-        return <Loading/>;
+        return <div className="flex justify-center mt-40">
+                <Loading/>
+            </div>
     }
 
     return(
@@ -74,3 +76,4 @@ const Activities =()=>{
     )
 }
 export default Activities;
+
