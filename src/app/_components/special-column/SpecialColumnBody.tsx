@@ -1,25 +1,34 @@
 "use client"
 import Image from "next/image";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SpecialColumnList } from "@/app/_components/special-column/SpecialColumnList";
 import { SpecialColumnIntroduce } from "@/app/_components/special-column/SpecialColumnIntroduce";
 import { api } from "@/trpc/react";
 import Reserved from "@/app/_components/dialog/dialog/reserved";
 import { useSearchParams } from "next/navigation";
+import useLocalStorage from "@/tools/useStore";
 
 
 export const SpecialColumnBody = () => {
     const params = useSearchParams();
     const columnId = params.get("id");
+    const token = useLocalStorage("token", null);
     const [currentContent, setCurrentContent] = useState<number>(1);
+    const status = api.order.getUserStatus.useQuery({
+        userId: token[0],
+        columnId: columnId,
+    }).data
+      
+    
     const order = api.order.getColumnOrder.useQuery({
         columnId: columnId,
     })
+    
     const active = "text-[#252525] font-500 border-b-3 border-[#45E1B8]";
     const renderContent = () => {
         switch (currentContent) {
             case 1:
-                return <SpecialColumnList></SpecialColumnList>;
+                return <SpecialColumnList data={status}></SpecialColumnList>;
             case 2:
                 return <SpecialColumnIntroduce></SpecialColumnIntroduce>;
 
@@ -71,14 +80,16 @@ export const SpecialColumnBody = () => {
             </div>
             {renderContent()}
             {/*按钮*/}
-            <button
-                className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-8"}
+            {status?<div></div>:<button
+                className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-2"}
                 onClick={setting}>
                 订阅
-            </button>
+            </button>}
+            
             <div className="fixed  top-200px   w-full">
                 {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}
             </div>
+            <div className="bg-white h-35 w-100%"></div>
         </div>
     )
 }

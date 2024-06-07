@@ -101,6 +101,32 @@ export const orderRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const orderData = await ctx.db.select().from(order).where(and(eq(order.buyerId, input.userId), eq(order.status, true)))
       return orderData;
-    })
+    }),
 
+    // 查看用户是否购买专栏
+    getUserStatus: publicProcedure
+    .input(z.object({
+      userId: z.string(),
+      columnId: z.string(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const MyColumn = await ctx.db.query.column.findFirst({
+        where: and(eq(column.id, input.columnId), eq(column.userId, input.userId))
+      })
+      if(MyColumn){
+        return true
+      }else{
+        const list = await ctx.db.query.order.findFirst({
+          where: and(eq(order.columnId, input.columnId), eq(order.buyerId, input.userId))
+        })
+        if(list){
+          const status = list.status
+          return status;
+        }else{
+          return false;
+        }
+      }
+      
+      
+    }),
 });

@@ -5,8 +5,9 @@ import { useSearchParams } from "next/navigation";
 import React, {Suspense} from "react";
 
 
-export const SpecialColumnList=()=>{
-
+export const SpecialColumnList=(props)=>{
+    const status = props.data;
+    
     const params = useSearchParams();
     const columnId = params.get("id");
     const userId = api.column.getUserId.useQuery({ id: columnId }).data;
@@ -23,7 +24,7 @@ export const SpecialColumnList=()=>{
                 <Suspense>
                     {postInfo && postInfo.length > 0
                         && postInfo.map((item: any,index) => (
-                            <SpecialColumnCard key={item.id} index={index} item={item} user={user}/>
+                            <SpecialColumnCard key={item.id} index={index} item={item} user={user} data={status}/>
                         ))
                     }
                 </Suspense>
