@@ -1,10 +1,8 @@
 "use client";
-
-import { time } from "console";
 import Image from "next/image"
 import React, {useState, useEffect} from "react"
-import { string } from "zod";
 import { api } from "@/trpc/react";
+import Loading from "../_components/common/Loading";
 
 interface WalletData {
     balance: number;
@@ -12,7 +10,8 @@ interface WalletData {
     cashableAmount: number;}
 
 const Wallet = () => {
-    const {  data, isLoading, isError } = api.wallet.getBalance.useQuery<WalletData>();
+    const {data} = api.wallet.getBalance.useQuery<WalletData>();
+    const [loading, setLoading] = useState(true);
     const [payments, setPayments] = useState<Array<{ name: string; date: string; time:string; sign:string; amount: number }>>([]);
     const [transactionType, setTransactionType] = useState("expenditure"); // 跟踪交易类型
 
@@ -34,6 +33,7 @@ const Wallet = () => {
                         sign:item.sign as string,
                     }));
                     setPayments(parsedData);
+                    setLoading(false);
                 } else {
                     console.error('Data fetched is not in the expected format.');
                 }
@@ -77,13 +77,12 @@ const Wallet = () => {
     };
 
     
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+    if (loading) {
+        return <div>
+            <Loading/>
+        </div>;
+    };
 
-    if (isError || !data) {
-        return <div>Error loading data</div>;
-    }
 
     return (
         <div>
