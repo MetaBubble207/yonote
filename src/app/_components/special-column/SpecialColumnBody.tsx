@@ -18,12 +18,12 @@ export const SpecialColumnBody = () => {
         userId: token[0],
         columnId: columnId,
     }).data
-      
-    
+
+
     const order = api.order.getColumnOrder.useQuery({
         columnId: columnId,
     })
-    
+
     const active = "text-[#252525] font-500 border-b-3 border-[#45E1B8]";
     const renderContent = () => {
         switch (currentContent) {
@@ -80,12 +80,12 @@ export const SpecialColumnBody = () => {
             </div>
             {renderContent()}
             {/*按钮*/}
-            {status?<div></div>:<button
+            {status ? <div></div> : <button
                 className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-2"}
                 onClick={setting}>
                 订阅
             </button>}
-            
+
             <div className="fixed  top-200px   w-full">
                 {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}
             </div>
