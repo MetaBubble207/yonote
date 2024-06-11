@@ -86,7 +86,7 @@ export const postRouter = createTRPCRouter({
             } else {
                 const postIsTopTag = (await postIsTop).filter(item => item.tag.includes(input.activeCategory))
                 const postNoTopTag = (await postNoTop).filter(item => item.tag.includes(input.activeCategory))
-                return [...(await postIsTopTag), ...(await postNoTopTag)]
+                return [...postIsTopTag, ...postNoTopTag]
             }
 
             // const postNoTop = ctx.db.select().from(post)

@@ -88,8 +88,9 @@ export const SortLabel = (props) => {
                     置顶
                 </div>
                 {/* 自定义标签 */}
-                {tags?.map((item) => (
+                {tags?.map((item, index) => (
                     <div
+                        key={index}
                         className="w-15 h-6 shrink-0 bg-rgba(69,225,184,0.20) ml-24px text-center text-[#1DB48D] text-3.25 font-not-italic font-400 lh-6 border-rd-1"
                         onClick={() => handleCategoryClick(item)}
                         style={getCategoryStyle(item)}
