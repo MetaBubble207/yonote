@@ -4,9 +4,12 @@ import React, { useState,useEffect  } from "react";
 import { api } from "@/trpc/react";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 import Link from "next/link";
+import Loading from "../common/Loading";
+
 
 const Activities =()=>{
     const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const  queryData  = api.activity.getAll.useQuery().data;
     // 在数据加载完成时更新状态
@@ -19,12 +22,16 @@ const Activities =()=>{
                 return endDate > currentTime;
             });
 
-            //
             goingData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
             setData(goingData);
-            // setData(queryData)
+            setLoading(false);
         }
     }, [queryData]);
+
+    if(loading){
+        return (
+            <Loading/>
+    )}
 
     return(
         <div>

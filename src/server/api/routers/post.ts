@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { column, post, user } from "@/server/db/schema";
-import {and, eq} from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 
 export const postRouter = createTRPCRouter({
@@ -36,7 +36,7 @@ export const postRouter = createTRPCRouter({
                 updatedAt: getCurrentTime(),
                 columnId: input.columnId,
                 chapter: chapter,
-            }).returning({name: post.name, content: post.content, tag: post.tag, status: post.status, columnId: post.columnId, chapter: post.chapter, createdAt: post.createdAt, updatedAt: post.updatedAt, isTop: post.isTop, isFree: post.isFree});
+            }).returning({ name: post.name, content: post.content, tag: post.tag, status: post.status, columnId: post.columnId, chapter: post.chapter, createdAt: post.createdAt, updatedAt: post.updatedAt, isTop: post.isTop, isFree: post.isFree });
         }),
 
     updateIsTop: publicProcedure
@@ -69,15 +69,33 @@ export const postRouter = createTRPCRouter({
             })
         }),
     // 专栏详情页展示有序的章节数
-    getAllInOrder: publicProcedure.input(z.object({ columnId: z.string(), limit: z.number(), offset: z.number() }))
+    getAllInOrder: publicProcedure.input(z.object({ columnId: z.string(), limit: z.number(), offset: z.number(), activeCategory: z.string() }))
         .query(async ({ ctx, input }) => {
             const postNoTop = ctx.db.select().from(post)
-                .where(and(eq(post.columnId, input.columnId),eq(post.isTop,false)))
+                .where(and(eq(post.columnId, input.columnId), eq(post.isTop, false)))
                 .orderBy(post.createdAt);
             const postIsTop = ctx.db.select().from(post)
-                .where(and(eq(post.columnId, input.columnId),eq(post.isTop,true)))
+                .where(and(eq(post.columnId, input.columnId), eq(post.isTop, true)))
                 .orderBy(post.createdAt);
-            return [...(await postIsTop), ...(await postNoTop)]
+            if (input.activeCategory == "全部") {
+                return [...(await postIsTop), ...(await postNoTop)]
+            } else if (input.activeCategory == "免费") {
+                return [...(await postIsTop), ...(await postNoTop)].filter(item => item.isFree == true)
+            } else if (input.activeCategory == "置顶") {
+                return [...(await postIsTop)]
+            } else {
+                const postIsTopTag = (await postIsTop).filter(item => item.tag.includes(input.activeCategory))
+                const postNoTopTag = (await postNoTop).filter(item => item.tag.includes(input.activeCategory))
+                return [...postIsTopTag, ...postNoTopTag]
+            }
+
+            // const postNoTop = ctx.db.select().from(post)
+            //     .where(and(eq(post.columnId, input.columnId), eq(post.isTop, false)))
+            //     .orderBy(post.createdAt);
+            // const postIsTop = ctx.db.select().from(post)
+            //     .where(and(eq(post.columnId, input.columnId), eq(post.isTop, true)))
+            //     .orderBy(post.createdAt);
+            // return [...(await postIsTop), ...(await postNoTop)]
         }),
     getAllInUser: publicProcedure
         .input(z.object({ userId: z.string(), limit: z.number(), offset: z.number() }))
@@ -122,5 +140,25 @@ export const postRouter = createTRPCRouter({
             })
             // 返回所有根据 id 查询的数据
             return data.length;
+        }),
+    getPostTag: publicProcedure
+        .input(z.object({ columnId: z.string() }))
+        .query(async ({ ctx, input }) => {
+            const data = await ctx.db.query.post.findMany({
+                where: eq(post.columnId, input.columnId),
+            })
+            const res = [];
+            // data.map(item => {
+            //     if (item.tag.length != 0 && !res.includes(item.tag)) {
+            //         res.push(item.tag);
+            //     }
+            // })
+            data.map(item => {
+                const temp = item.tag.split(",");
+                res.push(...temp);
+            })
+            // 过滤掉重复和空值
+            const tags = [...new Set(res)].filter(item => item !== "");
+            return tags;
         })
 });

@@ -7,7 +7,7 @@ const homepage = () => {
         <div className="w-full flex flex-col">
             <div className="mt-16px ml-18px">
                 <Suspense>
-                    <Homepagedata />
+                    <Homepagedata/>
                 </Suspense>
             </div>
             <div className="mt-16px ml-18px">

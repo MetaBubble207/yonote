@@ -172,7 +172,6 @@ export const activity = createTable(
         introduction: varchar("introduction", {length: 256}),
         cover: varchar("cover", {length: 256}),
         url: varchar("url", {length: 256}),
-        isEnd: boolean("is_end"),
         endDate: timestamp("end_date"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)

@@ -327,7 +327,7 @@ const Page = () => {
             dangerouslySetInnerHTML={{ __html: content }}
           ></div>
         </div>
-        <div className="flex flex-row pt-2 relative">
+        <div className="flex flex-row pt-2 relative h-6">
           {tags.map((item, index) => {
             return (
               <span
