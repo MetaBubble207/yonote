@@ -7,7 +7,7 @@ import {api} from "@/trpc/react";
 
 // eslint-disable-next-line react/display-name
 const ManagementColumn = forwardRef(
-    (props, ref) => {
+    (props:any, ref) => {
         useImperativeHandle(
             ref,
             () => ({ handleSave })
