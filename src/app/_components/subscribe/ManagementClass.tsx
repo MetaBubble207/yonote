@@ -27,7 +27,7 @@ const ManagementClass = (props) => {
     
     return (
         <div className="w-85.75 h-20.471 bg-#fff m-auto border-rd-2.5 flex">
-            <div>
+            <div className={"m-auto"}>
                 还没有数据哦~
                     {/*<div className={"flex flex-col"}>*/}
                     {/*    <Checkbox.Group onChange={outputValue} disabled={!checkSate}>*/}

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, {useRef, useState} from 'react';
 import ManagementColumn from './ManagementColumn';
 import ManagementClass from './ManagementClass';
 import Image from 'next/image';
 import { api } from '@/trpc/react';
 import useLocalStorage from '@/tools/useStore';
 const SubscribeManage = () => {
+    const saveColumn = useRef(null)
     const token = useLocalStorage("token", '');
     const order = api.order.getUserOrder.useQuery({
         userId: token[0],
@@ -22,6 +23,12 @@ const SubscribeManage = () => {
     };
     const [manage, setManage] = useState(false);
     const handleManage = () => {
+        console.log(saveColumn)
+        if (saveColumn.current && manage==true){
+            console.log("123")
+            saveColumn.current.handleSave();
+            window.location.reload();
+        }
         setManage(!manage);
     }
 
@@ -55,7 +62,7 @@ const SubscribeManage = () => {
                                 <button onClick={handleManage} className='text-[#1DB48D] text-3.25 font-400 lh-6'>{manage ? '保存' : '管理'}</button>
                             </div>
                             {transactionType === 'column'
-                                && (<ManagementColumn manage={manage} />)
+                                && (<ManagementColumn manage={manage} ref={saveColumn}/>)
                             }
                             {transactionType === 'class'
                                 && (<ManagementClass manage={manage} />)}

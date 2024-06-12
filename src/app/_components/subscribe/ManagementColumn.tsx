@@ -1,12 +1,18 @@
 "use client"
 import Image from "next/image"
 import {Checkbox, message} from 'antd';
-import {useEffect, useState} from "react";
+import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import useLocalStorage from "@/tools/useStore";
 import {api} from "@/trpc/react";
 
-const ManagementColumn = (props) => {
-
+// eslint-disable-next-line react/display-name
+const ManagementColumn = forwardRef(
+    (props, ref) => {
+        useImperativeHandle(
+            ref,
+            () => ({ handleSave })
+        );
+    // const {manage} = props;
     const token = useLocalStorage("token", '');
     const order = api.order.getUserOrder.useQuery({
         userId: token[0],
@@ -15,7 +21,6 @@ const ManagementColumn = (props) => {
     console.log(column)
     const [array, setArray] = useState([]);
     const [checkSate, setCheckSate] = useState(props.manage); // 控制多选框是否可用
-
     const outputValue = (checkedValues) => {
         console.log('checked values:', checkedValues);
         setArray(checkedValues);
@@ -46,12 +51,25 @@ const ManagementColumn = (props) => {
         },
     });
     const handleSave = () => {
-        changeVisable.mutate({
-            id: order.data.map((item) => (item.columnId))[0],
-            isVisable: false,
-            userId: token[0],
+        const selectedColumnIds = array.map((index) => column.data[index].id);
+
+        column.data.forEach((item) => {
+            if (selectedColumnIds.includes(item.id)) {
+                changeVisable.mutate({
+                    id: item.id,
+                    isVisable: true,
+                    userId: token[0],
+                });
+            } else {
+                changeVisable.mutate({
+                    id: item.id,
+                    isVisable: false,
+                    userId: token[0],
+                });
+            }
         });
-        console.log("1111")
+
+        console.log("选中的column的id:", selectedColumnIds);
         message.success('保存成功');
     }
 
@@ -75,10 +93,10 @@ const ManagementColumn = (props) => {
                     </Checkbox.Group>
                 </div>
             </div>
-            <button onClick={handleSave}>save</button>
         </div>
     )
 
-};
+}
+);
 
 export default ManagementColumn;
