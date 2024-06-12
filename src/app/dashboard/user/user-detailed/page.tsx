@@ -1,6 +1,6 @@
 "use client"
 // page.tsx
-import { api } from "@/trpc/react";
+import {api} from "@/trpc/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -13,16 +13,15 @@ function User() {
     if (token) {
         userInfo = api.users.getOne.useQuery({id: token}).data
     }
-    const ColumnInfo = api.column.getAllByUserId.useQuery({userId:userInfo?.id }).data
-
-
-
+    const ColumnInfo = api.column.getAllByUserId.useQuery({userId: userInfo?.id}).data
 
 
     return (
         <div>
             {/*顶部*/}
-
+            <Link href={`/dashboard/user`}>
+                <Image src={"/images/writer/edit/left-c.svg"} alt={"huitui"} width={25} height={25}></Image>
+            </Link>
             {/*背景图片*/}
             <div className="blur-24 relative h-28.25 w-full overflow-hidden">
                 {/*<img src={ImageURL} className="absolute inset-0 object-cover w-full h-full"/>*/}
