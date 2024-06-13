@@ -59,7 +59,7 @@ const Page = () => {
                                         {/* 左边图片 */}
                                         <div className={"border-rd-2 w-69px h-92px flex items-start flex-grow"}>
                                             <div className={"flex items-center justify-center  w-100% h-100% border-rd-2 overflow-hidden"}>
-                                                <Image src={item.logo ?? "/images/user/Loading.svg"} alt={"小专栏图片"} width={69} height={92} className={"rounded-6px"} style={{ width: "100%" }}/>
+                                                <Image src={item.logo ?? "/images/user/Loading.svg"} alt={"小专栏图片"} width={69} height={92} className={"rounded-6px"} style={{ width: "100%", height:"100%"}}/>
                                             </div>
                                         </div>
                                         {/* 右边文字 */}
