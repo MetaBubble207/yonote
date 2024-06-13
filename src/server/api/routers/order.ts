@@ -1,6 +1,6 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import { column, order } from "@/server/db/schema";;
+import {column, order, subscription} from "@/server/db/schema";;
 import {eq, and} from "drizzle-orm";
 
 export const orderRouter = createTRPCRouter({
@@ -71,6 +71,15 @@ export const orderRouter = createTRPCRouter({
                         buyerId: order.buyerId,
                         columnId: order.columnId,
                     });
+
+                    // 创建订单时向订阅表写入数据
+                    const insertSubscription = await ctx.db.insert(subscription).values({
+                        userId: input.buyerId,
+                        columnId: input.columnId,
+                        status: input.status
+                    })
+
+
 
                     return insertedOrder[0]; // 返回插入的订单对象
                 } else {
