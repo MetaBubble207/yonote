@@ -57,7 +57,7 @@ export const UserTop = () => {
                         {token ? userInfo?.name : "请点击头像登录"}
                     </h1>
                     <Image
-                        src="/images/user/Group.png"
+                        src="/images/user/Rank.svg"
                         alt="group"
                         width={20}
                         height={20}
