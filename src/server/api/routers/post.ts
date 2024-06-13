@@ -128,7 +128,7 @@ export const postRouter = createTRPCRouter({
             //改变排序方式
             let res = [];
             data.map(item => {
-                res.push({ ...item, user: u })
+                res.unshift({ ...item, user: u })
             })
             return res[input.chapter - 1]
         }),
