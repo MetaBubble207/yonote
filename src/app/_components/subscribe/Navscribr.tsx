@@ -6,15 +6,20 @@ import React, {Suspense, useState, useContext} from "react"
 import {api} from "@/trpc/react";
 import useLocalStorage from '@/tools/useStore';
 import SubscribeClass from '../special-column/SubscribeClass';
+import Loading from '../common/Loading';
 
 
 const Page = () => {
     const token = useLocalStorage('token', '')
+    // const {data:columns, isFetched} = api.column.getAll.useQuery();
     const columns = api.column.getAll.useQuery().data;
-    const orders = api.order.getUserOrder.useQuery({
+    // const orders = api.order.getUserOrder.useQuery({
+    //     userId: token[0],
+    // }).data;
+    const {data:orders,isFetched} = api.order.getUserOrder.useQuery({
         userId: token[0],
-    }).data;
-
+    });
+    
     // 按钮选中状态
     const [selectedButton, setSelectedButton] = useState<number | null>(1); // 追踪选中的按钮
 
@@ -24,12 +29,14 @@ const Page = () => {
             setSelectedButton(button);
         }
     };
-
+    
     // 导航栏返回相应页面
     const [currentPage, setCurrentPage] = React.useState<number>(1);
+    
     const Update = () => {
         return (
             <div>
+                {/* {isFetched?<div><Loading></Loading></div>: */}
                 {orders && orders.length > 0 && (
                     <div>
                         {columns && columns.length > 0 && columns.map((column: any) => (
@@ -40,6 +47,7 @@ const Page = () => {
                         ))}
                     </div>
                 )}
+                
             </div>
         );
     };
@@ -86,6 +94,9 @@ const Page = () => {
     }
 
     const renderContent = (): React.ReactNode => {
+        if(!isFetched){
+            return <div className='flex items-center justify-center h-[400px]'><Loading></Loading> </div>         
+        }
         switch (currentPage) {
             case 1:
                 return <Update/>;

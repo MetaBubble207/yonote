@@ -28,7 +28,9 @@ export const readRouter = createTRPCRouter({
             if (!data?.length) {
                 throw new Error("No data found");
             }
-            const postId = data[input.chapter - 1].id
+            // const postId = data[input.chapter - 1].id
+            const postId = (await ctx.db.query.post.findFirst({ where: and(eq(post.columnId, input.id),eq(post.chapter, input.chapter))})).id;
+            
             const list = await ctx.db.select().from(postRead).where(and(eq(postRead.postId, postId), eq(postRead.userId, input.userId)));
             if (!list?.length) {
                 return ctx.db.insert(postRead).values({
