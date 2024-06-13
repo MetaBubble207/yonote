@@ -3,7 +3,7 @@ import Image from "next/image";
 import Navbar from "../../_components/common/Navbar"
 import Activities from "@/app/_components/find/activities";
 import {SearchColumn} from "@/app/_components/common/SearchColumn";
-
+import Link from "next/link";
 
 const Find=()=>{
     return (
@@ -11,7 +11,7 @@ const Find=()=>{
             <div className="w-85.75 m-auto pt-8">
 
                 {/*搜索框*/}
-                <SearchColumn></SearchColumn>
+                <Link href={'find/search-page'}><SearchColumn ></SearchColumn></Link>
 
                 {/*活动中心*/}
                 <div className="text-[#252525]  text-4.5 font-500 lh-6 mt-6 ml-1.5">活动中心</div>
