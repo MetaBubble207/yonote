@@ -17,4 +17,13 @@ export const subscriptionRouter = createTRPCRouter({
             updatedAt: getCurrentTime(),
         })
     }),
+    // 获取当前专栏所有订阅者
+    getAllBuyers: publicProcedure
+        // .input(z.object({limit: z.number().optional(),offset: z.number().optional(),columnId: z.string()}))
+        .input(z.object({columnId: z.string()}))
+        .query(async ({ctx,input})=>{
+            // return  await ctx.db.query.subscription.findMany({where: eq(subscription.columnId,input.columnId)})
+            return  await ctx.db.select().from(subscription).where(eq(subscription.columnId, input.columnId));
+
+        })
 });
