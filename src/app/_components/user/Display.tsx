@@ -56,6 +56,7 @@ const Display = (props:{token:string;ColumnInfo:any}) => {
                 ColumnInfo?.slice(0,ColumnInfo?.length>1?2:1).map((item, index) => (
                     <Link href={`/special-column?id=${item.id}`} className="flex h-14 mb-8" key={item.id}>
                         <Image
+                            style={{objectFit:"cover"}}
                             // src="/images/user/cover.svg"
                             // src={Column.logo}
                             // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
