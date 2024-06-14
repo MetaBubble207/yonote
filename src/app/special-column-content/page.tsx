@@ -309,13 +309,15 @@ const Page = () => {
 
         {/*内容*/}
         <div>
-          <Image
-            src={"/images/special-column/Rectangle 442.png"}
-            alt={"心智与阅读"}
-            width={343}
-            height={161}
-            className="w-85.75 h-40.25"
-          />
+          { postData?.logo && (
+              <Image
+                  src={postData?.logo}
+                  alt={"心智与阅读"}
+                  width={343}
+                  height={161}
+                  className="w-85.75 h-40.25"
+              />
+          )}
         </div>
         <div
           className={

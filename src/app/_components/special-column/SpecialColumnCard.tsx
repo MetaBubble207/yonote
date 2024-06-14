@@ -48,9 +48,13 @@ export const SpecialColumnCard = (props) => {
             <div className={"flex mt-25.5px items-center w-full"} onClick={data ? link : alertMessage}>
                 {/* {status?:<div className={"flex mt-25.5px items-center w-full"} onClick={alertMessage}>} */}
                 {/*左边图片*/}
-                <div className={"border-rd-2 w-30%"}>
-                    <Image src={"/images/special-column/Cardpc.png"} alt={"小专栏图片"} width={85} height={74.5} className={"rounded-6px"} style={{ width: "100%" }} />
-                </div>
+                { item?.logo && (
+                    <div className={"border-rd-2 w-30%"}>
+                        <Image src={item?.logo} alt={"小专栏图片"} width={85} height={74.5}
+                               className={"rounded-6px"} style={{width: "100%"}}/>
+                    </div>
+                )}
+
                 {/*右边文字*/}
                 <div className={"ml-8px w-67% "}>
                     <div className={" text-[#252525] text-3.75 font-500 lh-6 text-3.75 "}>
