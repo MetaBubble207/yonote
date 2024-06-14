@@ -35,12 +35,12 @@ const Page = () => {
         <UserTop />
 
         {/* 专栏、小课区域 */}
+
         {ColumnInfo && (
           <>
             {/* 内容区域 */}
             <Display token={token} ColumnInfo={ColumnInfo}></Display>
-          </>
-        ) }
+          </> ) }
 
         {/*  我的服务模块*/}
         <div
