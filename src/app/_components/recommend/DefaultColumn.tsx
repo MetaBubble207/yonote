@@ -25,7 +25,7 @@ export const DefaultColumn = () => {
             <div className="w-85.75 h-33.75 border-rd-5 bg-[#FFF]">
               <div className="flex h-19 pl-2.5 pt-2">
                 <Image
-                    quality={100}
+                    unoptimized
                   style={{ objectFit: "cover" }}
                   src={item.logo ?? "/images/user/Loading.svg"}
                   alt="cover"

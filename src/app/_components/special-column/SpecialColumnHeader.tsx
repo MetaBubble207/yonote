@@ -50,7 +50,7 @@ export const SpecialColumnHeader = () => {
         <div className={"flex  mt-10px w-full"}>
           <div className={"ml-20px  w-28.5 h-30 overflow-hidden"}>
             <Image
-              src={column.data?.logo}
+              src={column.data?.logo ?? "/images/user/Loading.svg"}
               className="object-cover"
               width={140}
               height={160}
