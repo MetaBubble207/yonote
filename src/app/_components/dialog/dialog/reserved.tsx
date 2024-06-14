@@ -10,7 +10,13 @@ const Reserved = ({ onClose, check }) => {
     const params = useSearchParams();
     const columnId = params.get("id");
     const token = useLocalStorage("token", null);
-    const column = api.column.getColumnDetail.useQuery({ columnId: columnId }).data;
+
+    const {data:column,isFetching} = api.column.getColumnDetail.useQuery({ columnId: columnId });
+
+    if(isFetching){
+        return <>loading</>
+    }
+
     const columnUserId = api.column.getUserId.useQuery({ id: columnId });
     const subscribeOrder = api.order.createOrder.useMutation({
         onSuccess: (r) => {
