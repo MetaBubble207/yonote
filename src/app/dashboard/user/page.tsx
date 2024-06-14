@@ -20,9 +20,9 @@ const Page = () => {
   // 检测当前用户ID是否有专栏，如果没有，display组件就不渲染
   // const tempID = 'oqWsn6dZt5znIwVE_LrkREZ0NzT4'
   // const ColumnInfo = api.column.getAllByUserId.useQuery({userId:tempID }).data
-  const ColumnInfo = api.column.getAllByUserId.useQuery({
+  const { data: ColumnInfo } = api.column.getAllByUserId.useQuery({
     userId: userInfo?.id,
-  }).data;
+  });
   // console.log("ColumnInfo======================>",ColumnInfo);
   // console.log("ColumnID=====================>",Column.id);
   // console.log("ColumnId==================>",ColumnId)
@@ -35,14 +35,12 @@ const Page = () => {
         <UserTop />
 
         {/* 专栏、小课区域 */}
-        {ColumnInfo ? (
+
+        {ColumnInfo && (
           <>
             {/* 内容区域 */}
             <Display token={token} ColumnInfo={ColumnInfo}></Display>
-          </>
-        ) : (
-          <Display token={token} ColumnInfo={ColumnInfo}></Display>
-        )}
+          </> ) }
 
         {/*  我的服务模块*/}
         <div
