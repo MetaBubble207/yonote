@@ -51,12 +51,12 @@ export const SpecialColumnHeader = () => {
           <div className={"ml-20px  w-28.5 h-30 overflow-hidden"}>
             <Image
               src={column.data?.logo}
-              alt={"心智与阅读"}
-              placeholder="empty"
               className="object-cover"
               width={140}
               height={160}
-              style={{ width: "100%" }}
+              alt=""
+              style={{ width: "100%",objectFit:"cover" }}
+              unoptimized
             />
           </div>
           <div className={"flex flex-col ml-10px space-y-0 "}>

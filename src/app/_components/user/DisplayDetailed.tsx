@@ -163,7 +163,7 @@ const DisplayDetailed = (props) => {
                         alt="icon"
                         width={74}
                         height={100}
-                        fill
+                        // fill
                         className="w-15.5 h-19 rounded object-cover"
                         objectFit="cover"
                         style={{objectFit:"cover"}}
