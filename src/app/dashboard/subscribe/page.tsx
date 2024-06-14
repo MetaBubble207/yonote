@@ -63,7 +63,7 @@ const Subscribe = () => {
                     <input type="search" name="" id="" placeholder="仅支持搜索专栏和作者" className="text-3.25 text-[#999] lh-8.5 ml-1.6 justify-center outline-none w-full h-8.5 pl-1.6 border-rd-13 " ></input>
                 </div>
                 {isFetching?<div className="h-20.5 w-full mt-8 items-center flex justify-center"><Loading></Loading></div>:<div className="h-20.5 w-full mt-8 border-rd-2.5 bg-[#FFF] flex items-center relative">
-                    <Image src={recentColumn?.logo} alt="cover" width={18.2} height={24.8} className="w-11.375 h-15.5 ml-4"></Image>
+                    <Image objectFit="cover" src={recentColumn?.logo} alt="cover" width={18.2} height={24.8} className="w-11.375 h-15.5 ml-4"></Image>
                     <div className="pl-2 relative h-23 pt-3">
                         {
                             recentRead && (

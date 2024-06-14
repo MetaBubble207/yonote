@@ -3,15 +3,16 @@ import Link from "next/link";
 import Image from "next/image";
 import React, {useState} from "react";
 import {api} from "@/trpc/react";
+import Loading from "../common/Loading";
 
 const Display = (props:{token:string;ColumnInfo:any}) => {
     const {token, ColumnInfo} = props
     // console.log("token============>",token);
     // console.log("ColumnInfo",ColumnInfo);
-    console.log("length==============>", ColumnInfo.length);
+    console.log("length==============>", ColumnInfo?.length);
     // const columnInfo = api.column.getAll.useQuery().data
     // console.log(columnInfo)
-
+   
 
     const buttonInfos = [
         {id: 1, label: '专栏'},
@@ -51,8 +52,8 @@ const Display = (props:{token:string;ColumnInfo:any}) => {
     }
     //
     const renderColumn = () => {
-        return ColumnInfo.length > 0 && (
-                ColumnInfo.slice(0,ColumnInfo.length>1?2:1).map((item, index) => (
+        return ColumnInfo?.length > 0 && (
+                ColumnInfo?.slice(0,ColumnInfo?.length>1?2:1).map((item, index) => (
                     <Link href={`/special-column?id=${item.id}`} className="flex h-14 mb-8" key={item.id}>
                         <Image
                             // src="/images/user/cover.svg"
@@ -63,6 +64,7 @@ const Display = (props:{token:string;ColumnInfo:any}) => {
                             width={74}
                             height={100}
                             className="w-15.5 h-19 rounded"
+                            objectFit="cover"
 
                         />
                         <div>
@@ -104,7 +106,7 @@ const Display = (props:{token:string;ColumnInfo:any}) => {
     const Course = () => {
         return (
             <div className={'flex justify-center items-center'}>
-                <h1>暂无数据</h1>
+                {/* <h1>暂无数据</h1> */}
                 {/*<div className="flex h-14 mb-8">*/}
                 {/*    <Image*/}
                 {/*        src="/images/user/cover.svg"*/}
@@ -175,7 +177,7 @@ const Display = (props:{token:string;ColumnInfo:any}) => {
 
     return (
         <>
-            <div className="w-full h-63.75 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4">
+            <div className="w-full pb-10 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4">
 
                 {/* 导航区域 */}
                 <div className="flex ">
@@ -185,7 +187,9 @@ const Display = (props:{token:string;ColumnInfo:any}) => {
                 {/*<Nav></Nav>*/}
                 {/*内容区域*/}
                 <div className='mt-3'>
-                    {renderContent()}
+                    {ColumnInfo && renderContent()}
+                    {!ColumnInfo && Loading()}
+                    {ColumnInfo.length === 0 && <div className="flex justify-center items-center text-xs text-gray-500">暂无数据</div>}
                 </div>
             </div>
         </>
