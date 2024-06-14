@@ -67,6 +67,7 @@ const DisplayDetailed = (props) => {
                             height={100}
                             className="w-15.5 h-19 rounded object-cover"
                             objectFit="cover"
+                            unoptimized
                             style={{objectFit:"cover"}}
                         />
                         <div>
@@ -166,6 +167,7 @@ const DisplayDetailed = (props) => {
                         className="w-15.5 h-19 rounded object-cover"
                         objectFit="cover"
                         style={{objectFit:"cover"}}
+                        unoptimized
                     />
                     <div>
                         <h2

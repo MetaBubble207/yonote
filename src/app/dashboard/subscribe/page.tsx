@@ -84,6 +84,7 @@ const Subscribe = () => {
               style={{ objectFit: "cover" }}
             //   fill
               objectFit="cover"
+              unoptimized
               src={recentColumn?.logo}
               alt="cover"
               width={18.2}
