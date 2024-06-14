@@ -65,8 +65,10 @@ const DisplayDetailed = (props) => {
                             alt="icon"
                             width={74}
                             height={100}
-                            className="w-15.5 h-19 rounded"
-
+                            className="w-15.5 h-19 rounded object-cover"
+                            objectFit="cover"
+                            unoptimized
+                            style={{objectFit:"cover"}}
                         />
                         <div>
                             <h2
@@ -161,8 +163,11 @@ const DisplayDetailed = (props) => {
                         alt="icon"
                         width={74}
                         height={100}
-                        className="w-15.5 h-19 rounded"
-
+                        // fill
+                        className="w-15.5 h-19 rounded object-cover"
+                        objectFit="cover"
+                        style={{objectFit:"cover"}}
+                        unoptimized
                     />
                     <div>
                         <h2

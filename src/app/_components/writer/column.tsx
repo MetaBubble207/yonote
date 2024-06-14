@@ -136,7 +136,7 @@ const Column = () => {
   return (
     <>
       <div className="w-64.77925 shrink-0 border-rd-1.25 bg-#fff flex items-center  pl-12.995" onClick={() => setShowColumnPopup(!showColumnPopup)}>
-          <Image src={currentColumn?.logo ?? "/images/user/Loading.svg"} alt={"cover"} width={58} height={75} className="h-75px border-rd-1.25"></Image>
+          <Image objectFit="cover" src={currentColumn?.logo ?? "/images/user/Loading.svg"} alt={"cover"} width={58} height={75} className="h-75px border-rd-1.25"></Image>
           <div className=" ">
             <button>
               <Image src={"/images/writer/edit/Switch.svg"} alt={""} width={14.09} height={14} className={"w-3.52225 h-3.5 shrink-0 ml-2"}></Image>
