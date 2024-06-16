@@ -32,6 +32,7 @@ const Page = () => {
     const buyerInfos = api.subscription.getAllBuyers.useQuery({columnId: columnId}).data
     // console.log('=======================>buyerInfos',buyerInfos);
     const data = api.column.getColumnInfo.useQuery({columnId: columnId}).data
+    const [filteredItems, setFilteredItems] = useState<Item[]>([]);
 
 
     // console.log('========================>',buyerInfos===undefined?'null':buyerInfos[0].columnId)
@@ -164,6 +165,7 @@ const Page = () => {
     }
 
     const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+
         console.log(`正在查询userID为${userIdValue},订阅状态为${status}的信息`)
     }
 
