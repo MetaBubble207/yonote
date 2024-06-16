@@ -114,8 +114,6 @@ export const postRouter = createTRPCRouter({
             if (!c) {
                 throw new Error("Column not found");
             }
-
-
             const u = await ctx.db.query.user.findFirst({ where: eq(user.id, c.userId) })
 
             if (!u) {
@@ -127,8 +125,14 @@ export const postRouter = createTRPCRouter({
             }
             //改变排序方式
             let res = [];
-            data.map(item => {
-                res.unshift({ ...item, user: u })
+            // data.map(item => {
+            //     res.unshift({ ...item, user: u })
+            // })
+
+            // return res[input.chapter - 1]
+            const newData = data.sort((a, b) => a.chapter - b.chapter)
+            newData.map(item => {
+                res.push({ ...item, user: u })
             })
             return res[input.chapter - 1]
         }),

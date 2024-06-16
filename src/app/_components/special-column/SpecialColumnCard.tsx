@@ -43,15 +43,15 @@ export const SpecialColumnCard = (props) => {
         }
     }, [item.content])
     return (
-            <div className={"w-91.5%  mt-8px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-12px pb-10px"} >
+        <div className={"w-91.5%  mt-8px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-12px pb-10px"} >
             {/*上边*/}
-            <div className={"flex mt-25.5px items-center w-full"} onClick={data ? link : alertMessage}>
+            <div className={"flex mt-25.5px items-center w-full"} onClick={data || item.isFree ? link : alertMessage}>
                 {/* {status?:<div className={"flex mt-25.5px items-center w-full"} onClick={alertMessage}>} */}
                 {/*左边图片*/}
-                { item?.logo && (
+                {item?.logo && (
                     <div className={"border-rd-2 w-30%"}>
                         <Image src={item?.logo} alt={"小专栏图片"} width={85} height={74.5}
-                               className={"rounded-6px"} style={{width: "100%"}}/>
+                            className={"rounded-6px"} style={{ width: "100%" }} />
                     </div>
                 )}
 
@@ -136,6 +136,6 @@ export const SpecialColumnCard = (props) => {
                 </div>
             </div>
         </div>
-        
+
     )
 }
