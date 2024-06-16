@@ -43,7 +43,7 @@ export const SpecialColumnCard = (props) => {
         }
     }, [item.content])
     return (
-        <div className={"w-91.5%  mt-8px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-12px pb-10px"} >
+            <div className={"w-91.5%  mt-8px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-12px pb-10px"} >
             {/*上边*/}
             <div className={"flex mt-25.5px items-center w-full"} onClick={data ? link : alertMessage}>
                 {/* {status?:<div className={"flex mt-25.5px items-center w-full"} onClick={alertMessage}>} */}
@@ -136,5 +136,6 @@ export const SpecialColumnCard = (props) => {
                 </div>
             </div>
         </div>
+        
     )
 }
