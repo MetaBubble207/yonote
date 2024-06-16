@@ -166,6 +166,18 @@ export const orderRouter = createTRPCRouter({
             return orderData;
         }),
 
+    // 更新订阅状态
+    updateStatus: publicProcedure
+        .input(z.object({
+            userId: z.string(),
+            status:z.boolean(),
+        }))
+        .mutation(async ({ctx, input}) => {
+            return await ctx.db.update(order).set({
+                status: input.status,
+            }).where(eq(order.buyerId, input.userId));
+        }),
+
     // 查看用户是否购买专栏
     getUserStatus: publicProcedure
         .input(z.object({
