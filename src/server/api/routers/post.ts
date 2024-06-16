@@ -65,7 +65,7 @@ export const postRouter = createTRPCRouter({
             return ctx.db.query.post.findMany({
                 limit: input.limit,
                 offset: input.offset,
-                where: eq(post.columnId, input.columnId),
+                where: and(eq(post.columnId, input.columnId), eq(post.status, true)),
             })
         }),
     // 专栏详情页展示有序的章节数
