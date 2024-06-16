@@ -250,6 +250,12 @@ const Page = () => {
   const link = () => {
     router.push(`/special-column?c=1&id=${columnId}`);
   }
+  const preLink = () => {
+    router.push(`/special-column-content?c=${chapter - 1}&id=${columnId}`);
+  }
+  const nextLink = () => {
+    router.push(`/special-column-content?c=${chapter + 1}&id=${columnId}`);
+  }
 
   return (
     <div className={"relative bg-#F5F7FB min-h-screen pb-10"}>
@@ -392,7 +398,7 @@ const Page = () => {
                     "text-[#666] text-2.5 font-not-italic font-400 lh-14px"
                   }
                 >
-                  心智与阅读•目录
+                  {columnDetail?.name}•目录
                 </div>
                 <div className={"ml-5px"}>
                   <img
@@ -435,7 +441,8 @@ const Page = () => {
                 </div>
               )
                 : (
-                  <Link className="flex flex-col" href={`../special-column-content?c=${chapter - 1}&id=${columnId}`}>
+                  // <Link className="flex flex-col" href={`../special-column-content?c=${chapter - 1}&id=${columnId}`}>
+                  <div className="flex flex-col" onClick={prepost?.isFree || status ? preLink : alertMessage}>
                     <div className={"flex items-center"}>
                       <div>
                         <img
@@ -460,7 +467,7 @@ const Page = () => {
                     >
                       {pretitle}
                     </div>
-                  </Link>
+                  </div>
                 )}
               {numData <= chapter ? (
                 <div className="flex flex-col ml-auto">
@@ -490,34 +497,36 @@ const Page = () => {
                   </div>
                 </div>
               ) :
-                (
-                  <Link className="flex flex-col ml-auto " href={`../special-column-content?c=${chapter + 1}&id=${columnId}`}>
-                    <div className={"flex items-center justify-end"}>
-                      <div
-                        className={
-                          "text-[#333] text-3 font-not-italic font-400 lh-6 "
-                        }
-                      >
-                        下一篇
-                      </div>
-                      <div>
-                        <img
-                          src={"/images/special-column/Double-left (双右) .png"}
-                          alt={"心智与阅读"}
-                          width={14}
-                          height={14}
-                        />
-                      </div>
-                    </div>
+
+                // nextpost?.data.isFree || status ? (<div>hellop</div>)
+                //   : (<div></div>)
+                <div className="flex flex-col ml-auto" onClick={nextpost?.isFree || status ? nextLink : alertMessage}>
+                  <div className={"flex items-center justify-end"}>
                     <div
                       className={
-                        "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
+                        "text-[#333] text-3 font-not-italic font-400 lh-6 "
                       }
                     >
-                      {nexttitle}
+                      下一篇
                     </div>
-                  </Link>
-                )
+                    <div>
+                      <img
+                        src={"/images/special-column/Double-left (双右) .png"}
+                        alt={"心智与阅读"}
+                        width={14}
+                        height={14}
+                      />
+                    </div>
+                  </div>
+                  <div
+                    className={
+                      "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
+                    }
+                  >
+                    {nexttitle}
+                  </div>
+                </div>
+
               }
 
             </div>
