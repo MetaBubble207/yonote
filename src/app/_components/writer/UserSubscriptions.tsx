@@ -7,20 +7,21 @@ import {useSearchParams} from "next/navigation";
 import {api} from "@/trpc/react";
 import {subscription, user} from "@/server/db/schema";
 import {promise} from "zod";
+import {timeToDateString} from "@/tools/timeToString";
 
 
 const UserSubscriptions = () => {
     // const [mergedData, setMergedData] = useState([])
-
-    interface Item {
-        id: string;
-        avatar: string;
-        userName: string;
-        userID: string;
-        status: string;
-        start: string;
-        end: string;
-    }
+    //
+    // interface Item {
+    //     id: string;
+    //     avatar: string;
+    //     userName: string;
+    //     userID: string;
+    //     status: string;
+    //     start: string;
+    //     end: string;
+    // }
 
     const params = useSearchParams();
     // const columnId = params.get("columnId")
@@ -33,28 +34,28 @@ const UserSubscriptions = () => {
     const buyerInfos = api.order.getOrderByColumnId.useQuery({columnId: columnId}).data
     console.log('buyerInfos================>',buyerInfos);
 
-    const [items, setItems] = useState<Item[]>([
-        {
-            id: '1',
-            avatar: '/images/writer/avatar1.svg',
-            userName: '胖头鱼吃瓜',
-            userID: '1239f7.5',
-            status: '订阅中',
-            start: '2017-10-31 23:12:00',
-            end: '2017-10-31 23:12:00'
-        }])
+    // const [items, setItems] = useState<Item[]>([
+    //     {
+    //         id: '1',
+    //         avatar: '/images/writer/avatar1.svg',
+    //         userName: '胖头鱼吃瓜',
+    //         userID: '1239f7.5',
+    //         status: '订阅中',
+    //         start: '2017-10-31 23:12:00',
+    //         end: '2017-10-31 23:12:00'
+    //     }])
 
 
-    const newItems = buyerInfos?.map((buyer,index) => ({
-        id: index,
-        avatar: buyer.user.avatar,
-        userName: buyer.user.name,
-        userID: buyer.user.idNumber,
-        status: buyer.status,
-        start: buyer.createdAt,
-        end: buyer.endDate
-    }));
-
+    // const newItems = buyerInfos?.map((buyer,index) => ({
+    //     id: index,
+    //     avatar: buyer.user.avatar,
+    //     userName: buyer.user.name,
+    //     userID: buyer.user.idNumber,
+    //     status: buyer.status,
+    //     start: buyer.createdAt,
+    //     end: buyer.endDate
+    // }));
+    // const [items, setItems] = useState(newItems);
 
 
 
@@ -65,47 +66,51 @@ const UserSubscriptions = () => {
     }
 
 
-    const [status, setStatus] = useState<string>('')
-    const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        console.log(`正在查询status: ${e.target.value}`)
-        setStatus(e.target.value)
-    }
+    const [status, setStatus] = useState<boolean>(true)
+
 
     const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         console.log(`正在查询userID为${userIdValue},订阅状态为${status}的信息`)
     }
 
 
-    const handleDelete = (index: number) => {
-        const newData = [...items]
-        newData.splice(index, 1)
-        setItems(newData)
-        console.log('即将删除')
+    const handleChangeStatus = (idNumber: string,currentStatus: boolean) => {
+        // 修改订阅状态
+        console.log(`即将修改userId为${idNumber}的订阅状态`)
+        const newStatus = !currentStatus;
+        updateStatusApi.mutate({userId: idNumber, status: newStatus})
     }
+
+    const updateStatusApi = api.order.updateStatus.useMutation({
+        onSuccess:(r)=>{
+            console.log('更新成功')
+        }
+    })
 
 
     // 表体内容
     const ItemList: React.FC = () => {
         return (
             <tbody className='text-center'>
-            {items.map((item, index) => (
+            {buyerInfos?.map((item, index) => (
                 <tr key={index}
                     className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
                     <td>{index + 1}</td>
                     {/*<td>{item.avatar}</td>*/}
                     <td className='relative'><Image
                         className=' w-8 h-8 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shrink-0 border-rd-8'
-                        src={item.avatar} alt={'avatar'} width={32} height={32}/>
+                        src={item.user.avatar} alt={'avatar'} width={32} height={32}/>
                     </td>
-                    <td>{item.userName}</td>
-                    <td>{item.userID}</td>
-                    <td>{item.status}</td>
-                    <td>{item.start}</td>
-                    <td>{item.end}</td>
+                    <td>{item.user.name}</td>
+                    <td>{item.user.idNumber}</td>
+                    <td>{item.status?'订阅中':'已结束'}</td>
+                    {/*<td>{item.start}</td>*/}
+                    <td>{timeToDateString(item.createdAt)}</td>
+                    <td>{timeToDateString(item.endDate)?timeToDateString(item.endDate):'无数据'}</td>
                     <td>
                         <button
                             onClick={(e) => {
-                                handleDelete(index)
+                                handleChangeStatus(item.buyerId,item.status)
                             }}
                             className='text-[#1DB48D] font-"Microsoft YaHei" text-3.5 font-not-italic font-400 lh-5.5'>结束订阅
                         </button>
