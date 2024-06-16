@@ -7,17 +7,17 @@ import useLocalStorage from "@/tools/useStore";
 import { useSearchParams } from "next/navigation";
 
 const Reserved = ({ onClose, check }) => {
+    
     const params = useSearchParams();
     const columnId = params.get("id");
     const token = useLocalStorage("token", null);
-
-    const {data:column,isFetching} = api.column.getColumnDetail.useQuery({ columnId: columnId });
-
-    if(isFetching){
-        return <>loading</>
-    }
-
     const columnUserId = api.column.getUserId.useQuery({ id: columnId });
+    const {data:column,isFetching} = api.column.getColumnDetail.useQuery({ columnId: columnId });
+    // if(isFetching){
+    //     return <>loading</>
+    // }
+
+    
     const subscribeOrder = api.order.createOrder.useMutation({
         onSuccess: (r) => {
             onClose();
@@ -44,6 +44,7 @@ const Reserved = ({ onClose, check }) => {
             });
         };
     }
+    
 
     const [selectedButton, setSelectedButton] = useState<number | null>(null); // 追踪选中的按钮
 
@@ -58,10 +59,10 @@ const Reserved = ({ onClose, check }) => {
     };
 
     return (
-        <div className="flex items-center w-full h-full z-1">
-            <div className="flex flex-col w-full items-center justify-center b-white fixed top-60 bg-#fff b-r-10 pb-10">
+        <div className="flex items-center w-full h-full z-1 justify-center">
+            <div className="flex flex-col w-full items-center justify-center b-white fixed bottom-0 bg-#fff pb-10">
                 <Image src={"/images/dialog/Close-small.png"} alt="close" width={20} height={20} className="w-20px h-20px ml-335px" onClick={onClose}></Image>
-                <div className="w-36.75 text-[#252525] text-3.75 font-500 lh-6  mt-2">「{column.name}」</div>
+                <div className=" text-[#252525] text-3.75 font-500 lh-6  mt-2 justify-center items-center">「{column.name}」</div>
                 <div className="mt-6">
                     <button className={`w-84.25 h-10 shrink-0 border-rd-1.25 border-1 border-solid bg-[#F5F7FB] justify-center ${selectedButton === 1 ? 'border-[#45E1B8]' : ''}`} onClick={() => handleButtonClick(1)}>
                         <div className="flex ml-2.5 items-center ">

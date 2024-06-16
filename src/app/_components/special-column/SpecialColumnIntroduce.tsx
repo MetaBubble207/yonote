@@ -8,7 +8,7 @@ export const SpecialColumnIntroduce = () => {
     const columnId = params.get("id");
     const column = api.column.getColumnDetail.useQuery({
         columnId: columnId,
-    })
+    }).data
 
     const router = useRouter();
     // 点赞
@@ -17,6 +17,7 @@ export const SpecialColumnIntroduce = () => {
     const handleClick = () => {
         setIsHeartFilled(!isHeartFilled);
     };
+
     return (
         <div className={"w-91.5% mt-20px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-10px"} >
             {/*上方文字*/}
@@ -63,7 +64,8 @@ export const SpecialColumnIntroduce = () => {
                     <div className={"text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-4px"}>1.2k</div>
                 </div>
             </div> */}
-            {column.data?.introduce}
+            
+            {column?.introduce?column.introduce:"暂无数据"}
         </div>
     )
 }
