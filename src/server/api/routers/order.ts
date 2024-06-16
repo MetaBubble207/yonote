@@ -91,6 +91,9 @@ export const orderRouter = createTRPCRouter({
             return combinedResults;
         }),
 
+
+
+
 // 创建订单
     createOrder: publicProcedure
         .input(z.object({
@@ -170,12 +173,18 @@ export const orderRouter = createTRPCRouter({
     updateStatus: publicProcedure
         .input(z.object({
             userId: z.string(),
-            status:z.boolean(),
+            status: z.boolean(),
         }))
-        .mutation(async ({ctx, input}) => {
-            return await ctx.db.update(order).set({
-                status: input.status,
-            }).where(eq(order.buyerId, input.userId));
+        .mutation(async ({ ctx, input }) => {
+            const result = await ctx.db.update(order)
+                .set({ status: !input.status })
+                .where(eq(order.buyerId, input.userId))
+                .returning({
+                    buyerId: order.buyerId,
+                    status: order.status,
+                });
+
+            return result[0]; // 确保只返回更新后的单个对象
         }),
 
     // 查看用户是否购买专栏
