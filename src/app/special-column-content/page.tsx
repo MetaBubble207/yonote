@@ -91,6 +91,18 @@ const Page = () => {
     postId: postId.data,
   }).data;
 
+  const columnDetail = api.column.getColumnDetail.useQuery({
+    columnId: columnId
+  }).data;
+
+  const status = api.order.getUserStatus.useQuery({
+    userId: token[0],
+    columnId: columnId,
+  }).data
+
+  const alertMessage = () => {
+    alert("请先购买专栏")
+  }
 
   useEffect(() => {
 
@@ -309,14 +321,14 @@ const Page = () => {
 
         {/*内容*/}
         <div>
-          { postData?.logo && (
-              <Image
-                  src={postData?.logo}
-                  alt={"心智与阅读"}
-                  width={343}
-                  height={161}
-                  className="w-85.75 h-40.25"
-              />
+          {postData?.logo && (
+            <Image
+              src={postData?.logo}
+              alt={"心智与阅读"}
+              width={343}
+              height={161}
+              className="w-85.75 h-40.25"
+            />
           )}
         </div>
         <div
@@ -512,7 +524,7 @@ const Page = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 export default Page;
