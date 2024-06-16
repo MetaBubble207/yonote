@@ -1,6 +1,4 @@
 
-
-
 // import React, { useState, useEffect } from "react";
 // import Image from "next/image";
 // import ColumnPopup from "./ColumnPopup";
@@ -128,9 +126,9 @@ const Column = () => {
     setShowColumnPopup(false);
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
 
 
   return (
@@ -147,7 +145,7 @@ const Column = () => {
           </div>
       </div>
       <div className="left-308px top-59px absolute">
-        {showColumnPopup && 
+        {showColumnPopup &&
         <div>
           <button className="absolute right-4 top-2" onClick={() => setShowColumnPopup(!showColumnPopup)}>X</button>
            <ColumnPopup columns={columns} onImageClick={handleImageClick} />
