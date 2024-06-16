@@ -13,14 +13,23 @@ export const ContentForm=()=>{
     const columnId = params.get("columnId")
     const [showDeleteModal,setShowDeleteModal]=useState(false);
     const [currentDeleteId,setCurrentDeleteId]=useState(0);
-    const [contentData,setContentData] = useState( api.post.getAll.useQuery({
+    const queryResult = api.post.getAll.useQuery({
         limit: 5,
         offset: 0,
-        columnId:columnId
-    }).data);
+        columnId: columnId
+    });
+
+    const [contentData, setContentData] = useState([]);
 
     useEffect(() => {
-        console.log(contentData)
+        if (queryResult.data) {
+            const filteredData = queryResult.data.filter(item => item.status !== false);
+            setContentData(filteredData);
+        }
+    }, [queryResult.data]);
+
+    useEffect(() => {
+        console.log(contentData);
     }, [contentData]);
 
     const updateIsTopApi = api.post.updateIsTop.useMutation({
