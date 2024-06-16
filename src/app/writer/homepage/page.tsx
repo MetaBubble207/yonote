@@ -4,7 +4,7 @@ import Chart from "@/app/_components/homepage/Chart";
 const homepage = () => {
 
     return (
-        <div className="w-full flex flex-col">
+        <div className="w-291 flex flex-col">
             <div className="mt-16px ml-18px">
                 <Suspense>
                     <Homepagedata/>

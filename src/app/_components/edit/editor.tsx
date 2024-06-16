@@ -67,13 +67,25 @@ function MyEditor() {
   const columnId = params.get("columnId")
 
   const [editor, setEditor] = useState<IDomEditor | null>(null);
-  const [html, setHtml] = useState("<p>hello</p>");
+  let [html, setHtml] = useState('');
+  const draft = html;
   const [title, setTitle] = useState("");
   const [preview, setPreview] = useState(false);
   const toolbar = DomEditor.getToolbar(editor);
   const [tags, setTags] = useState<string[]>([]);
   const [publishModal,setPublishModal] = useState(false);
   const curToolbarConfig = toolbar?.getConfig();
+
+  // 从 localStorage 中加载保存的草稿数据
+  useEffect(() => {
+    const savedDraft = localStorage.getItem("editorDraft");
+    if (savedDraft) {
+      const { title: savedTitle, html: savedHtmlContent, tags: savedTags } = JSON.parse(savedDraft);
+      setTitle(savedTitle);
+      setHtml(savedHtmlContent);
+      setTags(savedTags);
+    }
+  }, []);
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newTitle = event.target.value.slice(0, 64); // 限制标题长度为64个字符
@@ -111,13 +123,18 @@ function MyEditor() {
   // 保存草稿的函数
   const saveDraft = () => {
     // 调用保存草稿的 API 请求，并传递标题、HTML 内容和标签
-    b.mutate({
-      name: title, // 使用标题作为草稿的名称
-      content: html, // 使用 HTML 内容作为草稿的内容
-      tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
-      status: false,
-      columnId: columnId,
-    });
+    // b.mutate({
+    //   name: title, // 使用标题作为草稿的名称
+    //   content: html, // 使用 HTML 内容作为草稿的内容
+    //   tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
+    //   status: false,
+    //   columnId: columnId,
+    // });
+    // 将标题、HTML 内容和标签保存到 localStorage 中
+    localStorage.setItem(
+        "editorDraft",
+        JSON.stringify({ title, html, tags })
+    );
     router.push(`/writer/content-management?columnId=${columnId}`);
   };
   const publish = () => {
@@ -188,6 +205,7 @@ function MyEditor() {
   const editorConfig: Partial<IEditorConfig> = {
     placeholder: "请输入内容...",
     maxLength: 1000,
+    MENU_CONF: {},
   }; // 编辑器配置
 
   useEffect(() => {
@@ -197,6 +215,93 @@ function MyEditor() {
       setEditor(null);
     };
   }, [editor]);
+
+
+  console.log(html)
+//   // 上传图片的配置
+//   const E = window.wangEditor
+//   const editor_1 = new E('#div1')
+//
+// // 配置 server 接口地址
+//   editor_1.config.uploadImgServer = '/upload-img'
+//
+//   editor_1.create()
+//
+//   editorConfig.MENU_CONF['uploadImage'] = {
+//     server: 'http://106.12.198.214:3000/api/upload-img', // 上传图片地址
+//     // server: 'http://106.12.198.214:3000/api/upload-img-10s', // 用于测试 timeout
+//     // server: 'http://106.12.198.214:3000/api/upload-img-failed', // 用于测试 failed
+//     // server: 'http://106.12.198.214:3000/api/xxx', // 用于测试 404
+//
+//     timeout: 5 * 1000, // 5s
+//
+//     fieldName: 'custom-fileName',
+//     meta: { token: 'xxx', a: 100 },
+//     metaWithUrl: true, // 参数拼接到 url 上
+//     headers: { Accept: 'text/x-json' },
+//
+//     maxFileSize: 10 * 1024 * 1024, // 10M
+//
+//     base64LimitSize: 5 * 1024, // 5kb 以下插入 base64
+//
+//     onBeforeUpload(files) {
+//       console.log('onBeforeUpload', files)
+//
+//       return files // 返回哪些文件可以上传
+//       // return false 会阻止上传
+//     },
+//     onProgress(progress) {
+//       console.log('onProgress', progress)
+//     },
+//     onSuccess(file, res) {
+//       console.log('onSuccess', file, res)
+//     },
+//     onFailed(file, res) {
+//       alert(res.message)
+//       console.log('onFailed', file, res)
+//     },
+//     onError(file, err, res) {
+//       alert(err.message)
+//       console.error('onError', file, err, res)
+//     },
+//
+//     // // 用户自定义插入图片
+//     // customInsert(res, insertFn) {
+//     //   console.log('customInsert', res)
+//     //   const imgInfo = res.data[0] || {}
+//     //   const { url, alt, href } = imgInfo
+//     //   if (!url) throw new Error(`Image url is empty`)
+//
+//     //   // 自己插入图片
+//     //   console.log('自己插入图片', url)
+//     //   insertFn(url, alt, href)
+//     // },
+//
+//     // // 用户自定义上传图片
+//     // customUpload(file, insertFn) {
+//     //   console.log('customUpload', file)
+//
+//     //   return new Promise((resolve) => {
+//     //     // 插入一张图片，模拟异步
+//     //     setTimeout(() => {
+//     //       const src = `https://www.baidu.com/img/flexible/logo/pc/result@2.png?r=${Math.random()}`
+//     //       insertFn(src, '百度 logo', src)
+//     //       resolve('ok')
+//     //     }, 500)
+//     //   })
+//     // },
+//
+//     // // 自定义选择图片（如图床）
+//     // customBrowseAndUpload(insertFn) {
+//     //   alert('自定义选择图片，如弹出图床')
+//
+//     //   // 插入一张图片，模拟异步
+//     //   setTimeout(() => {
+//     //     const src = 'https://www.baidu.com/img/flexible/logo/pc/result@2.png'
+//     //     insertFn(src, '百度 logo', src) // 插入图片
+//     //   }, 500)
+//     // },
+//   }
 
   return (
     <div className="pt-21.5">
@@ -270,7 +375,7 @@ function MyEditor() {
                     onCreated={setEditor}
                     onChange={(editor) => setHtml(editor.getHtml())}
                     mode="default"
-                    v-model="html"
+                    value={draft}
                     style={{ height: "500px", overflowY: "hidden" }}
                     className="  shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-5 p-l-10"
                   />
@@ -292,7 +397,7 @@ function MyEditor() {
                     onCreated={setEditor}
                     onChange={(editor) => setHtml(editor.getHtml())}
                     mode="default"
-                    v-model="html"
+                    value={draft}
                     style={{ height: "500px", overflowY: "hidden" }}
                     className="  shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-5 p-l-10"
                   />

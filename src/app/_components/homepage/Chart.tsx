@@ -24,7 +24,6 @@ const Chart = () => {
                     </div>
                 </div>
             </div>
-            
         </div>
     )
 }
