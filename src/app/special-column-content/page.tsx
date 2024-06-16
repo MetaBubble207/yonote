@@ -24,13 +24,10 @@ const Page = () => {
   //   return divElements;
   // }
 
-  let chapter;
-  let columnId;
-  if (typeof window !== "undefined") {
-    const params = useSearchParams();
-    chapter = parseInt(params.get("c"));
-    columnId = params.get("id");
-  }
+  const params = useSearchParams();
+  const chapter = params ? parseInt(params.get("c")) : null;
+  const columnId = params ? params.get("id") : null;
+
 
   // const handleClick = () => {
   //   setIsHeartFilled(!isHeartFilled);
