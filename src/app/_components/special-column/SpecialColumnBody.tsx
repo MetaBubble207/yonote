@@ -18,7 +18,12 @@ export const SpecialColumnBody = () => {
         userId: token[0],
         columnId: columnId,
     }).data
-
+    const [reservedStatus, setReservedStatus] = useState<boolean>(true);
+    useEffect(() => {
+        if (status) {
+            setReservedStatus(status);
+        }
+    },[status])
 
     const order = api.order.getColumnOrder.useQuery({
         columnId: columnId,
@@ -49,6 +54,8 @@ export const SpecialColumnBody = () => {
         setIsSubscribe(!isSubscribe);
         setCheck(!check);
     }
+    console.log(reservedStatus);
+    
 
     return (
         <div className={" w-full  bg-#fff rounded-t-30px lh-6 "}>
@@ -80,7 +87,7 @@ export const SpecialColumnBody = () => {
             </div>
             {renderContent()}
             {/*按钮*/}
-            {status ? <div></div> : <button
+            {reservedStatus ? <div></div> : <button
                 className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-2"}
                 onClick={setting}>
                 订阅
@@ -89,7 +96,7 @@ export const SpecialColumnBody = () => {
             <div className="fixed  top-200px   w-full">
                 {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}
             </div>
-            <div className="bg-white h-35 w-100%"></div>
+            <div className="bg-white h-25 w-100%"></div>
         </div>
     )
 }
