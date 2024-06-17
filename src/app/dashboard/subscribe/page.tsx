@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useIsFetching } from "@tanstack/react-query";
 import Loading from "../../_components/common/Loading";
+import { SearchColumn } from "@/app/_components/common/SearchColumn";
 
 const Subscribe = () => {
   const router = useRouter();
@@ -58,7 +59,7 @@ const Subscribe = () => {
   return (
     <div className="min-h-screen relative pt-8 pb-15 bg-#F5F7FB">
       <div className="w-85.75 m-auto mb-2">
-        <div className="border-rd-13 h-8.5 bg-[#FFF] flex items-center">
+        {/* <div className="border-rd-13 h-8.5 bg-[#FFF] flex items-center">
           <Image
             src={"/images/subscribe/search.png"}
             alt="search"
@@ -73,7 +74,10 @@ const Subscribe = () => {
             placeholder="仅支持搜索专栏和作者"
             className="text-3.25 text-[#999] lh-8.5 ml-1.6 justify-center outline-none w-full h-8.5 pl-1.6 border-rd-13 "
           ></input>
-        </div>
+        </div> */}
+        {/*搜索框*/}
+        <Link href={'find/search-page'}><SearchColumn ></SearchColumn></Link>
+
         {isFetching ? (
           <div className="h-20.5 w-full mt-8 items-center flex justify-center">
             <Loading></Loading>
