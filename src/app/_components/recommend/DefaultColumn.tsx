@@ -28,7 +28,7 @@ export const DefaultColumn = () => {
     <div>
       <button className="flex" onClick={toggleSortOrder}>
         <div className="ml-4 mt-2 text-[#B5B5B5] text-2.5 font-400 lh-6">
-          {sortOrder ? "顺序排序" : "默认倒序排序"}
+          {sortOrder ? "默认倒序排序" : "顺序排序"}
         </div>
         <Image
           src={"/images/recommend/sort.svg"}
