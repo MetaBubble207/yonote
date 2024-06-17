@@ -11,7 +11,7 @@ const Find=()=>{
             <div className="w-85.75 m-auto pt-8">
 
                 {/*搜索框*/}
-                <Link href={'find/search-page'}><SearchColumn ></SearchColumn></Link>
+                <Link href={'find/search-result'}><SearchColumn ></SearchColumn></Link>
 
                 {/*活动中心*/}
                 <div className="text-[#252525]  text-4.5 font-500 lh-6 mt-6 ml-1.5">活动中心</div>

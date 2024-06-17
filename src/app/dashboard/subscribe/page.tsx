@@ -76,7 +76,7 @@ const Subscribe = () => {
           ></input>
         </div> */}
         {/*搜索框*/}
-        <Link href={'find/search-page'}><SearchColumn ></SearchColumn></Link>
+        <Link href={'find/search-result'}><SearchColumn ></SearchColumn></Link>
 
         {isFetching ? (
           <div className="h-20.5 w-full mt-8 items-center flex justify-center">

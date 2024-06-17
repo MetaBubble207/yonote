@@ -12,7 +12,7 @@ export const SearchColumn = (props) => {
     const pathname = usePathname()
     const inputRef = useRef(null);
     useEffect(() => {
-        if(pathname.includes("/search-page")){
+        if(pathname.includes("/search-result")){
             inputRef.current.focus()
         }
     }, []);

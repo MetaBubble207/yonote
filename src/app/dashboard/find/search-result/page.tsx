@@ -7,6 +7,7 @@ import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
 import { timeToDateString } from "@/tools/timeToString";
 import Link from "next/link";
+import Loading from "@/app/_components/common/Loading";
 
 const Page = () => {
     const params = useSearchParams();
@@ -43,13 +44,17 @@ const Page = () => {
                     </div>
 
                     {/* 数据加载中的显示 */}
-                    {isLoading && <LoadingIndicator />}
-
-                    {/* 没有搜索结果 */}
-                    {!isLoading && searchResults.length === 0 && (
-                        <div className="text-center mt-8 text-gray-500">没有找到相关的结果。</div>
+                    {isLoading && <div className={"mt-70"}>
+                        <Loading />
+                    </div>}
+                    {/* 第一次进入页面的时候，需要显示请搜索你想搜索的专栏 */}
+                    {!searchValue && (
+                        <div className="text-center mt-8 text-gray-500">请您搜索想要搜索的内容噢~</div>
                     )}
-
+                    {/* 没有搜索结果 */}
+                    {!isLoading && searchValue && searchResults.length === 0 && (
+                        <div className="text-center mt-8 text-gray-500">没有找到相关的结果噢~</div>
+                    )}
                     {/* 渲染搜索结果 */}
                     {!isLoading && searchResults.map(item => (
                         <div key={item.id}>
