@@ -82,7 +82,7 @@ const Subscribe = () => {
           <div className="h-20.5 w-full mt-8 border-rd-2.5 bg-[#FFF] flex items-center relative">
             <Image
               style={{ objectFit: "cover" }}
-            //   fill
+              //   fill
               objectFit="cover"
               unoptimized
               src={recentColumn?.logo}
@@ -90,7 +90,7 @@ const Subscribe = () => {
               width={18.2}
               height={24.8}
               placeholder="empty"
-              className="w-11.375 h-15.5 ml-4  object-cover"
+              className="w-11.375 h-15.5 ml-4  object-cover rounded-2"
             ></Image>
             <div className="pl-2 relative h-23 pt-3">
               {recentRead && (

@@ -40,12 +40,12 @@ const Page = () => {
           <>
             {/* 内容区域 */}
             <Display token={token} ColumnInfo={ColumnInfo}></Display>
-          </> ) }
+          </>)}
 
         {/*  我的服务模块*/}
         <div
           className={
-            "w-full h-51.5 border-rd-2.5 bg-[#FFF] mt-1.5  pt-4.5 mb-3"
+            "w-full h-51.5 border-rd-2.5 bg-[#FFF] mt-1.5  pt-4.5 mb-3 pb-10"
           }
         >
           {/*标题*/}

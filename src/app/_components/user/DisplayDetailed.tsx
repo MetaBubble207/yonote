@@ -1,18 +1,18 @@
 'use client'
 import Image from "next/image";
 import Link from "next/link";
-import React, {useState} from "react";
-import {api} from "@/trpc/react";
+import React, { useState } from "react";
+import { api } from "@/trpc/react";
 
 const DisplayDetailed = (props) => {
-    const {token, userInfo} = props
+    const { token, userInfo } = props
 
     // 按钮选中状态
     const [selectButton, setSelectButton] = useState<number>(1)
 
     // 导航栏返回响应页面
     const [currentPage, setCurrentPage] = useState<number>(1)
-    const columnInfos = api.column.getAllByUserId.useQuery({userId:token }).data
+    const columnInfos = api.column.getAllByUserId.useQuery({ userId: token }).data
     console.log(columnInfos)
 
 
@@ -20,17 +20,17 @@ const DisplayDetailed = (props) => {
 
     // 订阅数量
     // const subscribeInfos = api.order.getColumnByBuyer.useQuery({BuyerID:token}).data
-    const subscribeInfos = api.order.getUserOrder.useQuery({userId:token}).data
+    const subscribeInfos = api.order.getUserOrder.useQuery({ userId: token }).data
 
 
-    const postLength = api.post.getNumById.useQuery({id:userInfo?.id}).data
+    const postLength = api.post.getNumById.useQuery({ id: userInfo?.id }).data
     // console.log("====================>",subscribe.length)
 
 
     const buttonInfos = [
-        {id: 1, label: '更新'},
-        {id: 2, label: '专栏'},
-        {id: 3, label: '小课'},
+        { id: 1, label: '更新' },
+        { id: 2, label: '专栏' },
+        { id: 3, label: '小课' },
     ]
 
     const handleButtonClick = (button: number) => {
@@ -68,7 +68,7 @@ const DisplayDetailed = (props) => {
                             className="w-15.5 h-19 rounded object-cover"
                             objectFit="cover"
                             unoptimized
-                            style={{objectFit:"cover"}}
+                            style={{ objectFit: "cover" }}
                         />
                         <div>
                             <h2
@@ -166,7 +166,7 @@ const DisplayDetailed = (props) => {
                         // fill
                         className="w-15.5 h-19 rounded object-cover"
                         objectFit="cover"
-                        style={{objectFit:"cover"}}
+                        style={{ objectFit: "cover" }}
                         unoptimized
                     />
                     <div>
@@ -234,15 +234,15 @@ const DisplayDetailed = (props) => {
         {/* 订阅数量展示 */}
         <div className={"mt-24.5 w-full flex justify-center"}>
             <div className={"flex flex-col items-center "}>
-                <p className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6"}>{subscribeInfos?.length?subscribeInfos.length:" "}</p>
+                <p className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6"}>{subscribeInfos?.length ? subscribeInfos.length : " "}</p>
                 <h2 className={"w-6.5 h-4.75 shrink-0 text-[#999] text-3 font-400 lh-6"}>订阅</h2>
             </div>
             <div className={"flex flex-col items-center ml-14"}>
-                <p className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6"}>{columnInfos?.length?columnInfos.length:" "}</p>
+                <p className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6"}>{columnInfos?.length ? columnInfos.length : " "}</p>
                 <h2 className={"w-6.5 h-4.75 shrink-0 text-[#999] text-3 font-400 lh-6"}>专栏</h2>
             </div>
             <div className={"flex flex-col items-center ml-14"}>
-                <p className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6"}>{postLength?postLength:'0'}</p>
+                <p className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6"}>{postLength ? postLength : '0'}</p>
                 <h2 className={"w-6.5 h-4.75 shrink-0 text-[#999] text-3 font-400 lh-6"}>内容</h2>
             </div>
         </div>

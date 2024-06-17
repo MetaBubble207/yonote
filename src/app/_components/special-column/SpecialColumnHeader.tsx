@@ -11,7 +11,7 @@ export const SpecialColumnHeader = () => {
     id: columnId,
   });
 
-  const {data:user,isFetching} = api.users.getOne.useQuery({
+  const { data: user, isFetching } = api.users?.getOne.useQuery({
     id: userId.data,
   });
 
@@ -21,7 +21,7 @@ export const SpecialColumnHeader = () => {
   const column = api.column.getColumnDetail.useQuery({
     columnId: columnId,
   }).data
-  
+
   return (
     <>
       <div className={"w-full absolute top-0 z-1 filter blur-sm"}>
@@ -52,59 +52,73 @@ export const SpecialColumnHeader = () => {
             />
           </div>
         </div>
-        {isFetching?<div className="pt-5"><Loading></Loading></div>:
-        <div className={"flex  mt-10px w-full"}>
-        <div className={"ml-20px  w-28.5 h-30 overflow-hidden"}>
-          <Image
-            // src={column.data?.logo ?? "/images/user/Loading.svg"}
-            src={column?.logo}
-            className="object-cover"
-            width={140}
-            height={160}
-            alt=""
-            style={{ width: "100%",objectFit:"cover" }}
-            unoptimized
-          />
-        </div>
-        <div className={"flex flex-col ml-10px space-y-0 "}>
-          <div
-            className={"text-[#FFF] text-4.5 font-not-italic font-500 lh-6"}
-          >
-            {column?.name}
-          </div>
-          <div
-            className={
-              "w-98% text-[#F2F2F2] text-3.5 font-not-italic font-400 lh-[120%] pt-5px"
-            }
-          >
-            {column?.description}
-          </div>
-          <div className={"flex pt-8px "}>
-            <Image
-              src={user?.avatar}
-              alt={""}
-              width={18}
-              height={18}
-            />
-            <div
-              className={
-                "text-[#DFDFDF] text-2.75 font-not-italic font-500 lh-18px ml-5px"
-              }
-            >
-              {user?.name}
+        {isFetching ? <div className="pt-5"><Loading></Loading></div> :
+          <div className={"flex  mt-10px w-full"}>
+            {/* <div className={"ml-20px  w-28.5 h-30 overflow-hidden"}>
+              <Image
+                // src={column.data?.logo ?? "/images/user/Loading.svg"}
+                src={column?.logo}
+                className="object-cover"
+                width={140}
+                height={160}
+                alt=""
+                style={{ width: "100%", objectFit: "cover" }}
+                unoptimized
+              />
+            </div> */}
+
+            <div className={"ml-20px  w-26 h-33 overflow-hidden mr-2.5"}>
+              <Image
+                src={column?.logo}
+                className="object-cover rounded-10px"
+                width={140}
+                height={160}
+                alt=""
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                unoptimized
+              />
             </div>
-            <Image
-              src={"/images/special-column/Group 225.png"}
-              alt={""}
-              width={12}
-              height={12}
-              className={"lh-0"}
-              style={{ objectFit: "none", marginLeft: "5px" }}
-            />
-          </div>
-        </div>
-      </div>}
-        
+
+
+            <div className={"flex flex-col ml-10px space-y-0 "}>
+              <div
+                className={"text-[#FFF] text-4.5 font-not-italic font-500 lh-6"}
+              >
+                {column?.name.length >= 10 ? column?.name.substring(0, 10) : column?.name}
+              </div>
+              <div
+                className={
+                  " text-[#F2F2F2] text-3.5 font-not-italic font-400 lh-[120%] pt-5px"
+                }
+              >
+                {column?.description?.length >= 20 ? column?.description.substring(0, 20) + '...' : column?.description}
+              </div>
+              <div className={"flex pt-8px "}>
+                <Image
+                  src={user?.avatar}
+                  alt={""}
+                  width={18}
+                  height={18}
+                />
+                <div
+                  className={
+                    "text-[#DFDFDF] text-2.75 font-not-italic font-500 lh-18px ml-5px"
+                  }
+                >
+                  {user?.name}
+                </div>
+                <Image
+                  src={"/images/special-column/Group 225.png"}
+                  alt={""}
+                  width={12}
+                  height={12}
+                  className={"lh-0"}
+                  style={{ objectFit: "none", marginLeft: "5px" }}
+                />
+              </div>
+            </div>
+          </div>}
+
 
 
       </div>

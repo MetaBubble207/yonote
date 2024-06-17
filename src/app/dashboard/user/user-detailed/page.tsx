@@ -1,6 +1,6 @@
 "use client"
 // page.tsx
-import {api} from "@/trpc/react";
+import { api } from "@/trpc/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -11,24 +11,24 @@ function User() {
     let userInfo
     const [token] = useLocalStorage("token", null)
     if (token) {
-        userInfo = api.users.getOne.useQuery({id: token}).data
+        userInfo = api.users.getOne.useQuery({ id: token }).data
     }
-    const ColumnInfo = api.column.getAllByUserId.useQuery({userId: userInfo?.id}).data
+    const ColumnInfo = api.column.getAllByUserId.useQuery({ userId: userInfo?.id }).data
 
 
     return (
         <div>
             {/*顶部*/}
-            <Link href={`/dashboard/user`}>
+            {/* <Link href={`/dashboard/user`}>
                 <Image src={"/images/writer/edit/left-c.svg"} alt={"huitui"} width={25} height={25}></Image>
-            </Link>
+            </Link> */}
             {/*背景图片*/}
             <div className="blur-24 relative h-28.25 w-full overflow-hidden">
                 {/*<img src={ImageURL} className="absolute inset-0 object-cover w-full h-full"/>*/}
                 {/*<Image src={'/images/user/avatar.svg'} alt={"头像"} width={124} height={124}*/}
                 {/*       className={"absolute inset-0 object-cover w-full h-full"}/>*/}
                 <Image src={userInfo?.avatar} alt={"头像"} width={124} height={124}
-                       className={"absolute inset-0 object-cover w-full h-full"}/>
+                    className={"absolute inset-0 object-cover w-full h-full"} />
             </div>
 
             {/*空白区域*/}
@@ -41,7 +41,7 @@ function User() {
                     {/*<Image src={'/images/user/avatar.svg'} alt={"头像"} width={83} height={83}*/}
                     {/*       className={"w-20.75 h-20.75"}/>*/}
                     <Image src={userInfo?.avatar} alt={"头像"} width={83} height={83}
-                           className={"w-20.75 h-20.75 rounded-full"}/>
+                        className={"w-20.75 h-20.75 rounded-full"} />
 
                     {/* 用户名 */}
                     <div className={"flex mt-1.25 items-center"}>
@@ -51,7 +51,7 @@ function User() {
                             </div>
                         </h2>
                         <Image className={"ml-1.25 w-5 h-5"} src={"/images/user/Rank.svg"} alt={"rank"} width={20}
-                               height={20}/>
+                            height={20} />
                     </div>
 
                     {/* ID */}
@@ -64,11 +64,11 @@ function User() {
                         {/*</div>*/}
                         <span className={"ml-  text-[#999] text-2.5 font-400 lh-6 flex items-center"}>
                             <div className={"flex w-3.75"}>
-                            <Image className={"w-1.4775 h-1.86"} src={"/images/user/I_logo.svg"} alt={"I"} width={7.44}
-                                   height={7.44}/>
-                            <Image className={"w-1.4775 h-1.86"} src={"/images/user/D_logo.svg"} alt={"D"} width={7.44}
-                                   height={7.44}/>
-                        </div>
+                                <Image className={"w-1.4775 h-1.86"} src={"/images/user/I_logo.svg"} alt={"I"} width={7.44}
+                                    height={7.44} />
+                                <Image className={"w-1.4775 h-1.86"} src={"/images/user/D_logo.svg"} alt={"D"} width={7.44}
+                                    height={7.44} />
+                            </div>
                             {userInfo?.idNumber}</span>
                     </div>
                 </div>
@@ -134,10 +134,10 @@ function User() {
 
 
                     {/*更多优质内容*/}
-                    <div className={"flex justify-center mt-18"}>
-                        <div className={"w-26 h-7 pl-3.44 shrink-0 border-rd-9 bg-[#DAF9F1]"}>
+                    <div className={" flex justify-center mt-18"}>
+                        <div className={"w-26 h-7 pl-3.44 shrink-0 border-rd-9 bg-[#daf9f1]"}>
                             <Link href="../find"
-                                  className={"w-19.12225 h-6.25 shrink-0 text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
+                                className={"w-19.12225 h-6.25 shrink-0 text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
                         </div>
                     </div>
                 </div>

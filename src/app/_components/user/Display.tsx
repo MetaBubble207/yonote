@@ -1,30 +1,30 @@
 'use client'
 import Link from "next/link";
 import Image from "next/image";
-import React, {useState} from "react";
-import {api} from "@/trpc/react";
+import React, { useState } from "react";
+import { api } from "@/trpc/react";
 import Loading from "../common/Loading";
 
-const Display = (props:{token:string;ColumnInfo:any}) => {
-    const {token, ColumnInfo} = props
+const Display = (props: { token: string; ColumnInfo: any }) => {
+    const { token, ColumnInfo } = props
     // console.log("token============>",token);
     // console.log("ColumnInfo",ColumnInfo);
     console.log("length==============>", ColumnInfo?.length);
     // const columnInfo = api.column.getAll.useQuery().data
     // console.log(columnInfo)
-   
+
 
     const buttonInfos = [
-        {id: 1, label: '专栏'},
-        {id: 2, label: '小课'}
+        { id: 1, label: '专栏' },
+        { id: 2, label: '小课' }
     ]
 
     const renderContent = () => {
         switch (currentPage) {
             case 1:
-                return <Column/>;
+                return <Column />;
             case 2:
-                return <Course/>;
+                return <Course />;
 
         }
     };
@@ -53,48 +53,48 @@ const Display = (props:{token:string;ColumnInfo:any}) => {
     //
     const renderColumn = () => {
         return ColumnInfo?.length > 0 && (
-                ColumnInfo?.slice(0,ColumnInfo?.length>1?2:1).map((item, index) => (
-                    <Link href={`/special-column?id=${item.id}`} className="flex h-14 mb-8" key={item.id}>
-                        <Image
-                            style={{objectFit:"cover"}}
-                            // src="/images/user/cover.svg"
-                            // src={Column.logo}
-                            // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
-                            src={item?.logo}
-                            alt="icon"
-                            width={74}
-                            height={100}
-                            className="w-15.5 h-19 rounded"
-                            objectFit="cover"
+            ColumnInfo?.slice(0, ColumnInfo?.length > 1 ? 2 : 1).map((item, index) => (
+                <Link href={`/special-column?id=${item.id}`} className="flex h-14 mb-8" key={item.id}>
+                    <Image
+                        style={{ objectFit: "cover" }}
+                        // src="/images/user/cover.svg"
+                        // src={Column.logo}
+                        // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
+                        src={item?.logo}
+                        alt="icon"
+                        width={74}
+                        height={100}
+                        className="w-15.5 h-19 rounded"
+                        objectFit="cover"
 
-                        />
-                        <div>
-                            <h2
-                                className={
-                                    "ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"
-                                }
-                            >
-                                {/*「心智与阅读」*/}
-                                「{item?.name}」
-                            </h2>
-                            <p
-                                className={
-                                    'w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
-                                }
-                            >
-                                {item?.introduce}
-                            </p>
-                        </div>
+                    />
+                    <div>
+                        <h2
+                            className={
+                                "ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"
+                            }
+                        >
+                            {/*「心智与阅读」*/}
+                            「{item?.name}」
+                        </h2>
+                        <p
+                            className={
+                                'w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
+                            }
+                        >
+                            {item?.introduce}
+                        </p>
+                    </div>
 
-                    </Link>
-                ))
-            )
-        }
-        // return ColumnInfo.map((item,index)=>(
-        //     <>
-        //
-        //     </>
-        // ))
+                </Link>
+            ))
+        )
+    }
+    // return ColumnInfo.map((item,index)=>(
+    //     <>
+    //
+    //     </>
+    // ))
 
 
     // 按钮选中状态
@@ -178,7 +178,7 @@ const Display = (props:{token:string;ColumnInfo:any}) => {
 
     return (
         <>
-            <div className="w-full pb-10 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4">
+            <div className="w-full pb-2 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4">
 
                 {/* 导航区域 */}
                 <div className="flex ">
