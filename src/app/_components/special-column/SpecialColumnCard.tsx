@@ -39,7 +39,7 @@ export const SpecialColumnCard = (props) => {
         if (item.content && item.content.length > 30) {
             setPostContent(item.content = item.content.substring(0, 30) + "...");
         } else {
-            setPostContent(item.content + "...")
+            setPostContent(item.content)
         }
     }, [item.content])
     return (
