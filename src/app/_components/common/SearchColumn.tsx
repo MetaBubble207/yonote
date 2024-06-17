@@ -2,8 +2,12 @@
 import Image from "next/image";
 import React, {useState, useEffect, useRef} from "react";
 import {usePathname, useRouter} from "next/navigation";
-
+import { message } from 'antd';
 export const SearchColumn = (props) => {
+    const [messageApi, contextHolder] = message.useMessage();
+    const info = () => {
+        messageApi.info("请输入内容再进行搜索😯~");
+    };
     const {SearchValue} = props
     const pathname = usePathname()
     const inputRef = useRef(null);
@@ -16,7 +20,10 @@ export const SearchColumn = (props) => {
     const [searchValue, setSearchValue] = useState(SearchValue);
     const handleKeyDown =  (event) => {
         if (event.key === 'Enter') {
-            setSearchValue(searchValue);
+            if(searchValue === '' || !searchValue){
+                info()
+                return
+            }
             router.push(`/dashboard/find/search-result?query=${searchValue}`);
         }
 
@@ -26,7 +33,7 @@ export const SearchColumn = (props) => {
     }
     return (
         <div className="w-full inline border-rd-13 h-8.5 bg-[#FFF] flex items-center">
-
+            {contextHolder}
             <Image src={"/images/subscribe/search.png"} alt="search" width={18} height={18} className="inline ml-5.25 w-4.5 h-4.5" />
             <input
                 ref={inputRef}
