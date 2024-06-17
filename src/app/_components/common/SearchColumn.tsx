@@ -1,14 +1,18 @@
 "use client"
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
-import { api } from "@/trpc/react";
-import {router} from "next/client";
-import {useRouter} from "next/navigation";
+import React, {useState, useEffect, useRef} from "react";
+import {usePathname, useRouter} from "next/navigation";
 
 export const SearchColumn = (props) => {
     const {SearchValue} = props
+    const pathname = usePathname()
+    const inputRef = useRef(null);
+    useEffect(() => {
+        if(pathname.includes("/search-page")){
+            inputRef.current.focus()
+        }
+    }, []);
     const router = useRouter();
-
     const [searchValue, setSearchValue] = useState(SearchValue);
     const handleKeyDown =  (event) => {
         if (event.key === 'Enter') {
@@ -25,6 +29,7 @@ export const SearchColumn = (props) => {
 
             <Image src={"/images/subscribe/search.png"} alt="search" width={18} height={18} className="inline ml-5.25 w-4.5 h-4.5" />
             <input
+                ref={inputRef}
                 type="search"
                 value={searchValue}
                 onChange={handleSearchChange}
