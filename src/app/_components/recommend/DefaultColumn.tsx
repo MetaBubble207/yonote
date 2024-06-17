@@ -38,7 +38,7 @@ export const DefaultColumn = () => {
                     {item.name}
                   </div>
                   <div className="text-[#666] text-3.25 font-400 lh-[120%] mt-2">
-                    情绪价值波动，上上签，愤怒，变化，偏执，创造
+                    {item.introduce}
                   </div>
                 </div>
               </div>
