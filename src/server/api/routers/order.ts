@@ -174,14 +174,16 @@ export const orderRouter = createTRPCRouter({
         .input(z.object({
             userId: z.string(),
             status: z.boolean(),
+            columnId: z.string()
         }))
         .mutation(async ({ ctx, input }) => {
             const result = await ctx.db.update(order)
                 .set({ status: !input.status })
-                .where(eq(order.buyerId, input.userId))
+                .where(and(eq(order.buyerId, input.userId),eq(order.columnId,input.columnId)))
                 .returning({
                     buyerId: order.buyerId,
                     status: order.status,
+                    columnId: order.columnId
                 });
 
             return result[0]; // 确保只返回更新后的单个对象
