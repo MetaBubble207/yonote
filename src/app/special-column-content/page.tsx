@@ -65,7 +65,6 @@ const Page = () => {
 
 
 
-
   const [date, setDate] = useState("");
   const [name, setName] = useState("");
   const [tags, setTags] = useState<string[]>([]);
@@ -93,7 +92,7 @@ const Page = () => {
   }).data;
 
   const status = api.order.getUserStatus.useQuery({
-    userId: token[0],
+    userId: token,
     columnId: columnId,
   }).data
 
@@ -439,7 +438,7 @@ const Page = () => {
               )
                 : (
                   // <Link className="flex flex-col" href={`../special-column-content?c=${chapter - 1}&id=${columnId}`}>
-                  <div className="flex flex-col" onClick={prepost?.isFree || status ? preLink : alertMessage}>
+                  <div className="flex flex-col" onClick={prepost?.isFree || status || columnDetail?.userId===token? preLink : alertMessage}>
                     <div className={"flex items-center"}>
                       <div>
                         <img
@@ -497,7 +496,7 @@ const Page = () => {
 
                 // nextpost?.data.isFree || status ? (<div>hellop</div>)
                 //   : (<div></div>)
-                <div className="flex flex-col ml-auto" onClick={nextpost?.isFree || status ? nextLink : alertMessage}>
+                <div className="flex flex-col ml-auto" onClick={nextpost?.isFree || status || columnDetail?.userId===token? nextLink : alertMessage}>
                   <div className={"flex items-center justify-end"}>
                     <div
                       className={
