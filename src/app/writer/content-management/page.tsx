@@ -1,20 +1,31 @@
-"use client"
-import React from 'react';
+"use client";
+import React, { useRef, useState } from 'react';
 import MyPagination from '@/app/_components/pagination/page';
 import Date from "@/app/_components/datarange/Date";
-import {ContentForm} from "@/app/_components/writer/ContentForm";
+import { ContentForm } from "@/app/_components/writer/ContentForm";
 import Link from 'next/link';
-import {useSearchParams} from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
-    // const statusClassName = `px-2 py-1 rounded-full ${isTop ? 'bg-yellow-500' : 'bg-transparent'} ${isFree ? 'text-white bg-green-500' : 'text-gray-700 bg-gray-200'}`;
     let columnId;
 
-    if(typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
         const params = useSearchParams();
         columnId = params.get("columnId");
     }
-    // 表格内容
+
+    const titleRef = useRef(null);
+    const tagRef = useRef(null);
+    const [searchParams, setSearchParams] = useState({ title: "", tag: "" });
+
+    const handleSearch = () => {
+        const titleValue = titleRef.current.value;
+        const tagValue = tagRef.current.value;
+        console.log("内容标题:", titleValue);
+        console.log("标签:", tagValue);
+        setSearchParams({ title: titleValue, tag: tagValue });
+    };
+
     return (
         <div className={'w-full h-full mt-16px ml-18px'}>
             <div className={'w-92% min-h-155 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] relative pb-120px'}>
@@ -25,29 +36,40 @@ const Page = () => {
                 </div>
 
                 {/*justify-between*/}
-                <div className={'flex  ml-32.5px mt-30px'}>
-                   <div>
-                       <label className='text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5'>内容标题: </label>
-                       <input
-                           className=' ml-4 w-56 h-8 pl-3.045 shrink-0 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] lh-8'
-                           type="text" placeholder="搜索标题"/>
-                   </div>
+                <div className={'flex ml-32.5px mt-30px'}>
+                    <div>
+                        <label className='text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5'>内容标题: </label>
+                        <input
+                            className='ml-4 w-56 h-8 pl-3.045 shrink-0 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] lh-8'
+                            type="text"
+                            placeholder="搜索标题"
+                            ref={titleRef}
+                        />
+                    </div>
 
                     <div className={'ml-32px'}>
                         <label className='text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5'>标签: </label>
                         <input
-                            className=' ml-4 w-56 h-8 pl-3.045 shrink-0 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] lh-8'
-                            type="text" placeholder="不限"/>
+                            className='ml-4 w-56 h-8 pl-3.045 shrink-0 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] lh-8'
+                            type="text"
+                            placeholder="不限"
+                            ref={tagRef}
+                        />
                     </div>
                     <div className={"flex items-center ml-32px"}>
                         <label className='text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5 mr-10px'>发布时间: </label>
                         <Date></Date>
                     </div>
-                    <div className={'inline-block h-32px border-rd-1 bg-[#1DB48D] text-[#fff] px-16px font-400 text-3.5 lh-32px mx-56px'}>查询</div>
+                    <button
+                        className={'inline-block h-32px border-rd-1 bg-[#1DB48D] text-[#fff] px-16px font-400 text-3.5 lh-32px mx-56px'}
+                        onClick={handleSearch}
+                    >
+                        查询
+                    </button>
                 </div>
 
                 {/*表格*/}
-                <ContentForm></ContentForm>
+                <ContentForm title={searchParams.title} tag={searchParams.tag} />
 
                 {/*底部分页*/}
                 <div className={'absolute bottom-10 left-60 flex justify-center items-center'}>

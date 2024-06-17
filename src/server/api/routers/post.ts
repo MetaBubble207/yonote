@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { column, post, user } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
+import {and, eq, like} from "drizzle-orm";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 
 export const postRouter = createTRPCRouter({
@@ -164,5 +164,11 @@ export const postRouter = createTRPCRouter({
             // 过滤掉重复和空值
             const tags = [...new Set(res)].filter(item => item !== "");
             return tags;
-        })
+        }),
+    getByName:publicProcedure
+        .input(z.object({ title: z.string() ,tag:z.string()}))
+        .query(async ({ ctx, input })=>{
+            const userData = await ctx.db.select().from(post).where(and(like(post.name,`%${input.title}%`),like(post.tag,`%${input.tag}%`)));
+            console.log(userData)
+})
 });
