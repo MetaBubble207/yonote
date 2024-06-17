@@ -126,11 +126,6 @@ const Column = () => {
     setShowColumnPopup(false);
   };
 
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
-
-
   return (
     <>
       <div className="w-64.77925 shrink-0 border-rd-1.25 bg-#fff flex items-center  pl-12.995" onClick={() => setShowColumnPopup(!showColumnPopup)}>
@@ -148,7 +143,7 @@ const Column = () => {
         {showColumnPopup &&
         <div>
           <button className="absolute right-4 top-2" onClick={() => setShowColumnPopup(!showColumnPopup)}>X</button>
-           <ColumnPopup columns={columns} onImageClick={handleImageClick} />
+            {isLoading ? <Loading/> :<ColumnPopup columns={columns} onImageClick={handleImageClick}/>}
         </div>
        }
       </div>
