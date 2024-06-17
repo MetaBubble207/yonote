@@ -29,9 +29,11 @@ export const SpecialColumn = () => {
                 return <CreateAtQueryColumn/>;
             case "创作时间":
                 return <CreateAtQueryColumn/>;
-
         }
     }
+
+    
+
     const getCategoryStyle = (category:string ) => {
         if (category === activeCategory) {
             return {
@@ -45,6 +47,8 @@ export const SpecialColumn = () => {
             };
         }
     };
+
+
 
 
     return (
@@ -94,13 +98,16 @@ export const SpecialColumn = () => {
                         </div>
                     </div>
 
-                    <div className="flex">
-                        <div className=" mt-2 text-[#B5B5B5] text-2.5 font-400 lh-6">默认倒序排序</div>
-                        <button>
-                            <Image src={"/images/recommend/sort.svg"} alt={"sort"} width={12} height={12} className="w-3 h-3 mt-1.5 ml-1.25"/>
-                        </button>
+                    
+                    {/* <button className="flex">
+                        <div className=" mt-2 text-[#B5B5B5] text-2.5 font-400 lh-6">默认倒序排序</div>  
+                        <Image src={"/images/recommend/sort.svg"} alt={"sort"} width={12} height={12} className="w-3 h-3 mt-3.5 ml-1.25"/>
+                    </button> */}
+                    
 
-                    </div>
+                    
+
+
                 </div>
             </div>
 
