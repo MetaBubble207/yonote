@@ -22,16 +22,27 @@ export const ColumnCard = ({columnData}) => {
                         ></Image>
                     </div>
                     <div className="w-250px h-64px mt-1 ml-3">
-                        <div className="text-[#252525] text-3.75 font-500 lh-6 ">
+                        <div className="text-[#252525] text-3.75 font-500 lh-6 w-80%" style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap'
+                        }}>
                             {columnData.name}
                         </div>
-                        <div className="text-[#666] text-3.25 h-10 font-400 mt-2 overflow-hidden relative">
+                        <div className="text-[#666] text-3.25 h-10 w-80% font-400 mt-2 overflow-hidden relative" style={{
+                            display: '-webkit-box',
+                            WebkitBoxOrient: 'vertical',
+                            WebkitLineClamp: 2,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                        }}>
                             {columnData.introduce}
-                            <div className="absolute bottom-0 right-0 w-full h-4 bg-gradient-to-t from-white"></div>
+                            {/*<div className="absolute bottom-0 right-0 w-full h-4 bg-gradient-to-t from-white"></div>*/}
                         </div>
+
                     </div>
                 </div>
-                <div className={"flex items-center justify-between w-full pt-3"}>
+                <div className={"flex items-center justify-between w-full pt-6 mb-4"}>
                     <div className="flex items-center">
                         <Image
                             src={columnData.user?.avatar ?? "/images/user/Loading.svg"}
