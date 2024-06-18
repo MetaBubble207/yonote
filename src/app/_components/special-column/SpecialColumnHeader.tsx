@@ -20,7 +20,7 @@ export const SpecialColumnHeader = () => {
   // });
   const column = api.column.getColumnDetail.useQuery({
     columnId: columnId,
-  }).data
+  }).data;
 
   return (
     <>
@@ -52,7 +52,11 @@ export const SpecialColumnHeader = () => {
             />
           </div>
         </div>
-        {isFetching ? <div className="pt-5"><Loading></Loading></div> :
+        {isFetching ? (
+          <div className="pt-5">
+            <Loading></Loading>
+          </div>
+        ) : (
           <div className={"flex  mt-10px w-full"}>
             {/* <div className={"ml-20px  w-28.5 h-30 overflow-hidden"}>
               <Image
@@ -67,7 +71,11 @@ export const SpecialColumnHeader = () => {
               />
             </div> */}
 
-            <div className={"ml-20px  w-26 h-33 overflow-hidden mr-2.5 bg-#f2f2f2 rounded-10px"}>
+            <div
+              className={
+                "ml-20px  w-28 h-33 overflow-hidden mr-2.5 bg-#f2f2f2 rounded-10px"
+              }
+            >
               <Image
                 src={column?.logo}
                 className="object-cover rounded-10px"
@@ -79,27 +87,25 @@ export const SpecialColumnHeader = () => {
               />
             </div>
 
-
             <div className={"flex flex-col ml-10px space-y-0 "}>
               <div
                 className={"text-[#FFF] text-4.5 font-not-italic font-500 lh-6"}
               >
-                {column?.name.length >= 10 ? column?.name.substring(0, 10) : column?.name}
+                {column?.name.length >= 10
+                  ? column?.name.substring(0, 10)
+                  : column?.name}
               </div>
               <div
                 className={
-                  " text-[#F2F2F2] text-3.5 font-not-italic font-400 lh-[120%] pt-5px"
+                  " text-[#F2F2F2] text-3.5 font-not-italic font-400 lh-[120%] pt-5px h-10"
                 }
               >
-                {column?.description?.length >= 20 ? column?.description.substring(0, 20) + '...' : column?.description}
+                {column?.description?.length >= 20
+                  ? column?.description.substring(0, 20) + "..."
+                  : column?.description}
               </div>
               <div className={"flex pt-8px "}>
-                <Image
-                  src={user?.avatar}
-                  alt={""}
-                  width={18}
-                  height={18}
-                />
+                <Image src={user?.avatar} alt={""} width={18} height={18} />
                 <div
                   className={
                     "text-[#DFDFDF] text-2.75 font-not-italic font-500 lh-18px ml-5px"
@@ -117,10 +123,8 @@ export const SpecialColumnHeader = () => {
                 />
               </div>
             </div>
-          </div>}
-
-
-
+          </div>
+        )}
       </div>
     </>
   );

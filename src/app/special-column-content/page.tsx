@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import { timeToDateString } from "@/tools/timeToString";
-
+import Loading from "../_components/common/Loading";
 
 const Page = () => {
   const router = useRouter();
@@ -41,10 +41,10 @@ const Page = () => {
   const [token] = useLocalStorage("token", null);
 
 
-  const postData = api.post.getById.useQuery({
+  const {data: postData, isFetching} = api.post.getById.useQuery({
     id: columnId,
     chapter: chapter
-  }).data;
+  });
   const prepost = api.post.getById.useQuery({
     id: columnId,
     chapter: chapter - 1
@@ -74,17 +74,17 @@ const Page = () => {
   const [nexttitle, setNexttitle] = useState(null);
   const [isHeartFilled, setIsHeartFilled] = useState(false);
 
-  const postId = api.like.getPostId.useQuery({
+  const postId = api.post.getPostId.useQuery({
     id: columnId,
     chapter: chapter,
-  })
+  }).data;
   const likeList = api.like.getLikeList.useQuery({
-    postId: postId.data,
+    postId: postId,
     userId: token
   }).data;
 
   const getLikeCount = api.like.getLikeCount.useQuery({
-    postId: postId.data,
+    postId: postId,
   }).data;
 
   const columnDetail = api.column.getColumnDetail.useQuery({
@@ -217,7 +217,7 @@ const Page = () => {
   const likehandle = () => {
     if (likeList.length === 0) {
       createLike.mutate({
-        postId: postId.data,
+        postId: postId,
         userId: token,
         isLike: true
       },
@@ -225,12 +225,12 @@ const Page = () => {
       )
     } else {
       updateLike.mutate({
-        postId: postId.data,
+        postId: postId,
         userId: token,
         isLike: !isHeartFilled
       }),
         uptime.mutate({
-          postId: postId.data,
+          postId: postId,
           userId: token,
         })
     }

@@ -170,5 +170,14 @@ export const postRouter = createTRPCRouter({
         .query(async ({ ctx, input })=>{
             const userData = await ctx.db.select().from(post).where(and(like(post.name,`%${input.title}%`),like(post.tag,`%${input.tag}%`)));
             console.log(userData)
-})
+    }),
+    getPostId:publicProcedure
+        .input(z.object({id:z.string(),chapter:z.number()}))
+        .query(async ({ ctx, input }) => {
+            const postId = await ctx.db.query.post.findFirst({
+                where: and(eq(post.columnId, input.id),eq(post.chapter, input.chapter)),
+            })
+            return postId.id;
+        })
+
 });
