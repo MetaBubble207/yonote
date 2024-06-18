@@ -68,7 +68,7 @@ export const SortLabel = (props) => {
 
     return (
         <div>
-            <div className="flex mt-23px overflow-scroll pr-3">
+            <div className="flex mt-23px overflow-scroll pr-3" >
                 <div
                     className="pl-3 pr-3 h-6 shrink-0 bg-rgba(69,225,184,0.20) ml-2 mr-2 text-center text-[#1DB48D] text-3.25 font-not-italic font-400 lh-6 border-rd-1"
                     onClick={() => handleCategoryClick("全部")}
@@ -98,7 +98,8 @@ export const SortLabel = (props) => {
                         onClick={() => handleCategoryClick(item)}
                         style={getCategoryStyle(item)}
                     >
-                        {item}
+                        {/* {item.substring(0, 10)} */}
+                        {item.length > 10 ? item.substring(0, 10) + "..." : item}
                     </div>
                 ))}
 

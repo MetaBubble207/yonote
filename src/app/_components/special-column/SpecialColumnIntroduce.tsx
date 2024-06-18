@@ -19,7 +19,7 @@ export const SpecialColumnIntroduce = () => {
     };
 
     return (
-        <div className={"w-91.5% mt-20px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-10px"} >
+        <div className={"w-91.5% mt-20px ml-16px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-10px ws-normal break-all"} >
             {/*上方文字*/}
             {/* <div onClick={() => router.push('/special-column/content')}>
                 <p className={"text-[#252525] text-3.75 font-not-italic font-500 lh-6 text-3.75 pt-16.5px"}>「开播的第3年，P人沉浸于J人的世界时间我是乱打的」</p>
@@ -64,8 +64,7 @@ export const SpecialColumnIntroduce = () => {
                     <div className={"text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-4px"}>1.2k</div>
                 </div>
             </div> */}
-            
-            {column?.introduce?column.introduce:"暂无数据"}
+            {column?.introduce?column.introduce:"暂无数据"}     
         </div>
     )
 }
