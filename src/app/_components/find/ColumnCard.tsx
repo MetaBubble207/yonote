@@ -11,7 +11,7 @@ export const ColumnCard = ({columnData}) => {
         <Link href={`/special-column?id=${columnData.id}`}>
             <div className="w-85.75 h-33.75 border-rd-5 bg-[#FFF] pr-4 pl-2.5 ">
                 <div className="flex h-19 pt-2">
-                    <div className={"w-62px h-76px relative"}>
+                    <div className={"w-62px h-76px relative shrink-0"}>
                         <Image
                             src={columnData.logo ?? "/images/user/Loading.svg"}
                             alt="cover"

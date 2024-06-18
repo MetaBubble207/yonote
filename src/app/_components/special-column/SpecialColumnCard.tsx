@@ -50,7 +50,7 @@ export const SpecialColumnCard = (props) => {
                 {/*左边图片*/}
                 {item?.logo && (
                     <div className={"border-rd-2 w-30%"}>
-                        <Image src={item?.logo} alt={"小专栏图片"} width={85} height={74.5}
+                        <Image src={item?.logo?item?.logo:"images/recommend/cover.svg"} alt={"小专栏图片"} width={85} height={74.5}
                             className={"rounded-6px"} style={{ width: "100%" }} />
                     </div>
                 )}
@@ -59,7 +59,7 @@ export const SpecialColumnCard = (props) => {
                 <div className={"ml-8px w-67% "}>
                     <div className={" text-[#252525] text-3.75 font-500 lh-6 text-3.75 "}>
                         <span>
-                            {item.name}
+                            {item?.name?item?.name:"未知专栏"}
                         </span>
                         {
                             item?.isTop && <span
@@ -98,13 +98,13 @@ export const SpecialColumnCard = (props) => {
                 {user && <>
                     {/*左边头像*/}
                     <div>
-                        <Image src={user.avatar} alt={"心智与阅读"} width={23} height={23} className={"rounded-full"} />
+                        <Image src={user?.avatar?user?.avatar:"images/recommend/cover.svg"} alt={"心智与阅读"} width={23} height={23} className={"rounded-full"} />
                     </div>
                     {/*昵称，日期，VIP*/}
                     <div>
                         <div className={"flex items-center"}>
                             <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
-                                {user.name}
+                                {user?.user?user?.name:"未知用户"}
                             </div>
                             <div>
                                 <Image src={"/images/special-column/Group 225.png"} alt={"心智与阅读"} width={12} height={12} className={"lh-0"} style={{ marginLeft: "2.5px" }} />
