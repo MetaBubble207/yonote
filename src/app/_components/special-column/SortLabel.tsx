@@ -55,7 +55,7 @@ export const SortLabel = (props) => {
     const Body = () => {
         return <>
             <Suspense>
-                {!isFetched ? <Loading></Loading> : null}
+                {!isFetched ? <div className="relative w-full mt-7 bg-#fff h-100"><Loading></Loading></div> : null}
                 {postInfo && postInfo.length > 0
                     && postInfo.map((item: any, index) => (
                         <SpecialColumnCard key={item.id} index={index} item={item} user={user} data={status} />

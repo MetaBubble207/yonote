@@ -24,15 +24,15 @@ const Page = () => {
     // const [SubscriptionData, setSubscriptionData] = useState(null);
     const params = useSearchParams();
     // 获取当前专栏ID
-    // const columnId = params.get("columnId")
-    const columnId = 'aasda123'
+    const columnId = params.get("columnId")
+    // const columnId = 'aasda123'
 
 
     // 通过当前专栏ID 查阅订阅表，拿订阅用户
     const buyerInfos = api.subscription.getAllBuyers.useQuery({columnId: columnId}).data
     // console.log('=======================>buyerInfos',buyerInfos);
-    const data = api.column.getColumnInfo.useQuery({columnId: columnId}).data
-    const [filteredItems, setFilteredItems] = useState<Item[]>([]);
+    // const data = api.column.getColumnInfo.useQuery({columnId: columnId}).data
+    // const [filteredItems, setFilteredItems] = useState<Item[]>([]);
 
 
     // console.log('========================>',buyerInfos===undefined?'null':buyerInfos[0].columnId)

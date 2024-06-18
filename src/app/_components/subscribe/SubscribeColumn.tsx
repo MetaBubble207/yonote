@@ -2,12 +2,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { timeToDateString } from "@/tools/timeToString";
+import React from "react";
 
 const SubscribeColumn = (prop) => {
-  console.log(prop);
   const column = prop.column;
   return (
-    <Link href={`../special-column-content?c=1&id=${column.id}`}>
+    <Link href={`../special-column?id=${column.id}`}>
       <div className="h-29.25 mt-4 flex">
         <div className="relative h-18">
           <Image
@@ -39,18 +39,19 @@ const SubscribeColumn = (prop) => {
               <div className="text-[#252525] text-3.75 font-500 lh-6">
                 {column.name}
               </div>
-              <div className="pt-2 text-[#666] text-3.25">
+              <div className="text-[#666] text-3.25 h-10 font-400 mt-2 overflow-hidden relative">
                 {column.introduce}
+                <div className="absolute bottom-0 right-0 w-full h-4 bg-gradient-to-t from-white"></div>
               </div>
             </div>
             <Image
-              src={"/images/subscribe/cover.png"}
-              alt="cover"
-              width={24}
-              height={24}
-              className="w-15.5 h-19 ml-3"
-              unoptimized
-              style={{ objectFit: "cover" }}
+                src={column.logo ?? "/images/subscribe/cover.png"}
+                alt="cover"
+                width={24}
+                height={24}
+                className="w-15.5 h-19 ml-3"
+                unoptimized
+                style={{objectFit: "cover"}}
             ></Image>
           </div>
         </div>

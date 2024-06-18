@@ -1,0 +1,79 @@
+import Image from "next/image";
+import {timeToDateString} from "@/tools/timeToString";
+import Link from "next/link";
+import React from "react";
+
+export const ColumnCard = ({columnData}) => {
+    return (
+        <Link href={`/special-column?id=${columnData.id}`}>
+            <div className="w-85.75 h-33.75 border-rd-5 bg-[#FFF] pr-4 pl-2.5 ">
+                <div className="flex h-19 pt-2">
+                    <div className={"w-62px h-76px relative"}>
+                        <Image
+                            src={columnData.logo ?? "/images/user/Loading.svg"}
+                            alt="cover"
+                            layout='fill'
+                            objectFit='cover'
+                            quality={100}
+                            className="border-rd-2"
+                        ></Image>
+                    </div>
+                    <div className="w-250px h-64px mt-1 ml-3">
+                        <div className="text-[#252525] text-3.75 font-500 lh-6 ">
+                            {columnData.name}
+                        </div>
+                        <div className="text-[#666] text-3.25 h-10 font-400 mt-2 overflow-hidden relative">
+                            {columnData.introduce}
+                            <div className="absolute bottom-0 right-0 w-full h-4 bg-gradient-to-t from-white"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className={"flex items-center justify-between w-full pt-3"}>
+                    <div className="flex items-center">
+                        <Image
+                            src={columnData.user?.avatar ?? "/images/user/Loading.svg"}
+                            alt="user_image"
+                            width={24}
+                            height={24}
+                            className="rounded-full"
+                        ></Image>
+                        <div className="ml-1">
+                            <div className="flex text-[#999] text-2.75 lh-4">
+                                {columnData.user?.name}
+                            </div>
+                            <div className="text-[#B5B5B5] text-2.75 lh-4">
+                                {timeToDateString(columnData.createdAt)}发布
+                            </div>
+                        </div>
+                    </div>
+                    <div className={"flex"}>
+                        <div className="flex items-center">
+                            <Image
+                                src={"/images/recommend/rss.svg"}
+                                alt="rss"
+                                width={5}
+                                height={5}
+                                className="w-4.5 h-4.5 "
+                            ></Image>
+                            <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
+                                1.2k
+                            </div>
+                        </div>
+                        <div className="flex items-center">
+                            <Image
+                                src={"/images/recommend/open.svg"}
+                                alt="open"
+                                width={5}
+                                height={5}
+                                className=" w-4.5 h-4.5 ml-7"
+                            ></Image>
+                            <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
+                                1.2k
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Link>
+    )
+}
