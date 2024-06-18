@@ -111,6 +111,7 @@ const Display = (props: { token: string; ColumnInfo: any }) => {
     const Course = () => {
         return (
             <div className={'flex justify-center items-center'}>
+                <div className="text-center text-[#B5B5B5] mt-4 h-10">暂无数据哦~</div>    
                 {/* <h1>暂无数据</h1> */}
                 {/*<div className="flex h-14 mb-8">*/}
                 {/*    <Image*/}
