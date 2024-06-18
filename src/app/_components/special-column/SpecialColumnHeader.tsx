@@ -77,7 +77,7 @@ export const SpecialColumnHeader = () => {
               }
             >
               <Image
-                src={column?.logo}
+                src={column?.logo?column?.logo:"/images/recommend/cover.svg"}
                 className="object-cover rounded-10px"
                 width={140}
                 height={160}
@@ -91,27 +91,31 @@ export const SpecialColumnHeader = () => {
               <div
                 className={"text-[#FFF] text-4.5 font-not-italic font-500 lh-6"}
               >
-                {column?.name.length >= 10
-                  ? column?.name.substring(0, 10)
-                  : column?.name}
+                {column?.name?(
+                    column?.name.length >= 10
+                    ? column?.name.substring(0, 10)
+                    : column?.name):
+                    "未知专栏"}
               </div>
               <div
                 className={
                   " text-[#F2F2F2] text-3.5 font-not-italic font-400 lh-[120%] pt-5px h-10"
                 }
               >
-                {column?.description?.length >= 20
-                  ? column?.description.substring(0, 20) + "..."
-                  : column?.description}
+                {column?.description?(
+                    column?.description?.length >= 20
+                    ? column?.description.substring(0, 20) + "..."
+                    : column?.description):
+                    "暂时没有数据"}
               </div>
               <div className={"flex pt-8px "}>
-                <Image src={user?.avatar} alt={""} width={18} height={18} />
+                <Image src={user?.avatar?user?.avatar:"/images/recommend/cover.svg"} alt={""} width={18} height={18} />
                 <div
                   className={
                     "text-[#DFDFDF] text-2.75 font-not-italic font-500 lh-18px ml-5px"
                   }
                 >
-                  {user?.name}
+                  {user?.name?user?.name:"未知用户"}
                 </div>
                 <Image
                   src={"/images/special-column/Group 225.png"}
