@@ -73,12 +73,12 @@ export const SpecialColumnHeader = () => {
 
             <div
               className={
-                "ml-20px  w-28 h-33 overflow-hidden mr-2.5 bg-#f2f2f2 rounded-10px"
+                "ml-20px  w-28 h-33 overflow-hidden mr-2.5 bg-#f2f2f2 rounded-10px shrink-0"
               }
             >
               <Image
                 src={column?.logo}
-                className="object-cover rounded-10px"
+                className="object-cover"
                 width={140}
                 height={160}
                 alt=""
