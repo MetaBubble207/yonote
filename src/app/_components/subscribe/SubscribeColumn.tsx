@@ -37,10 +37,15 @@ const SubscribeColumn = (prop) => {
           <div className="border-rd-[2px_16px_16px_16px] bg-[#FFF] h-24 mt-1 ml-2 flex items-center">
             <div className="w-49.75 pl-2.5 ">
               <div className="text-[#252525] text-3.75 font-500 lh-6">
-                {column.name}
+                {column?.name?
+                    (column?.name?.length>=20?column?.name?.substring(0, 20) + "...":column?.name)
+                    :"未知专栏"
+                }
               </div>
               <div className="text-[#666] text-3.25 h-10 font-400 mt-2 overflow-hidden relative">
-                {column.introduce}
+                {column?.introduce?
+                    (column?.introduce?.length>=25?column?.introduce?.substring(0, 25) + "...":column?.introduce)
+                    :"未知专栏"}
                 <div className="absolute bottom-0 right-0 w-full h-4 bg-gradient-to-t from-white"></div>
               </div>
             </div>

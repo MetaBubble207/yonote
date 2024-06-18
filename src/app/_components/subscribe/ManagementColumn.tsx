@@ -84,8 +84,8 @@ const ManagementColumn = forwardRef(
                                     <Image src={item ? item.logo : ''} width={100} height={100}
                                            alt={"cover"} className="w-11.375 h-15.478 rounded inline-block"></Image>
                                     <span className="ml-3 mt-3 flex flex-col">
-                                        <h3 className="text-[#252525] text-3 font-500 lh-6">{item?.name ? item?.name : "无数据"}</h3>
-                                        <h4 className="text-[#666] text-2.5 lh-[120%] mt-1">{item?.introduce ? item?.introduce : "无数据"}</h4>
+                                        <h3 className="text-[#252525] text-3 font-500 lh-6">{item?.name ? (item?.name?.length>=20?item?.name?.substring(0, 20)+"...":item?.name) : "无数据"}</h3>
+                                        <h4 className="text-[#666] text-2.5 lh-[120%] mt-1">{item?.introduce ? (item?.introduce?.length>=50?item?.introduce?.substring(0, 50)+"...":item?.introduce) : "无数据"}</h4>
                                     </span>
                                 </div>
                             </Checkbox>

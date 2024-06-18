@@ -60,7 +60,7 @@ const Display = (props: { token: string; ColumnInfo: any }) => {
                         // src="/images/user/cover.svg"
                         // src={Column.logo}
                         // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
-                        src={item?.logo}
+                        src={item?.logo ?? '/images/user/cover.svg'}
                         alt="icon"
                         width={74}
                         height={100}
@@ -75,14 +75,14 @@ const Display = (props: { token: string; ColumnInfo: any }) => {
                             }
                         >
                             {/*「心智与阅读」*/}
-                            「{item?.name}」
+                            「{item?.name ?? "未知专栏"}」
                         </h2>
                         <p
                             className={
                                 'w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
                             }
                         >
-                            {item?.introduce}
+                            {item?.introduce ?? "暂无数据"}
                         </p>
                     </div>
 

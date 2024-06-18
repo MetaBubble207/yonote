@@ -93,13 +93,13 @@ export const SpecialColumnHeader = () => {
               >
                 {column?.name?(
                     column?.name.length >= 10
-                    ? column?.name.substring(0, 10)
+                    ? column?.name.substring(0, 10) + "..."
                     : column?.name):
                     "未知专栏"}
               </div>
               <div
                 className={
-                  " text-[#F2F2F2] text-3.5 font-not-italic font-400 lh-[120%] pt-5px h-10"
+                  " text-[#F2F2F2] text-3.5 font-not-italic font-400 lh-[120%] pt-5px h-10 w-50"
                 }
               >
                 {column?.description?(
