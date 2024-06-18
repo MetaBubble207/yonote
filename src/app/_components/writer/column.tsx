@@ -135,20 +135,13 @@ const Column = () => {
               <Image src={"/images/writer/edit/Switch.svg"} alt={""} width={14.09} height={14} className={"w-3.52225 h-3.5 shrink-0 ml-2"}></Image>
             </button>
 
-            <div className="text-[#323232] text-3.5 font-not-italic font-400 ml-2 w-12%" style={{
+            <div className="text-[#323232] text-3.5 font-not-italic font-400 ml-2 w-30" style={{
               overflow :'hidden',
               textOverflow :'ellipsis',
               whiteSpace :'nowrap',
-              maxWidth:'calc(100% - 90px)'
             }}>
               {currentColumn?.name ? currentColumn?.name : "暂无数据哦~"}
             </div>
-
-
-
-
-
-
           </div>
       </div>
       <div className="left-308px top-59px absolute">
