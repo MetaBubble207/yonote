@@ -2,8 +2,11 @@ import Image from "next/image";
 import {timeToDateString} from "@/tools/timeToString";
 import Link from "next/link";
 import React from "react";
+import {api} from "@/trpc/react";
 
 export const ColumnCard = ({columnData}) => {
+    const order = api.order.getColumnOrder.useQuery({columnId: columnData?.id});
+    const read = api.read.getColumnRead.useQuery({columnId: columnData?.id});
     return (
         <Link href={`/special-column?id=${columnData.id}`}>
             <div className="w-85.75 h-33.75 border-rd-5 bg-[#FFF] pr-4 pl-2.5 ">
@@ -56,7 +59,7 @@ export const ColumnCard = ({columnData}) => {
                                 className="w-4.5 h-4.5 "
                             ></Image>
                             <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
-                                1.2k
+                                {order.data?.length}
                             </div>
                         </div>
                         <div className="flex items-center">
@@ -68,7 +71,7 @@ export const ColumnCard = ({columnData}) => {
                                 className=" w-4.5 h-4.5 ml-7"
                             ></Image>
                             <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
-                                1.2k
+                                {read?.data}
                             </div>
                         </div>
                     </div>
