@@ -68,7 +68,11 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
                 height={51.5}
                 className='block'
               />
-              <span className='mt-2'>
+              <span className='mt-2 w-30' style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}>
                 {columns[index]?.name || ' '}
               </span>
             </button>
