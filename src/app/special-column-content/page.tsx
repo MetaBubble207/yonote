@@ -343,7 +343,7 @@ const Page = () => {
             dangerouslySetInnerHTML={{ __html: content }}
           ></div>
         </div>
-        <div className="flex flex-row pt-2 relative h-6">
+        <div className="flex flex-row w-full flex-wrap pt-2 relative ws-normal whitespace-pre-line break-all">
           {tags.map((item, index) => {
             return (
               <span
@@ -394,7 +394,8 @@ const Page = () => {
                     "text-[#666] text-2.5 font-not-italic font-400 lh-14px"
                   }
                 >
-                  {columnDetail?.name}•目录
+                  {/* {columnDetail?.name}•目录 */}
+                  {columnDetail?.name.length > 20 ? columnDetail?.name.substring(0,20)+"…" : columnDetail?.name}
                 </div>
                 <div className={"ml-5px"}>
                   <img

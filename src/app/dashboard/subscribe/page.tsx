@@ -83,13 +83,13 @@ const Subscribe = () => {
             <Loading></Loading>
           </div>
         ) : (
-          <div className="h-20.5 w-full mt-8 border-rd-2.5 bg-[#FFF] flex items-center relative">
+          <div className="h-20.5 w-full mt-8 border-rd-2.5 bg-[#FFF] flex items-center relative shrink-0">
             <Image
               style={{ objectFit: "cover" }}
               //   fill
               objectFit="cover"
               unoptimized
-              src={recentColumn?.logo}
+              src={recentColumn?.logo??"/images/subscribe/cover.png"}
               alt="cover"
               width={18.2}
               height={24.8}
@@ -100,7 +100,7 @@ const Subscribe = () => {
               {recentRead && (
                 <>
                   <div className="text-3 text-[#252525] font-500 pb-1.5 lh-6">
-                    {recentRead.name}
+                    {recentRead.name?.length > 15? recentRead.name.substring(0, 15)+"...": recentRead.name}
                   </div>
                   <div
                     className="text-2.5 text-[#666] lh-3 pl-1"
