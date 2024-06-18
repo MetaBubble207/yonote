@@ -7,7 +7,9 @@ import { timeToDateString } from "@/tools/timeToString";
 
 const UserSubscriptions = () => {
     const params = useSearchParams();
-    const columnId = 'aasda123';
+    const columnId = params.get("columnId");
+
+    // const columnId = 'hkhwdhao';
 
     // 使用 useQuery 获取数据
     const { data: buyerInfos, refetch } = api.order.getOrderByColumnId.useQuery({ columnId });
@@ -44,7 +46,7 @@ const UserSubscriptions = () => {
 
     const handleChangeStatus = (buyerId: string, currentStatus: boolean) => {
         console.log(`即将修改 userId 为 ${buyerId} 的订阅状态`);
-        updateStatusApi.mutate({ userId: buyerId, status: currentStatus });
+        updateStatusApi.mutate({ userId: buyerId, status: currentStatus, columnId: columnId });
     };
 
     const ItemList: React.FC = () => {
