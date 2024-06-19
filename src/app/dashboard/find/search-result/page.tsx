@@ -63,13 +63,28 @@ const Page = () => {
                                     <div className={"flex items-start my-10px items-center w-full"}>
                                         {/* 左边图片 */}
                                         <div className={"border-rd-2 w-69px h-92px flex items-start flex-grow"}>
-                                            <div className={"flex items-center justify-center  w-100% h-100% border-rd-2 overflow-hidden"}>
-                                                <Image src={item.logo ?? "/images/user/Loading.svg"} alt={"小专栏图片"} width={69} height={92} className={"rounded-6px"} style={{ width: "100%", height:"100%"}}/>
+                                            {/*<div className={"flex items-center justify-center  w-100% h-100% border-rd-2 overflow-hidden"}>*/}
+                                            {/*    <Image src={item.logo ?? "/images/user/Loading.svg"} alt={"小专栏图片"} width={69} height={92} className={"rounded-6px"} style={{ width: "100%", height:"100%"}}/>*/}
+                                            {/*</div>*/}
+                                            <div className={"w-69px h-92px relative shrink-0"}>
+                                                <Image
+                                                    src={item.logo ?? "/images/user/Loading.svg"}
+                                                    alt="cover"
+                                                    layout='fill'
+                                                    objectFit='cover'
+                                                    quality={100}
+                                                    className="border-rd-2"
+                                                ></Image>
                                             </div>
                                         </div>
                                         {/* 右边文字 */}
                                         <div className={"ml-8px w-67% "}>
-                                            <div className={" text-[#252525] text-3.75 font-500 lh-6 text-3.75 "}>
+                                            <div className={" text-[#252525] text-3.75 font-500 lh-6 text-3.75 "}
+                                                 style={{
+                                                     overflow: 'hidden',
+                                                     textOverflow: 'ellipsis',
+                                                     whiteSpace: 'nowrap'
+                                                 }}>
                                                 {item.name}
                                             </div>
                                             {/* 右边图标 */}

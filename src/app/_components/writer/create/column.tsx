@@ -83,6 +83,7 @@ const Column = () => {
             type=""
             name=""
             id=""
+            maxLength={15}
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="起个名字"

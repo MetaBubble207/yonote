@@ -2,7 +2,7 @@ import {z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {column, order, user} from "@/server/db/schema";
-import {and, desc, eq, like, or} from "drizzle-orm";
+import {and, desc, eq, like, sql} from "drizzle-orm";
 import {uniqueArray} from "@/tools/uniqueArray";
 
 export const columnRouter = createTRPCRouter({
@@ -170,17 +170,47 @@ export const columnRouter = createTRPCRouter({
 
         }),
 
-    changeStatus: publicProcedure
-        .input(z.object({id: z.string(), isVisable: z.boolean(), userId: z.string()}))
-        .mutation(async ({ctx, input}) => {
-            const orders = await ctx.db.select().from(order).where(and(eq(order.columnId, input.id), eq(order.buyerId, input.userId)));
-            if (orders.length === 0) {
-                throw new Error("该columnId在order表中不存在");
-            }
+    //订阅量查询
+    getColumnOrderNumbers: publicProcedure
+        .query(async ({ ctx }) => {
 
-            return ctx.db.update(column).set({
-                isVisable: input.isVisable,
-            }).where(eq(column.id, input.id));
+            const columnIds = await ctx.db
+                .select({columnId:order.columnId,userId:order.ownerId})
+                .from(order)
+                .groupBy(order.columnId,order.ownerId)
+                .orderBy(sql`count(*) DESC`)
+
+            const promises = columnIds.map(async item =>{
+                const col =   await ctx.db.select().from(column).where(eq(column.id, item.columnId)).limit(1)
+                const owner = await ctx.db.select().from(user).where(eq(user.id, item.userId)).limit(1)
+                return {...col[0], user: {...owner[0]}}
+            })
+            return await Promise.all(promises);
+
+
+            // 获取所有 columns
+            // const columns = await ctx.db.select().from(column);
+            // // 创建一个数组来存储 columnId 和对应的订阅次数及详情
+            // const columnOrderNumbersWithDetails = [];
+            //
+            // // 遍历每个 column 获取对应的订阅次数
+            // for (const item of columns) {
+            //     const orderData = await ctx.db.query.order.findMany({
+            //         where: eq(order.columnId, item.id),
+            //     });
+            //
+            //     // 获取与 columnId 对应的 column 数据
+            //     const columnData = await ctx.db.select().from(column).where(eq(column.id, item.id));
+            //     // const columnData = await ctx.db.query.column.findfirst({
+            //     //     where:eq(column.id, item.id)
+            //     // })
+            //
+            //     // 将 columnId、订阅次数和 column 数据存储在数组中
+            //     columnOrderNumbersWithDetails.push({ columnId: item.id, orderCount: orderData.length, columnData });
+            // }
+            //
+            // // 按订阅次数从多到少排序
+            // columnOrderNumbersWithDetails.sort((a, b) => b.orderCount - a.orderCount);
         }),
 
 });

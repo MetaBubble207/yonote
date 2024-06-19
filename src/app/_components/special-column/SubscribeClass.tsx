@@ -8,7 +8,6 @@ const SubscribeClass = (prop) => {
     const column = prop.column;
     return (
         <Link href={`../special-column-content?c=1&id=${column.id}`}>
-            暂时还没有数据哦~~
             {/* <div className="h-29.25 mt-4 flex">
                 <div className="relative h-18">
                     <Image src={column.user?.avatar} alt="avatar" width={24} height={24} className="rounded-full w-11.25 h-11.25 mt-4"></Image>

@@ -10,6 +10,7 @@ import { orderRouter } from "./routers/order";
 import { activityRouter } from "./routers/activity";
 import { readRouter } from "./routers/read";
 import {subscriptionRouter} from "@/server/api/routers/subscription";
+import {invitationCodeRouter} from "@/server/api/routers/invitationCode";
 
 /**
  * This is the primary router for your server.
@@ -28,6 +29,7 @@ export const appRouter = createTRPCRouter({
   activity:activityRouter,
   read: readRouter,
   subscription: subscriptionRouter,
+  invitationCode:invitationCodeRouter,
 
 });
 

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import { timeToDateString } from "@/tools/timeToString";
-
+import Loading from "../_components/common/Loading";
 
 const Page = () => {
   const router = useRouter();
@@ -41,10 +41,10 @@ const Page = () => {
   const [token] = useLocalStorage("token", null);
 
 
-  const postData = api.post.getById.useQuery({
+  const {data: postData, isFetching} = api.post.getById.useQuery({
     id: columnId,
     chapter: chapter
-  }).data;
+  });
   const prepost = api.post.getById.useQuery({
     id: columnId,
     chapter: chapter - 1
@@ -74,17 +74,17 @@ const Page = () => {
   const [nexttitle, setNexttitle] = useState(null);
   const [isHeartFilled, setIsHeartFilled] = useState(false);
 
-  const postId = api.like.getPostId.useQuery({
+  const postId = api.post.getPostId.useQuery({
     id: columnId,
     chapter: chapter,
-  })
+  }).data;
   const likeList = api.like.getLikeList.useQuery({
-    postId: postId.data,
+    postId: postId,
     userId: token
   }).data;
 
   const getLikeCount = api.like.getLikeCount.useQuery({
-    postId: postId.data,
+    postId: postId,
   }).data;
 
   const columnDetail = api.column.getColumnDetail.useQuery({
@@ -217,7 +217,7 @@ const Page = () => {
   const likehandle = () => {
     if (likeList.length === 0) {
       createLike.mutate({
-        postId: postId.data,
+        postId: postId,
         userId: token,
         isLike: true
       },
@@ -225,12 +225,12 @@ const Page = () => {
       )
     } else {
       updateLike.mutate({
-        postId: postId.data,
+        postId: postId,
         userId: token,
         isLike: !isHeartFilled
       }),
         uptime.mutate({
-          postId: postId.data,
+          postId: postId,
           userId: token,
         })
     }
@@ -343,7 +343,7 @@ const Page = () => {
             dangerouslySetInnerHTML={{ __html: content }}
           ></div>
         </div>
-        <div className="flex flex-row pt-2 relative h-6">
+        <div className="flex flex-row w-full flex-wrap pt-2 relative ws-normal whitespace-pre-line break-all">
           {tags.map((item, index) => {
             return (
               <span
@@ -394,7 +394,8 @@ const Page = () => {
                     "text-[#666] text-2.5 font-not-italic font-400 lh-14px"
                   }
                 >
-                  {columnDetail?.name}•目录
+                  {/* {columnDetail?.name}•目录 */}
+                  {columnDetail?.name.length > 20 ? columnDetail?.name.substring(0,20)+"…" : columnDetail?.name}
                 </div>
                 <div className={"ml-5px"}>
                   <img

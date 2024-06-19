@@ -16,7 +16,7 @@ const Page = () => {
     // const orders = api.order.getUserOrder.useQuery({
     //     userId: token[0],
     // }).data;
-    const {data:orders,isFetched} = api.order.getUserOrder.useQuery({
+    const {data:orders,isFetched,isFetching} = api.order.getUserOrder.useQuery({
         userId: token[0],
     });
     
@@ -29,33 +29,89 @@ const Page = () => {
             setSelectedButton(button);
         }
     };
-    
+
     // 导航栏返回相应页面
     const [currentPage, setCurrentPage] = React.useState<number>(1);
     
+    // const Update = () => {
+    //     return (
+    //         <div>
+    //              {isFetching ? <div className={"mt-50"}><Loading></Loading></div>
+    //              :
+    //                  orders && orders.length > 0 && (
+    //                      <div>
+    //                          {columns && columns.length > 0 && columns.map((column: any) => (
+    //                              // 检查当前 column 是否在 orders 中存在
+    //                              orders.some(order => order.columnId === column.id) && column.isVisable && (
+    //                                  <SubscribeRenew key={column.id} column={column} />
+    //                              )
+    //                          ))}
+    //                      </div>
+    //                  )
+    //              }
+                
+    //         </div>
+    //     );
+    // };
     const Update = () => {
         return (
             <div>
-                {/* {isFetched?<div><Loading></Loading></div>: */}
-                {orders && orders.length > 0 && (
+                {isFetching ? (
+                    <div className="mt-50">
+                        <Loading />
+                    </div>
+                ) : (
                     <div>
-                        {columns && columns.length > 0 && columns.map((column: any) => (
-                            // 检查当前 column 是否在 orders 中存在
-                            orders.some(order => order.columnId === column.id) && column.isVisable && (
-                                <SubscribeRenew key={column.id} column={column} />
-                            )
-                        ))}
+                        {orders.filter(item => item.status === true) && orders.length > 0 ? (
+                            <div>
+                                {columns && columns.length > 0 && columns.map((column: any) => (
+                                    // 检查当前 column 是否在 orders 中存在
+                                    orders.some(order => order.columnId === column.id) && (
+                                        <SubscribeRenew key={column.id} column={column} />
+                                    )
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center text-[#B5B5B5] mt-20">暂无数据哦~</div>
+                        )}
                     </div>
                 )}
-                
             </div>
         );
     };
+    
+    
+
+
+
+    
+    // const Column = () => {
+    //     return (
+    //         <div>
+    //             {isFetching ? <div className={"mt-50"}><Loading></Loading></div>
+    //                 :
+    //                 orders && orders.length > 0 && (
+    //                 <div>
+    //                     {columns && columns.length > 0 && columns.map((column: any) => (
+    //                         // 检查当前 column 是否在 orders 中存在
+    //                         orders.some(order => order.columnId === column.id) && (
+    //                             <SubscribeColumn key={column.id} column={column} />
+    //                         )
+    //                     ))}
+    //                 </div>
+    //             )}
+    //             {/* {columns && columns.length > 0 && columns.map((column: any) => (
+    //                 <SubscribeColumn key={column.id} column={column} />
+    //             ))} */}
+    //         </div>
+
+    //     )
+    // };
 
     const Column = () => {
         return (
             <div>
-                {orders && orders.length > 0 && (
+                {orders.filter(item => item.status === true) && orders.length > 0 ? (
                     <div>
                         {columns && columns.length > 0 && columns.map((column: any) => (
                             // 检查当前 column 是否在 orders 中存在
@@ -64,28 +120,31 @@ const Page = () => {
                             )
                         ))}
                     </div>
+                ) : (
+                    <div className="text-center text-[#B5B5B5] mt-20">暂无数据哦~</div>
                 )}
-                {/* {columns && columns.length > 0 && columns.map((column: any) => (
-                    <SubscribeColumn key={column.id} column={column} />
-                ))} */}
             </div>
-
-        )
+        );
     };
+    
 
     const Course = () => {
         return (
             <div>
-                {orders && orders.length > 0 && (
-                    <div>
-                        {columns && columns.length > 0 && columns.map((column: any) => (
-                            // 检查当前 column 是否在 orders 中存在
-                            orders.some(order => order.columnId === column.id) && (
-                                <SubscribeClass key={column.id} column={column} />
-                            )
-                        ))}
-                    </div>
-                )}
+                {isFetching && <div className={"mt-50"}><Loading></Loading></div>}
+                {!isFetching && <div className={"w-full text-center text-[#B5B5B5] mt-20"}>暂无数据哦~</div>}
+                {/*{*/}
+                {/*    (orders && orders.length > 0) && (*/}
+                {/*        <div>*/}
+                {/*            {columns && columns.length > 0 && columns.map((column: any) => (*/}
+                {/*                // 检查当前 column 是否在 orders 中存在*/}
+                {/*                orders.some(order => order.columnId === column.id) && (*/}
+                {/*                    <SubscribeClass key={column.id} column={column} />*/}
+                {/*                )*/}
+                {/*            ))}*/}
+                {/*        </div>*/}
+                {/*)*/}
+                {/*}*/}
                 {/* {columns && columns.length > 0 && columns.map((column: any) => (
                     <SubscribeColumn key={column.id} column={column} />
                 ))} */}

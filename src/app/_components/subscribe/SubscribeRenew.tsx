@@ -49,10 +49,22 @@ const SubscribeRenew = (prop) => {
 
             <div className="w-57.5 h-21.25 mt-2 ml-3">
               <div className="text-[#252525] text-3.75 font-500 lh-6 ">
-                {column.name}
+                {column?.name?
+                    (column?.name?.length>=20?column?.name?.substring(0, 20) + "...":column?.name)
+                    :"未知专栏"
+                }
               </div>
-              <div className="text-[#666] text-3.25 font-400 lh-[120%]">
-                {column.introduce}
+              <div className="text-[#666] text-3.25 font-400 lh-[120%]"
+              style={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 5,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}>
+                {column?.introduce?
+                    (column?.introduce?.length>=100?column?.introduce?.substring(0, 100) + "...":column?.introduce)
+                    :"未知专栏"}
               </div>
             </div>
           </div>

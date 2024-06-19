@@ -128,13 +128,30 @@ const Column = () => {
 
   return (
     <>
-      <div className="w-64.77925 shrink-0 border-rd-1.25 bg-#fff flex items-center  pl-12.995" onClick={() => setShowColumnPopup(!showColumnPopup)}>
-          <Image objectFit="cover" src={currentColumn?.logo ?? "/images/user/Loading.svg"} alt={"cover"} width={58} height={75} className="h-75px border-rd-1.25"></Image>
-          <div className=" ">
+      <div className="w-64.77925 shrink-0 border-rd-1.25 bg-#fff flex items-center pl-12.995" onClick={() => setShowColumnPopup(!showColumnPopup)}>        
+          <div className="relative w-58px h-75px">
+            <Image 
+              src={currentColumn?.logo ?? "/images/user/Loading.svg"} 
+              alt={"cover"} 
+              // width={58} 
+              // height={75} 
+              objectFit="cover" 
+              layout="fill"
+              quality={100}
+              className=" border-rd-2">   
+            </Image>
+          </div>
+
+          <div>
             <button>
               <Image src={"/images/writer/edit/Switch.svg"} alt={""} width={14.09} height={14} className={"w-3.52225 h-3.5 shrink-0 ml-2"}></Image>
             </button>
-            <div className=" text-[#323232] text-3.5 font-not-italic font-400  ml-2">
+
+            <div className="text-[#323232] text-3.5 font-not-italic font-400 ml-2 w-30" style={{
+              overflow :'hidden',
+              textOverflow :'ellipsis',
+              whiteSpace :'nowrap',
+            }}>
               {currentColumn?.name ? currentColumn?.name : "暂无数据哦~"}
             </div>
           </div>

@@ -27,7 +27,7 @@ const SubscribeManage = () => {
         if (saveColumn.current && manage==true){
             console.log("123")
             saveColumn.current.handleSave();
-            window.location.reload();
+
         }
         setManage(!manage);
     }

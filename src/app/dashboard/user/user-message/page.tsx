@@ -104,7 +104,7 @@ const UserMessage = () => {
         <div>
             {/*头像*/}
 
-            <Image src={userInfo?.avatar ?? "/image/user/Loading.svg"} alt={"头像"} width={"128"} height={"128"}
+            <Image src={userInfo?.avatar?userInfo?.avatar : "/image/user/Loading.svg"} alt={"头像"} width={"128"} height={"128"}
                    className={"mt-6.75 rounded-full mx-auto w-16 h-16"}/>
 
             {/*修改头像*/}

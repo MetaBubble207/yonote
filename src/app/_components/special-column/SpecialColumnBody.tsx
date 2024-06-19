@@ -18,18 +18,32 @@ export const SpecialColumnBody = () => {
         userId: token[0],
         columnId: columnId,
     }).data
-    const [reservedStatus, setReservedStatus] = useState<boolean>(true);
-    useEffect(() => {
-        if (status) {
-            setReservedStatus(status);
-        }
-    },[status])
-
+    // const [reservedStatus, setReservedStatus] = useState<boolean>(true);
+    // useEffect(() => {
+    //     if (status) {
+            // setReservedStatus(status);
+        // }
+    // },[status])
+    // console.log(status);
+    
     const order = api.order.getColumnOrder.useQuery({
         columnId: columnId,
     })
-
+    
     const active = "text-[#252525] font-500 border-b-3 border-[#45E1B8]";
+    
+    // 是否加载订阅按钮
+    const reserverButton = () =>{
+        if(status || status === undefined){
+            return <div></div>
+        }else{
+            return <button
+            className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-2"}
+            onClick={setting}>
+            订阅
+        </button>
+        }
+    }
     const renderContent = () => {
         switch (currentContent) {
             case 1:
@@ -54,7 +68,7 @@ export const SpecialColumnBody = () => {
         setIsSubscribe(!isSubscribe);
         setCheck(!check);
     }
-    console.log(reservedStatus);
+    // console.log(reservedStatus);
     
 
     return (
@@ -87,11 +101,12 @@ export const SpecialColumnBody = () => {
             </div>
             {renderContent()}
             {/*按钮*/}
-            {reservedStatus ? <div></div> : <button
+            {/* {status ?  <div></div> : <button
                 className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-2"}
                 onClick={setting}>
                 订阅
-            </button>}
+            </button>} */}
+            {reserverButton()}
 
             <div className="fixed  top-200px   w-full">
                 {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}

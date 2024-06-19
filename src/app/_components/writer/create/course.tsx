@@ -43,16 +43,11 @@ const Course = () => {
 
     // 路由到payment页面
     const router = useRouter();
-    const pathname = usePathname();
 
 
     return(
         <div className="relative w-286.75 h-195 border-rd-[0px_0px_10px_10px] bg-[#FFF] ml-16px mt-18px pt-25.75">
             {/* <button onClick={() => router.push('/writer/create-course/payment')}>路由</button> */}
-
-            
-
-
             <div className="text-[#323232]  text-4 font-700 lh-6  ml-53.75 w-16 ">小课创建</div>
 
             <div className="flex items-center w-full h-8 mt-6 ">
