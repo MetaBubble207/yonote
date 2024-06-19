@@ -101,7 +101,6 @@ export const column = createTable(
         description: varchar("description"),
         payment: varchar("payment"),
         userId: varchar("user_id"),
-        isVisable: boolean("is_visable"),
     }
 );
 export const distributorshipDetail = createTable(

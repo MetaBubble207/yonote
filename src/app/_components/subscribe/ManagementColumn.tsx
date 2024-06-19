@@ -14,7 +14,7 @@ const ManagementColumn = forwardRef(
         );
     // const {manage} = props;
     const token = useLocalStorage("token", '');
-    const order = api.order.getUserOrder.useQuery({
+    const order = api.order.getUserOrderDefault.useQuery({
         userId: token[0],
     });
     const column = api.column.getOrderColumn.useQuery({userId: token[0]});
@@ -26,11 +26,11 @@ const ManagementColumn = forwardRef(
         setArray(checkedValues);
     };
 
-    const isVisable = api.column.getOrderColumn.useQuery({
-        userId: token[0]
-    }).data
+    // const isVisable = api.column.getOrderColumn.useQuery({
+    //     userId: token[0]
+    // }).data
 
-    console.log(isVisable)
+    // console.log(isVisable)
 
     useEffect(() => {
         console.log('selectedOptions:', array);
@@ -45,25 +45,29 @@ const ManagementColumn = forwardRef(
     })
     console.log(column.data?.length);
 
-    const changeVisable = api.column.changeStatus.useMutation({
+    const changeVisable = api.order.changeStatus.useMutation({
         onSuccess: (r) => {
             console.log(r);
+            window.location.reload();
         },
     });
-    const handleSave = () => {
-        const selectedColumnIds = array.map((index) => column.data[index].id);
 
-        column.data.forEach((item) => {
-            if (selectedColumnIds.includes(item.id)) {
+        console.log("order============>", order.data)
+    const handleSave = () => {
+        const selectedColumnIds = array.map((index) => order.data[index]?.columnId);
+
+        console.log("selectedColumnIds============>", selectedColumnIds)
+        order.data.map((item) => {
+            if (selectedColumnIds.includes(item.columnId)) {
                 changeVisable.mutate({
-                    id: item.id,
-                    isVisable: true,
+                    columnId: item.columnId,
+                    status: true,
                     userId: token[0],
                 });
             } else {
                 changeVisable.mutate({
-                    id: item.id,
-                    isVisable: false,
+                    columnId: item.columnId,
+                    status: false,
                     userId: token[0],
                 });
             }
