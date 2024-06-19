@@ -36,7 +36,7 @@ const SubscribeColumn = (prop) => {
               className="w-3 h-3"
             ></Image>
           </div>
-          <div className="text-center text-[#999]  font-500 lh-5.6 text-3 w-11 overflow-hidden">
+          <div className="text-center text-[#999]  font-500 lh-5.6 text-2.5 w-11 overflow-hidden whitespace-nowrap">
             {column.user?.name?.length >= 8?column.user?.name+"…":column.user?.name}
           </div>
         </div>
