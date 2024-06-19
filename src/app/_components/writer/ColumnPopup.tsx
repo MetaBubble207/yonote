@@ -61,13 +61,21 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
         {columns.length > 0 ? (
           currentIndices.map((index) => (
             <button key={index} onClick={() => handleImageClick(index)} className='flex flex-col items-center w-1/4'>
-              <img
-                src={columns[index]?.logo}
-                alt={`图片${index + 1}`}
-                width={160}
-                height={51.5}
-                className='block'
-              />
+              <div className='w-160px h-206px relative'>
+                <Image
+                  src={columns[index]?.logo}
+                  alt={`cover${index + 1}`}
+                  // width={160}
+                  // height={51.5}
+                  layout='fill'
+                  objectFit='cover'
+                  quality={100}
+                  className='block border-rd-2'
+                />
+              </div>
+              
+
+
               <span className='mt-2 w-30' style={{
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
