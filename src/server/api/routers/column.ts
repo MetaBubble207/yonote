@@ -183,4 +183,35 @@ export const columnRouter = createTRPCRouter({
             }).where(eq(column.id, input.id));
         }),
 
+    //订阅量查询
+    getColumnOrderNumbers: publicProcedure
+        .query(async ({ ctx }) => {
+            // 获取所有 columns
+            const columns = await ctx.db.select().from(column);
+
+            // 创建一个数组来存储 columnId 和对应的订阅次数及详情
+            const columnOrderNumbersWithDetails = [];
+
+            // 遍历每个 column 获取对应的订阅次数
+            for (const item of columns) {
+                const orderData = await ctx.db.query.order.findMany({
+                    where: eq(order.columnId, item.id),
+                });
+
+                // 获取与 columnId 对应的 column 数据
+                const columnData = await ctx.db.select().from(column).where(eq(column.id, item.id));
+                // const columnData = await ctx.db.query.column.findfirst({
+                //     where:eq(column.id, item.id)
+                // })
+
+                // 将 columnId、订阅次数和 column 数据存储在数组中
+                columnOrderNumbersWithDetails.push({ columnId: item.id, orderCount: orderData.length, columnData });
+            }
+
+            // 按订阅次数从多到少排序
+            columnOrderNumbersWithDetails.sort((a, b) => b.orderCount - a.orderCount);
+
+            return columnOrderNumbersWithDetails;
+        }),
+
 });
