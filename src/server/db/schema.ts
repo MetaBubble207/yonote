@@ -43,10 +43,6 @@ export const post = createTable(
         id: serial("id").primaryKey(),
         name: varchar("name", {length: 256}),
         userID: varchar("user_id"),
-        createdAt: timestamp("created_at")
-            .default(sql`CURRENT_TIMESTAMP`)
-            .notNull(),
-        updatedAt: timestamp("updated_at"),
         readNumber: integer("readNumber"),
         likeCount: integer("likeCount"),
         content: varchar("content"),
@@ -57,6 +53,10 @@ export const post = createTable(
         status: boolean("status"),
         logo: text("logo"),
         chapter: integer("chapter"),
+        createdAt: timestamp("created_at")
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
     },
     (example) => ({
         nameIndex: index("name_idx").on(example.name),
@@ -68,10 +68,6 @@ export const user = createTable(
     {
         id: varchar("id", {length: 256}).primaryKey(),
         name: varchar("name", {length: 256}),
-        createdAt: timestamp("created_at")
-            .default(sql`CURRENT_TIMESTAMP`)
-            .notNull(),
-        updatedAt: timestamp("updated_at"),
         phone: varchar("phone"),
         idNumber: varchar("id_number"),
         password: integer("password"),
@@ -80,6 +76,10 @@ export const user = createTable(
         weChat: varchar("we_chat"),
         endDate: timestamp("end_date"),
         sex: integer("sex"),
+        createdAt: timestamp("created_at")
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
     }
 );
 
@@ -89,10 +89,6 @@ export const column = createTable(
     {
         id: varchar("id").primaryKey(),
         name: varchar("name", {length: 256}),
-        createdAt: timestamp("created_at")
-            .default(sql`CURRENT_TIMESTAMP`)
-            .notNull(),
-        updatedAt: timestamp("updated_at"),
         distributorship: boolean("distributorship").notNull().default(false),
         introduce: varchar("introduce"),
         type: varchar("type"),
@@ -101,18 +97,26 @@ export const column = createTable(
         description: varchar("description"),
         payment: varchar("payment"),
         userId: varchar("user_id"),
+        createdAt: timestamp("created_at")
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
     }
 );
 export const distributorshipDetail = createTable(
-    "distributorshipDetail",
+    "distributorship_detail",
     {
         id: serial("id").primaryKey(),
-        columnID: serial("columnID"),
-        platDistributorship: integer("platDistributorship"),
-        speedUp: integer("speedUp"),
-        writerMoney: real("writerMoney"),
-        Price: real("columnPrice"),
+        columnId: serial("column_id"),
+        platDistributorship: integer("plat_distributorship"),
+        speedUp: integer("speed_up"),
+        writerMoney: real("writer_money"),
+        price: real("column_price"),
         distributorship: integer("distributorship"),
+        createdAt: timestamp("created_at")
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
     }
 );
 
@@ -121,9 +125,6 @@ export const order = createTable(
     {
         id: serial("id").primaryKey(),
         columnId: varchar("column_id"),
-        createdAt: timestamp("created_at")
-            .default(sql`CURRENT_TIMESTAMP`)
-            .notNull(),
         price: real("price"),
         buyerId: varchar("buyer_id"),
         ownerId: varchar("owner_id"),
@@ -132,21 +133,25 @@ export const order = createTable(
         recommendationId: varchar("recommendation_id"),
         status: boolean("status"),
         endDate: timestamp("end_date"),
-    }
-);
-
-export const speedUp = createTable(
-    "speedUp",
-    {
-        id: serial("id").primaryKey(),
-        name: varchar("name", {length: 256}),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
         updatedAt: timestamp("updated_at"),
-        ownerID: serial("ownerID"),
+    }
+);
+
+export const speedUp = createTable(
+    "speed_up",
+    {
+        id: serial("id").primaryKey(),
+        name: varchar("name", {length: 256}),
+        ownerId: serial("owner_id"),
         quantity: integer("quantity"),
         ranking: smallint("ranking"),
+        createdAt: timestamp("created_at")
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
     }
 );
 
@@ -154,8 +159,8 @@ export const wallet = createTable(
     "wallet",
     {
         userId: varchar("user_id").notNull(),
-        regularIncome: real("regularIncome"),
-        freezeIncome: real("regularOutcome"),
+        regularIncome: real("regular_income"),
+        freezeIncome: real("regular_outcome"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
@@ -180,75 +185,83 @@ export const activity = createTable(
 );
 
 export const coColumn = createTable(
-    "coColumn",
+    "co_column",
     {
         id: serial("id").primaryKey(),
         name: varchar("name", {length: 256}),
+        deadline: timestamp("deadline"),
+        subscribers: integer("subscribers"),
+        number: integer("number"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
         updatedAt: timestamp("updated_at"),
-        deadline: timestamp("deadline"),
-        subscribers: integer("subscribers"),
-        number: integer("number"),
     }
 );
 
 export const courseRecommendation = createTable(
-    "courseRecommendation",
+    "course_recommendation",
     {
         id: serial("id").primaryKey(),
         name: varchar("name", {length: 256}),
+        deadline: timestamp("deadline"),
+        subscribers: integer("subscribers"),
+        number: integer("number"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
         updatedAt: timestamp("updated_at"),
-        deadline: timestamp("deadline"),
-        subscribers: integer("subscribers"),
-        number: integer("number"),
     }
 );
 
 export const columnRecommendation = createTable(
-    "columnRecommendation",
+    "column_recommendation",
     {
         id: serial("id").primaryKey(),
         name: varchar("name", {length: 256}),
+        deadline: timestamp("deadline"),
+        subscribers: integer("subscribers"),
+        number: integer("number"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
         updatedAt: timestamp("updated_at"),
-        deadline: timestamp("deadline"),
-        subscribers: integer("subscribers"),
-        number: integer("number"),
     }
 );
 
 export const postLike = createTable(
-    "postLike",
+    "post_like",
     {
         id: serial("id").primaryKey(),
-        postId: integer("postId"),
-        userId: varchar("userId"),
+        postId: integer("post_id"),
+        userId: varchar("user_id"),
+        isLike: boolean("is_like"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
         updatedAt: timestamp("updated_at"),
-        isLike: boolean("isLike"),
     }
 );
 
 export const postRead = createTable(
-    "postRead",
+    "post_read",
     {
         id: serial("id").primaryKey(),
-        postId: integer("postId"),
-        userId: varchar("userId"),
+        postId: integer("post_id"),
+        userId: varchar("user_id"),
+        readCount: integer("read_count"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
         updatedAt: timestamp("updated_at"),
-        readCount: integer("readCount"),
+    }
+)
+
+export const invitationCode = createTable(
+    "invitation_code",
+    {
+        id: serial("id").primaryKey(),
+        value: varchar("value")
     }
 )
 
