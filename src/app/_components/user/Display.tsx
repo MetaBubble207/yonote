@@ -82,9 +82,12 @@ const Display = (props: { token: string; ColumnInfo: any }) => {
                         </h2>
                         
                         <p
-                            className={
-                                'w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
-                            }
+                            className='w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
+                            style={{
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap'
+                            }}
                         >
                             {item?.introduce ?? "暂无数据"}
                         </p>
