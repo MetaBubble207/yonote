@@ -216,4 +216,26 @@ export const orderRouter = createTRPCRouter({
 
         }),
 
+    changeStatus: publicProcedure
+        .input(z.object({columnId: z.string(), status: z.boolean(), userId: z.string()}))
+        .mutation(async ({ctx, input}) => {
+            const orders = await ctx.db.select().from(order).where(and(eq(order.columnId, input.columnId), eq(order.buyerId, input.userId)));
+            if (orders.length === 0) {
+                throw new Error("该columnId在order表中不存在");
+            }
+
+            return ctx.db.update(order).set({
+                status: input.status,
+            }).where(eq(order.columnId, input.columnId));
+        }),
+
+    getUserOrderDefault: publicProcedure
+        .input(z.object({
+            userId: z.string(),
+        }))
+        .query(async ({ctx, input}) => {
+            const orderData = await ctx.db.select().from(order).where(eq(order.buyerId, input.userId))
+            return orderData;
+        }),
+
 });

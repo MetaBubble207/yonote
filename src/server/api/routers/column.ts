@@ -170,19 +170,6 @@ export const columnRouter = createTRPCRouter({
 
         }),
 
-    changeStatus: publicProcedure
-        .input(z.object({id: z.string(), isVisable: z.boolean(), userId: z.string()}))
-        .mutation(async ({ctx, input}) => {
-            const orders = await ctx.db.select().from(order).where(and(eq(order.columnId, input.id), eq(order.buyerId, input.userId)));
-            if (orders.length === 0) {
-                throw new Error("该columnId在order表中不存在");
-            }
-
-            return ctx.db.update(column).set({
-                isVisable: input.isVisable,
-            }).where(eq(column.id, input.id));
-        }),
-
     //订阅量查询
     getColumnOrderNumbers: publicProcedure
         .query(async ({ ctx }) => {

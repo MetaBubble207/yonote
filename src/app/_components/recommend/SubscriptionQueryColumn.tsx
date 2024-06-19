@@ -10,7 +10,7 @@ export const SubscriptionQueryColumn = () => {
   const [data, setData] = useState(null);
   const [sortOrder, setSortOrder] = useState<boolean>(true); // 默认为 true，表示倒序排序
   // 使用 useQuery 钩子获取数据
-  const { data: queryData,isFetching} = api.order.getColumnOrderNumbers.useQuery();
+  const { data: queryData,isFetching} = api.column.getColumnOrderNumbers.useQuery();
 
   // 在数据加载完成时更新状态
   useEffect(() => {
