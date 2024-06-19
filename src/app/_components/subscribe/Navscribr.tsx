@@ -19,8 +19,6 @@ const Page = () => {
     const {data:orders,isFetched,isFetching} = api.order.getUserOrder.useQuery({
         userId: token[0],
     });
-
-    console.log(orders)
     
     // 按钮选中状态
     const [selectedButton, setSelectedButton] = useState<number | null>(1); // 追踪选中的按钮
