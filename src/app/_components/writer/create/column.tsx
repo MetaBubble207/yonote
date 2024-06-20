@@ -19,7 +19,7 @@ const Column = () => {
   };
   const [messageApi, contextHolder] = message.useMessage();
   const info = () => {
-    messageApi.info("邀请码已经被使用了噢😯~");
+    messageApi.info("该邀请码不存在或者已经被使用了噢😯~");
   };
   // 限制“价格”输入值最小为50
   const [price, setPrice] = useState("");
