@@ -1,18 +1,18 @@
 "use client"
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
-import {api} from "@/trpc/react";
+import { api } from "@/trpc/react";
 
-const Compass= () => {
+const Compass = () => {
     const router = useRouter();
 
     const handleLogout = () => {
         setToken(null)
         router.push("/edit/login");
     }
-    const [token,setToken] = useLocalStorage("token",null)
+    const [token, setToken] = useLocalStorage("token", null)
 
     const user = api.users.getOne.useQuery({
         id: token ?? "",
@@ -24,7 +24,7 @@ const Compass= () => {
                 <div className="flex items-center w-107.55675 h-11.75 shrink-0 ml-7.1975 mt-2.875">
                     <div className="inline-flex w-20 h-9.48025 items-center">
                         <Image src={"/images/logo.svg"} alt={"logo"} width={30.3} height={30.42}
-                               className="w-7.57425 h-8.35625 shrink-0"></Image>
+                            className="w-7.57425 h-8.35625 shrink-0"></Image>
                         <div className="ml-2">
                             <div className=" shrink-0 font-size-4">
                                 有记
@@ -39,7 +39,7 @@ const Compass= () => {
                         <button></button>
                     </div>
                     <div className="text-[#323232] text-3.5 font-400 lh-6 ml-15"
-                         onClick={() => router.push("/writer/create-specialColumn")}>
+                        onClick={() => router.push("/writer/create-specialColumn")}>
                         专栏申请
                         <button></button>
                     </div>
@@ -49,8 +49,9 @@ const Compass= () => {
                 </div>
                 {/*右半边信息区*/}
                 <div className={"flex items-center"}>
-                    <Image src={user?.avatar ?? "/images/user/Loading.svg"} alt="avatar" width={44} height={44}
-                           className="w-11 h-11 shrink-0 border-rd-11"></Image>
+                    <Image placeholder="blur"
+                        src={user?.avatar ?? "/images/user/Loading.svg"} alt="avatar" width={44} height={44}
+                        className="w-11 h-11 shrink-0 border-rd-11"></Image>
                     <div className="ml-3.4275">
                         {user?.name ?? "您还未登录"}
                     </div>

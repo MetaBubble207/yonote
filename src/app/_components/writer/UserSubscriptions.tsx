@@ -130,6 +130,7 @@ const UserSubscriptions = () => {
                         <td>{index + 1}</td>
                         <td className="relative">
                             <Image
+                                placeholder="blur"
                                 className="w-8 h-8 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shrink-0 border-rd-8"
                                 src={item.avatar}
                                 alt="avatar"
