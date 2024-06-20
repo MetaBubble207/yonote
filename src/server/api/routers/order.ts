@@ -3,7 +3,7 @@ import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {column, order, subscription, user} from "@/server/db/schema";
 
 ;
-import {eq, and, inArray, gte, lte, between} from "drizzle-orm";
+import {eq, and, inArray, gte, lte, between,like} from "drizzle-orm";
 
 export const orderRouter = createTRPCRouter({
     hello: publicProcedure
@@ -98,7 +98,9 @@ export const orderRouter = createTRPCRouter({
             const orders = await ctx.db.query.order.findMany({
                 where: eq(order.columnId, input.columnId)
             });
+
             const buyerIds = orders.map(order => order.buyerId);
+
 
             // 查询用户信息
             const users = await ctx.db.select({
@@ -155,8 +157,8 @@ export const orderRouter = createTRPCRouter({
             }
             // // 查 order 表里的 userId 其实是 user 的 id 而不是 idNumber, 而用户输入的是 user表里的 idNumber
             if (input.buyerId !== undefined) {
-                const selectdUserIdNum = ctx.db.select({id: user.id}).from(user).where(eq(user.idNumber, input.buyerId))
-                conditions.push(eq(order.buyerId, selectdUserIdNum))
+                const selectdUserIdNum = ctx.db.select({id: user.id}).from(user).where(like(user.idNumber, `${input.buyerId}%`))
+                conditions.push(like(order.buyerId, selectdUserIdNum))
             }
 
             if (input.startPick !== undefined && input.endPick !== undefined) {
@@ -172,7 +174,10 @@ export const orderRouter = createTRPCRouter({
 
             //
             const buyerIds = orders.map(order => order.buyerId);
-
+            if (buyerIds.length === 0) {
+                // 处理空数组的情况，例如返回空结果或默认数据
+                return [];  // 返回一个空数组或默认数据
+            }
             // 查询用户信息
             const users = await ctx.db.select({
                 id: user.id,
