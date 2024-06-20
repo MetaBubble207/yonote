@@ -14,6 +14,7 @@ export const ColumnCard = ({ columnData }) => {
                     <div className={"w-62px h-76px relative shrink-0"}>
                         <Image
                             placeholder="blur"
+blurDataURL={columnData.logo ?? "/images/user/Loading.svg"}
                             src={columnData.logo ?? "/images/user/Loading.svg"}
                             alt="cover"
                             layout='fill'
@@ -47,6 +48,7 @@ export const ColumnCard = ({ columnData }) => {
                     <div className="flex items-center">
                         <Image
                             placeholder="blur"
+blurDataURL={columnData.user?.avatar ?? "/images/user/Loading.svg"}
                             src={columnData.user?.avatar ?? "/images/user/Loading.svg"}
                             alt="user_image"
                             width={24}

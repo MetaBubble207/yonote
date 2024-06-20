@@ -64,6 +64,7 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
               <div className='w-160px h-206px relative'>
                 <Image
                   placeholder="blur"
+blurDataURL={columns[index]?.logo  ?? "/images/user/Loading.svg"}
                   src={columns[index]?.logo}
                   alt={`cover${index + 1}`}
                   // width={160}

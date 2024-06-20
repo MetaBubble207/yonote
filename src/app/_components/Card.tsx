@@ -12,6 +12,7 @@ export const Card = (data: CardClass) => {
     return (
         <div className={"bg-green p10 rounded-3px border-amber"}>
             <Image placeholder="blur"
+blurDataURL={img ?? "/images/user/Loading.svg"}
                 src={img} alt={"img"} width={50} height={50} />
             <div>{time}</div>
             <div className={"text-4"}>{title}</div>

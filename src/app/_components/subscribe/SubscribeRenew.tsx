@@ -38,6 +38,7 @@ const SubscribeRenew = (prop) => {
             ></Image> */}
             <Image
               placeholder="blur"
+blurDataURL={column?.logo ?? "/images/user/Loading.svg"}
               unoptimized
               style={{ objectFit: "cover" }}
               src={column?.logo ?? "/images/user/Loading.svg"}
@@ -73,6 +74,7 @@ const SubscribeRenew = (prop) => {
         <div className="mt-3.5 ml-3 flex w-full h-9.5 items-center flex-shrink-0">
           <Image
             placeholder="blur"
+blurDataURL={column.user?.avatar  ?? "/images/user/Loading.svg"}
             style={{ objectFit: "cover" }}
             src={column.user?.avatar}
             alt="user_image"

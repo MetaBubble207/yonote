@@ -58,6 +58,7 @@ const Activities = () => {
                                 </div>
                             </div>
                             <Image placeholder="blur"
+blurDataURL={item.cover  ?? "/images/user/Loading.svg"}
                                 src={item.cover ?? "/images/user/Loading.svg"} alt="acti-cover" width={16} height={12}
                                 className="border-rd=4 w-41 h-31.25 absolute top-2.5 left-2.5 " />
 

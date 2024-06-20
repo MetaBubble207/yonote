@@ -20,6 +20,7 @@ const SubscribeColumn = (prop) => {
           <div className="w-11.25 h-11.25 relative mt-4">
             <Image
               placeholder="blur"
+blurDataURL={column.user?.avatar ?? "/images/user/Loading.svg"}
               src={column.user?.avatar ?? "/images/user/Loading.svg"}
               alt="avatar"
               layout="fill"
@@ -66,6 +67,7 @@ const SubscribeColumn = (prop) => {
             <div className="w-15.5 h-19 ml-3 relative">
               <Image
                 placeholder="blur"
+blurDataURL={column.logo ?? "/images/subscribe/cover.png"}
                 src={column.logo ?? "/images/subscribe/cover.png"}
                 alt="cover"
                 layout="fill"

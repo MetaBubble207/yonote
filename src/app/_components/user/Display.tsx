@@ -58,6 +58,7 @@ const Display = (props: { token: string; ColumnInfo: any }) => {
                     <div className="relative w-15.5 h-19">
                         <Image
                             placeholder="blur"
+                            blurDataURL={item?.logo ?? '/images/user/cover.svg'}
                             // style={{ objectFit: "cover" }}
                             // src="/images/user/cover.svg"
                             // src={Column.logo}

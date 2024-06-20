@@ -50,6 +50,7 @@ const Compass = () => {
                 {/*右半边信息区*/}
                 <div className={"flex items-center"}>
                     <Image placeholder="blur"
+blurDataURL={user?.avatar ?? "/images/user/Loading.svg"}
                         src={user?.avatar ?? "/images/user/Loading.svg"} alt="avatar" width={44} height={44}
                         className="w-11 h-11 shrink-0 border-rd-11"></Image>
                     <div className="ml-3.4275">

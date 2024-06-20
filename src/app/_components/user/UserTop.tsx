@@ -30,6 +30,7 @@ export const UserTop = () => {
             {token ? (
                 <Image
                     placeholder="blur"
+                    blurDataURL={userInfo?.avatar ?? "/images/user/Loading.svg"}
                     src={userInfo?.avatar ?? "/images/user/Loading.svg"}
                     alt="avatar"
                     width={83}

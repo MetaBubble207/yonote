@@ -132,10 +132,11 @@ const Column = () => {
         <div className="relative w-58px h-75px">
           <Image
             placeholder="blur"
+blurDataURL={currentColumn?.logo  ?? "/images/user/Loading.svg"}
             src={currentColumn?.logo ?? "/images/user/Loading.svg"}
             alt={"cover"}
-            // width={58} 
-            // height={75} 
+            // width={58}
+            // height={75}
             objectFit="cover"
             layout="fill"
             quality={100}
