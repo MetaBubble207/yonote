@@ -50,7 +50,7 @@ const UserSubscriptions = () => {
 
 // 构建查询参数
     const queryParams = React.useMemo(() => {
-        const params = {};
+        const params:any = {};
         if (userIdValue) params.buyerId = userIdValue;
         if (columnId) params.columnId = columnId;
         if (status !== null) params.status = status; // 只在 status 不为 null 时设置
