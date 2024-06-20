@@ -33,6 +33,14 @@ export const timeToTimeString = (dateString: string) => {
     return `${time}`;
 };
 
+export const timeToDateFullTimeString = (dateString: string) => {
+    if (!dateString) return "";
+    dateString = String(dateString)
+    const parts = dateString.split(" ");
+    const time = parts[4].substring(0, 8);
+    return `${parts[3]}-${getMonthNumber(parts[1])}-${parts[2]} ${time}`;
+};
+
 const getMonthNumber = (month: string) => {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return (months.indexOf(month) + 1).toString().padStart(2, '0');

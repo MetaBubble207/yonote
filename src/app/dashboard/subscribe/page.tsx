@@ -2,12 +2,11 @@
 import Navbar from "../../_components/common/Navbar";
 import Image from "next/image";
 import Link from "next/link";
-import Page from "../../_components/subscribe/Navscribr";
+import NavScribr from "../../_components/subscribe/NavScribr";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useIsFetching } from "@tanstack/react-query";
 import Loading from "../../_components/common/Loading";
 import { SearchColumn } from "@/app/_components/common/SearchColumn";
 
@@ -119,7 +118,7 @@ const Subscribe = () => {
         )}
 
         <div>
-          <Page />
+          <NavScribr />
         </div>
       </div>
 
@@ -130,4 +129,5 @@ const Subscribe = () => {
     </div>
   );
 };
+
 export default Subscribe;

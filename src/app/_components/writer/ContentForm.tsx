@@ -186,7 +186,7 @@ export const ContentForm = ({ title, tag }) => {
                         <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{timeToDateString(option.createdAt)}</td>
                         <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{timeToDateString(option.updatedAt)}</td>
                         <td className="px-4 py-2">
-                            <Link href={`/edit/edit?columnId=${columnId}postId=${option.id}`}  className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={handleEdit}>编辑</Link>
+                            <Link href={`/edit/edit?columnId=${columnId}&postId=${option.id}`}  className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={handleEdit}>编辑</Link>
                             <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={()=> handleToggleTop(index)}>{option.isTop ? '取消置顶' : '置顶'}</button>
                             <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={()=> handleToggleFree(index)}>{option.isFree ? '取消免费' : '免费'} </button>
                             <button className={'mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5'} onClick={()=> handleClickDelete(option.id)}>删除</button>

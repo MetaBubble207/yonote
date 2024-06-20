@@ -55,22 +55,30 @@ const Display = (props: { token: string; ColumnInfo: any }) => {
         return ColumnInfo?.length > 0 && (
             ColumnInfo?.slice(0, ColumnInfo?.length > 1 ? 2 : 1).map((item, index) => (
                 <Link href={`/special-column?id=${item.id}`} className="flex h-14 mb-8" key={item.id}>
-                    <Image
-                        style={{ objectFit: "cover" }}
-                        // src="/images/user/cover.svg"
-                        // src={Column.logo}
-                        // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
-                        src={item?.logo ?? '/images/user/cover.svg'}
-                        alt="icon"
-                        width={74}
-                        height={100}
-                        className="w-15.5 h-19 rounded"
-                        objectFit="cover"
+                    <div className="relative w-15.5 h-19">
+                        <Image
+                            placeholder="blur"
+                            blurDataURL={item?.logo ?? '/images/user/cover.svg'}
+                            // style={{ objectFit: "cover" }}
+                            // src="/images/user/cover.svg"
+                            // src={Column.logo}
+                            // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
+                            src={item?.logo ?? '/images/user/cover.svg'}
+                            alt="icon"
+                            // width={74}
+                            // height={100}
+                            // className="w-15.5 h-19 rounded"
+                            className="rounded"
+                            objectFit="cover"
+                            quality={100}
+                            layout="fill"
+                        />
+                    </div>
 
-                    />
+
                     <div>
                         <h2
-                            className= "ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"
+                            className="ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"
                             style={{
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
@@ -80,7 +88,7 @@ const Display = (props: { token: string; ColumnInfo: any }) => {
                             {/*「心智与阅读」*/}
                             「{item?.name ?? "未知专栏"}」
                         </h2>
-                        
+
                         <p
                             className='w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
                             style={{
@@ -114,7 +122,7 @@ const Display = (props: { token: string; ColumnInfo: any }) => {
     const Course = () => {
         return (
             <div className={'flex justify-center items-center'}>
-                <div className="text-center text-[#B5B5B5] mt-4 h-10">暂无数据哦~</div>    
+                <div className="text-center text-[#B5B5B5] mt-4 h-10">暂无数据哦~</div>
                 {/* <h1>暂无数据</h1> */}
                 {/*<div className="flex h-14 mb-8">*/}
                 {/*    <Image*/}

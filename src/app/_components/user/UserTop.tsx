@@ -29,6 +29,8 @@ export const UserTop = () => {
         <div className="pt-9 flex flex-row items-center">
             {token ? (
                 <Image
+                    placeholder="blur"
+                    blurDataURL={userInfo?.avatar ?? "/images/user/Loading.svg"}
                     src={userInfo?.avatar ?? "/images/user/Loading.svg"}
                     alt="avatar"
                     width={83}

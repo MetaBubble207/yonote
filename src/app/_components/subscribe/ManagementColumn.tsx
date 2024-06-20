@@ -25,8 +25,8 @@ const ManagementColumn = forwardRef(
             console.log('checked values:', checkedValues);
             setArray(checkedValues);
         };
-        const status = order.data?.map((item) => item.status)
-        console.log("status=============>", status)
+        const isVisable = order.data?.map((item) => item.isVisable)
+        console.log("isVisable=============>", isVisable)
 
         useEffect(() => {
             console.log('selectedOptions:', array);
@@ -53,13 +53,13 @@ const ManagementColumn = forwardRef(
                 if (selectedColumnIds.includes(item.columnId)) {
                     changeVisable.mutate({
                         columnId: item.columnId,
-                        status: true,
+                        isVisable: true,
                         userId: token[0],
                     });
                 } else {
                     changeVisable.mutate({
                         columnId: item.columnId,
-                        status: false,
+                        isVisable: false,
                         userId: token[0],
                     });
                 }
@@ -76,12 +76,14 @@ const ManagementColumn = forwardRef(
                         {column.data?.length > 0 ? (
                             <Checkbox.Group onChange={outputValue} disabled={!checkSate} className={"flex-col flex"}>
                                 {column.data?.map((item, index) => (
-                                    <Checkbox
-                                        value={index}
-                                        className={'mb-2 flex flex-row'}
-                                        key={item?.id}
-                                        defaultChecked={order?.data[index]?.status}
-                                    >
+                                    <div className={"flex"}>
+                                        <input
+                                            type={"checkbox"}
+                                            value={index}
+                                            className={'flex flex-row'}
+                                            key={item?.id}
+                                            defaultChecked={order?.data[index]?.isVisable}
+                                        />
                                         <div className={"flex"}>
                                             <Image src={item ? item.logo : ''} width={100} height={100}
                                                    alt={"cover"}
@@ -91,7 +93,7 @@ const ManagementColumn = forwardRef(
                                             <h4 className="text-[#666] text-2.5 lh-[120%] mt-1">{item?.introduce ? (item?.introduce?.length >= 50 ? item?.introduce?.substring(0, 50) + "..." : item?.introduce) : "无数据"}</h4>
                                         </span>
                                         </div>
-                                    </Checkbox>
+                                    </div>
                                 ))}
                             </Checkbox.Group>
                         ) : (
