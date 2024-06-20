@@ -41,7 +41,7 @@ const Page = () => {
   const [token] = useLocalStorage("token", null);
 
 
-  const {data: postData, isFetching} = api.post.getById.useQuery({
+  const { data: postData, isFetching } = api.post.getById.useQuery({
     id: columnId,
     chapter: chapter
   });
@@ -343,20 +343,37 @@ const Page = () => {
             dangerouslySetInnerHTML={{ __html: content }}
           ></div>
         </div>
-        <div className="flex flex-row w-full flex-wrap pt-2 relative ws-normal whitespace-pre-line break-all">
+        <div className="w-full flex-wrap pt-2 relative ws-normal whitespace-pre-line break-all">
           {tags.map((item, index) => {
             return (
-              <span
+              <div
                 className={
                   "text-[#1DB48D] text-3 font-not-italic font-400 lh-6 mr-2"
                 }
                 key={index}
               >
                 #{item}
-              </span>
+              </div>
             );
           })}
-          <div className="flex absolute right-2">
+          {/* <div className="flex absolute right-2">
+            <img
+              src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 1.png"}
+              alt={"爱心"}
+              width={18}
+              height={18}
+              className="w-5 h-5"
+              onClick={likehandle}
+            />
+            <div
+              className={
+                "text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-2.5 mr-4"
+              }
+            >
+              {likeCount}
+            </div>
+          </div> */}
+          <div className="flex h-5">
             <img
               src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 1.png"}
               alt={"爱心"}
@@ -374,6 +391,7 @@ const Page = () => {
             </div>
           </div>
         </div>
+
       </div>
 
       {/*页面底端上一篇下一篇*/}
@@ -395,7 +413,7 @@ const Page = () => {
                   }
                 >
                   {/* {columnDetail?.name}•目录 */}
-                  {columnDetail?.name.length > 20 ? columnDetail?.name.substring(0,20)+"…" : columnDetail?.name}
+                  {columnDetail?.name.length > 20 ? columnDetail?.name.substring(0, 20) + "…" : columnDetail?.name}
                 </div>
                 <div className={"ml-5px"}>
                   <img
@@ -439,7 +457,7 @@ const Page = () => {
               )
                 : (
                   // <Link className="flex flex-col" href={`../special-column-content?c=${chapter - 1}&id=${columnId}`}>
-                  <div className="flex flex-col" onClick={prepost?.isFree || status || columnDetail?.userId===token? preLink : alertMessage}>
+                  <div className="flex flex-col" onClick={prepost?.isFree || status || columnDetail?.userId === token ? preLink : alertMessage}>
                     <div className={"flex items-center"}>
                       <div>
                         <img
@@ -497,7 +515,7 @@ const Page = () => {
 
                 // nextpost?.data.isFree || status ? (<div>hellop</div>)
                 //   : (<div></div>)
-                <div className="flex flex-col ml-auto" onClick={nextpost?.isFree || status || columnDetail?.userId===token? nextLink : alertMessage}>
+                <div className="flex flex-col ml-auto" onClick={nextpost?.isFree || status || columnDetail?.userId === token ? nextLink : alertMessage}>
                   <div className={"flex items-center justify-end"}>
                     <div
                       className={
