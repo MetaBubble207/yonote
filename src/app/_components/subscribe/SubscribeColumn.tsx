@@ -19,6 +19,7 @@ const SubscribeColumn = (prop) => {
           ></Image> */}
           <div className="w-11.25 h-11.25 relative mt-4">
             <Image
+              placeholder="blur"
               src={column.user?.avatar ?? "/images/user/Loading.svg"}
               alt="avatar"
               layout="fill"
@@ -37,7 +38,7 @@ const SubscribeColumn = (prop) => {
             ></Image>
           </div>
           <div className="text-center text-[#999]  font-500 lh-5.6 text-2.5 w-11 overflow-hidden whitespace-nowrap">
-            {column.user?.name?.length >= 8?column.user?.name+"…":column.user?.name}
+            {column.user?.name?.length >= 8 ? column.user?.name + "…" : column.user?.name}
           </div>
         </div>
         <div className="flex-1">
@@ -64,6 +65,7 @@ const SubscribeColumn = (prop) => {
             </div>
             <div className="w-15.5 h-19 ml-3 relative">
               <Image
+                placeholder="blur"
                 src={column.logo ?? "/images/subscribe/cover.png"}
                 alt="cover"
                 layout="fill"
