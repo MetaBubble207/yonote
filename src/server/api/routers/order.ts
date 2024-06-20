@@ -162,7 +162,12 @@ export const orderRouter = createTRPCRouter({
             }
 
             if (input.startPick !== undefined && input.endPick !== undefined) {
-                conditions.push(between(order.createdAt, new Date(input.startPick), new Date(input.endPick)))
+                const startDate = new Date(input.startPick);
+                startDate.setHours(0, 0, 0, 0); // 将时间设为当天的0点
+                const endDate = new Date(input.endPick);
+                endDate.setHours(23, 59, 59, 999); // 将时间设为当天的23点59分59秒999毫秒
+
+                conditions.push(between(order.createdAt, startDate, endDate));
             }
 
             // 查询订单表中的匹配记录
