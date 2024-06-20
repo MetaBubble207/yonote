@@ -39,7 +39,7 @@ const Compass = () => {
                         <button></button>
                     </div>
                     <div className="text-[#323232] text-3.5 font-400 lh-6 ml-15"
-                        onClick={() => router.push("/writer/create-specialColumn")}>
+                        onClick={() => router.push("/writer/create-special-column")}>
                         专栏申请
                         <button></button>
                     </div>
