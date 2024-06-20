@@ -132,6 +132,7 @@ export const order = createTable(
         recommendationId: varchar("recommendation_id"),
         status: boolean("status"),
         endDate: timestamp("end_date"),
+        isVisable: boolean("is_visable"),
     }
 );
 

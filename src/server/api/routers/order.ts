@@ -217,7 +217,7 @@ export const orderRouter = createTRPCRouter({
         }),
 
     changeStatus: publicProcedure
-        .input(z.object({columnId: z.string(), status: z.boolean(), userId: z.string()}))
+        .input(z.object({columnId: z.string(), isVisable: z.boolean(), userId: z.string()}))
         .mutation(async ({ctx, input}) => {
             const orders = await ctx.db.select().from(order).where(and(eq(order.columnId, input.columnId), eq(order.buyerId, input.userId)));
             if (orders.length === 0) {
@@ -225,7 +225,7 @@ export const orderRouter = createTRPCRouter({
             }
 
             return ctx.db.update(order).set({
-                status: input.status,
+                isVisable: input.isVisable,
             }).where(eq(order.columnId, input.columnId));
         }),
 
