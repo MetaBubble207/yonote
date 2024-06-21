@@ -19,7 +19,7 @@ const Page = () => {
     const {data:orders,isFetched,isFetching} = api.order.getUserOrder.useQuery({
         userId: token[0],
     });
-    
+    const order = orders?.filter(item=>(item.isVisable===true));
     // 按钮选中状态
     const [selectedButton, setSelectedButton] = useState<number | null>(1); // 追踪选中的按钮
 
@@ -29,6 +29,8 @@ const Page = () => {
             setSelectedButton(button);
         }
     };
+
+    console.log("order================>", order)
 
     // 导航栏返回相应页面
     const [currentPage, setCurrentPage] = React.useState<number>(1);
@@ -62,11 +64,11 @@ const Page = () => {
                     </div>
                 ) : (
                     <div>
-                        {orders.filter(item => item.status === true) && orders.length > 0 ? (
+                        {order && orders.length>0 ? (
                             <div>
                                 {columns && columns.length > 0 && columns.map((column: any) => (
                                     // 检查当前 column 是否在 orders 中存在
-                                    orders.some(order => order.columnId === column.id) && (
+                                    order.some(order => order.columnId === column.id) && (
                                         <SubscribeRenew key={column.id} column={column} />
                                     )
                                 ))}
@@ -111,11 +113,11 @@ const Page = () => {
     const Column = () => {
         return (
             <div>
-                {orders.filter(item => item.status === true) && orders.length > 0 ? (
+                {order && orders.length > 0 ? (
                     <div>
                         {columns && columns.length > 0 && columns.map((column: any) => (
                             // 检查当前 column 是否在 orders 中存在
-                            orders.some(order => order.columnId === column.id) && (
+                            order.some(order => order.columnId === column.id) && (
                                 <SubscribeColumn key={column.id} column={column} />
                             )
                         ))}
