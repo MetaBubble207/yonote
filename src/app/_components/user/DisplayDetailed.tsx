@@ -72,17 +72,23 @@ const DisplayDetailed = (props) => {
                         />
                         <div>
                             <h2
-                                className={
-                                    "ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"
-                                }
+                                className="ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"
+                                style={{
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap'
+                                }}
                             >
                                 {/*「心智与阅读」*/}
                                 「{item?.name ?? "未知专栏"}」
                             </h2>
                             <p
-                                className={
-                                    'w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
-                                }
+                                className='w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
+                                style={{
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap'
+                                }}
                             >
                                 {item?.introduce ?? "暂无数据"}
                             </p>
