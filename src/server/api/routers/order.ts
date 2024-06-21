@@ -3,7 +3,7 @@ import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {column, order, subscription, user} from "@/server/db/schema";
 
 ;
-import {eq, and, inArray, gte, lte, between,like} from "drizzle-orm";
+import {eq, and, inArray, gte, lte, between, like, count, sql} from "drizzle-orm";
 
 export const orderRouter = createTRPCRouter({
     hello: publicProcedure
@@ -143,9 +143,11 @@ export const orderRouter = createTRPCRouter({
         buyerId: z.string().optional(),
         status: z.boolean().optional(),
         startPick: z.string().optional(),
-        endPick: z.string().optional()
+        endPick: z.string().optional(),
+        pageSize: z.string().optional(),
+        currentPage: z.string().optional()
     }))
-        .query(async ({ctx, input}) => {
+        .query(async ({ ctx, input }) => {
             // 初始化where 条件数组
             const conditions = [
                 eq(order.columnId, input.columnId)
@@ -157,32 +159,45 @@ export const orderRouter = createTRPCRouter({
             }
             // // 查 order 表里的 userId 其实是 user 的 id 而不是 idNumber, 而用户输入的是 user表里的 idNumber
             if (input.buyerId !== undefined) {
-                const selectdUserIdNum = ctx.db.select({id: user.id}).from(user).where(like(user.idNumber, `${input.buyerId}%`))
-                conditions.push(like(order.buyerId, selectdUserIdNum))
+                const selectedUserIdNum = await ctx.db.select({ id: user.id }).from(user).where(like(user.idNumber, `${input.buyerId}%`));
+                if (selectedUserIdNum.length > 0) {
+                    conditions.push(inArray(order.buyerId, selectedUserIdNum.map(u => u.id)));
+                }
             }
 
             if (input.startPick !== undefined && input.endPick !== undefined) {
                 const startDate = new Date(input.startPick);
-                startDate.setHours(0, 0, 0, 0); // 将时间设为当天的0点
+                startDate.setHours(0, 0, 0, 0);
                 const endDate = new Date(input.endPick);
-                endDate.setHours(23, 59, 59, 999); // 将时间设为当天的23点59分59秒999毫秒
+                endDate.setHours(23, 59, 59, 999);
 
                 conditions.push(between(order.createdAt, startDate, endDate));
             }
 
+            // 计算分页参数
+            const pageSize = parseInt(input.pageSize || '10', 10);
+            const currentPage = parseInt(input.currentPage || '1', 10);
+            const offset = (currentPage - 1) * pageSize;
+
+            // 获取总记录数
+            const totalOrdersCountResult = await ctx.db.select({
+                count: sql<number>`count(*)`.as('count')
+            }).from(order).where(and(...conditions));
+
+            const totalOrdersCount = totalOrdersCountResult[0]?.count || 0;
+
             // 查询订单表中的匹配记录
             const orders = await ctx.db.query.order.findMany({
-                // where: eq(order.columnId, input.columnId)
-                where: and(...conditions)
+                where: and(...conditions),
+                limit: pageSize,
+                offset: offset
             });
 
-
-            //
             const buyerIds = orders.map(order => order.buyerId);
             if (buyerIds.length === 0) {
-                // 处理空数组的情况，例如返回空结果或默认数据
-                return [];  // 返回一个空数组或默认数据
+                return { data: [], total: totalOrdersCount };
             }
+
             // 查询用户信息
             const users = await ctx.db.select({
                 id: user.id,
@@ -214,7 +229,7 @@ export const orderRouter = createTRPCRouter({
                 user: userMap[subscription.buyerId]
             }));
 
-            return combinedResults;
+            return { data: combinedResults, total: totalOrdersCount };
         }),
 
 
