@@ -54,7 +54,7 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ columnId, current
 
     const queryParams = React.useMemo(() => {
         const params: any = {};
-        if (userIdValue) params.buyerId = userIdValue;
+        if (userIdValue) params.buyerId = userIdValue.trim(); // 去除空格
         if (columnId) params.columnId = columnId;
         if (status !== null) params.status = status;
         if (startPick) params.startPick = startPick;
@@ -64,6 +64,8 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ columnId, current
         return params;
     }, [columnId, status, userIdValue, startPick, endPick, currentPage, pageSize]);
 
+
+    console.log("ppppppppppppppppppppppppp=>",queryParams)
     const { data, refetch } = api.order.getOrderByColumnIdTest.useQuery<OrderQueryResult>(queryParams, {
         enabled: !!columnId // 只在 columnId 存在时启用查询
     });
@@ -109,8 +111,10 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ columnId, current
     };
 
     const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault();
         refetch();
     };
+
 
     const ItemList: React.FC = () => {
         const offset = (currentPage - 1) * pageSize;
