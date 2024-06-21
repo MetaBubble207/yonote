@@ -148,24 +148,25 @@ export const orderRouter = createTRPCRouter({
         currentPage: z.number().default(1),
     }))
         .query(async ({ ctx, input }) => {
-            // 初始化where 条件数组
             const conditions = [
                 eq(order.columnId, input.columnId)
             ];
 
-            // 根据可选参数动态添加条件
             if (input.status !== undefined && input.status !== null) {
                 conditions.push(eq(order.status, input.status));
             }
-            // // 查 order 表里的 userId 其实是 user 的 id 而不是 idNumber, 而用户输入的是 user表里的 idNumber
-            if (input.buyerId !== undefined) {
+
+            if (input.buyerId) {
                 const selectedUserIdNum = await ctx.db.select({ id: user.id }).from(user).where(like(user.idNumber, `${input.buyerId}%`));
                 if (selectedUserIdNum.length > 0) {
                     conditions.push(inArray(order.buyerId, selectedUserIdNum.map(u => u.id)));
+                } else {
+                    // 如果没有匹配的用户，返回空结果
+                    return { data: [], total: 0 };
                 }
             }
 
-            if (input.startPick !== undefined && input.endPick !== undefined) {
+            if (input.startPick && input.endPick) {
                 const startDate = new Date(input.startPick);
                 startDate.setHours(0, 0, 0, 0);
                 const endDate = new Date(input.endPick);
@@ -178,7 +179,6 @@ export const orderRouter = createTRPCRouter({
             const currentPage = input.currentPage;
             const offset = (currentPage - 1) * pageSize;
 
-            // 获取总记录数
             const totalOrdersCountResult = await ctx.db.select({
                 count: sql<number>`count(*)`.as('count')
             }).from(order).where(and(...conditions));
