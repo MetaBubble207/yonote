@@ -121,7 +121,7 @@ export const SpecialColumnCard = (props) => {
                     <div>
                         <div className={"flex items-center"}>
                             <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
-                                {user?.user ? user?.name : "未知用户"}
+                                {user?.name ? user?.name : "未知用户"}
                             </div>
                             <div>
                                 <Image src={"/images/special-column/Group 225.png"} alt={"心智与阅读"} width={12}

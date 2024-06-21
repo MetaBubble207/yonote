@@ -23,11 +23,9 @@ const SubscribeManage = () => {
     };
     const [manage, setManage] = useState(false);
     const handleManage = () => {
-        console.log(saveColumn)
+        console.log("savecolumn",saveColumn)
         if (saveColumn.current && manage==true){
-            console.log("123")
             saveColumn.current.handleSave();
-
         }
         setManage(!manage);
     }

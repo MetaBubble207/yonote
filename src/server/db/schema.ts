@@ -137,6 +137,7 @@ export const order = createTable(
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
         updatedAt: timestamp("updated_at"),
+        isVisable: boolean("is_visable"),
     }
 );
 
