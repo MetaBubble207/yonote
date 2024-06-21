@@ -3,7 +3,7 @@ import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {column, order, subscription, user} from "@/server/db/schema";
 
 ;
-import {eq, and, inArray, gte, lte, between, like, count, sql} from "drizzle-orm";
+import {eq, and, inArray, gte, lte, between, like, sql} from "drizzle-orm";
 
 export const orderRouter = createTRPCRouter({
     hello: publicProcedure
@@ -144,8 +144,8 @@ export const orderRouter = createTRPCRouter({
         status: z.boolean().optional(),
         startPick: z.string().optional(),
         endPick: z.string().optional(),
-        pageSize: z.string().optional(),
-        currentPage: z.string().optional()
+        pageSize: z.number().default(10),
+        currentPage: z.number().default(1),
     }))
         .query(async ({ ctx, input }) => {
             // 初始化where 条件数组
@@ -174,9 +174,8 @@ export const orderRouter = createTRPCRouter({
                 conditions.push(between(order.createdAt, startDate, endDate));
             }
 
-            // 计算分页参数
-            const pageSize = parseInt(input.pageSize || '10', 10);
-            const currentPage = parseInt(input.currentPage || '1', 10);
+            const pageSize = input.pageSize;
+            const currentPage = input.currentPage;
             const offset = (currentPage - 1) * pageSize;
 
             // 获取总记录数
@@ -186,7 +185,6 @@ export const orderRouter = createTRPCRouter({
 
             const totalOrdersCount = totalOrdersCountResult[0]?.count || 0;
 
-            // 查询订单表中的匹配记录
             const orders = await ctx.db.query.order.findMany({
                 where: and(...conditions),
                 limit: pageSize,
@@ -198,7 +196,6 @@ export const orderRouter = createTRPCRouter({
                 return { data: [], total: totalOrdersCount };
             }
 
-            // 查询用户信息
             const users = await ctx.db.select({
                 id: user.id,
                 avatar: user.avatar,
@@ -206,13 +203,11 @@ export const orderRouter = createTRPCRouter({
                 idNumber: user.idNumber
             }).from(user).where(inArray(user.id, buyerIds));
 
-            // 创建用户字典
             const userMap = users.reduce((acc, usr) => {
                 acc[usr.id] = usr;
                 return acc;
             }, {});
 
-            // 查询订阅信息
             const subscriptions = await ctx.db.select({
                 buyerId: order.buyerId,
                 status: order.status,
@@ -223,7 +218,6 @@ export const orderRouter = createTRPCRouter({
                 eq(order.columnId, input.columnId)
             ));
 
-            // 合并用户信息和订阅信息
             const combinedResults = subscriptions.map(subscription => ({
                 ...subscription,
                 user: userMap[subscription.buyerId]
