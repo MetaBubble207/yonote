@@ -114,7 +114,7 @@ const UserMessage = () => {
 
                     {isEditing ? (
                         <div className='flex items-center justify-end flex-1'>
-                            <input type="text" className='pl-12.2 w-50 text-3.5 font-400' value={editingPhone}
+                            <input type="text" className=' pl-11.71 w-50 text-3.5 font-400' value={editingPhone}
                                    onChange={handlePhoneInputChange}/>
                             <button className='w-10 ml-1.25 text-[#252525] text-2.5 font-500 lh-6'
                                     onClick={handleSavePhone}>保存
@@ -127,7 +127,7 @@ const UserMessage = () => {
                         <div className='flex items-center justify-end flex-1'>
                             <span className='flex-1 pl-15 text-3.5 font-400'>
                                 {userInfo?.phone}</span>
-                            <button className="w-10 ml-1.25 text-[#252525] text-2.5 font-500 lh-6"
+                            <button className="w-10 ml-2.5 text-[#252525] text-2.5 font-500 lh-6"
                                     onClick={handlePhoneButtonClick}>
                                 修改
                             </button>
