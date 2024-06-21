@@ -1,14 +1,14 @@
 'use client'
-import React, {Suspense, useEffect, useState} from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import Image from "next/image";
 import Date from '../../_components/datarange/Date'
 import MyPagination from "@/app/_components/pagination/page";
-import {useSearchParams} from "next/navigation";
-import {api} from "@/trpc/react";
-import {user} from "@/server/db/schema";
+import { useSearchParams } from "next/navigation";
+import { api } from "@/trpc/react";
+import { user } from "@/server/db/schema";
 import UserSubscriptions from "@/app/_components/writer/UserSubscriptions";
 import DatePickerComponent from "@/app/_components/datarange/DatePickerComponent";
-import {Dayjs} from "dayjs";
+import { Dayjs } from "dayjs";
 
 
 const Page = () => {
@@ -42,14 +42,14 @@ const Page = () => {
 
     // 订阅开始日期组件参数
     const [selectedDates, setSelectedDates] = useState<[Dayjs, Dayjs] | null>(null);
-    const startPick = selectedDates?selectedDates[0].format("YYYY-MM-DD"):null
-    const endPick = selectedDates?selectedDates[1].format("YYYY-MM-DD"):null
+    const startPick = selectedDates ? selectedDates[0].format("YYYY-MM-DD") : null
+    const endPick = selectedDates ? selectedDates[1].format("YYYY-MM-DD") : null
     const handleDateChange = (dates: [Dayjs, Dayjs] | null) => {
         setSelectedDates(dates);
         console.log("Selected dates in ParentComponent:", dates);
 
     };
-    console.log("=================>订阅开始时间:",startPick,endPick)
+    console.log("=================>订阅开始时间:", startPick, endPick)
 
 
 
@@ -57,7 +57,7 @@ const Page = () => {
         <Suspense>
             <div className='w-full h-full'>
                 <div
-                    className='w-92% min-h-150   relative ml-4.465 mt-4.02 pt-8 pl-8  shrink-0 rounded-tl-lg rounded-tr-lg bg-[#FFF]'>
+                    className='w-97% min-h-150   relative ml-4.465 mt-4.02 pt-8 pl-8  shrink-0 rounded-tl-lg rounded-tr-lg bg-[#FFF]'>
                     <h3 className='text-[#323232] text-4 font-700 lh-6'>订阅管理</h3>
 
                     {/*/!*条件查询*!/*/}
@@ -98,12 +98,12 @@ const Page = () => {
                     {/*</div>*/}
 
                     {/*信息列表*/}
-                    <UserSubscriptions/>
+                    <UserSubscriptions />
 
 
                     {/*分页*/}
                     <div className="absolute bottom-10  left-60 flex justify-center items-center">
-                        <MyPagination/>
+                        <MyPagination />
                     </div>
                 </div>
             </div>

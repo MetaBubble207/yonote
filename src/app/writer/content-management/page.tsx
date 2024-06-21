@@ -28,7 +28,7 @@ const Page = () => {
 
     return (
         <div className={'w-full h-full mt-16px ml-18px'}>
-            <div className={'w-92% min-h-155 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] relative pb-120px'}>
+            <div className={'w-97% min-h-155 shrink-0 border-rd-[10px_10px_10px_10px] bg-[#FFF] relative pb-120px'}>
                 <div className={'flex items-center pt-51px '}>
                     <div className="text-[#323232] text-4 font-not-italic font-700 lh-6 ml-32.5px">内容管理</div>
                     {/*发布*/}

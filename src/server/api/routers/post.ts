@@ -32,7 +32,7 @@ export const postRouter = createTRPCRouter({
                 name: input.name,
                 content: input.content,
                 tag: input.tag,
-                status: true,
+                status: input.status,
                 updatedAt: getCurrentTime(),
                 columnId: input.columnId,
                 chapter: chapter,
@@ -178,6 +178,33 @@ export const postRouter = createTRPCRouter({
                 where: and(eq(post.columnId, input.id),eq(post.chapter, input.chapter)),
             })
             return postId.id;
+        }),
+    getByPostId:publicProcedure
+        .input(z.object({ id: z.number()}))
+        .query(async ({ ctx, input }) => {
+            const data = await ctx.db.query.post.findFirst({
+                where: eq(post.id, input.id),
+            });
+            if (!data) {
+                throw new Error("No data found");
+            }
+            return data;
+        }),
+    getDraft:publicProcedure
+        .input(z.object({columnId:z.string()}))
+        .query(async ({ ctx, input }) => {
+                return ctx.db.query.post.findFirst({
+                    where:and(eq(post.columnId,input.columnId),eq(post.status,false))
+                })
+        }),
+    updatePost:publicProcedure
+        .input(z.object({ id: z.number(), columnId: z.string(), name: z.string(), content: z.string(), tag: z.string(), status: z.boolean()}))
+        .mutation(async ({ ctx, input }) => {
+            return ctx.db.update(post).set({
+                name: input.name,
+                content: input.content,
+                tag: input.tag,
+                status: input.status,
+            }).where(eq(post.id, input.id));
         })
-
 });

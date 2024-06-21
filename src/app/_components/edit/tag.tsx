@@ -7,7 +7,7 @@ interface TagInputProps{
 
 function TagInput(props:TagInputProps) {
   console.log(props);
-  
+
   // const [tags, setTags] = useState<string[]>([]);
   const {tags,setTags} = props;
   const [editIndex, setEditIndex] = useState<number | null>(null);
@@ -30,7 +30,7 @@ function TagInput(props:TagInputProps) {
 
   const handleEdit = (index:number) => {
     setEditIndex(index);
-    setEditValue(tags[index]!);
+    setEditValue(tags[index]);
   };
 
   const handleConfirmEdit = () => {
@@ -64,7 +64,7 @@ function TagInput(props:TagInputProps) {
           {editIndex !== null ? '确定' : '+ 添加标签'}
         </button>
       </div>
-      {tags.map((tag:string, index:number)=> (
+      {tags?.map((tag:string, index:number)=> (
         <div key={index} className="w-22 h-8 shrink-0 b-1 b-rd-1 ml-4" >
           {editIndex === index ? (
             <input

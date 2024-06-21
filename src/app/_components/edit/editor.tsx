@@ -16,56 +16,35 @@ import useLocalStorage from "@/tools/useStore";
 import {W100H50Modal} from "@/app/_components/common/W100H50Modal";
 
 function MyEditor() {
-  const a = api.draft.delete.useMutation({
-    onSuccess: (r) => {
-      console.log(r);
-    },
-  });
-  const router = useRouter();
-  // const draftQuery = api.draft.getAll.useQuery();
-  // const [example, setExample] = useState(draftQuery);
-  const b = api.draft.create.useMutation({
-    onSuccess: (r) => {
-      console.log(r);
-      // setExample(api.draft.getAll.useQuery());
-    },
-  });
-
-  // const c = () => {
-  //   b.mutate({
-  //     name: "test",
-  //     content: "这是一个测试内容",
-  //     tag: "test1",
-  //     status: false,
-  //     columnId: columnId ?? "1"
-  //   })
-  // }
-
-  const delpost = api.post.deletePost.useMutation({
-    onSuccess: (r) => {
-      console.log(r);
-    },
-  });
-
+  const router = useRouter()
   const createpost = api.post.create.useMutation({
     onSuccess: (r) => {
       console.log(r);
       // setExample(api.post.getAll.useQuery());
     },
   });
-
-  // const c2 = () => {
-  //   createpost.mutate({
-  //     name: "test2",
-  //     content: "这是一个发布测试内容",
-  //     tag: "test2",
-  //     status: true,
-  //   });
-  // };
-
+  const updatePost = api.post.updatePost.useMutation({
+    onSuccess: (r) => {
+      console.log(r);
+      // setExample(api.post.getAll.useQuery());
+    },
+  });
+  const [token] = useLocalStorage("token",null)
   const params = useSearchParams();
   const columnId = params.get("columnId")
-
+  const postId = params.get("postId")
+  let postData;
+  if(postId){
+    postData = api.post.getByPostId.useQuery({
+      id: parseInt(postId),
+    }).data
+  }
+  let draftData;
+  if(!postId){
+    draftData = api.post.getDraft.useQuery({
+      columnId: columnId
+    }).data
+  }
   const [editor, setEditor] = useState<IDomEditor | null>(null);
   let [html, setHtml] = useState('');
   const draft = html;
@@ -78,14 +57,19 @@ function MyEditor() {
 
   // 从 localStorage 中加载保存的草稿数据
   useEffect(() => {
-    const savedDraft = localStorage.getItem("editorDraft");
-    if (savedDraft) {
-      const { title: savedTitle, html: savedHtmlContent, tags: savedTags } = JSON.parse(savedDraft);
-      setTitle(savedTitle);
-      setHtml(savedHtmlContent);
-      setTags(savedTags);
+    // 此时是路由过来的数据
+    if (postData) {
+      setTitle(postData.name);
+      setHtml(postData.content);
+      setTags(postData.tag.split(","));
+      console.log(postData)
+    }else if(draftData){
+      console.log(draftData)
+      setTitle(draftData.name);
+      setHtml(draftData.content);
+      setTags(draftData.tag.split(","));
     }
-  }, []);
+  }, [postData, draftData]);
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newTitle = event.target.value.slice(0, 64); // 限制标题长度为64个字符
@@ -131,21 +115,47 @@ function MyEditor() {
     //   columnId: columnId,
     // });
     // 将标题、HTML 内容和标签保存到 localStorage 中
-    localStorage.setItem(
-        "editorDraft",
-        JSON.stringify({ title, html, tags })
-    );
-    router.push(`/writer/content-management?columnId=${columnId}`);
-  };
+    if (draftData) {
+      updatePost.mutate({
+        id: draftData.id,
+        name: title, // 使用标题作为草稿的名称
+        content: html, // 使用 HTML 内容作为草稿的内容
+        tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
+        status: false,
+        columnId: columnId
+      });
+    } else {
+      createpost.mutate({
+        name: title, // 使用标题作为草稿的名称
+        content: html, // 使用 HTML 内容作为草稿的内容
+        tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
+        status: false,
+        columnId: columnId
+      });
+      router.push(`/writer/content-management?columnId=${columnId}`);
+    }
+  }
   const publish = () => {
     // 调用保存草稿的 API 请求，并传递标题、HTML 内容和标签
-    createpost.mutate({
-      name: title, // 使用标题作为草稿的名称
-      content: html, // 使用 HTML 内容作为草稿的内容
-      tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
-      status: true,
-      columnId: columnId
-    });
+    console.log(html)
+    if(postData){
+      updatePost.mutate({
+        id: postData.id,
+        name: title, // 使用标题作为草稿的名称
+        content: html, // 使用 HTML 内容作为草稿的内容
+        tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
+        status: true,
+        columnId: columnId
+      });
+    }else{
+      createpost.mutate({
+        name: title, // 使用标题作为草稿的名称
+        content: html, // 使用 HTML 内容作为草稿的内容
+        tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
+        status: true,
+        columnId: columnId
+      });
+    }
     router.push(`/writer/content-management?columnId=${columnId}`);
   }
   // 发布的函数
