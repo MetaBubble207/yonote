@@ -19,7 +19,7 @@ const Page = () => {
     const {data:orders,isFetched,isFetching} = api.order.getUserOrder.useQuery({
         userId: token[0],
     });
-    
+
     // 按钮选中状态
     const [selectedButton, setSelectedButton] = useState<number | null>(1); // 追踪选中的按钮
 
@@ -32,7 +32,7 @@ const Page = () => {
 
     // 导航栏返回相应页面
     const [currentPage, setCurrentPage] = React.useState<number>(1);
-    
+
     // const Update = () => {
     //     return (
     //         <div>
@@ -49,7 +49,7 @@ const Page = () => {
     //                      </div>
     //                  )
     //              }
-                
+
     //         </div>
     //     );
     // };
@@ -79,12 +79,12 @@ const Page = () => {
             </div>
         );
     };
-    
-    
 
 
 
-    
+
+
+
     // const Column = () => {
     //     return (
     //         <div>
@@ -126,7 +126,7 @@ const Page = () => {
             </div>
         );
     };
-    
+
 
     const Course = () => {
         return (
@@ -154,7 +154,7 @@ const Page = () => {
 
     const renderContent = (): React.ReactNode => {
         if(!isFetched){
-            return <div className='flex items-center justify-center h-[400px]'><Loading></Loading> </div>         
+            return <div className='flex items-center justify-center h-[400px]'><Loading></Loading> </div>
         }
         switch (currentPage) {
             case 1:
@@ -196,7 +196,7 @@ const Page = () => {
     };
 
     return (
-        <div> 
+        <div>
             <div className='mt-6 mb-3 flex justify-between items-center '>
                 <div className='flex w-43 justify-between'>
                     {renderButtons()}
@@ -209,6 +209,3 @@ const Page = () => {
 };
 
 export default Page;
-
-
-
