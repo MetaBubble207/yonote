@@ -5,12 +5,13 @@ import Image from "next/image";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 import { useSearchParams } from "next/navigation";
+import process from "process";
 
 const Reserved = ({ onClose, check }) => {
     
     const params = useSearchParams();
     const columnId = params.get("id");
-    const token = useLocalStorage("token", null);
+    const [token] = useLocalStorage("token", null);
     const columnUserId = api.column.getUserId.useQuery({ id: columnId });
     const {data:column,isFetching} = api.column.getColumnDetail.useQuery({ columnId: columnId });
     // if(isFetching){
@@ -31,7 +32,9 @@ const Reserved = ({ onClose, check }) => {
         }
     })
 
-    const handle = () => {
+    const handle = async () => {
+        const createOrderRes = await createOrder();
+
         if (check) {
             // 在组件渲染完成后执行订阅订单操作
             subscribeOrder.mutate({
@@ -40,9 +43,9 @@ const Reserved = ({ onClose, check }) => {
                 price: 10,
                 payment: "alipay",
                 status: check,
-                buyerId: token[0],
+                buyerId: token,
             });
-        };
+        }
     }
     
 
@@ -57,6 +60,80 @@ const Reserved = ({ onClose, check }) => {
             setSelectedButton(button);
         }
     };
+    const createOrder = async () =>  {
+        try {
+            const url = 'https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi';
+
+            const reqdata = {
+                amount: {
+                    total: 100,
+                    currency: 'CNY'
+                },
+                mchid: '1900006891',
+                description: 'Image形象店-深圳腾大-QQ公仔',
+                notify_url: 'https://www.weixin.qq.com/wxpay/pay.php',
+                payer: {
+                    openid: token
+                },
+                out_trade_no: '1217752501201407033233388881',
+                goods_tag: 'WXG',
+                appid: process.env.NEXT_PUBLIC_APP_ID
+            };
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(reqdata)
+            });
+
+            if (response.status === 200) {
+                const responseData = await response.json();
+                console.log('success, return body = ', responseData);
+                return responseData;
+            } else if (response.status === 204) {
+                console.log('success');
+            } else {
+                const errorData = await response.text();
+                console.log('failed, resp code = ', response.status, ', return body = ', errorData);
+                throw new Error('request failed');
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
+    }
+//     function onBridgeReady() {
+//         WeixinJSBridge.invoke('getBrandWCPayRequest', {
+//                 "appId": "wx2421b1c4370ecxxx",   // 公众号ID，由商户传入
+//                 "timeStamp": "1395712654",       // 时间戳，自1970年以来的秒数
+//                 "nonceStr": "e61463f8efa94090b1f366cccfbbb444", // 随机串
+//                 "package": "prepay_id=wx21201855730335ac86f8c43d1889123400",
+//                 "signType": "RSA",               // 微信签名方式
+//                 "paySign": "oR9d8PuhnIc+YZ8cBHFCwfgpaK9gd7vaRvkYD7rthRAZ\/X+QBhcCYL21N7cHCTUxbQ+EAt6Uy+lwSN22f5YZvI45MLko8Pfso0jm46v5hqcVwrk6uddkGuT+Cdvu4WBqDzaDjnNa5UK3GfE1Wfl2gHxIIY5lLdUgWFts17D4WuolLLkiFZV+JSHMvH7eaLdT9N5GBovBwu5yYKUR7skR8Fu+LozcSqQixnlEZUfyE55feLOQTUYzLmR9pNtPbPsu6WVhbNHMS3Ss2+AehHvz+n64GDmXxbX++IOBvm2olHu3PsOUGRwhudhVf7UcGcunXt8cqNjKNqZLhLw4jq\/xDg==" // 微信签名
+//             },
+//             function(res) {
+//                 if (res.err_msg == "get_brand_wcpay_request:ok") {
+//                     // 使用以上方式判断前端返回,微信团队郑重提示：
+//                     // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+//                 }
+//             });
+//     }
+//
+// // 检查 WeixinJSBridge 是否已定义
+//     if (typeof WeixinJSBridge == "undefined") {
+//         // 如果 WeixinJSBridge 未定义，添加事件监听器
+//         if (document.addEventListener) {
+//             document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+//         } else if (document.attachEvent) {
+//             document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+//             document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+//         }
+//     } else {
+//         // 如果 WeixinJSBridge 已定义，直接调用 onBridgeReady
+//         onBridgeReady();
+//     }
 
     return (
         <div className="flex items-center w-full h-full z-1 justify-center">
