@@ -59,19 +59,20 @@ const Display = (props: { token: string; ColumnInfo: any }) => {
                         <Image
                             placeholder="blur"
                             blurDataURL={item?.logo ?? '/images/user/cover.svg'}
-                            // style={{ objectFit: "cover" }}
-                            // src="/images/user/cover.svg"
-                            // src={Column.logo}
-                            // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
                             src={item?.logo ?? '/images/user/cover.svg'}
                             alt="icon"
-                            // width={74}
-                            // height={100}
-                            // className="w-15.5 h-19 rounded"
                             className="rounded"
                             objectFit="cover"
                             quality={100}
                             layout="fill"
+                            // style={{ objectFit: "cover" }}
+                            // src="/images/user/cover.svg"
+                            // src={Column.logo}
+                            // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
+                            
+                            // width={74}
+                            // height={100}
+                            // className="w-15.5 h-19 rounded"
                         />
                     </div>
 

@@ -14,7 +14,7 @@ export const ColumnCard = ({ columnData }) => {
                     <div className={"w-62px h-76px relative shrink-0"}>
                         <Image
                             placeholder="blur"
-blurDataURL={columnData.logo ?? "/images/user/Loading.svg"}
+                            blurDataURL={columnData.logo ?? "/images/user/Loading.svg"}
                             src={columnData.logo ?? "/images/user/Loading.svg"}
                             alt="cover"
                             layout='fill'

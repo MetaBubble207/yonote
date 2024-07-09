@@ -3,6 +3,11 @@ import Image from "next/image";
 import { api } from "@/trpc/react";
 import { useSearchParams } from "next/navigation";
 import Loading from "../common/Loading";
+import {useRouter} from "next/navigation";
+import { PathnameContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
+
+
+
 
 export const SpecialColumnHeader = () => {
   const params = useSearchParams();
@@ -15,12 +20,21 @@ export const SpecialColumnHeader = () => {
     id: userId.data,
   });
 
-  // const {data:column, isFetching} = api.column.getColumnDetail.useQuery({
-  //   columnId: columnId,
-  // });
+
   const column = api.column.getColumnDetail.useQuery({
     columnId: columnId,
   }).data;
+
+  //
+  const router = useRouter();
+  const link = () => {
+    if (column){
+      router.push(
+         `/poster/specialCol?id=${column.id}`
+    )}
+    
+};
+//
 
   return (
     <>
@@ -43,15 +57,26 @@ export const SpecialColumnHeader = () => {
           >
             加速计划
           </div>
-          <div className={"inline-block ml-10px mr-16px"}>
+          {/* <div className={"inline-block ml-10px mr-16px"}>
             <Image
               src={"/images/special-column/Share-two (分享2).png"}
               alt={"分享"}
               width={12}
               height={12}
             />
-          </div>
+          </div> */}
+          {/* 点击分享，跳转海报 */}
+          <button className={"inline-block ml-10px mr-16px"} onClick={link}>
+            <Image
+              src={"/images/special-column/Share-two (分享2).png"}
+              alt={"分享"}
+              width={12}
+              height={12}
+            />
+          </button>
+
         </div>
+
         {isFetching ? (
           <div className="pt-5">
             <Loading></Loading>
