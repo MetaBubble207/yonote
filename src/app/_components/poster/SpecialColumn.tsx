@@ -49,13 +49,26 @@ export const SpecialColumn = () => {
     });
 
     const [columnIntro, setColumnIntro] = useState("");
+    // useEffect(() => {
+    //     if (column?.introduce  && column.introduce.length > 176) {
+    //         setColumnIntro(column.introduce = column.introduce.substring(0, 101) + "...");
+    //     } else {
+    //         setColumnIntro(column?.introduce)
+    //     }
+        
+    // }, [column?.introduce || null])
     useEffect(() => {
-        if (column?.introduce  && column.introduce.length > 176) {
-            setColumnIntro(column.introduce = column.introduce.substring(0, 101) + "...");
+        if (column && column.introduce) {
+            if (column.introduce.length > 176) {
+                setColumnIntro(column.introduce.substring(0, 101) + "...");
+            } else {
+                setColumnIntro(column.introduce);
+            }
         } else {
-            setColumnIntro(column?.introduce)
+            setColumnIntro("暂无数据");
         }
-    }, [column?.introduce || null])
+    }, [column]);
+    
 
     return <div className="relative min-h-screen bg-[#999999] pt-25.75">
     <div className="w-85.75 h-129.5005 bg-[#ffffff] ml-4">
@@ -82,7 +95,13 @@ export const SpecialColumn = () => {
                     </div>
                 </div>
             </div>
-            <Image src={"/images/poster/wholeLogo.svg"} alt="wholeLogo" width={2} height={2} className="w-9.5 h-4.29725 mt-7 mr-5" ></Image>
+            <Image src={"/images/poster/wholeLogo.svg"} 
+                alt="wholeLogo" 
+                width={2} 
+                height={2} 
+                className="w-9.5 h-4.29725 mt-7 mr-5" >
+            </Image>
+            
         </div>
 
         {/* 专栏名称 */}
@@ -124,7 +143,7 @@ export const SpecialColumn = () => {
                     WebkitLineClamp: 6
                     }}
                 >
-                    {/* {column?.introduce ? column?.introduce : "暂无简介信息"} */}
+                    
                     {columnIntro}
                 </div>
             </div>        
@@ -157,7 +176,7 @@ export const SpecialColumn = () => {
                 </div>
 
                 <div className="h-5.75 text-[#999] text-2.5 font-500 lh-6">
-                    分享了分享了一篇专栏
+                    分享了一篇专栏
                 </div>
             </div>
 
