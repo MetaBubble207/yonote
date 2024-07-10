@@ -253,6 +253,11 @@ const Page = () => {
     router.push(`/special-column-content?c=${chapter + 1}&id=${columnId}`);
   }
 
+  const shareLink = () => {
+    router.push(`/poster/article?c=${chapter}&id=${columnId}`)
+  }
+
+
   return (
     <div className={"relative bg-#F5F7FB min-h-screen pb-10"}>
       <div className={"ml-16px"}>
@@ -265,10 +270,10 @@ const Page = () => {
           >
             加速计划
           </div>
-          <div className={"inline-block ml-10px mr-16px"}>
+          <div className="inline-block ml-10px mr-16px" onClick={shareLink}>
             <img
               src={"/images/special-column/Share-black.png"}
-              alt={"心智与阅读"}
+              alt={"分享"}
               width={12}
               height={12}
             />
