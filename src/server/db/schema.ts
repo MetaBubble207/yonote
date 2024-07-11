@@ -131,6 +131,7 @@ export const order = createTable(
         payment: varchar("payment"),
         endStatus: boolean("end_status"),
         recommendationId: varchar("recommendation_id"),
+        referralLevel: integer("referral_level"),
         status: boolean("status"),
         endDate: timestamp("end_date"),
         createdAt: timestamp("created_at")
@@ -159,6 +160,7 @@ export const speedUp = createTable(
 export const wallet = createTable(
     "wallet",
     {
+        id: serial("id").primaryKey(),
         userId: varchar("user_id").notNull(),
         regularIncome: real("regular_income"),
         freezeIncome: real("regular_outcome"),
@@ -265,6 +267,18 @@ export const invitationCode = createTable(
         value: varchar("value")
     }
 )
-
+export const referrals = createTable(
+    "referrals",
+    {
+            id: serial("id").primaryKey(),
+            userId:varchar("user_id"),
+            columnId:varchar("column_id"),
+            referredUserId:varchar("referred_user_id"),
+            createdAt: timestamp("created_at")
+                .default(sql`CURRENT_TIMESTAMP`)
+                .notNull(),
+            updatedAt: timestamp("updated_at"),
+    }
+)
 
 export type User = typeof user.$inferInsert
