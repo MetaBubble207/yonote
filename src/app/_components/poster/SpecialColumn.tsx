@@ -4,10 +4,11 @@ import { useSearchParams } from "next/navigation";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 import { useEffect, useState } from "react";
+import QRCode from "qrcode.react";
 
 export const SpecialColumn = () => {
     const params = useSearchParams();
-    const columnId = params.get("id") ;
+    const columnId = params.get("id");
     const userId = api.column.getUserId.useQuery({
         id: columnId,
       });
@@ -49,14 +50,6 @@ export const SpecialColumn = () => {
     });
 
     const [columnIntro, setColumnIntro] = useState("");
-    // useEffect(() => {
-    //     if (column?.introduce  && column.introduce.length > 176) {
-    //         setColumnIntro(column.introduce = column.introduce.substring(0, 101) + "...");
-    //     } else {
-    //         setColumnIntro(column?.introduce)
-    //     }
-        
-    // }, [column?.introduce || null])
     useEffect(() => {
         if (column && column.introduce) {
             if (column.introduce.length > 176) {
@@ -68,6 +61,10 @@ export const SpecialColumn = () => {
             setColumnIntro("暂无数据");
         }
     }, [column]);
+    
+    const originURL = window?.location?.origin;
+    const qrcodeURL = originURL + `/special-column?id=${columnId} `
+
     
 
     return <div className="relative min-h-screen bg-[#999999] pt-25.75">
@@ -143,7 +140,6 @@ export const SpecialColumn = () => {
                     WebkitLineClamp: 6
                     }}
                 >
-                    
                     {columnIntro}
                 </div>
             </div>        
@@ -180,8 +176,15 @@ export const SpecialColumn = () => {
                 </div>
             </div>
 
-            <div className="w-20 ml-25">
-                <Image src={"/images/poster/QRcode.svg"} alt="QRcode" width={2} height={2} className="w-12.5 h-12.5 ml-1.5" />
+            <div className="ml-18.5">
+                <div className="w-12 h-12 mx-auto rounded-1.5 border-1.5 border-[#c1c1c1] bg-white" >
+                    <QRCode
+                        id="columnQrCode"
+                        value= {qrcodeURL}  
+                        size={35} 
+                        className="mt-1.25 ml-1.25"
+                    /> 
+                </div>
                 <div className="h-5.75 text-[#999] text-2.5 font-400 lh-6 mt-1.25">扫码查看详情</div>
             </div>
         </div>

@@ -1,10 +1,12 @@
 "use client"
 import Image from "next/image"
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import React, {useState} from "react";
 import {api} from "@/trpc/react";
 import {useEffect} from "react";
 import useLocalStorage from "@/tools/useStore";
+import  QRCode  from 'qrcode.react';
+import { check } from "drizzle-orm/mysql-core";
 
 export const Article = () => {
     const params = useSearchParams();
@@ -59,6 +61,18 @@ export const Article = () => {
         }
     }, [postData?.content || null])
     
+
+
+     
+    const originURL = window?.location?.origin;
+    const qrcodeURL = originURL + `/special-column-content?c=${chapter}&id=${columnId} `
+    
+    
+
+    
+
+
+
     return <div className="relative min-h-screen bg-[#999999] pt-25.75">
         <div className="w-85.75 h-129.5005 bg-[#ffffff] ml-4">
             {/* 顶部作者信息 */}
@@ -92,21 +106,21 @@ export const Article = () => {
                 overflow:'hidden',
                 textOverflow:'ellipsis',
                 whiteSpace:'nowrap'
-            }}>{postData?.name?postData?.name:"暂无数据"}
+            }}>
+                {postData?.name?postData?.name:"暂无数据"}
+           
             </div>
 
             {/* 文章内容 */}
             <div className="relative w-72.462 h-43.25 mt-4 ml-4.5">
                 <Image src={"/images/poster/title2.svg"} alt="title2" width={2} height={2} className="w-14.75 h-5.25"/>
                 <div className="w-72.462 h-35 text-[#666] text-2.5  font-500 lh-6 mt-1.25"
-                style={{
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 6,}}
-                
-                    // {postData?.content?postData?.content:"暂无数据"}
-                    dangerouslySetInnerHTML={{__html:postContent}}>
+                    style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 6,}}
+                        dangerouslySetInnerHTML={{__html:postContent}}>
                 </div>
             </div>
             
@@ -134,11 +148,18 @@ export const Article = () => {
                         </div>
                     </div>
 
-                    <div className="h-5.75 text-[#999] text-2.5 font-500 lh-6">分享了分享了一篇专栏</div>
+                    <div className="h-5.75 text-[#999] text-2.5 font-500 lh-6">分享了一篇文章</div>
                 </div>
 
-                <div className="w-20 ml-25">
-                    <Image src={"/images/poster/QRcode.svg"} alt="QRcode" width={2} height={2} className="w-12.5 h-12.5 ml-1.5"/>
+                <div className="ml-18.5">
+                    <div className="w-12 h-12 mx-auto rounded-1.5 border-1.5 border-[#c1c1c1] bg-white" >
+                        <QRCode
+                            id="articleQrCode"
+                            value= {qrcodeURL}  
+                            size={35} 
+                            className="mt-1.25 ml-1.25"
+                        /> 
+                    </div>
                     <div className="h-5.75 text-[#999] text-2.5 font-400 lh-6 mt-1.25">扫码查看详情</div>
                 </div>
             </div>
