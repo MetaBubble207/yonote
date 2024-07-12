@@ -61,17 +61,10 @@ export const Article = () => {
         }
     }, [postData?.content || null])
     
-
-
      
     const originURL = window?.location?.origin;
-    const qrcodeURL = originURL + `/special-column-content?c=${chapter}&id=${columnId} `
+    const qrcodeURL = originURL + `/special-column-content?c=${chapter}&id=${columnId}&code=${token} `
     
-    
-
-    
-
-
 
     return <div className="relative min-h-screen bg-[#999999] pt-25.75">
         <div className="w-85.75 h-129.5005 bg-[#ffffff] ml-4">

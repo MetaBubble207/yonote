@@ -63,7 +63,7 @@ export const SpecialColumn = () => {
     }, [column]);
     
     const originURL = window?.location?.origin;
-    const qrcodeURL = originURL + `/special-column?id=${columnId} `
+    const qrcodeURL = originURL + `/special-column?id=${columnId}&code=${token} `
 
     
 
