@@ -81,7 +81,7 @@ export const SpecialColumn = () => {
             link.download = 'screenshotColumn.png';  
             link.href = dataUrl; 
             link.classList.add('hidden'); 
-            // console.log(link.href);  //查看生成的图片
+            console.log(link.href);  //查看生成的图片
 
             document.body.appendChild(link);
             link.click();

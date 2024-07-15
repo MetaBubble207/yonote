@@ -82,7 +82,7 @@ export const Article = () => {
             link.download = 'screenshotArticle.png';  
             link.href = dataUrl; 
             link.classList.add('hidden'); 
-            // console.log(link.href);  //查看生成的图片
+            console.log(link.href);  //查看生成的图片
 
             document.body.appendChild(link);
             link.click();
