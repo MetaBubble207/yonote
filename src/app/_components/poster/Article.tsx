@@ -79,7 +79,7 @@ export const Article = () => {
 
             // 创建一个<a>元素用于下载截图
             const link = document.createElement('a');
-            link.download = 'screenshot.png';  
+            link.download = 'screenshotArticle.png';  
             link.href = dataUrl; 
             link.classList.add('hidden'); 
             // console.log(link.href);  //查看生成的图片

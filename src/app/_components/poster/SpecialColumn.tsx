@@ -3,8 +3,9 @@ import Image from "next/image"
 import { useSearchParams } from "next/navigation";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode.react";
+import { domToPng } from 'modern-screenshot';
 
 export const SpecialColumn = () => {
     const params = useSearchParams();
@@ -21,6 +22,7 @@ export const SpecialColumn = () => {
         columnId: columnId,
     }).data;
 
+    //分享的用户数据
     let userInfo;
     const [token, setToken] = useLocalStorage("token", null);
     if (typeof window !== "undefined"){
@@ -62,13 +64,51 @@ export const SpecialColumn = () => {
         }
     }, [column]);
     
+    //生成分享二维码
     const originURL = window?.location?.origin;
     const qrcodeURL = originURL + `/special-column?id=${columnId}&code=${token} `
 
-    
+    // useRef来获取截图按钮的引用
+    const screenshotButtonRef = useRef(null);
+
+    // 处理截图按钮点击事件
+    const handleScreenshotClick = async () => {
+        try {
+            const dataUrl = await domToPng(document.querySelector('#poster'));
+
+            // 创建一个<a>元素用于下载截图
+            const link = document.createElement('a');
+            link.download = 'screenshotColumn.png';  
+            link.href = dataUrl; 
+            link.classList.add('hidden'); 
+            // console.log(link.href);  //查看生成的图片
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            alert('保存成功！');
+        } catch (error) {
+            console.error('截图失败:', error);
+            alert('无法截图，请重试。');
+        }
+    };
+
+    // useEffect来监听截图按钮的点击事件
+    useEffect(() => {
+        const button = screenshotButtonRef.current;
+        if (button) {
+            button.addEventListener('click', handleScreenshotClick);
+        }
+        return () => {
+            if (button) {
+                button.removeEventListener('click', handleScreenshotClick);
+            }
+        };
+    }, []); 
+
 
     return <div className="relative min-h-screen bg-[#999999] pt-25.75">
-    <div className="w-85.75 h-129.5005 bg-[#ffffff] ml-4">
+    <div id="poster" className="w-85.75 h-129.5005 bg-[#ffffff] ml-4">
         {/* 顶部作者信息 */}
         <div className="flex">
             <div className="flex items-center w-full h-19.375">
@@ -148,7 +188,7 @@ export const SpecialColumn = () => {
         {/* 底部用户信息 */}
         <div className="flex h-40 ml-4.375 mt-14">
             <div className="w-40 mt-2">
-                <button className="flex items-center w-20 h-3">
+                <button ref={screenshotButtonRef} className="flex items-center w-20 h-3">
                     <Image src={"/images/poster/triangle.svg"} alt="triangle" width={2} height={2} className="w-2.58125 h-2.58125 " />
                     <div className="h-5.7 text-[#666] text-2.5 font-500 lh-6 ml-1.5">保存到相册</div>
                 </button>
