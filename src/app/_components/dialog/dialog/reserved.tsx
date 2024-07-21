@@ -14,10 +14,9 @@ const Reserved = ({ onClose, check }) => {
     const [token] = useLocalStorage("token", null);
     const columnUserId = api.column.getUserId.useQuery({ id: columnId });
     const {data:column,isFetching} = api.column.getColumnDetail.useQuery({ columnId: columnId });
-    // if(isFetching){
-    //     return <>loading</>
-    // }
-
+    const priceListData = api.priceList
+        .getByColumnId.useQuery({columnId: columnId}, {enabled: !!columnId}).data
+        ?.sort((a,b)=> a.id - b.id);
     
     const subscribeOrder = api.order.createOrder.useMutation({
         onSuccess: (r) => {
@@ -33,7 +32,7 @@ const Reserved = ({ onClose, check }) => {
     })
 
     const handle = async () => {
-        const createOrderRes = await createOrder();
+        // const createOrderRes = await createOrder();
 
         if (check) {
             // 在组件渲染完成后执行订阅订单操作
@@ -161,30 +160,41 @@ const Reserved = ({ onClose, check }) => {
                 <Image src={"/images/dialog/Close-small.png"} alt="close" width={20} height={20} className="w-20px h-20px ml-335px" onClick={onClose}></Image>
                 <div className=" text-[#252525] text-3.75 font-500 lh-6  mt-2 justify-center items-center">「{column?.name?.length >= 18 ? column?.name?.substring(0, 18) + "..." : column.name}」</div>
                 <div className="mt-6">
-                    <button className={`w-84.25 h-10 shrink-0 border-rd-1.25 border-1 border-solid bg-[#F5F7FB] justify-center ${selectedButton === 1 ? 'border-[#45E1B8]' : ''}`} onClick={() => handleButtonClick(1)}>
-                        <div className="flex ml-2.5 items-center ">
-                            <div className="shrink-0 text-[#252525] font-700 lh-6">¥{column?.price}</div>
-                            <div className="w-29.25 ml-1 h-6.158 shrink-0 text-[#B5B5B5] text-3 font-500 lh-6">一次购买，永久有效</div>
-                            {selectedButton === 1 && (
-                                <Image src="/images/dialog/check.png" alt="check" width={20} height={20} className="right-8 absolute w-5 h-5" />
-                            )}
-                        </div>
-                    </button>
-                    <button className={`block w-84.25 h-10 shrink-0 border-rd-1.25 border-1 mt-2 border-solid bg-[#F5F7FB] ${selectedButton === 2 ? 'border-[#45E1B8]' : ''}`} onClick={() => handleButtonClick(2)}>
-                        <div className="flex ml-2.5 items-center  ">
-                            <div className=" text-[#252525] text-3.5 font-700 lh-6">¥{column.price}</div>
-                            <div className="w-33.5 ml-1 text-[#B5B5B5] text-3 font-500 lh-6 ">限时购买，有效期30天</div>
-                            {selectedButton === 2 && (
-                                <Image src="/images/dialog/check.png" alt="check" width={20} height={20} className="right-8 absolute w-5 h-5" />
-                            )}
-                        </div>
-                    </button>
+                    {priceListData?.map((strategy, index) => (
+                        <button
+                            key={index}
+                            className={`w-84.25 h-10 shrink-0 border-rd-1.25 border-1 border-solid bg-[#F5F7FB] justify-center ${selectedButton === index + 1 ? 'border-[#45E1B8]' : ''} ${index > 0 ? 'mt-2' : ''}`}
+                            onClick={() => handleButtonClick(index + 1)}
+                        >
+                            <div className="flex ml-2.5 items-center relative">
+                                <div className="shrink-0 text-[#252525] font-700 lh-6">¥{strategy.price}</div>
+                                <div className="ml-1 text-[#B5B5B5] text-3 font-500 lh-6">
+                                    {strategy.timeLimit >= 99999
+                                        ? '一次购买，永久有效'
+                                        : `限时购买，有效期${strategy.timeLimit}天`}
+                                </div>
+                                {selectedButton === index + 1 && (
+                                    <Image
+                                        src="/images/dialog/check.png"
+                                        alt="check"
+                                        width={20}
+                                        height={20}
+                                        className="absolute right-8 w-5 h-5"
+                                    />
+                                )}
+                            </div>
+                        </button>
+                    ))}
+                    {(!priceListData || priceListData?.length < 1) && <span>该专栏还没设置定价策略噢~</span>}
                 </div>
-                <div className="w-85 mt-4 text-[#666] text-2.5 font-not-italic font-500 lh-6 m-auto">*内容为第三方个人创建，购买前请知晓内容，服务及相关风险，购买后 24 小时内可申请退款</div>
+                <div
+                    className="w-85 mt-4 text-[#666] text-2.5 font-not-italic font-500 lh-6 m-auto">*内容为第三方个人创建，购买前请知晓内容，服务及相关风险，购买后
+                    24 小时内可申请退款
+                </div>
                 <div className="w-85.75 h-10 shrink-0 mt-8">
                     <button onClick={handle}>
                         {/* 支付跳转 */}
-                        <Image src="/images/dialog/pay.png" alt="pay" width={343} height={40} className="h-10 w-85.75" />
+                        <Image src="/images/dialog/pay.png" alt="pay" width={343} height={40} className="h-10 w-85.75"/>
                     </button>
                 </div>
             </div>

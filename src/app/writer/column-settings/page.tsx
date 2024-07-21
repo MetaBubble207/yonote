@@ -23,7 +23,7 @@ const Page = () => {
     const columnData = api.column.getColumnDetail.useQuery({columnId: columnId}, {enabled: !!columnId}).data;
     const priceListData = api.priceList
         .getByColumnId.useQuery({columnId: columnId}, {enabled: !!columnId}).data
-        ?.sort((item,pre)=> item.id - pre.id);
+        ?.sort((a,b)=> a.id - b.id);
     const [name, setName] = useState(columnData?.name);
     const [priceList, setPriceList] = useState(priceListData);
 
@@ -212,7 +212,7 @@ const Page = () => {
                                             <>
                                                 <input
                                                     className={'w-40 h-8 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] pl-3'}
-                                                    placeholder="大于99999天即为永久"
+                                                    placeholder="大于99998天即为永久"
                                                     style={{fontSize: '14px'}}
                                                     type="text"
                                                     value={strategy.timeLimit}
@@ -220,7 +220,7 @@ const Page = () => {
                                                         const inputValue = e.target.value.replace(/\D/g, ''); // 只保留数字
                                                         updatePriceList(index, 'timeLimit', inputValue);
                                                     }}
-                                                    maxLength={5}
+                                                    maxLength={7}
                                                     required
                                                 />
                                                 天：
@@ -228,7 +228,7 @@ const Page = () => {
                                         ) : (
                                             <span
                                                 className="text-[rgba(0,0,0,0.85)] text-3.5 font-not-italic font-400 lh-5.5">
-                                                {strategy.timeLimit === 99999 ? '永久买断价格：' : `限时购买价格(${strategy.timeLimit}天)：`}
+                                                {strategy.timeLimit >= 99999 ? '永久买断价格：' : `限时购买价格(${strategy.timeLimit}天)：`}
                                             </span>
                                         )}
                                     </td>
