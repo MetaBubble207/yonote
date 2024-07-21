@@ -1,32 +1,35 @@
 "use client"
-import React from "react";
+import React, {useEffect} from "react";
 import Image from "next/image";
 import process from "process";
+import {useRouter, useSearchParams} from "next/navigation";
+
 const Login = () => {
   // const [checked, setChecked] = useState(false);
   // const [modalVisible, setModalVisible] = useState(false); // 用于管理模态框可见性的状态
-  // const router = useRouter();
+  const router = useRouter();
+  let originPathname = useSearchParams().get("origin");
+  console.log(originPathname)
   let checked = false;
   const handleCancel = () => {
     // 处理模态框取消/关闭的函数
     // setModalVisible(false); // 当取消时隐藏模态框
-    // router.back();
+    router.back();
   };
 
-  // 定义关闭模态框的函数
-  // const closeModal = () => {
-  //   setModalVisible(false);
-  // };
 
   // const aut1_url = `https://open.weixin.qq.com/connect/qrconnect?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect`;
   const handleLogin = () => {
     if (checked && typeof  window !== "undefined") {
       const appid = process.env.NEXT_PUBLIC_APP_ID;
 
+      if(originPathname === null){
+        originPathname = "/dashboard/user";
+      }
       const originURL = window?.location?.origin;
 
       // const redirect_uri = encodeURIComponent(originURL + "/login/callback");
-      const redirect_uri = encodeURIComponent(originURL + "/dashboard/user");
+      const redirect_uri = encodeURIComponent(originURL + originPathname);
       // 跳转到微信认证中心
       window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_userinfo&forcePopup=true&state=STATE#wechat_redirect`;
       // setModalVisible(true);

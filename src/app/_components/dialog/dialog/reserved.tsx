@@ -104,6 +104,26 @@ const Reserved = ({ onClose, check }) => {
             console.error('Error:', error.message);
         }
     }
+
+    const placeAnOrderOnWechatPay = async () => {
+        await fetch('https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi',{
+            method: 'post',
+            body: JSON.stringify({
+                mchid: process.env.NEXT_PUBLIC_MCHID,
+                out_trade_no: "asd1123",
+                appid: process.env.NEXT_PUBLIC_APP_ID,
+                description: "测试文章购买",
+                notify_url: "https://www.weixin.qq.com/wxpay/pay.php",
+                amount: {
+                    total: 1,
+                    currency: "CNY"
+                },
+                payer: {
+                    openid: token
+                }
+            })
+        })
+    }
 //     function onBridgeReady() {
 //         WeixinJSBridge.invoke('getBrandWCPayRequest', {
 //                 "appId": "wx2421b1c4370ecxxx",   // 公众号ID，由商户传入

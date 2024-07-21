@@ -37,6 +37,8 @@
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
     "uuid": "^9.0.1",
+    "weixin-js-sdk": "^1.6.5",
+    "wxpay-v3": "^3.0.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -48,6 +50,7 @@
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "@unocss/postcss": "^0.58.7",
+    "@unocss/preset-web-fonts": "^0.60.0",
     "drizzle-kit": "^0.20.14",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.1.3",
