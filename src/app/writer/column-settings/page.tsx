@@ -28,7 +28,6 @@ const Page = () => {
     const [priceList, setPriceList] = useState(priceListData);
 
     const [intro, setIntro] = useState(columnData?.introduce);
-    const [initIntro, setInitIntro] = useState(columnData?.introduce);
     const [cover, setCover] = useState(columnData?.logo);
     const [description, setDescription] = useState(columnData?.description);
     const [checkColor, setCheckColor] = useState("#1DB48D");
@@ -41,15 +40,16 @@ const Page = () => {
     useEffect(()=>{
         setPriceList(priceListData);
     },[priceListData])
+    useEffect(() => {
+        setCover(columnData?.logo);
+    }, [columnData]);
     const updateApi = api.column.update.useMutation({
         onSuccess: (data) => {
-            router.push(`/writer/column-settings?columnId=${columnId}`);
 
         }
     });
     const deleteApi = api.priceList.delById.useMutation({
         onSuccess: (data) => {
-            router.push(`/writer/column-settings?columnId=${columnId}`);
 
         }
     })
@@ -88,7 +88,6 @@ const Page = () => {
                 introduce: intro ?? columnData!.introduce ?? "",
                 description: description ?? columnData!.description ?? ""
             });
-        setInitIntro(intro);
         setIsEditing(false);
         setShowConfirmSubmitModal(false);
     };
