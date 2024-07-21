@@ -92,7 +92,7 @@ export const column = createTable(
         distributorship: boolean("distributorship").notNull().default(false),
         introduce: varchar("introduce"),
         type: varchar("type"),
-        price: real("price"),
+        priceId: integer("price_id"),
         logo: text("logo").default("http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png"),
         description: varchar("description"),
         payment: varchar("payment"),
@@ -280,5 +280,17 @@ export const referrals = createTable(
             updatedAt: timestamp("updated_at"),
     }
 )
-
+export const priceList = createTable(
+    "price_list",
+    {
+        id: serial("id").primaryKey(),
+        columnId: varchar("column_id"),
+        price: real("price"),
+        timeLimit: integer("time_limit"),
+        createdAt: timestamp("created_at")
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
+    }
+)
 export type User = typeof user.$inferInsert
