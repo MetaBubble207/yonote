@@ -36,14 +36,6 @@ export const SortLabel = (props) => {
                 color: '#999'
             };
         }
-        // const sendData = () => {
-        //     this.props.onData("Hello from Child");
-        // }
-
-        // const render=()=> {
-        //     return <button onClick={this.sendData}>Send Data</button>;
-        // }
-
 
     }
     const { data: postInfo, isFetched } = api.post.getAllInOrder.useQuery({

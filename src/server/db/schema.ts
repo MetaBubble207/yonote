@@ -92,7 +92,6 @@ export const column = createTable(
         distributorship: boolean("distributorship").notNull().default(false),
         introduce: varchar("introduce"),
         type: varchar("type"),
-        priceId: integer("price_id"),
         logo: text("logo").default("http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png"),
         description: varchar("description"),
         payment: varchar("payment"),

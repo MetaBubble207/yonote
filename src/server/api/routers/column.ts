@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column, order, user} from "@/server/db/schema";
+import {column, order, priceList, user} from "@/server/db/schema";
 import {and, desc, eq, like, sql} from "drizzle-orm";
 import {uniqueArray} from "@/tools/uniqueArray";
 
@@ -17,9 +17,8 @@ export const columnRouter = createTRPCRouter({
         return ctx.db.insert(column).values({
             id: input.id,
             name: input.name,
-            price: input.price,
             userId: input.userId,
-        }).returning({id: column.id, name: column.name, price: column.price})
+        }).returning({id: column.id, name: column.name})
     }),
 
     // getAll: publicProcedure
@@ -50,14 +49,35 @@ export const columnRouter = createTRPCRouter({
         .input(z.object({
             id: z.string(),
             name: z.string(),
-            price: z.number(),
+            priceList: z.array(z.object({id:z.union([z.number(),z.undefined()]),price:z.number(),timeLimit:z.number()})),
             introduce: z.string(),
             description: z.string()
         }))
         .mutation(async ({ctx, input}) => {
+            const oldPriceList = await ctx.db.select().from(priceList).where(eq(priceList.columnId,input.id));
+            const sortedOldPriceList = oldPriceList.sort((item,pre)=> item.id - pre.id);
+            input.priceList.map(async (item,index) => {
+                if(sortedOldPriceList?.[index] && (sortedOldPriceList?.[index]?.price !== input.priceList[index].price || sortedOldPriceList?.[index]?.timeLimit !== input.priceList[index].timeLimit)) {
+                    console.log("old ===>",sortedOldPriceList,"new ===>",item,input.priceList[index])
+                    await ctx.db.update(priceList).set({
+                        price: item.price,
+                        timeLimit: item.timeLimit
+                    }).where(eq(priceList.id,sortedOldPriceList[index].id))
+                }
+                // 判断是否是新加入的策略
+                const isNew = !sortedOldPriceList?.map(item => item.id).includes(item.id);
+
+                if(isNew || !sortedOldPriceList){
+                    await ctx.db.insert(priceList).values({
+                        columnId: input.id,
+                        price: item.price,
+                        timeLimit: item.timeLimit
+                    })
+                }
+
+            })
             return ctx.db.update(column).set({
                 name: input.name,
-                price: input.price,
                 introduce: input.introduce,
                 description: input.description,
             }).where(eq(column.id, input.id));

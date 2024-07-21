@@ -1,22 +1,11 @@
-import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { wallet } from "@/server/db/schema";
-import { sql } from "drizzle-orm";
-import { getCurrentTime } from "@/tools/getCurrentTime";
-
+import {z} from "zod";
+import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
+import {wallet} from "@/server/db/schema";
+import {eq} from "drizzle-orm";
 
 
 export const walletRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-  }),
-
-
-  // 查询账户余额信息
+  // 查询账户余额信息 // 错误方法
   getBalance: publicProcedure.query(async ({ ctx }) => {
     const walletData = await ctx.db.query.wallet.findFirst();
     if (walletData) {
@@ -35,8 +24,12 @@ export const walletRouter = createTRPCRouter({
       };
     }
   }),
+  getById: publicProcedure
+      .input(z.object({ id: z.string() }))
+      .query(({ ctx ,input}) => {
+        return ctx.db.query.wallet.findFirst({
+          where: eq(wallet.userId, input.id)
+        });
 
-  
-
-  
+  })
 });
