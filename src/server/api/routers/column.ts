@@ -55,10 +55,15 @@ export const columnRouter = createTRPCRouter({
         }))
         .mutation(async ({ctx, input}) => {
             const oldPriceList = await ctx.db.select().from(priceList).where(eq(priceList.columnId,input.id));
+            const oldIds = input.priceList.map((item) => item.id);
+            oldPriceList.map(async item => {
+                if(!oldIds.includes(item.id)) {
+                    await ctx.db.delete(priceList).where(eq(priceList.id,item.id));
+                }
+            });
             const sortedOldPriceList = oldPriceList.sort((item,pre)=> item.id - pre.id);
             input.priceList.map(async (item,index) => {
                 if(sortedOldPriceList?.[index] && (sortedOldPriceList?.[index]?.price !== input.priceList[index].price || sortedOldPriceList?.[index]?.timeLimit !== input.priceList[index].timeLimit)) {
-                    console.log("old ===>",sortedOldPriceList,"new ===>",item,input.priceList[index])
                     await ctx.db.update(priceList).set({
                         price: item.price,
                         timeLimit: item.timeLimit

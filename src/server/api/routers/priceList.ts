@@ -9,5 +9,10 @@ export const priceListRouter = createTRPCRouter({
         .input(z.object({ columnId: z.string() }))
         .query(({ ctx ,input}) => {
             return ctx.db.select().from(priceList).where(eq(priceList.columnId, input.columnId));
+        }),
+    delById: publicProcedure
+        .input(z.object({id:z.number()}))
+        .mutation(({ ctx, input }) => {
+            return ctx.db.delete(priceList).where(eq(priceList.id, input.id));
         })
 });

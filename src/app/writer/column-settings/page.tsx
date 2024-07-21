@@ -4,7 +4,7 @@ import React, {Suspense, useEffect, useRef, useState} from 'react';
 import {message, Switch} from 'antd';
 import {api} from "@/trpc/react";
 import Image from "next/image";
-import {useSearchParams} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import OSS from "ali-oss";
 import {W100H50Modal} from "@/app/_components/common/W100H50Modal";
 
@@ -17,6 +17,7 @@ let client = new OSS({
 });
 
 const Page = () => {
+    const router = useRouter();
     const params = useSearchParams();
     const columnId = params.get("columnId");
     const columnData = api.column.getColumnDetail.useQuery({columnId: columnId}, {enabled: !!columnId}).data;
@@ -42,10 +43,16 @@ const Page = () => {
     },[priceListData])
     const updateApi = api.column.update.useMutation({
         onSuccess: (data) => {
-            console.log(data);
+            router.push(`/writer/column-settings?columnId=${columnId}`);
+
         }
     });
+    const deleteApi = api.priceList.delById.useMutation({
+        onSuccess: (data) => {
+            router.push(`/writer/column-settings?columnId=${columnId}`);
 
+        }
+    })
     const fileInputRef = useRef(null);
     const handleNameChange = (e) => setName(e.target.value);
 
@@ -73,13 +80,14 @@ const Page = () => {
     };
 
     const submit = () => {
-        updateApi.mutate({
-            id: columnId,
-            name: name ?? columnData!.name ?? "",
-            priceList: priceList,
-            introduce: intro ?? columnData!.introduce ?? "",
-            description: description ?? columnData!.description ?? ""
-        });
+        console.log(priceList,priceListData);
+            updateApi.mutate({
+                id: columnId,
+                name: name ?? columnData!.name ?? "",
+                priceList: priceList,
+                introduce: intro ?? columnData!.introduce ?? "",
+                description: description ?? columnData!.description ?? ""
+            });
         setInitIntro(intro);
         setIsEditing(false);
         setShowConfirmSubmitModal(false);
@@ -114,6 +122,10 @@ const Page = () => {
             // @ts-ignore
             setPriceList([...priceList, {price: 0, timeLimit: 0}]);
         }
+    };
+    const delStrategy = (index) => {
+        const newList = priceList.filter((_, i) => i !== index);
+        setPriceList(newList);
     };
 
     const ConfirmSubmitModal = () => (
@@ -237,7 +249,7 @@ const Page = () => {
                                                     maxLength={7}
                                                     required
                                                 />
-                                                <span></span>
+                                                <span onClick={() => delStrategy(index)}>删除</span>
                                             </>
                                         ) : (
                                             <span
