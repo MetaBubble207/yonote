@@ -33,28 +33,10 @@ const Reserved = ({onClose, check}) => {
         }
     })
     const [showTopUpModal,setShowTopUpModal] = useState(false);
-    const handleClickPay = async () => {
-        // const createOrderRes = await createOrder();
-        if (!selectedItem) {
-            messageApi.error("请先选择支付策略噢~😁");
-            return false;
-        }
-        if (!walletData || walletData.freezeIncome + walletData.regularIncome < selectedItem) {
-            messageApi.error("钱包余额不足，请先充值噢~😁");
-            setShowTopUpModal(true);
-            return false;
-        }
-        if (check) {
-            // 在组件渲染完成后执行订阅订单操作
-            subscribeOrder.mutate({
-                ownerId: columnUserId.data,
-                columnId: columnId,
-                price: 10,
-                payment: "alipay",
-                status: check,
-                buyerId: token,
-            });
-        }
+    const [showConfirmPayModal,setConfirmPayModal] = useState(false);
+    const handleClickPay =  () => {
+        setShowTopUpModal(false);
+        setConfirmPayModal(true);
     }
 
 
@@ -72,6 +54,31 @@ const Reserved = ({onClose, check}) => {
 
     const popUp = () => {
         setShowTopUpModal(false);
+        setConfirmPayModal(true);
+    }
+    const pay = async () => {
+        if (!selectedItem) {
+            messageApi.error("请先选择支付策略噢~😁");
+            return false;
+        }
+        if (!walletData || walletData.freezeIncome + walletData.regularIncome < selectedItem) {
+            messageApi.error("钱包余额不足，请先充值噢~😁");
+            setShowTopUpModal(true);
+            setConfirmPayModal(false);
+            return false;
+        }
+        // 支付
+        if (check) {
+            // 在组件渲染完成后执行订阅订单操作
+            subscribeOrder.mutate({
+                ownerId: columnUserId.data,
+                columnId: columnId,
+                price: 10,
+                payment: "alipay",
+                status: check,
+                buyerId: token,
+            });
+        }
     }
     const createOrder = async () => {
         try {
@@ -177,11 +184,17 @@ const Reserved = ({onClose, check}) => {
             <button onClick={() => popUp()}>充值</button>
         </W100H50Modal>
     }
+    const ConfirmPayModal = () => {
+        return <W100H50Modal>
+            <div>确定是否购买该专栏</div>
+            <button onClick={pay}>确认</button>
+        </W100H50Modal>
+    }
     return (
         <div className="flex items-center w-full h-full z-1 justify-center">
             {contextHolder}
             {showTopUpModal && <TopUpModal/>}
-
+            {showConfirmPayModal && <ConfirmPayModal/>}
             <div className="flex flex-col w-full items-center justify-center b-white fixed bottom-0 bg-#fff pb-10">
                 <Image src={"/images/dialog/Close-small.png"} alt="close" width={20} height={20}
                        className="w-20px h-20px ml-335px" onClick={onClose}></Image>
