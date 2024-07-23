@@ -1,23 +1,25 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Image from "next/image";
-import { api } from "@/trpc/react";
+import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
-import { useSearchParams } from "next/navigation";
+import {useSearchParams} from "next/navigation";
 import process from "process";
+import {message} from "antd";
+import {W100H50Modal} from "@/app/_components/common/W100H50Modal";
 
-const Reserved = ({ onClose, check }) => {
-    
+const Reserved = ({onClose, check}) => {
+    const [messageApi, contextHolder] = message.useMessage();
     const params = useSearchParams();
     const columnId = params.get("id");
     const [token] = useLocalStorage("token", null);
-    const columnUserId = api.column.getUserId.useQuery({ id: columnId });
-    const {data:column,isFetching} = api.column.getColumnDetail.useQuery({ columnId: columnId });
+    const columnUserId = api.column.getUserId.useQuery({id: columnId});
+    const {data: column, isFetching} = api.column.getColumnDetail.useQuery({columnId: columnId});
     const priceListData = api.priceList
         .getByColumnId.useQuery({columnId: columnId}, {enabled: !!columnId}).data
-        ?.sort((a,b)=> a.id - b.id);
-    
+        ?.sort((a, b) => a.id - b.id);
+    const walletData = api.wallet.getByUserId.useQuery({id: token}, {enabled: !!token}).data;
     const subscribeOrder = api.order.createOrder.useMutation({
         onSuccess: (r) => {
             onClose();
@@ -30,10 +32,18 @@ const Reserved = ({ onClose, check }) => {
             console.log("订阅失败");
         }
     })
-
-    const handle = async () => {
+    const [showTopUpModal,setShowTopUpModal] = useState(false);
+    const handleClickPay = async () => {
         // const createOrderRes = await createOrder();
-
+        if (!selectedItem) {
+            messageApi.error("请先选择支付策略噢~😁");
+            return false;
+        }
+        if (!walletData || walletData.freezeIncome + walletData.regularIncome < selectedItem) {
+            messageApi.error("钱包余额不足，请先充值噢~😁");
+            setShowTopUpModal(true);
+            return false;
+        }
         if (check) {
             // 在组件渲染完成后执行订阅订单操作
             subscribeOrder.mutate({
@@ -46,20 +56,24 @@ const Reserved = ({ onClose, check }) => {
             });
         }
     }
-    
 
-    const [selectedButton, setSelectedButton] = useState<number | null>(null); // 追踪选中的按钮
 
-    const handleButtonClick = (button: number) => {
-        if (selectedButton === button) {
-            // 如果点击的是当前选中的按钮，则取消选中状态
-            setSelectedButton(null);
+    const [selectedItem, setSelectedItem] = useState(null); // 追踪选中的item
+
+    const handleButtonClick = (item) => {
+        if (selectedItem === item) {
+            // 如果点击的是当前选中的item，则取消选中状态
+            setSelectedItem(null);
         } else {
-            // 否则设置点击的按钮为选中状态
-            setSelectedButton(button);
+            // 否则设置点击的item为选中状态
+            setSelectedItem(item);
         }
     };
-    const createOrder = async () =>  {
+
+    const popUp = () => {
+        setShowTopUpModal(false);
+    }
+    const createOrder = async () => {
         try {
             const url = 'https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi';
 
@@ -105,7 +119,7 @@ const Reserved = ({ onClose, check }) => {
     }
 
     const placeAnOrderOnWechatPay = async () => {
-        await fetch('https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi',{
+        await fetch('https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi', {
             method: 'post',
             body: JSON.stringify({
                 mchid: process.env.NEXT_PUBLIC_MCHID,
@@ -154,17 +168,32 @@ const Reserved = ({ onClose, check }) => {
 //         onBridgeReady();
 //     }
 
+    const TopUpModal = () => {
+        return <W100H50Modal>
+            <div>
+                <label htmlFor="">输入充值金额</label>
+                <input type="text"/>
+            </div>
+            <button onClick={() => popUp()}>充值</button>
+        </W100H50Modal>
+    }
     return (
         <div className="flex items-center w-full h-full z-1 justify-center">
+            {contextHolder}
+            {showTopUpModal && <TopUpModal/>}
+
             <div className="flex flex-col w-full items-center justify-center b-white fixed bottom-0 bg-#fff pb-10">
-                <Image src={"/images/dialog/Close-small.png"} alt="close" width={20} height={20} className="w-20px h-20px ml-335px" onClick={onClose}></Image>
-                <div className=" text-[#252525] text-3.75 font-500 lh-6  mt-2 justify-center items-center">「{column?.name?.length >= 18 ? column?.name?.substring(0, 18) + "..." : column.name}」</div>
-                <div className="mt-6">
+                <Image src={"/images/dialog/Close-small.png"} alt="close" width={20} height={20}
+                       className="w-20px h-20px ml-335px" onClick={onClose}></Image>
+                <div
+                    className=" text-[#252525] text-3.75 font-500 lh-6  mt-2 justify-center items-center">「{column?.name?.length >= 18 ? column?.name?.substring(0, 18) + "..." : column.name}」
+                </div>
+                <div className="mt-6 pl-5">
                     {priceListData?.map((strategy, index) => (
                         <button
                             key={index}
-                            className={`w-84.25 h-10 shrink-0 border-rd-1.25 border-1 border-solid bg-[#F5F7FB] justify-center ${selectedButton === index + 1 ? 'border-[#45E1B8]' : ''} ${index > 0 ? 'mt-2' : ''}`}
-                            onClick={() => handleButtonClick(index + 1)}
+                            className={`w-84.25 h-10 shrink-0 border-rd-1.25 border-1 border-solid bg-[#F5F7FB] justify-center ${selectedItem === strategy ? 'border-[#45E1B8]' : ''} ${index > 0 ? 'mt-2' : ''}`}
+                            onClick={() => handleButtonClick(strategy)}
                         >
                             <div className="flex ml-2.5 items-center relative">
                                 <div className="shrink-0 text-[#252525] font-700 lh-6">¥{strategy.price}</div>
@@ -173,13 +202,13 @@ const Reserved = ({ onClose, check }) => {
                                         ? '一次购买，永久有效'
                                         : `限时购买，有效期${strategy.timeLimit}天`}
                                 </div>
-                                {selectedButton === index + 1 && (
+                                {selectedItem === strategy && (
                                     <Image
                                         src="/images/dialog/check.png"
                                         alt="check"
-                                        width={20}
-                                        height={20}
-                                        className="absolute right-8 w-5 h-5"
+                                        width={24}
+                                        height={24}
+                                        className="absolute right-2.5"
                                     />
                                 )}
                             </div>
@@ -192,7 +221,7 @@ const Reserved = ({ onClose, check }) => {
                     24 小时内可申请退款
                 </div>
                 <div className="w-85.75 h-10 shrink-0 mt-8">
-                    <button onClick={handle}>
+                    <button onClick={handleClickPay}>
                         {/* 支付跳转 */}
                         <Image src="/images/dialog/pay.png" alt="pay" width={343} height={40} className="h-10 w-85.75"/>
                     </button>

@@ -24,7 +24,7 @@ export const walletRouter = createTRPCRouter({
       };
     }
   }),
-  getById: publicProcedure
+  getByUserId: publicProcedure
       .input(z.object({ id: z.string() }))
       .query(({ ctx ,input}) => {
         return ctx.db.query.wallet.findFirst({

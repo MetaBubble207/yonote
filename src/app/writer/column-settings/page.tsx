@@ -149,6 +149,7 @@ const Page = () => {
 
     return (
         <Suspense>
+            {contextHolder}
             <div className={'w-full h-full mt-16px ml-18px'}>
                 <div className={'w-97% flex items-center shrink-0 border-rd-10px bg-[#FFF] pb-35px'}>
                     <div className={'pt-7 ml-10'}>

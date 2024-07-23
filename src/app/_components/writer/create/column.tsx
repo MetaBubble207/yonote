@@ -50,9 +50,6 @@ const Column = () => {
       setPrice("");
       return false;
     }
-    // 在这里可以添加其他提交逻辑
-    // console.log(name, columnId, price);
-    console.log("name ==========",name)
     createApi.mutate({
       id: columnId,
       name: name,
