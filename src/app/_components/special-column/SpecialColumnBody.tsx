@@ -14,7 +14,6 @@ export const SpecialColumnBody = () => {
     const params = useSearchParams();
     const columnId = params.get("id");
     const code = params.get("code");
-    const invitationCode = params.get("invitationCode");
     const [token, setToken] = useLocalStorage("token", null);
 
     const [check, setCheck] = useState(false);

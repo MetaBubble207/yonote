@@ -13,6 +13,7 @@ const Reserved = ({onClose, check}) => {
     const [messageApi, contextHolder] = message.useMessage();
     const params = useSearchParams();
     const columnId = params.get("id");
+    const invitationCode = params.get("invitationCode");
     const [token] = useLocalStorage("token", null);
     const columnUserId = api.column.getUserId.useQuery({id: columnId});
     const {data: column, isFetching} = api.column.getColumnDetail.useQuery({columnId: columnId});
@@ -59,6 +60,7 @@ const Reserved = ({onClose, check}) => {
     const pay = async () => {
         if (!selectedItem) {
             messageApi.error("请先选择支付策略噢~😁");
+            setConfirmPayModal(false);
             return false;
         }
         if (!walletData || walletData.freezeIncome + walletData.regularIncome < selectedItem) {
@@ -73,10 +75,11 @@ const Reserved = ({onClose, check}) => {
             subscribeOrder.mutate({
                 ownerId: columnUserId.data,
                 columnId: columnId,
-                price: 10,
-                payment: "alipay",
+                priceListId: selectedItem.id,
+                payment: "wallet",
                 status: check,
                 buyerId: token,
+                referrerId: invitationCode
             });
         }
     }

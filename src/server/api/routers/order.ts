@@ -1,9 +1,10 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column, order, subscription, user} from "@/server/db/schema";
+import {column, order, priceList, referrals, subscription, user, wallet} from "@/server/db/schema";
 
 ;
 import {eq, and, inArray, gte, lte, between, like, sql} from "drizzle-orm";
+import {addDays, format} from "date-fns";
 
 export const orderRouter = createTRPCRouter({
     hello: publicProcedure
@@ -147,7 +148,7 @@ export const orderRouter = createTRPCRouter({
         pageSize: z.number().default(10),
         currentPage: z.number().default(1),
     }))
-        .query(async ({ ctx, input }) => {
+        .query(async ({ctx, input}) => {
             const conditions = [
                 eq(order.columnId, input.columnId)
             ];
@@ -157,12 +158,12 @@ export const orderRouter = createTRPCRouter({
             }
 
             if (input.buyerId) {
-                const selectedUserIdNum = await ctx.db.select({ id: user.id }).from(user).where(like(user.idNumber, `${input.buyerId}%`));
+                const selectedUserIdNum = await ctx.db.select({id: user.id}).from(user).where(like(user.idNumber, `${input.buyerId}%`));
                 if (selectedUserIdNum.length > 0) {
                     conditions.push(inArray(order.buyerId, selectedUserIdNum.map(u => u.id)));
                 } else {
                     // 如果没有匹配的用户，返回空结果
-                    return { data: [], total: 0 };
+                    return {data: [], total: 0};
                 }
             }
 
@@ -193,7 +194,7 @@ export const orderRouter = createTRPCRouter({
 
             const buyerIds = orders.map(order => order.buyerId);
             if (buyerIds.length === 0) {
-                return { data: [], total: totalOrdersCount };
+                return {data: [], total: totalOrdersCount};
             }
 
             const users = await ctx.db.select({
@@ -223,7 +224,7 @@ export const orderRouter = createTRPCRouter({
                 user: userMap[subscription.buyerId]
             }));
 
-            return { data: combinedResults, total: totalOrdersCount };
+            return {data: combinedResults, total: totalOrdersCount};
         }),
 
 
@@ -232,48 +233,128 @@ export const orderRouter = createTRPCRouter({
         .input(z.object({
             ownerId: z.string(),
             columnId: z.string(),
-            price: z.number(),
+            priceListId: z.number(),
             payment: z.string(),
             status: z.boolean(),
             buyerId: z.string(),
+            referrerId: z.union([z.string(),z.null(),z.undefined()])
         }))
         .mutation(async ({ctx, input}) => {
             try {
-                await new Promise((resolve) => setTimeout(resolve, 1000));
+                // 查询专栏信息
+                const columnData = await ctx.db.query.column
+                    .findFirst({where: eq(column.id, input.columnId)});
+                // 获取作者钱包
+                const authorWalletData = await ctx.db.query.wallet
+                    .findFirst({where: eq(wallet.userId, columnData.userId)});
+                // 查询专栏价目表
+                const priceListData = await ctx.db.query.priceList
+                    .findFirst({where: eq(priceList.id, input.priceListId)});
+                const endDate = addDays(new Date(), priceListData.timeLimit);
 
-                // 查询订单是否已存在
-                const existingOrder = await ctx.db.select().from(order).where(and(eq(order.columnId, input.columnId), eq(order.buyerId, input.buyerId)));
+                // 钱包减少，优先扣除冻结金额，如果不够，就从可提现金额里面去扣除剩余的
+                // 先查询购买者冻结金额和可提现金额
+                const buyerWalletData = await ctx.db.query.wallet
+                    .findFirst({where: eq(wallet.userId, input.buyerId)});
+                // 如果冻结金额大于专栏价格，直接就扣除冻结金额的
+                if (buyerWalletData.freezeIncome > priceListData.price) {
+                    await ctx.db.update(wallet).set({
+                        freezeIncome: buyerWalletData.freezeIncome - priceListData.price,
+                    }).where(eq(wallet.userId, input.buyerId))
+                } else if (buyerWalletData.freezeIncome + buyerWalletData.regularIncome > priceListData.price) {
+                    await ctx.db.update(wallet).set({
+                        freezeIncome: 0,
+                        regularIncome: buyerWalletData.regularIncome - buyerWalletData.freezeIncome - priceListData.price,
+                    }).where(eq(wallet.userId, input.buyerId))
+                } else {
+                    return {status: "fail", meg: "余额不足"}
+                }
+                // 推荐表新增推荐人
+                if (input.referrerId && input.referrerId !== "") {
+                    await ctx.db.insert(referrals).values({
+                        userId: input.buyerId,
+                        columnId: input.columnId,
+                        referredUserId: input.referrerId
+                    })
+                    // 推荐人钱包增加
+                    // 查找一级分销的人的钱包
+                    const firstClassReferrerWalletData = await ctx.db.query.wallet
+                        .findFirst({where: eq(wallet.userId, input.referrerId)});
+                    // 查看有无二级分销
+                    const referralsData = await ctx.db.query.referrals
+                        .findFirst({where: and(eq(referrals.userId, input.referrerId), eq(referrals.columnId, input.columnId))});
+                    if (referralsData) {
+                        // 有二级分销
+                        // 查找二级推荐人的钱包
+                        const secondClassReferrerWalletData = await ctx.db.query.wallet
+                            .findFirst({where: eq(wallet.userId, referralsData.userId)});
+                        // 作者拿30%的钱
+                        await ctx.db.update(wallet).set({
+                            freezeIncome: authorWalletData.freezeIncome + priceListData.price * 0.3
+                        }).where(eq(wallet.userId, columnData.userId))
+                        // 一级分销拿50%
+                        await ctx.db.update(wallet).set({
+                            freezeIncome: firstClassReferrerWalletData.freezeIncome + priceListData.price * 0.5
+                        }).where(eq(wallet.userId, firstClassReferrerWalletData.userId))
+                        // 二级分销拿20%
+                        await ctx.db.update(wallet).set({
+                            freezeIncome: secondClassReferrerWalletData.freezeIncome + priceListData.price * 0.2
+                        }).where(eq(wallet.userId, secondClassReferrerWalletData.userId))
+                        // 新建订单
+                        const insertedOrder = await ctx.db.insert(order).values({
+                            ownerId: input.ownerId,
+                            columnId: input.columnId,
+                            price: priceListData.price,
+                            endDate: endDate,
+                            payment: input.payment,
+                            status: input.status,
+                            buyerId: input.buyerId,
+                            recommendationId: input.referrerId,
+                            referralLevel: 2,
+                        });
+                        return insertedOrder;
+                    } else {
+                        // 只有一级分销
+                        // 作者拿50%的钱
+                        await ctx.db.update(wallet).set({
+                            freezeIncome: authorWalletData.freezeIncome + priceListData.price * 0.5
+                        }).where(eq(wallet.userId, columnData.userId));
+                        // 一级分销拿50%
+                        await ctx.db.update(wallet).set({
+                            freezeIncome: firstClassReferrerWalletData.freezeIncome + priceListData.price * 0.5
+                        }).where(eq(wallet.userId, firstClassReferrerWalletData.userId));
 
-                // 如果订单不存在，则插入新订单
-                if (existingOrder.length === 0) {
+                        const insertedOrder = await ctx.db.insert(order).values({
+                            ownerId: input.ownerId,
+                            columnId: input.columnId,
+                            price: priceListData.price,
+                            endDate: endDate,
+                            payment: input.payment,
+                            status: input.status,
+                            buyerId: input.buyerId,
+                            recommendationId: input.referrerId,
+                            referralLevel: 1,
+                        });
+                        return insertedOrder;
+                    }
+                } else {
+                    // 没有人推荐，单独购买
+                    // 作者拿100%的钱
+                    await ctx.db.update(wallet).set({
+                        freezeIncome: authorWalletData.freezeIncome + priceListData.price
+                    }).where(eq(wallet.userId, columnData.userId));
+                    // 插入到新表
                     const insertedOrder = await ctx.db.insert(order).values({
                         ownerId: input.ownerId,
                         columnId: input.columnId,
-                        price: input.price,
+                        price: priceListData.price,
+                        endDate: endDate,
                         payment: input.payment,
                         status: input.status,
                         buyerId: input.buyerId,
-                    }).returning({
-                        id: order.id,
-                        ownerId: order.ownerId,
-                        price: order.price,
-                        payment: order.payment,
-                        status: order.status,
-                        buyerId: order.buyerId,
-                        columnId: order.columnId,
+                        referralLevel: 0,
                     });
-
-                    // 创建订单时向订阅表写入数据
-                    const insertSubscription = await ctx.db.insert(subscription).values({
-                        userId: input.buyerId,
-                        columnId: input.columnId,
-                        status: input.status
-                    })
-
-
-                    return insertedOrder[0]; // 返回插入的订单对象
-                } else {
-                    throw new Error("Order already exists!"); // 如果订单已存在，则抛出异常
+                    return insertedOrder;
                 }
             } catch (error) {
                 console.error("Error creating order:", error);
