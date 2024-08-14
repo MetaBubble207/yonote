@@ -161,8 +161,8 @@ export const wallet = createTable(
     {
         id: serial("id").primaryKey(),
         userId: varchar("user_id").notNull(),
-        regularIncome: real("regular_income"),
-        freezeIncome: real("regular_outcome"),
+        balance: real("balance"),
+        freezeIncome: real("freeze_income"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
@@ -269,14 +269,14 @@ export const invitationCode = createTable(
 export const referrals = createTable(
     "referrals",
     {
-            id: serial("id").primaryKey(),
-            userId:varchar("user_id"),
-            columnId:varchar("column_id"),
-            referredUserId:varchar("referred_user_id"),
-            createdAt: timestamp("created_at")
-                .default(sql`CURRENT_TIMESTAMP`)
-                .notNull(),
-            updatedAt: timestamp("updated_at"),
+        id: serial("id").primaryKey(),
+        userId: varchar("user_id"),
+        columnId: varchar("column_id"),
+        referredUserId: varchar("referred_user_id"),
+        createdAt: timestamp("created_at")
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
     }
 )
 export const priceList = createTable(
