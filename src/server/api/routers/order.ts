@@ -1,6 +1,6 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column, order, priceList, referrals, subscription, user, wallet} from "@/server/db/schema";
+import {column, order, priceList, referrals, runningWater, subscription, user, wallet} from "@/server/db/schema";
 
 ;
 import {eq, and, inArray, gte, lte, between, like, sql} from "drizzle-orm";
@@ -237,7 +237,7 @@ export const orderRouter = createTRPCRouter({
             payment: z.string(),
             status: z.boolean(),
             buyerId: z.string(),
-            referrerId: z.union([z.string(),z.null(),z.undefined()])
+            referrerId: z.union([z.string(), z.null(), z.undefined()])
         }))
         .mutation(async ({ctx, input}) => {
             try {
@@ -260,15 +260,27 @@ export const orderRouter = createTRPCRouter({
                 if (buyerWalletData.freezeIncome > priceListData.price) {
                     await ctx.db.update(wallet).set({
                         freezeIncome: buyerWalletData.freezeIncome - priceListData.price,
-                    }).where(eq(wallet.userId, input.buyerId))
+                    }).where(eq(wallet.userId, input.buyerId));
+
                 } else if (buyerWalletData.freezeIncome + buyerWalletData.amountWithdraw > priceListData.price) {
                     await ctx.db.update(wallet).set({
                         freezeIncome: 0,
-                        amountWithdraw: buyerWalletData.amountWithdraw - buyerWalletData.freezeIncome - priceListData.price,
+                        amountWithdraw: buyerWalletData.amountWithdraw + buyerWalletData.freezeIncome - priceListData.price,
                     }).where(eq(wallet.userId, input.buyerId))
                 } else {
                     return {status: "fail", meg: "余额不足"}
                 }
+
+                // 支出购买专栏
+                await ctx.db.insert(runningWater).values(
+                    {
+                        userId: input.buyerId,
+                        price: priceListData.price,
+                        name: `购买专栏${columnData.name}`,
+                        expenditureOrIncome: 0
+                    }
+                )
+
                 // 推荐表新增推荐人
                 if (input.referrerId && input.referrerId !== "") {
                     await ctx.db.insert(referrals).values({
@@ -288,18 +300,49 @@ export const orderRouter = createTRPCRouter({
                         // 查找二级推荐人的钱包
                         const secondClassReferrerWalletData = await ctx.db.query.wallet
                             .findFirst({where: eq(wallet.userId, referralsData.userId)});
-                        // 作者拿30%的钱
+                        // 作者拿30%的钱 一级分销拿50% 二级分销拿20%
+                        const income = {
+                            author: priceListData.price * 0.3,
+                            firstClassReferrer: priceListData.price * 0.5,
+                            secondClassReferrer: priceListData.price * 0.2
+                        };
                         await ctx.db.update(wallet).set({
-                            freezeIncome: authorWalletData.freezeIncome + priceListData.price * 0.3
+                            freezeIncome: authorWalletData.freezeIncome + income.author
                         }).where(eq(wallet.userId, columnData.userId))
-                        // 一级分销拿50%
                         await ctx.db.update(wallet).set({
-                            freezeIncome: firstClassReferrerWalletData.freezeIncome + priceListData.price * 0.5
+                            freezeIncome: firstClassReferrerWalletData.freezeIncome + income.firstClassReferrer,
                         }).where(eq(wallet.userId, firstClassReferrerWalletData.userId))
-                        // 二级分销拿20%
                         await ctx.db.update(wallet).set({
-                            freezeIncome: secondClassReferrerWalletData.freezeIncome + priceListData.price * 0.2
+                            freezeIncome: secondClassReferrerWalletData.freezeIncome + income.secondClassReferrer,
                         }).where(eq(wallet.userId, secondClassReferrerWalletData.userId))
+
+                        // 作者收入
+                        await ctx.db.insert(runningWater).values(
+                            {
+                                userId: input.buyerId,
+                                price: income.author,
+                                name: `专栏《${columnData.name}》收益`,
+                                expenditureOrIncome: 1
+                            }
+                        )
+                        // 一级推荐收入
+                        await ctx.db.insert(runningWater).values(
+                            {
+                                userId: firstClassReferrerWalletData.userId,
+                                price: income.firstClassReferrer,
+                                name: `专栏《${columnData.name}》分销`,
+                                expenditureOrIncome: 1
+                            }
+                        )
+                        // 二级推荐收入
+                        await ctx.db.insert(runningWater).values(
+                            {
+                                userId: secondClassReferrerWalletData.userId,
+                                price: income.secondClassReferrer,
+                                name: `专栏《${columnData.name}》分销`,
+                                expenditureOrIncome: 1
+                            }
+                        )
                         // 新建订单
                         const insertedOrder = await ctx.db.insert(order).values({
                             ownerId: input.ownerId,
@@ -315,15 +358,36 @@ export const orderRouter = createTRPCRouter({
                         return insertedOrder;
                     } else {
                         // 只有一级分销
-                        // 作者拿50%的钱
+                        // 作者拿50%的钱 一级分销拿50%
+                        const income = {
+                            author: priceListData.price * 0.5,
+                            firstClassReferrer: priceListData.price * 0.5,
+                        };
                         await ctx.db.update(wallet).set({
-                            freezeIncome: authorWalletData.freezeIncome + priceListData.price * 0.5
+                            freezeIncome: authorWalletData.freezeIncome + income.author
                         }).where(eq(wallet.userId, columnData.userId));
-                        // 一级分销拿50%
                         await ctx.db.update(wallet).set({
-                            freezeIncome: firstClassReferrerWalletData.freezeIncome + priceListData.price * 0.5
+                            freezeIncome: firstClassReferrerWalletData.freezeIncome + income.firstClassReferrer
                         }).where(eq(wallet.userId, firstClassReferrerWalletData.userId));
 
+                        // 作者收入
+                        await ctx.db.insert(runningWater).values(
+                            {
+                                userId: input.buyerId,
+                                price: income.author,
+                                name: `专栏《${columnData.name}》收益`,
+                                expenditureOrIncome: 1
+                            }
+                        )
+                        // 一级推荐收入
+                        await ctx.db.insert(runningWater).values(
+                            {
+                                userId: firstClassReferrerWalletData.userId,
+                                price: income.firstClassReferrer,
+                                name: `专栏《${columnData.name}》分销`,
+                                expenditureOrIncome: 1
+                            }
+                        )
                         const insertedOrder = await ctx.db.insert(order).values({
                             ownerId: input.ownerId,
                             columnId: input.columnId,
@@ -343,6 +407,15 @@ export const orderRouter = createTRPCRouter({
                     await ctx.db.update(wallet).set({
                         freezeIncome: authorWalletData.freezeIncome + priceListData.price
                     }).where(eq(wallet.userId, columnData.userId));
+                    // 作者收入
+                    await ctx.db.insert(runningWater).values(
+                        {
+                            userId: input.buyerId,
+                            price: priceListData.price,
+                            name: `专栏《${columnData.name}》收益`,
+                            expenditureOrIncome: 1
+                        }
+                    )
                     // 插入到新表
                     const insertedOrder = await ctx.db.insert(order).values({
                         ownerId: input.ownerId,
