@@ -292,4 +292,19 @@ export const priceList = createTable(
         updatedAt: timestamp("updated_at"),
     }
 )
+
+export const runningWater = createTable(
+    "running_water",
+    {
+        id: serial("id").primaryKey(),
+        userId: varchar("user_id"),
+        name: varchar("name"),
+        price: real("price"),
+        expenditureOrIncome: integer("expenditure_or_income"),
+        createdAt: timestamp("created_at")
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp("updated_at"),
+    }
+)
 export type User = typeof user.$inferInsert
