@@ -261,10 +261,10 @@ export const orderRouter = createTRPCRouter({
                     await ctx.db.update(wallet).set({
                         freezeIncome: buyerWalletData.freezeIncome - priceListData.price,
                     }).where(eq(wallet.userId, input.buyerId))
-                } else if (buyerWalletData.freezeIncome + buyerWalletData.regularIncome > priceListData.price) {
+                } else if (buyerWalletData.freezeIncome + buyerWalletData.amountWithdraw > priceListData.price) {
                     await ctx.db.update(wallet).set({
                         freezeIncome: 0,
-                        regularIncome: buyerWalletData.regularIncome - buyerWalletData.freezeIncome - priceListData.price,
+                        amountWithdraw: buyerWalletData.amountWithdraw - buyerWalletData.freezeIncome - priceListData.price,
                     }).where(eq(wallet.userId, input.buyerId))
                 } else {
                     return {status: "fail", meg: "余额不足"}
