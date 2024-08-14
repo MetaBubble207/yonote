@@ -161,7 +161,7 @@ export const wallet = createTable(
     {
         id: serial("id").primaryKey(),
         userId: varchar("user_id").notNull(),
-        balance: real("balance"),
+        amountWithdraw: real("amount_withdraw"),
         freezeIncome: real("freeze_income"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
