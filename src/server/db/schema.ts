@@ -2,7 +2,6 @@
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import {sql} from "drizzle-orm";
-import {char} from "drizzle-orm/mysql-core";
 import {
     index,
     pgTableCreator,
@@ -14,7 +13,6 @@ import {
     integer,
     smallint,
     text,
-    decimal,
 } from "drizzle-orm/pg-core";
 
 /**

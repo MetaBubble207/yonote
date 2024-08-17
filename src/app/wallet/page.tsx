@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image"
-import React, {useState, useEffect} from "react"
+import React, {useState} from "react"
 import {api} from "@/trpc/react";
 import Loading from "../_components/common/Loading";
 import useLocalStorage from "@/tools/useStore";
