@@ -2,7 +2,7 @@ import "../styles/globals.css";
 
 import {Inter} from "next/font/google";
 
-import {TRPCReactProvider} from "../trpc/react";
+import {TRPCReactProvider} from "@/trpc/react";
 import {ConfigProvider} from "antd";
 
 const inter = Inter({
@@ -33,7 +33,8 @@ export default function RootLayout({
                     },
                     components: {
                         Button: {
-                            primaryColor: '#252525'
+                            primaryColor: '#252525',
+                            colorLinkHover: '#252525',
                         }
                     }
                 }}
