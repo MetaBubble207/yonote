@@ -4,29 +4,45 @@ import React, {useState, useEffect} from "react"
 import {api} from "@/trpc/react";
 import Loading from "../_components/common/Loading";
 import useLocalStorage from "@/tools/useStore";
-
-interface WalletData {
-    balance: number;
-    frozenAmount: number;
-    cashableAmount: number;
-}
+import {RunningWater} from "@/server/db/schema";
+import {timeToDateString, timeToDateTimeString} from "@/tools/timeToString";
 
 const Wallet = () => {
     const [token] = useLocalStorage('token', null);
-    const {data: walletData, isLoading} = api.wallet.getByUserId.useQuery({id: token}, {enabled: !!token});
-    const [transactionType, setTransactionType] = useState("expenditure"); // 跟踪交易类型
+    const {
+        data: walletData,
+        isLoading: isWalletLoading
+    } = api.wallet.getByUserId.useQuery({id: token}, {enabled: !!token});
+    const {
+        data: runningWaterData,
+        isLoading: isRunningWaterLoading
+    } = api.runningWater.getRunningWater.useQuery({id: token});
+    const [currentType, setCurrentType] = useState(0);
 
-
-    const [selectedButton, setSelectedButton] = useState(1); // 追踪选中的按钮
-
-    const handleButtonClick = (button: number, type: string) => {
-        if (selectedButton !== button) {
+    const changeType = (type: number) => {
+        if (currentType !== type) {
             // 如果点击的是当前选中的按钮，则取消选中状态
-            setSelectedButton(button);
-            setTransactionType(type);
+            setCurrentType(type);
         }
     };
-    if(isLoading) return <Loading/>
+    if (isWalletLoading) return <Loading/>
+    const List = (runningWater) => {
+        return <div>
+            <div className="ml-0">
+                <div
+                    className="w-27 text-[#252525] text-3.25 font-not-italic font-400 lh-6">{runningWater.name}</div>
+                <div
+                    className="w-26.5 h-6.25 shrink-0 text-[#999] text-2.75 font-not-italic font-400 lh-6 mt--1">{timeToDateTimeString(runningWater.createdAt)}</div>
+            </div>
+            <div className="w-20.75 h-5.5 shrink-0 text-[#252525] text-3.75 font-700 lh-6 ml-62.75 mt--11">
+                {runningWater.expenditureOrIncome === 0?'-':'+'}
+                ￥
+                {runningWater.price}
+            </div>
+            <div className="border-1 mt-5"></div>
+            <div className="mt-4"></div>
+        </div>
+    }
     return (
         <div>
             <div className="flex items-center mt-8 justify-center">
@@ -65,52 +81,27 @@ const Wallet = () => {
             </div>
             <div className="flex mt-4 ml-9">
                 <button
-                    className={`w-15 h-6 shrink-0 border-rd-1 ${selectedButton === 1 ? 'bg-#daf9f1 text-#1db48d' : 'bg-[#F5F7FB] text-[#252525]'}`}
-                    onClick={() => handleButtonClick(1, "expenditure")}>
+                    className={`w-15 h-6 shrink-0 border-rd-1 ${currentType === 0 ? 'bg-#daf9f1 text-#1db48d' : 'bg-[#F5F7FB] text-[#252525]'}`}
+                    onClick={() => changeType(0)}>
                     支出
                 </button>
                 <button
-                    className={`w-15 h-6 shrink-0 border-rd-1  ml-6 ${selectedButton === 2 ? 'bg-#daf9f1 text-#1db48d' : ' bg-[#F5F7FB] text-[#252525]'}`}
-                    onClick={() => handleButtonClick(2, "income")}>
+                    className={`w-15 h-6 shrink-0 border-rd-1  ml-6 ${currentType === 1 ? 'bg-#daf9f1 text-#1db48d' : ' bg-[#F5F7FB] text-[#252525]'}`}
+                    onClick={() => changeType(1)}>
                     收入
                 </button>
             </div>
             <div>
                 <div className="flex items-center justify-center mt-4 ml-6.5 w-80.5 h-14.25 shrink-0 ">
-                    {/*<div className="w-80.5 h-14.25 shrink-0  ">*/}
-                    {/*    {payments.map((payment, index) => (*/}
-                    {/*        <div key={index}>*/}
-                    {/*            {transactionType === "expenditure" && payment.sign === "-¥" && (*/}
-                    {/*                <div>*/}
-                    {/*                    <div className="ml-0">*/}
-                    {/*                        <div*/}
-                    {/*                            className="w-27 text-[#252525] text-3.25 font-not-italic font-400 lh-6">{payment.name}</div>*/}
-                    {/*                        <div*/}
-                    {/*                            className="w-26.5 h-6.25 shrink-0 text-[#999] text-2.75 font-not-italic font-400 lh-6 mt--1">{payment.date} {payment.time}</div>*/}
-                    {/*                    </div>*/}
-                    {/*                    <div*/}
-                    {/*                        className="w-20.75 h-5.5 shrink-0 text-[#252525] text-3.75 font-700 lh-6 ml-62.75 mt--11">{payment.sign}{payment.amount}</div>*/}
-                    {/*                    <div className="border-1 mt-5"></div>*/}
-                    {/*                    <div className="mt-4"></div>*/}
-                    {/*                </div>*/}
-                    {/*            )}*/}
-                    {/*            {transactionType === "income" && payment.sign === "+¥" && (*/}
-                    {/*                <div>*/}
-                    {/*                    <div className="ml-0">*/}
-                    {/*                        <div*/}
-                    {/*                            className="w-27 text-[#252525] text-3.25 font-not-italic font-400 lh-6">{payment.name}</div>*/}
-                    {/*                        <div*/}
-                    {/*                            className="w-26.5 h-6.25 shrink-0 text-[#999] text-2.75 font-not-italic font-400 lh-6 mt--1">{payment.date} {payment.time}</div>*/}
-                    {/*                    </div>*/}
-                    {/*                    <div*/}
-                    {/*                        className="w-20.75 h-5.5 shrink-0 text-[#252525] text-3.75 font-700 lh-6 ml-62.75 mt--11">{payment.sign}{payment.amount}</div>*/}
-                    {/*                    <div className="border-1 mt-5"></div>*/}
-                    {/*                    <div className="mt-4"></div>*/}
-                    {/*                </div>*/}
-                    {/*            )}*/}
-                    {/*        </div>*/}
-                    {/*    ))}*/}
-                    {/*</div>*/}
+                    <div className="w-80.5 h-14.25 shrink-0  ">
+                        {runningWaterData
+                            .filter(item => item.expenditureOrIncome === currentType)
+                            .map((runningWater, index) => (
+                            <div key={index}>
+                                <List {...runningWater}></List>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

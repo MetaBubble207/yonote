@@ -10,7 +10,7 @@
 //     return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
 //
 // }
-export const timeToDateString = (dateString: string) => {
+export const timeToDateString = (dateString: any) => {
     if (!dateString) return "";
     dateString = String(dateString)
     const parts = dateString.split(" ");
@@ -21,7 +21,7 @@ export const timeToDateTimeString = (dateString: string) => {
     if (!dateString) return "";
     dateString = String(dateString)
     const parts = dateString.split(" ");
-    const time = parts[4].substring(0, 5);
+    const time = parts[4];
     return `${parts[3]}-${getMonthNumber(parts[1])}-${parts[2]} ${time}`;
 };
 
@@ -29,7 +29,7 @@ export const timeToTimeString = (dateString: string) => {
     if (!dateString) return "";
     dateString = String(dateString)
     const parts = dateString.split(" ");
-    const time = parts[4].substring(0, 5);
+    const time = parts[4];
     return `${time}`;
 };
 

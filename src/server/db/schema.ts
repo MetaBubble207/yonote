@@ -308,3 +308,4 @@ export const runningWater = createTable(
     }
 )
 export type User = typeof user.$inferInsert
+export type RunningWater = typeof runningWater.$inferSelect
