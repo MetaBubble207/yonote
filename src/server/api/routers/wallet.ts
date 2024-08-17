@@ -19,10 +19,10 @@ export const walletRouter = createTRPCRouter({
             await ctx.db.update(wallet).set({
                 amountWithdraw: 0
             });
-            await ctx.db.update(runningWater).set({
+            await ctx.db.insert(runningWater).values({
                 userId: input.id,
                 price: walletData.amountWithdraw,
-                name: '',
+                name: '提现',
                 expenditureOrIncome: 0
             })
             return walletData;

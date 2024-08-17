@@ -4,8 +4,8 @@ import React, {useState, useEffect} from "react"
 import {api} from "@/trpc/react";
 import Loading from "../_components/common/Loading";
 import useLocalStorage from "@/tools/useStore";
-import {RunningWater} from "@/server/db/schema";
-import {timeToDateString, timeToDateTimeString} from "@/tools/timeToString";
+import {timeToDateTimeString} from "@/tools/timeToString";
+import {message, Modal} from "antd";
 
 const Wallet = () => {
     const [token] = useLocalStorage('token', null);
@@ -17,6 +17,46 @@ const Wallet = () => {
         data: runningWaterData,
         isLoading: isRunningWaterLoading
     } = api.runningWater.getRunningWater.useQuery({id: token});
+
+    const [open, setOpen] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
+    const withdraw = api.wallet.withdraw.useMutation({
+        onSuccess: (r) => {
+            setOpen(false);
+            messageApi.open({
+                type: 'success',
+                content: `提现成功${r.amountWithdraw}`,
+            }).then(() => {
+                window.location.reload();
+            });
+        }
+    })
+    const [confirmLoading, setConfirmLoading] = useState(false);
+
+    const showModal = () => {
+        if(walletData.amountWithdraw <= 0){
+            messageApi.open({
+                type: 'error',
+                content: '可提现的余额不足',
+            });
+        }else{
+            setOpen(true);
+        }
+    };
+
+    const handleOk = () => {
+        setConfirmLoading(true);
+        withdraw.mutate({
+            id: token
+        })
+        setConfirmLoading(false);
+
+    };
+
+    const handleCancel = () => {
+        setOpen(false);
+    };
+
     const [currentType, setCurrentType] = useState(0);
 
     const changeType = (type: number) => {
@@ -25,7 +65,7 @@ const Wallet = () => {
             setCurrentType(type);
         }
     };
-    if (isWalletLoading) return <Loading/>
+    if (isWalletLoading || isRunningWaterLoading) return <Loading/>
     const List = (runningWater) => {
         return <div>
             <div className="ml-0">
@@ -35,7 +75,7 @@ const Wallet = () => {
                     className="w-26.5 h-6.25 shrink-0 text-[#999] text-2.75 font-not-italic font-400 lh-6 mt--1">{timeToDateTimeString(runningWater.createdAt)}</div>
             </div>
             <div className="w-20.75 h-5.5 shrink-0 text-[#252525] text-3.75 font-700 lh-6 ml-62.75 mt--11">
-                {runningWater.expenditureOrIncome === 0?'-':'+'}
+                {runningWater.expenditureOrIncome === 0 ? '-' : '+'}
                 ￥
                 {runningWater.price}
             </div>
@@ -43,38 +83,38 @@ const Wallet = () => {
             <div className="mt-4"></div>
         </div>
     }
+    const Card = () => {
+        return <div className="w-85.75 h-41 relative">
+            <Image src={"/images/wallet/bg.svg"} alt={"bg"} width={343} height={164}
+                   className="w-85.75 h-41 shrink-0"></Image>
+            <div className=" w-85.75 h-41 shrink-0 absolute top-0">
+                <div className="flex flex-col">
+                    <div className="w-16 text-[#FFF] text-4 font-not-italic font-400 lh-6 ml-6 mt-6">
+                        账户余额
+                    </div>
+                    <div className="w-25 text-[#FFF] font-D-DIN text-6 font-not-italic font-700 lh-6 ml-6 mt-2">
+                        ¥{walletData?.amountWithdraw + walletData?.freezeIncome}
+                    </div>
+                    <div className="flex flex-wrap  h-6 shrink-0 text-[#FFF]">
+                        <div className="ml-6 mt-9">
+                            冻结中 <span>¥{walletData?.freezeIncome}</span>
+                        </div>
+                        <div className="ml-11.75 mt-9">
+                            可提现 <span>¥{walletData?.amountWithdraw}</span>
+                        </div>
+                    </div>
+                    <div className="w-7.5 text-[#252525] text-3 font-500 lh-6 ml-73.75 mt--8">
+                        <button onClick={showModal} className={'bg-transparent'}>提现</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
     return (
         <div>
             <div className="flex items-center mt-8 justify-center">
-                <div className="w-85.75 h-41 relative">
-                    <Image src={"/images/wallet/bg.svg"} alt={"bg"} width={343} height={164}
-                           className="w-85.75 h-41 shrink-0"></Image>
-                    <div className=" w-85.75 h-41 shrink-0 absolute top-0">
-                        <div className="flex flex-col">
-                            <div className="w-16 text-[#FFF] text-4 font-not-italic font-400 lh-6 ml-6 mt-6">
-                                账户余额
-                            </div>
-                            <div className="w-25 text-[#FFF] font-D-DIN text-6 font-not-italic font-700 lh-6 ml-6 mt-2">
-                                ¥{walletData?.amountWithdraw + walletData?.freezeIncome}
-                            </div>
-                            <div className="flex flex-wrap  h-6 shrink-0 text-[#FFF]">
-                                <div className="ml-6 mt-9">
-                                    冻结中 <span>¥{walletData?.freezeIncome}</span>
-                                </div>
-                                <div className="ml-11.75 mt-9">
-                                    可提现 <span>¥{walletData?.amountWithdraw}</span>
-                                </div>
-                            </div>
-                            <div className="w-7.5 text-[#252525] text-3 font-500 lh-6 ml-73.75 mt--8">
-                                <button>提现</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
+                <Card/>
             </div>
-
             <div className="w-14 h-7.75 shrink-0 mt-6 ml-9 flex flex-col justify-center items-center">
                 <div className="text-[#252525] text-3.5 font-not-italic font-500 lh-6">收支明细</div>
                 <div className="w-2.75 h-1 shrink-0 border-rd-2 bg-[#45E1B8]"></div>
@@ -97,13 +137,22 @@ const Wallet = () => {
                         {runningWaterData
                             .filter(item => item.expenditureOrIncome === currentType)
                             .map((runningWater, index) => (
-                            <div key={index}>
-                                <List {...runningWater}></List>
-                            </div>
-                        ))}
+                                <div key={index}>
+                                    <List {...runningWater}></List>
+                                </div>
+                            ))}
                     </div>
                 </div>
             </div>
+            <Modal
+                open={open}
+                onOk={handleOk}
+                confirmLoading={confirmLoading}
+                onCancel={handleCancel}
+            >
+                <div>确认要提现￥{walletData.amountWithdraw}吗</div>
+            </Modal>
+            {contextHolder}
         </div>
     );
 }
