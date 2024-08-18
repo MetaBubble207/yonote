@@ -12,14 +12,17 @@ const DisplayDetailed = (props) => {
     // 导航栏返回响应页面
     const [currentPage, setCurrentPage] = useState<number>(1)
     const {data: columnInfos, isLoading: isColumnInfoLoading} = api.column.getAllByUserId.useQuery({userId: token});
+    const {data: updateColumnInfos, isLoading: isUpdateColumnInfoLoading} = api.column.getUpdate.useQuery({
+        writerId: token,
+        visitorId: token
+    });
     // 订阅数量
     const subscribeInfos = api.order.getUserOrder.useQuery({userId: token}).data
     // 帖子数量
     const postLength = api.post.getNumById.useQuery({id: userInfo?.id}).data
-    if (isColumnInfoLoading) return <Loading/>
+    if (isColumnInfoLoading || isUpdateColumnInfoLoading) return <Loading/>
     // 渲染按钮下对应的局部页面
     const RenderContent = () => {
-        console.log(currentPage,"123")
         switch (currentPage) {
             case 1:
                 return <Update/>;
@@ -32,7 +35,7 @@ const DisplayDetailed = (props) => {
     }
 
     const Update = () => {
-        return columnInfos.map(item => <ColumnCard {...item} key={item.id}/>)
+        return updateColumnInfos.map(item => <ColumnCard {...item} key={item.id}/>)
     }
 
     const Column = () => {
