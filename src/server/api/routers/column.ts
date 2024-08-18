@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column, order, priceList, user} from "@/server/db/schema";
+import {Column, column, order, post, postRead, priceList, user} from "@/server/db/schema";
 import {and, desc, eq, like, sql} from "drizzle-orm";
 import {uniqueArray} from "@/tools/uniqueArray";
 
@@ -49,30 +49,34 @@ export const columnRouter = createTRPCRouter({
         .input(z.object({
             id: z.string(),
             name: z.string(),
-            priceList: z.array(z.object({id:z.union([z.number(),z.undefined()]),price:z.number(),timeLimit:z.number()})),
+            priceList: z.array(z.object({
+                id: z.union([z.number(), z.undefined()]),
+                price: z.number(),
+                timeLimit: z.number()
+            })),
             introduce: z.string(),
             description: z.string()
         }))
         .mutation(async ({ctx, input}) => {
-            const oldPriceList = await ctx.db.select().from(priceList).where(eq(priceList.columnId,input.id));
+            const oldPriceList = await ctx.db.select().from(priceList).where(eq(priceList.columnId, input.id));
             const oldIds = input.priceList.map((item) => item.id);
             oldPriceList.map(async item => {
-                if(!oldIds.includes(item.id)) {
-                    await ctx.db.delete(priceList).where(eq(priceList.id,item.id));
+                if (!oldIds.includes(item.id)) {
+                    await ctx.db.delete(priceList).where(eq(priceList.id, item.id));
                 }
             });
-            const sortedOldPriceList = oldPriceList.sort((item,pre)=> item.id - pre.id);
-            input.priceList.map(async (item,index) => {
-                if(sortedOldPriceList?.[index] && (sortedOldPriceList?.[index]?.price !== input.priceList[index].price || sortedOldPriceList?.[index]?.timeLimit !== input.priceList[index].timeLimit)) {
+            const sortedOldPriceList = oldPriceList.sort((item, pre) => item.id - pre.id);
+            input.priceList.map(async (item, index) => {
+                if (sortedOldPriceList?.[index] && (sortedOldPriceList?.[index]?.price !== input.priceList[index].price || sortedOldPriceList?.[index]?.timeLimit !== input.priceList[index].timeLimit)) {
                     await ctx.db.update(priceList).set({
                         price: item.price,
                         timeLimit: item.timeLimit
-                    }).where(eq(priceList.id,sortedOldPriceList[index].id))
+                    }).where(eq(priceList.id, sortedOldPriceList[index].id))
                 }
                 // 判断是否是新加入的策略
                 const isNew = !sortedOldPriceList?.map(item => item.id).includes(item.id);
 
-                if(isNew || !sortedOldPriceList){
+                if (isNew || !sortedOldPriceList) {
                     await ctx.db.insert(priceList).values({
                         columnId: input.id,
                         price: item.price,
@@ -108,6 +112,26 @@ export const columnRouter = createTRPCRouter({
         .input(z.object({userId: z.string()}))
         .query(async ({ctx, input}) => {
             return ctx.db.query.column.findMany({where: eq(column.userId, input.userId)});
+        }),
+    getUpdate: publicProcedure
+        .input(z.object({visitorId: z.string(), writerId: z.string()}))
+        .query(async ({ctx, input}) => {
+            // 查找作者下所有的专栏
+            const columns = await ctx.db.select().from(column).where(eq(column.userId, input.writerId));
+            // 查找拜访者的观看记录
+            const readRecords = await ctx.db.select().from(postRead).where(eq(postRead.userId, input.visitorId));
+            const visitorPosts = readRecords.map(item => item.postId);
+            const res: Column[] = [];
+            // 遍历作者下的每一个专栏的帖子
+            const promises = columns.map(async (column) => {
+                const posts = await ctx.db.select().from(post).where(eq(post.columnId, column.id));
+                const flag = posts.every(item => visitorPosts.includes(item.id))
+                if (!flag) {
+                    res.push(column);
+                }
+            })
+            await Promise.all(promises)
+            return res;
         }),
     getColumnName: publicProcedure
         .input(z.object({searchValue: z.string()}))
@@ -197,45 +221,20 @@ export const columnRouter = createTRPCRouter({
 
     //订阅量查询
     getColumnOrderNumbers: publicProcedure
-        .query(async ({ ctx }) => {
+        .query(async ({ctx}) => {
 
             const columnIds = await ctx.db
-                .select({columnId:order.columnId,userId:order.ownerId})
+                .select({columnId: order.columnId, userId: order.ownerId})
                 .from(order)
-                .groupBy(order.columnId,order.ownerId)
+                .groupBy(order.columnId, order.ownerId)
                 .orderBy(sql`count(*) DESC`)
 
-            const promises = columnIds.map(async item =>{
-                const col =   await ctx.db.select().from(column).where(eq(column.id, item.columnId)).limit(1)
+            const promises = columnIds.map(async item => {
+                const col = await ctx.db.select().from(column).where(eq(column.id, item.columnId)).limit(1)
                 const owner = await ctx.db.select().from(user).where(eq(user.id, item.userId)).limit(1)
                 return {...col[0], user: {...owner[0]}}
             })
             return await Promise.all(promises);
-
-
-            // 获取所有 columns
-            // const columns = await ctx.db.select().from(column);
-            // // 创建一个数组来存储 columnId 和对应的订阅次数及详情
-            // const columnOrderNumbersWithDetails = [];
-            //
-            // // 遍历每个 column 获取对应的订阅次数
-            // for (const item of columns) {
-            //     const orderData = await ctx.db.query.order.findMany({
-            //         where: eq(order.columnId, item.id),
-            //     });
-            //
-            //     // 获取与 columnId 对应的 column 数据
-            //     const columnData = await ctx.db.select().from(column).where(eq(column.id, item.id));
-            //     // const columnData = await ctx.db.query.column.findfirst({
-            //     //     where:eq(column.id, item.id)
-            //     // })
-            //
-            //     // 将 columnId、订阅次数和 column 数据存储在数组中
-            //     columnOrderNumbersWithDetails.push({ columnId: item.id, orderCount: orderData.length, columnData });
-            // }
-            //
-            // // 按订阅次数从多到少排序
-            // columnOrderNumbersWithDetails.sort((a, b) => b.orderCount - a.orderCount);
         }),
 
 });
