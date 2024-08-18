@@ -29,13 +29,17 @@ const DisplayDetailed = (props) => {
             case 2:
                 return <Column/>;
             case 3:
-                return <NoData/>;
+                return <NoData title={"没有查找到数据噢😯~"}/>;
 
         }
     }
 
     const Update = () => {
-        return updateColumnInfos.map(item => <ColumnCard {...item} key={item.id}/>)
+        return updateColumnInfos.length < 1
+            ?
+            <NoData title={"你已经阅读完该作者所有的帖子了噢😁~"}/>
+            :
+            updateColumnInfos.map(item => <ColumnCard {...item} key={item.id}/>)
     }
 
     const Column = () => {
