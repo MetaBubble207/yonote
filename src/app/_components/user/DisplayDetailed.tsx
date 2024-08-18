@@ -1,268 +1,119 @@
 'use client'
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import { api } from "@/trpc/react";
+import React, {useState} from "react";
+import {api} from "@/trpc/react";
+import {Button} from "antd";
+import Loading from "@/app/_components/common/Loading";
+import NoData from "@/app/_components/common/NoData";
 
 const DisplayDetailed = (props) => {
-    const { token, userInfo } = props
-
-    // 按钮选中状态
-    const [selectButton, setSelectButton] = useState<number>(1)
-
+    const {token, userInfo} = props
     // 导航栏返回响应页面
     const [currentPage, setCurrentPage] = useState<number>(1)
-    const columnInfos = api.column.getAllByUserId.useQuery({ userId: token }).data
-    console.log(columnInfos)
-
-
-
-
+    const {data: columnInfos, isLoading: isColumnInfoLoading} = api.column.getAllByUserId.useQuery({userId: token});
     // 订阅数量
-    // const subscribeInfos = api.order.getColumnByBuyer.useQuery({BuyerID:token}).data
-    const subscribeInfos = api.order.getUserOrder.useQuery({ userId: token }).data
-
-
-    const postLength = api.post.getNumById.useQuery({ id: userInfo?.id }).data
-    // console.log("====================>",subscribe.length)
-
-
-    const buttonInfos = [
-        { id: 1, label: '更新' },
-        { id: 2, label: '专栏' },
-        { id: 3, label: '小课' },
-    ]
-
-    const handleButtonClick = (button: number) => {
-        if (selectButton !== button) {
-            setSelectButton(button)
-        }
-    }
-
+    const subscribeInfos = api.order.getUserOrder.useQuery({userId: token}).data
+    // 帖子数量
+    const postLength = api.post.getNumById.useQuery({id: userInfo?.id}).data
+    if (isColumnInfoLoading) return <Loading/>
     // 渲染按钮下对应的局部页面
-    const renderContent = () => {
+    const RenderContent = () => {
+        console.log(currentPage,"123")
         switch (currentPage) {
             case 1:
-                return <Update></Update>;
+                return <Update/>;
             case 2:
-                return <Column></Column>;
+                return <Column/>;
             case 3:
-                return <Course></Course>;
+                return <NoData/>;
 
         }
     }
 
     const Update = () => {
-        return (
-            columnInfos?.length > 0 && (
-                columnInfos?.map((item, index) => (
-                    <Link href={`/special-column?id=${item?.id}`} className="flex h-14 mb-8" key={item.id}>
-                        <Image
-                            // src="/images/user/cover.svg"
-                            // src={Column.logo}
-                            // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
-                            src={item?.logo ?? '/images/user/avatar.svg'}
-                            alt="icon"
-                            width={74}
-                            height={100}
-                            className="w-15.5 h-19 rounded object-cover"
-                            objectFit="cover"
-                            unoptimized
-                            style={{ objectFit: "cover" }}
-                        />
-                        <div>
-                            <h2
-                                className="ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"
-                                style={{
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap'
-                                }}
-                            >
-                                {/*「心智与阅读」*/}
-                                「{item?.name ?? "未知专栏"}」
-                            </h2>
-                            <p
-                                className='w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
-                                style={{
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap'
-                                }}
-                            >
-                                {item?.introduce ?? "暂无数据"}
-                            </p>
-                        </div>
-
-                    </Link>
-                ))
-            ))
-        // <div>
-        //     <div className="flex h-14 mt-6">
-        //         <Image src="/images/user/cover.svg" alt="icon" width={14} height={14}
-        //                className="w-15.5 h-19"/>
-        //         <div>
-        //             <h2 className={"ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"}>「心智与阅读」</h2>
-        //             <p className={"w-59.25 text-[#666] font-\"Source Han Sans SC\" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2"}>情绪价值波动，上上签，愤怒，变化，偏执，创造</p>
-        //         </div>
-        //     </div>
-        //     <div className="flex h-14 mt-8">
-        //         <Image src="/images/user/cover.svg" alt="icon" width={14} height={14}
-        //                className="w-15.5 h-19"/>
-        //         <div>
-        //             <h2 className={"ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"}>「心智与阅读」</h2>
-        //             <p className={"w-59.25 text-[#666] font-\"Source Han Sans SC\" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2"}>情绪价值波动，上上签，愤怒，变化，偏执，创造</p>
-        //         </div>
-        //     </div>
-        // </div>
+        return columnInfos.map(item => <ColumnCard {...item} key={item.id}/>)
     }
-
-    // const renderColumn = () => {
-    //     return ColumnInfo.length > 0 && (
-    //         ColumnInfo.slice(0,ColumnInfo.length>1?2:1).map((item, index) => (
-    //             <Link href={`/special-column?id=${item.id}`} className="flex h-14 mb-8">
-    //                 <Image
-    //                     // src="/images/user/cover.svg"
-    //                     // src={Column.logo}
-    //                     // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
-    //                     src={item?.logo}
-    //                     alt="icon"
-    //                     width={74}
-    //                     height={100}
-    //                     className="w-15.5 h-19 rounded"
-    //
-    //                 />
-    //                 <div>
-    //                     <h2
-    //                         className={
-    //                             "ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"
-    //                         }
-    //                     >
-    //                         {/*「心智与阅读」*/}
-    //                         「{item?.name}」
-    //                     </h2>
-    //                     <p
-    //                         className={
-    //                             'w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
-    //                         }
-    //                     >
-    //                         {item?.introduce}
-    //                     </p>
-    //                 </div>
-    //
-    //             </Link>
-    //         ))
-    //     )
-    // }
-
-
 
     const Column = () => {
-        return columnInfos.length > 0 && (
-            columnInfos?.map((item, index) => (
-                <Link href={`/special-column?id=${item?.id}`} className="flex h-14 mb-8" key={item.id}>
-                    <Image
-                        // src="/images/user/cover.svg"
-                        // src={Column.logo}
-                        // src={'http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png'}
-                        src={item?.logo ?? '/images/user/avatar.svg'}
-                        alt="icon"
-                        width={74}
-                        height={100}
-                        // fill
-                        className="w-15.5 h-19 rounded object-cover"
-                        objectFit="cover"
-                        style={{ objectFit: "cover" }}
-                        unoptimized
-                    />
-                    <div>
-                        <h2
-                            className={
-                                "ml-2 w-33.81125 text-[#252525] text-3.75 font-500 lh-6"
-                            }
-                        >
-                            {/*「心智与阅读」*/}
-                            「{item?.name ?? "未知专栏"}」
-                        </h2>
-                        <p
-                            className={
-                                'w-59.25 text-[#666] font-"Source Han Sans SC" text-3.25 font-not-italic font-400 lh-[120%] ml-3 mt-2'
-                            }
-                        >
-                            {item?.introduce ?? "暂无数据"}
-                        </p>
-                    </div>
-
-                </Link>
-            ))
-        )
-
+        return columnInfos.map(item => <ColumnCard {...item} key={item.id}/>)
     }
-    const Course = () => {
-        return <div className={'flex items-center justify-center mt-8'}>
-            <h1>暂无数据</h1>
-        </div>
+    const ColumnCard = ({id, logo, name, introduce}: any) => {
+        return <Link href={`/special-column?id=${id}`} className="flex mb-4">
+            <Image
+                src={logo ?? '/images/user/avatar.svg'}
+                alt="icon"
+                width={74}
+                height={100}
+                className="rounded object-cover"
+                unoptimized
+            />
+            <div>
+                <h2 className="ml-2 w-33.81125 text-3.75 font-500 lh-6 text-ellipsis whitespace-nowrap overflow-hidden">
+                    {/*「心智与阅读」*/}
+                    「{name ?? "未知专栏"}」
+                </h2>
+                <p
+                    className='w-59.25 text-#666 text-3.25 font-400 ml-3 mt-2 text-ellipsis whitespace-nowrap overflow-hidden'
+                >
+                    {introduce ?? "暂无数据"}
+                </p>
+            </div>
+        </Link>
     }
 
-    const renderButtons = () => {
-        return <div className="flex mb-8">
-            {/*<button*/}
-            {/*    className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">更新*/}
-            {/*</button>*/}
+    const buttonInfos = [
+        {id: 1, label: '更新'},
+        {id: 2, label: '专栏'},
+        {id: 3, label: '小课'},
+    ]
 
-            {/*<button*/}
-            {/*    className="w-7 h-6 mr-8 text-[#B5B5B5] font-source-han-sans-sc text-sm font-normal leading-6">专栏*/}
-            {/*</button>*/}
+    const handleButtonClick = (button: number) => {
+        if (currentPage !== button) {
+            setCurrentPage(button)
+        }
+    }
 
+    const Tabs = () => {
+        return <div className="flex mb-6">
             {buttonInfos.map((button, index) => (
                 <div key={index} className={"flex-col"}>
-                    <button
-                        className={`text-[#252525] w-7 h-6 mr-8 text-3.5 font-500 lh-6`}
-                        onClick={() => {
-                            setCurrentPage(button.id)
-                        }}
-                        onClickCapture={() => handleButtonClick(button.id)}
+                    <Button type="link" size={'small'}
+                            className={`mr-8  text-neutral text-3.5 font-500 lh-6 p0`}
+                            onClick={() => {
+                                handleButtonClick(button.id)
+                            }}
                     >
-                        {button.label}</button>
-                    <div
-                        className={`ml-2.25 mt-1 w-2.75 h-1 border-rd-2  ${selectButton === button.id ? 'bg-[#45E1B8]' : 'bg-[#FFF]'}`}></div>
+                        {button.label}</Button>
+                    <div className={`ml-2.25 mt-1 w-2.75 h-1 rounded-2  
+                                     ${currentPage === button.id ? 'bg-primary' : 'bg-#FFF'}`}/>
                 </div>
             ))}
 
         </div>
     }
 
-
-    const Content = () => {
-        return renderContent()
+    const StatsDisplay = ({length, stat}: { length: number, stat: string }) => {
+        return <div className="flex flex-col items-center">
+            {length || 0}
+            <h2 className="text-[#999] text-3 font-normal leading-6">{stat}</h2>
+        </div>
     }
     return <>
         {/* 订阅数量展示 */}
-        <div className={"mt-24.5 w-full flex justify-center"}>
-            <div className={"flex flex-col items-center "}>
-                <p className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6"}>{subscribeInfos?.length ? subscribeInfos.length : " "}</p>
-                <h2 className={"w-6.5 h-4.75 shrink-0 text-[#999] text-3 font-400 lh-6"}>订阅</h2>
-            </div>
-            <div className={"flex flex-col items-center ml-14"}>
-                <p className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6"}>{columnInfos?.length ? columnInfos.length : " "}</p>
-                <h2 className={"w-6.5 h-4.75 shrink-0 text-[#999] text-3 font-400 lh-6"}>专栏</h2>
-            </div>
-            <div className={"flex flex-col items-center ml-14"}>
-                <p className={"shrink-0 text-[#252525] font-D-DIN text-4 font-not-italic font-700 lh-6"}>{postLength ? postLength : '0'}</p>
-                <h2 className={"w-6.5 h-4.75 shrink-0 text-[#999] text-3 font-400 lh-6"}>内容</h2>
-            </div>
+        {/* 订阅数量展示 */}
+        <div className="w-full flex justify-center space-x-14 text-neutral text-4 font-bold leading-6">
+            {/* 订阅数量 */}
+            <StatsDisplay stat={'订阅'} length={subscribeInfos?.length}></StatsDisplay>
+            <StatsDisplay stat={'专栏'} length={columnInfos?.length}></StatsDisplay>
+            <StatsDisplay stat={'内容'} length={postLength}></StatsDisplay>
         </div>
-
-
         {/* 专栏、小课区域 */}
-        <div className="w-85.75 h-63.75 border-rd-2.5 bg-#FFF ml-4 pl-4 pt-4 mt-4">
-
+        <div className="rounded-2.5 ml-8 mr-8 mt-4">
             {/* 导航区域 */}
-            {renderButtons()}
-
+            <Tabs/>
             {/* 内容区域 */}
-            <Content></Content>
-
+            <RenderContent/>
         </div>
 
 

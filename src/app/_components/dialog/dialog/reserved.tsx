@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import Image from "next/image";
 import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
@@ -16,7 +16,7 @@ const Reserved = ({onClose, check}) => {
     const invitationCode = params.get("invitationCode");
     const [token] = useLocalStorage("token", null);
     const columnUserId = api.column.getUserId.useQuery({id: columnId});
-    const {data: column, isFetching} = api.column.getColumnDetail.useQuery({columnId: columnId});
+    const {data: column} = api.column.getColumnDetail.useQuery({columnId: columnId});
     const priceListData = api.priceList
         .getByColumnId.useQuery({columnId: columnId}, {enabled: !!columnId}).data
         ?.sort((a, b) => a.id - b.id);
@@ -63,7 +63,7 @@ const Reserved = ({onClose, check}) => {
             setConfirmPayModal(false);
             return false;
         }
-        if (!walletData || walletData.freezeIncome + walletData.regularIncome < selectedItem) {
+        if (!walletData || walletData.freezeIncome + walletData.amountWithdraw < selectedItem) {
             messageApi.error("钱包余额不足，请先充值噢~😁");
             setShowTopUpModal(true);
             setConfirmPayModal(false);
