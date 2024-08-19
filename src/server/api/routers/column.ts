@@ -21,30 +21,26 @@ export const columnRouter = createTRPCRouter({
         }).returning({id: column.id, name: column.name})
     }),
 
-    // getAll: publicProcedure
-    //     .input(z.object({id:z.number()}))
-    //     .query(({ctx,input})=>{
-    //         console.log(input.id)
-    //     return ctx.db.select().from(column).where(eq(column.id,input.id))
-    // }),
     getColumnId: publicProcedure
         .input(z.object({userId: z.string()}))
         .query(async ({ctx, input}) => {
             const data = await ctx.db.query.column.findFirst({where: eq(column.userId, input.userId)})
             return data?.id;
         }),
+
     getColumnInfo: publicProcedure
         .input(z.object({columnId: z.string()}))
         .query(async ({ctx, input}) => {
             const data = await ctx.db.query.column.findFirst({where: eq(column.id, input.columnId)})
-            console.log("data================>1111", data);
             return data
         }),
+
     getColumn: publicProcedure
         .input(z.object({userId: z.string()}))
         .query(async ({ctx, input}) => {
             return ctx.db.query.column.findFirst({where: eq(column.userId, input.userId)});
         }),
+
     update: publicProcedure
         .input(z.object({
             id: z.string(),
@@ -91,6 +87,7 @@ export const columnRouter = createTRPCRouter({
                 description: input.description,
             }).where(eq(column.id, input.id));
         }),
+
     updateCover: publicProcedure
         .input(z.object({id: z.string(), cover: z.string()}))
         .mutation(async ({ctx, input}) => {
@@ -98,6 +95,7 @@ export const columnRouter = createTRPCRouter({
                 logo: input.cover,
             }).where(eq(column.id, input.id))
         }),
+
     getAll: publicProcedure
         .query(async ({ctx}) => {
             const columns = await ctx.db.select().from(column)
@@ -108,11 +106,13 @@ export const columnRouter = createTRPCRouter({
             const res = await Promise.all(promises);
             return res;
         }),
+
     getAllByUserId: publicProcedure
         .input(z.object({userId: z.string()}))
         .query(async ({ctx, input}) => {
             return ctx.db.query.column.findMany({where: eq(column.userId, input.userId)});
         }),
+
     getUpdate: publicProcedure
         .input(z.object({visitorId: z.string(), writerId: z.string()}))
         .query(async ({ctx, input}) => {
@@ -133,6 +133,7 @@ export const columnRouter = createTRPCRouter({
             await Promise.all(promises)
             return res;
         }),
+
     getColumnName: publicProcedure
         .input(z.object({searchValue: z.string()}))
         .query(async ({ctx, input}) => {
@@ -145,7 +146,6 @@ export const columnRouter = createTRPCRouter({
                     return {...columnInfo[0], user: {...item}}
                 })
                 res.push(await Promise.all(promises));
-                console.log(res)
             } else {
                 throw new Error('Column not found');
             }
@@ -236,5 +236,55 @@ export const columnRouter = createTRPCRouter({
             })
             return await Promise.all(promises);
         }),
+    // 获取用户更新了帖子还未读的专栏列表
+    getUpdateColumn: publicProcedure
+        .input(z.object({userId: z.string()}))
+        .query(async ({ctx, input}) => {
+            // 获取所有订阅记录
+            const orders =
+                await ctx.db.select().from(order)
+                    .where(and(eq(order.buyerId, input.userId), eq(order.isVisable, true)));
+            // 获取所有订阅的专栏
+            const subscribeColumns: Column[] = [];
+            const ordersPromises = orders.map(async (order) => {
+                subscribeColumns.push(await ctx.db.query.column.findFirst({where: eq(column.id, order.columnId)}));
+            });
+            await Promise.all(ordersPromises);
+            // 获取所有观看记录
+            const readRecords = await ctx.db.select().from(postRead).where(eq(postRead.userId, input.userId));
+            const ownerPosts = readRecords.map(item => item.postId);
+            const res: Column[] = [];
+            // 遍历作者下的每一个专栏的帖子
+            const subscribeColumnsPromises = subscribeColumns.map(async (column) => {
+                const writerPosts = await ctx.db.select().from(post).where(eq(post.columnId, column.id));
+                const flag = writerPosts.every(item => ownerPosts.includes(item.id))
+                if (!flag) {
+                    res.push(column);
+                }
+            })
+            await Promise.all(subscribeColumnsPromises);
+            return res;
+        }),
+    // 获取用户所有可见订阅专栏列表
+    getVisableColumn: publicProcedure
+        .input(z.object({userId: z.string()}))
+        .query(async ({ctx, input}) => {
+            // 获取所有订阅记录
+            const orders =
+                await ctx.db.select().from(order)
+                    .where(and(eq(order.buyerId, input.userId), eq(order.isVisable, true)));
+            // 获取所有订阅的专栏
+            const subscribeColumnsTemp: any[] = [];
+            const ordersPromises = orders.map(async (order) => {
+                const columnTemp = await ctx.db.query.column.findFirst({where: eq(column.id, order.columnId)});
 
+                subscribeColumnsTemp.push({
+                    ...columnTemp,
+                    subscriptionTime: order.createdAt
+                });
+            });
+            await Promise.all(ordersPromises);
+            const res: Column[] = subscribeColumnsTemp.sort((a, b) => a.subscriptionTime > b.subscriptionTime ? 1 : -1);
+            return res;
+        })
 });

@@ -1,133 +1,100 @@
 "use client";
-import Navbar from "../../_components/common/Navbar";
+import Navbar from "@/app/_components/common/Navbar";
 import Image from "next/image";
 import Link from "next/link";
-import NavScribr from "../../_components/subscribe/NavScribr";
-import { api } from "@/trpc/react";
+import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Loading from "../../_components/common/Loading";
-import { SearchColumn } from "@/app/_components/common/SearchColumn";
+import {useEffect, useState} from "react";
+import {useRouter} from "next/navigation";
+import Loading from "@/app/_components/common/Loading";
+import {SearchColumn} from "@/app/_components/common/SearchColumn";
+import {Button} from "antd";
+import SubscribeMain from "@/app/_components/subscribe/SubscribeMain";
 
 const Subscribe = () => {
-  const router = useRouter();
-  const [token] = useLocalStorage("token", null);
-  // const recentRead = api.read.getRecentRead.useQuery({
-  //     userId: token,
-  // }).data;
-  const { data: recentRead, isFetching } = api.read.getRecentRead.useQuery({
-    userId: token,
-  });
-  // const recentColumn = api.post.getColumnbyPost.useQuery({
-  //     postId: recentRead?.id,
-  // })
-  const link = () => {
-    router.push(
-      `/special-column-content?c=${recentRead?.chapter}&id=${recentRead?.columnId}`
-    );
-  };
+    const router = useRouter();
+    const [token] = useLocalStorage("token", null);
+    const {data: recentRead, isLoading} =
+        api.read.getRecentRead.useQuery({userId: token});
 
-  // const {data:recentColumn, isFetching} = api.column.getColumnDetail.useQuery({
-  //     columnId: recentRead?.columnId,
-  // })
-  const recentColumn = api.column.getColumnDetail.useQuery({
-    columnId: recentRead?.columnId,
-  }).data;
+    const link = () => {
+        router.push(`/special-column-content?c=${recentRead?.chapter}&id=${recentRead?.columnId}`);
+    };
 
-  const [readContent, setReadContent] = useState(recentRead?.content);
+    const recentColumn = api.column.getColumnDetail.useQuery({
+        columnId: recentRead?.columnId,
+    }).data;
 
-  function extractText(html) {
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = html;
-    return tempDiv.textContent || tempDiv.innerText || "";
-  }
-  useEffect(() => {
-    if (recentRead && recentRead.content.length > 15) {
-      console.log(recentRead.content);
-      // setReadContent(recentRead.content.substring(0, 20) + "...");
-      const text = extractText(recentRead.content);
-      setReadContent(text.substring(0, 15) + "...");
-    } else {
-      const text = extractText(recentRead?.content);
-      setReadContent(text);
-      // console.log("---->"+recentRead.content);
+    const [readContent, setReadContent] = useState(recentRead?.content);
+
+    function extractText(html) {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        return tempDiv.textContent || tempDiv.innerText || "";
     }
-  }, [recentRead]);
 
-  return (
-    <div className="min-h-screen relative pt-8 pb-15 bg-#F5F7FB">
-      <div className="w-85.75 m-auto mb-2">
-        {/* <div className="border-rd-13 h-8.5 bg-[#FFF] flex items-center">
-          <Image
-            src={"/images/subscribe/search.png"}
-            alt="search"
-            width={18}
-            height={18}
-            className="inline  ml-5.25 w-4.5 h-4.5"
-          ></Image>
-          <input
-            type="search"
-            name=""
-            id=""
-            placeholder="仅支持搜索专栏和作者"
-            className="text-3.25 text-[#999] lh-8.5 ml-1.6 justify-center outline-none w-full h-8.5 pl-1.6 border-rd-13 "
-          ></input>
-        </div> */}
-        {/*搜索框*/}
-        <Link href={'find/search-result'}><SearchColumn ></SearchColumn></Link>
+    useEffect(() => {
+        if (recentRead && recentRead.content.length > 15) {
+            const text = extractText(recentRead.content);
+            setReadContent(text.substring(0, 15) + "...");
+        } else {
+            const text = extractText(recentRead?.content);
+            setReadContent(text);
+        }
+    }, [recentRead]);
 
-        {isFetching ? (
-          <div className="h-20.5 w-full mt-8 items-center flex justify-center">
-            <Loading></Loading>
-          </div>
-        ) : (
-          <div className="h-20.5 w-full mt-8 border-rd-2.5 bg-[#FFF] flex items-center relative shrink-0">
+    const RecentlyReadCard = () => {
+        if (isLoading) return <Loading/>
+        return <div className="h-20.5 w-full rounded-2.5 bg-[#FFF] flex relative p-2.5">
             <Image
-              style={{ objectFit: "cover" }}
-              //   fill
-              objectFit="cover"
-              unoptimized
-              src={recentColumn?.logo??"/images/subscribe/cover.png"}
-              alt="cover"
-              width={18.2}
-              height={24.8}
-              placeholder="empty"
-              className="w-11.375 h-15.5 ml-4  object-cover rounded-2"
+                unoptimized
+                src={recentColumn?.logo ?? "/images/subscribe/cover.png"}
+                alt="cover"
+                width={45.5}
+                height={62}
+                placeholder="empty"
+                className="rounded-2"
             ></Image>
-            <div className="pl-2 relative h-23 pt-3">
-              {recentRead && (
-                <>
-                  <div className="text-3 text-[#252525] font-500 pb-1.5 lh-6">
-                    {recentRead.name?.length > 15? recentRead.name.substring(0, 15)+"...": recentRead.name}
-                  </div>
-                  <div
-                    className="text-2.5 text-[#666] lh-3 pl-1"
-                    dangerouslySetInnerHTML={{ __html: readContent }}
-                  ></div>
-                </>
-              )}
+            <div className="pl-2 pt-1">
+                {recentRead && (
+                    <>
+                        <div className="text-3 text-[#252525] font-500 pb-1.5 lh-6">
+                            {recentRead.name?.length > 15 ? recentRead.name.substring(0, 15) + "..." : recentRead.name}
+                        </div>
+                        <div
+                            className="text-2.5 text-[#666] lh-3 pl-1"
+                            dangerouslySetInnerHTML={{__html: readContent}}
+                        ></div>
+                    </>
+                )}
             </div>
-            <div
-              onClick={link}
-              className="w-18.25 h-7.75 text-3 bg-[#daf9f1] text-[#1db48d] lh-7.75 text-center border-rd-12 absolute right-2.5 bottom-2.5"
+            <Button size={'small'}
+                    onClick={link}
+                    className="w-18.25 h-7.75 text-3 text-[#1db48d] bg-#DAF9F1 p0 lh-7.75 rounded-full absolute right-2.5 bottom-2.5"
             >
-              继续阅读
-            </div>
-          </div>
-        )}
-
-        <div>
-          <NavScribr />
+                继续阅读
+            </Button>
         </div>
-      </div>
+    }
 
-      <div className="bottom-4 justify-center w-full fixed">
-        <Navbar />
-      </div>
-      {/*<div className="h-14"></div>*/}
-    </div>
-  );
+    return (
+        <div className="min-h-screen px-4 pt-8 pb-15 bg-#F5F7FB">
+            {/*搜索框*/}
+            <Link href={'find/search-result'}><SearchColumn/></Link>
+            {/*最近观看*/}
+            <div className={'mt-8'}>
+                <RecentlyReadCard/>
+            </div>
+            {/*列表*/}
+            <div className={'mt-4'}>
+                <SubscribeMain/>
+            </div>
+            {/*工具栏*/}
+            <div className="bottom-4 justify-center w-full fixed">
+                <Navbar/>
+            </div>
+        </div>
+    );
 };
 
 export default Subscribe;

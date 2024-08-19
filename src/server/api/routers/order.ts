@@ -1,10 +1,10 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column, order, priceList, referrals, runningWater, subscription, user, wallet} from "@/server/db/schema";
+import {column, order, priceList, referrals, runningWater, user, wallet} from "@/server/db/schema";
+import {and, between, eq, gte, inArray, like, lte, sql} from "drizzle-orm";
+import {addDays} from "date-fns";
 
 ;
-import {eq, and, inArray, gte, lte, between, like, sql} from "drizzle-orm";
-import {addDays, format} from "date-fns";
 
 export const orderRouter = createTRPCRouter({
     hello: publicProcedure
@@ -452,9 +452,8 @@ export const orderRouter = createTRPCRouter({
         .input(z.object({
             userId: z.string(),
         }))
-        .query(async ({ctx, input}) => {
-            const orderData = await ctx.db.select().from(order).where(and(eq(order.buyerId, input.userId), eq(order.status, true)))
-            return orderData;
+        .query(({ctx, input}) => {
+            return ctx.db.select().from(order).where(and(eq(order.buyerId, input.userId), eq(order.status, true)));
         }),
 
     // 更新订阅状态
