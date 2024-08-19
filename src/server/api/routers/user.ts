@@ -131,6 +131,14 @@ export const userRouter = createTRPCRouter({
                 .where(eq(user.id,input.id))
                 .returning({phone:user.phone})
         }),
-
-
+    updateName: publicProcedure.input(z.object({ id: z.string(), name: z.string()}))
+        .mutation(({ctx,input})=>{
+            return ctx.db.update(user)
+                .set({
+                    name: input.name,
+                    updatedAt: getCurrentTime()
+                })
+                .where(eq(user.id,input.id))
+                .returning({name:user.name})
+        }),
 });
