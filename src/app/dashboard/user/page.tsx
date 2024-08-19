@@ -20,9 +20,14 @@ const Page = () => {
         const cardStyles = "flex flex-col items-center w-1/4 mt-2 mb-2";
         const navItems = [
             {
-                href: `user/user-detailed?id=${token}`,
+                href: `user/detail?id=${token}`,
                 iconSrc: '/images/user/HomePage.svg',
                 text: '个人主页'
+            },
+            {
+                href: '',
+                iconSrc: '/images/user/KnowledgePlanet.svg',
+                text: '知识星球'
             },
             {
                 href: 'https://eahu7fmu6k6.feishu.cn/wiki/JtU0wJWhfiBygNkEoCBc2VUIndb?from=from_copylink',
@@ -40,15 +45,10 @@ const Page = () => {
                 text: '意见反馈'
             },
             {
-                href: '',
+                href: 'https://work.weixin.qq.com/kfid/kfcef6edb33788c7a32',
                 iconSrc: '/images/user/Contact.svg',
                 text: '联系客服'
-            },
-            {
-                href: '',
-                iconSrc: '/images/user/HomePage.svg',
-                text: '个人主页'
-            },
+            }
         ]
         return <div className={"w-full h-51.5 rounded-2.5 bg-#FFF mt-1.5 py-4.5"}>
             {/*标题*/}

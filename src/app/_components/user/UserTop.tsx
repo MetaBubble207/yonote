@@ -5,6 +5,7 @@ import React from "react";
 import useLocalStorage from "@/tools/useStore";
 import {useRouter, useSearchParams} from "next/navigation";
 import {api} from "@/trpc/react";
+import {Button} from "antd";
 
 export const UserTop = () => {
     let userInfo;
@@ -86,17 +87,16 @@ export const UserTop = () => {
             </div>
 
             {/* 编辑资料 */}
-            <div
-                className="w-20 text-[#252525] text-2.5 font-500 lh-6 rounded-xl mr-4 flex flex-row bg-white pl-2.5 items-center ">
+            <Button
+                className="w-20 text-[#252525] text-2.5 font-500 lh-6 rounded-full mr-4 flex flex-row bg-white pl-2.5 items-center ">
                 <Image
                     src="/images/user/icon_edit.png"
                     alt="icon"
-                    width={14}
-                    height={14}
-                    className="w-4 h-4 mr-1"
+                    width={16}
+                    height={16}
                 />
-                <Link href="user/user-message">编辑资料</Link>
-            </div>
+                <Link href="user/message">编辑资料</Link>
+            </Button>
         </div>
     )
 }
