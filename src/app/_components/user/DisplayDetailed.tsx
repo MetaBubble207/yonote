@@ -58,15 +58,13 @@ const DisplayDetailed = (props) => {
                 unoptimized
             />
             <div>
-                <h2 className="ml-2 w-33.81125 text-3.75 font-500 lh-6 text-ellipsis whitespace-nowrap overflow-hidden">
+                <div className="ml-2 w-59.25 text-3.75 font-500 lh-6 text-ellipsis whitespace-nowrap overflow-hidden">
                     {/*「心智与阅读」*/}
                     「{name ?? "未知专栏"}」
-                </h2>
-                <p
-                    className='w-59.25 text-#666 text-3.25 font-400 ml-3 mt-2 text-ellipsis whitespace-nowrap overflow-hidden'
-                >
+                </div>
+                <div className='w-59.25 text-#666 text-3.25 font-400 ml-3 mt-2 text-ellipsis whitespace-nowrap overflow-hidden'>
                     {introduce ?? "暂无数据"}
-                </p>
+                </div>
             </div>
         </Link>
     }
