@@ -7,13 +7,15 @@ import useLocalStorage from "@/tools/useStore";
 import DisplayDetailed from "@/app/_components/user/DisplayDetailed";
 import Loading from "@/app/_components/common/Loading";
 import Error from "@/app/_components/common/Error";
+import {useSearchParams} from "next/navigation";
 
-function User() {
-    const [token] = useLocalStorage("token", null)
+const Page = () => {
+    const [token] = useLocalStorage("token", null);
+    const params = useSearchParams()
     const {data: userInfo, isLoading, isError} =
-        api.users.getOne.useQuery({id: token});
+        api.users.getOne.useQuery({id: params.get('id')});
     if (isLoading) return <Loading/>
-    if (isError) return <Error text={'数据加载错误'}/>
+    if (isError) return <Error text={'没有找到该用户的信息😯~'}/>
     return (
         <div>
             <div className="blur-24 h-28.25 w-full relative">
@@ -65,4 +67,4 @@ function User() {
 }
 
 
-export default User;
+export default Page;

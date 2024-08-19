@@ -11,15 +11,17 @@ const DisplayDetailed = (props) => {
     const {token, userInfo} = props
     // 导航栏返回响应页面
     const [currentPage, setCurrentPage] = useState<number>(1)
-    const {data: columnInfos, isLoading: isColumnInfoLoading} = api.column.getAllByUserId.useQuery({userId: token});
-    const {data: updateColumnInfos, isLoading: isUpdateColumnInfoLoading} = api.column.getUpdate.useQuery({
-        writerId: token,
+    const {data: columnInfos, isLoading: isColumnInfoLoading} =
+        api.column.getAllByUserId.useQuery({userId: userInfo.id});
+    const {data: updateColumnInfos, isLoading: isUpdateColumnInfoLoading} =
+        api.column.getUpdate.useQuery({
+        writerId: userInfo.id,
         visitorId: token
     });
     // 订阅数量
-    const subscribeInfos = api.order.getUserOrder.useQuery({userId: token}).data
+    const subscribeInfos = api.order.getUserOrder.useQuery({userId: userInfo.id}).data
     // 帖子数量
-    const postLength = api.post.getNumById.useQuery({id: userInfo?.id}).data
+    const postLength = api.post.getNumById.useQuery({id: userInfo.id}).data
     if (isColumnInfoLoading || isUpdateColumnInfoLoading) return <Loading/>
     // 渲染按钮下对应的局部页面
     const RenderContent = () => {
@@ -107,7 +109,6 @@ const DisplayDetailed = (props) => {
         </div>
     }
     return <>
-        {/* 订阅数量展示 */}
         {/* 订阅数量展示 */}
         <div className="w-full flex justify-center space-x-14 text-neutral text-4 font-bold leading-6">
             {/* 订阅数量 */}
