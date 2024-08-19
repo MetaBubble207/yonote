@@ -47,15 +47,14 @@ function User() {
                     </div>
                 </div>
                 {/*数据展示、导航和内容*/}
-                <div className={'w-full'}>
-                    <div className={"mt-26"}>
+                <div className={'w-full flex flex-col h-full'}>
+                    <div className={"mt-26  flex-1"}>
                         <DisplayDetailed token={token} userInfo={userInfo}></DisplayDetailed>
                     </div>
                     {/*更多优质内容*/}
-                    <div className={"w-full flex justify-center items-center"}>
-                        <div className={"flex justify-center mt-8 w-26 h-7 bg-[#daf9f1]"}>
-                            <Link href="../find"
-                                  className={" text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
+                    <div className={"w-full flex justify-center items-center sticky pb-9"}>
+                        <div className={"flex justify-center w-26 h-7 bg-[#daf9f1] rounded-full"}>
+                            <Link href="../find" className={" text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
                         </div>
                     </div>
                 </div>
