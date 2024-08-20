@@ -44,7 +44,6 @@ const Subscribe = () => {
     }, [recentRead]);
 
     const RecentlyReadCard = () => {
-        if (isLoading) return <Loading/>
         return <div className="h-20.5 w-full rounded-2.5 bg-[#FFF] flex relative p-2.5">
             <Image
                 unoptimized
@@ -76,6 +75,7 @@ const Subscribe = () => {
             </Button>
         </div>
     }
+    if (isLoading) return <Loading/>
 
     return (
         <div className="min-h-screen px-4 pt-8 pb-15 bg-#F5F7FB">

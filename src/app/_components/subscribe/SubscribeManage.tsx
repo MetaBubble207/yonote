@@ -2,12 +2,10 @@ import React, {useRef, useState} from 'react';
 import ManagementColumn from './ManagementColumn';
 import ManagementClass from './ManagementClass';
 import Image from 'next/image';
-import {Button, Drawer, DrawerProps} from "antd";
+import {Button, Drawer} from "antd";
 
 const SubscribeManage = () => {
-
     const [open, setOpen] = useState(false);
-    const [placement, setPlacement] = useState<DrawerProps['placement']>('bottom');
 
     const showDrawer = () => {
         setOpen(true);
@@ -19,27 +17,30 @@ const SubscribeManage = () => {
 
     const Panel = () => {
         const saveColumn = useRef(null)
-
         const [manage, setManage] = useState(false);
+
         const handleManage = () => {
             if (saveColumn.current && manage == true) {
                 saveColumn.current.handleSave();
+                setOpen(false);
+                window.location.reload();
             }
             setManage(!manage);
         }
+
         const [selectedButton, setSelectedButton] = useState(1); // 追踪选中的按钮
-        const handleButtonClick = (button: number, type: string) => {
+        const handleButtonClick = (button: number) => {
             if (selectedButton !== button) {
                 // 如果点击的是当前选中的按钮，则取消选中状态
                 setSelectedButton(button);
             }
         };
         return <Drawer
-            placement={placement}
+            placement={'bottom'}
             closable={true}
             onClose={onClose}
             open={open}
-            key={placement}
+            key={'bottom'}
             height={494}
             style={{borderRadius: '20px'}}
         >
@@ -48,11 +49,11 @@ const SubscribeManage = () => {
                 <div className='font-400 lh-6 flex justify-center'>
                     <button
                         className={`w-17 h-6 rounded-4px ${selectedButton === 1 ? 'bg-[rgba(69,225,184,0.20)] text-[#1DB48D]' : 'color-#999999 bg-#F5F7FB'}`}
-                        onClick={() => handleButtonClick(1, 'column')}>专栏
+                        onClick={() => handleButtonClick(1)}>专栏
                     </button>
                     <button
                         className={`w-17 h-6 ml-6 rounded-4px ${selectedButton === 2 ? ' bg-[rgba(69,225,184,0.20)] text-[#1DB48D]' : 'color-#999999 bg-#F5F7FB'}`}
-                        onClick={() => handleButtonClick(2, 'class')}>小课
+                        onClick={() => handleButtonClick(2)}>小课
                     </button>
                 </div>
                 <Button type={'link'} size={'small'} onClick={handleManage}

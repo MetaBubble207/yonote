@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {Column, column, order, post, postRead, priceList, user} from "@/server/db/schema";
+import {Column, column, ColumnOrder, order, post, postRead, priceList, user} from "@/server/db/schema";
 import {and, desc, eq, like, sql} from "drizzle-orm";
 import {uniqueArray} from "@/tools/uniqueArray";
 
@@ -31,8 +31,7 @@ export const columnRouter = createTRPCRouter({
     getColumnInfo: publicProcedure
         .input(z.object({columnId: z.string()}))
         .query(async ({ctx, input}) => {
-            const data = await ctx.db.query.column.findFirst({where: eq(column.id, input.columnId)})
-            return data
+            return await ctx.db.query.column.findFirst({where: eq(column.id, input.columnId)})
         }),
 
     getColumn: publicProcedure
@@ -103,8 +102,7 @@ export const columnRouter = createTRPCRouter({
                 const u = await ctx.db.query.user.findFirst({where: eq(user.id, item.userId)});
                 return {...item, user: u};
             });
-            const res = await Promise.all(promises);
-            return res;
+            return await Promise.all(promises);
         }),
 
     getAllByUserId: publicProcedure
@@ -173,8 +171,7 @@ export const columnRouter = createTRPCRouter({
                 const u = await ctx.db.query.user.findFirst({where: eq(user.id, item.userId)});
                 return {...item, user: u};
             });
-            const res = await Promise.all(promises);
-            return res;
+            return await Promise.all(promises);
 
         }),
 
@@ -185,8 +182,7 @@ export const columnRouter = createTRPCRouter({
                 const u = await ctx.db.query.user.findFirst({where: eq(user.id, item.userId)});
                 return {...item, user: u};
             });
-            const res = await Promise.all(promises);
-            return res;
+            return await Promise.all(promises);
 
         }),
 
@@ -213,9 +209,7 @@ export const columnRouter = createTRPCRouter({
                 const columnData = await ctx.db.select().from(column).where(eq(column.id, order.columnId))
                 return columnData[0];
             })
-            const res = await Promise.all(promises);
-
-            return res;
+            return await Promise.all(promises);
 
         }),
 
@@ -236,6 +230,7 @@ export const columnRouter = createTRPCRouter({
             })
             return await Promise.all(promises);
         }),
+
     // 获取用户更新了帖子还未读的专栏列表
     getUpdateColumn: publicProcedure
         .input(z.object({userId: z.string()}))
@@ -265,6 +260,7 @@ export const columnRouter = createTRPCRouter({
             await Promise.all(subscribeColumnsPromises);
             return res;
         }),
+
     // 获取用户所有可见订阅专栏列表
     getVisableColumn: publicProcedure
         .input(z.object({userId: z.string()}))
@@ -285,6 +281,23 @@ export const columnRouter = createTRPCRouter({
             });
             await Promise.all(ordersPromises);
             const res: Column[] = subscribeColumnsTemp.sort((a, b) => a.subscriptionTime > b.subscriptionTime ? 1 : -1);
+            return res;
+        }),
+
+    getAlreadySubscribedColumns: publicProcedure
+        .input(z.object({userId: z.string()}))
+        .query(async ({ctx, input}) => {
+            // 获取订单
+            const orders = await ctx.db.select().from(order).where(eq(order.buyerId,input.userId));
+            // 获取专栏
+            const res:ColumnOrder[] = [];
+            const promises = orders.map(async order => {
+                res.push({
+                    column: await ctx.db.query.column.findFirst({where:eq(column.id,order.columnId)}),
+                    order: order
+                });
+            })
+            await Promise.all(promises);
             return res;
         })
 });

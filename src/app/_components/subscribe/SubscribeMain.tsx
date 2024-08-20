@@ -25,7 +25,7 @@ const SubscribeMain = () => {
                 <SubscribeRenew key={column.id} column={column}/>
             ))}
         </div>
-    };
+    }
 
     const Column = () => {
         const {
@@ -41,7 +41,7 @@ const SubscribeMain = () => {
                 ))}
             </div>
         );
-    };
+    }
 
     const Course = () => {
         return <NoData title={'还没有购买过小课噢😯~'}/>
@@ -65,27 +65,31 @@ const SubscribeMain = () => {
         {id: 3, label: '小课'},
     ];
 
+    const Tabs = () => {
+        return <div className='flex space-x-8 text-4.5'>
+            {buttonData.map((button) => (
+                <Button
+                    size={'small'}
+                    type={'link'}
+                    key={button.id}
+                    onClick={() => setCurrentPage(button.id)}
+                    className={`p0 ${currentPage === button.id ? 'text-[#252525] fw-500' : 'text-[#B5B5B5] fw-400'}`}
+                >
+                    {button.label}
+                    <div
+                        className={`w-2.75 h-1 m-auto rounded-2
+                                ${currentPage === button.id ? 'bg-#45E1B8' : ''}`}/>
+                </Button>
+            ))
+            }
+        </div>
+    }
+
     return (
         <>
             <div className='flex justify-between items-center'>
-                <div className='flex space-x-8 text-4.5'>
-                    {buttonData.map((button) => (
-                        <Button
-                            size={'small'}
-                            type={'link'}
-                            key={button.id}
-                            onClick={() => setCurrentPage(button.id)}
-                            className={`p0 ${currentPage === button.id ? 'text-[#252525] fw-500' : 'text-[#B5B5B5] fw-400'}`}
-                        >
-                            {button.label}
-                            <div
-                                className={`w-2.75 h-1 m-auto rounded-2
-                                ${currentPage === button.id ? 'bg-#45E1B8' : ''}`}/>
-                        </Button>
-                    ))
-                    }
-                </div>
-                <SubscribeManage></SubscribeManage>
+                <Tabs/>
+                <SubscribeManage/>
             </div>
             <div className={"mt-3.5"}>
                 <List/>
