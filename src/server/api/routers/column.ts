@@ -290,14 +290,14 @@ export const columnRouter = createTRPCRouter({
             // 获取订单
             const orders = await ctx.db.select().from(order).where(eq(order.buyerId,input.userId));
             // 获取专栏
-            const res:ColumnOrder[] = [];
+            const resTemp:ColumnOrder[] = [];
             const promises = orders.map(async order => {
-                res.push({
+                resTemp.push({
                     column: await ctx.db.query.column.findFirst({where:eq(column.id,order.columnId)}),
                     order: order
                 });
             })
             await Promise.all(promises);
-            return res;
+            return resTemp.sort((a,b) => a.order.createdAt > b.order.createdAt ? 1 : -1);
         })
 });

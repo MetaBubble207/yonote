@@ -31,7 +31,6 @@ const SubscribeManage = () => {
         const [selectedButton, setSelectedButton] = useState(1); // 追踪选中的按钮
         const handleButtonClick = (button: number) => {
             if (selectedButton !== button) {
-                // 如果点击的是当前选中的按钮，则取消选中状态
                 setSelectedButton(button);
             }
         };
