@@ -37,5 +37,6 @@ a {
   height: 40px !important;
   background-color: #1db48d;
 }
-
-
+:where(.css-dev-only-do-not-override-1ysw8m8).ant-drawer .ant-drawer-header {
+  display: none !important;
+}
