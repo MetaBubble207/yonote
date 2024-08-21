@@ -1,14 +1,13 @@
 "use client"
 import Image from "next/image";
 import React, {useEffect, useState} from 'react';
-import {SpecialColumnList} from "@/app/_components/special-column/SpecialColumnList";
 import {SpecialColumnIntroduce} from "@/app/_components/special-column/SpecialColumnIntroduce";
 import {api} from "@/trpc/react";
 import Reserved from "@/app/_components/dialog/dialog/reserved";
 import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import {message} from "antd";
-
+import {SpecialColumnList} from "@/app/_components/special-column/SpecialColumnList";
 
 export const SpecialColumnBody = () => {
     const params = useSearchParams();
@@ -24,14 +23,8 @@ export const SpecialColumnBody = () => {
         columnId: columnId,
     }).data
     // 获取所有文章
-    const read = api.post.getAll.useQuery({
-        columnId: columnId,
-        limit: 10000,
-        offset: 0,
-    });
-    const order = api.order.getColumnOrder.useQuery({
-        columnId: columnId,
-    })
+    const read = api.post.getAllPost.useQuery({columnId: columnId});
+    const order = api.order.getColumnOrder.useQuery({columnId: columnId})
 
     const active = "text-[#252525] font-500 border-b-3 border-[#45E1B8]";
     useEffect(() => {
@@ -42,18 +35,19 @@ export const SpecialColumnBody = () => {
             router.push(`/login?origin=${origin}`)
         }
     }, []);
+
     // 是否加载订阅按钮
     const ShowButton = () => {
-        if (status) {
-            return <div></div>;
-        } else {
-            return <button
+        return <>
+            {status && <button
                 className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-2"}
                 onClick={setting}>
                 订阅
             </button>
-        }
+            }
+        </>
     }
+
     const RenderContent = () => {
         switch (currentContent) {
             case 1:
@@ -68,9 +62,9 @@ export const SpecialColumnBody = () => {
         setIsSubscribe(!isSubscribe);
         setCheck(!check);
     }
-    // console.log(reservedStatus);
+
     //这个地址是提前给微信登录接口重定向，默认微信那边会传回code和state两个query参数，通过useSearchParams可以拿到
-    const userInfoQuery = api.users.login.useQuery({ code: code }, { enabled: !!code && token === null });
+    const userInfoQuery = api.users.login.useQuery({code: code}, {enabled: !!code && token === null});
     const userInfo = userInfoQuery.data;
     const [messageApi, contextHolder] = message.useMessage();
     useEffect(() => {
@@ -111,12 +105,7 @@ export const SpecialColumnBody = () => {
                 </div>
             </div>
             {RenderContent()}
-            {/*按钮*/}
-            {/* {status ?  <div></div> : <button
-                className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-2"}
-                onClick={setting}>
-                订阅
-            </button>} */}
+
             <ShowButton/>
 
             <div className="fixed  top-200px   w-full">

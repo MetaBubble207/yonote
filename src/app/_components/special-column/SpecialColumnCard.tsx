@@ -8,17 +8,8 @@ import {useEffect} from "react";
 
 export const SpecialColumnCard = (props) => {
     const {item, user, data} = props;
-    const chapter = item.chapter;
 
     const router = useRouter();
-    // 点赞
-    // const [isLike, setIsLike] = useState(false);
-
-    // const handleClick = () => {
-    //     setIsLike(!isLike);
-    // };
-
-
     // 获取点赞数量
     const likeCount = api.like.getLikeCount.useQuery({
         postId: item.id,
@@ -44,10 +35,9 @@ export const SpecialColumnCard = (props) => {
     }, [item.content])
     return (
         <div
-            className={"w-91.5%  mt-8px ml-16px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-12px pb-10px"}>
+            className={"w-91.5% mt-8px ml-16px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] px-2.5 pb-4 pt-4"}>
             {/*上边*/}
-            <div className={"flex mt-25.5px items-center w-full"} onClick={data || item.isFree ? link : alertMessage}>
-                {/* {status?:<div className={"flex mt-25.5px items-center w-full"} onClick={alertMessage}>} */}
+            <div className={"flex items-center w-full"} onClick={data || item.isFree ? link : alertMessage}>
                 {/*左边图片*/}
                 {item?.logo && (
                     <div className={"border-rd-2 w-30%"}>
@@ -84,13 +74,6 @@ export const SpecialColumnCard = (props) => {
                         </span>
 
                         }
-                        {/* <span className={" shrink-0 border-rd-0.5 bg-[#75C3EE] shrink-0 text-[#000]  text-2.5 font-not-italic font-500 lh-6 px-7px py-3px ml-10px"}>
-                            {item.data && item.data.length > 0 && (
-                                <div>
-                                    <p>{item.data[number+1]?.tag}</p>
-                                </div>
-                            )}
-                        </span> */}
                     </div>
 
                     <div
@@ -104,13 +87,12 @@ export const SpecialColumnCard = (props) => {
                             }
                         }
                         dangerouslySetInnerHTML={{__html: postContent}}>
-                        {/* {item.content} */}
                     </div>
                 </div>
             </div>
 
             {/*下方图标*/}
-            <div className="flex mt-18px items-center space-y-0 ">
+            <div className="flex mt-18px items-end">
                 {user && <>
                     {/*左边头像*/}
                     <div>
@@ -134,18 +116,16 @@ export const SpecialColumnCard = (props) => {
                     </div>
                 </>}
                 {/*右方点赞数量*/}
-                <div className="ml-auto flex items-center space-y-0">
+                <div className="ml-auto flex items-center">
                     <div>
                         <Image
-                            // src={isLike ? "/images/special-column/heart red.png" : "/images/special-column/heart 2.png"}
                             src={"/images/special-column/heart 2.png"}
-                            // onClick={handleClick}
                             alt={"爱心"} width={18} height={18} objectFit="none"/>
                     </div>
                     <div className={"text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-4px"}>{likeCount}</div>
                 </div>
                 {/*右方浏览数量*/}
-                <div className="ml-24px flex items-center space-y-0">
+                <div className="ml-24px flex items-center">
                     <div>
                         <Image src={"/images/special-column/Preview-open (预览-打开).png"} alt={"爱心"} width={18}
                                height={18} objectFit="none"/>
