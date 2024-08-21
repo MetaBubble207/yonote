@@ -73,8 +73,9 @@ export const postRouter = createTRPCRouter({
         .query(({ctx,input}) => {
             return ctx.db.select().from(post).where(eq(post.columnId,input.columnId));
         }),
+
     // 专栏详情页展示有序的章节数
-    getAllInOrder: publicProcedure.input(z.object({ columnId: z.string(), limit: z.number(), offset: z.number(), activeCategory: z.string() }))
+    getAllInOrder: publicProcedure.input(z.object({ columnId: z.string(), activeCategory: z.string() }))
         .query(async ({ ctx, input }) => {
             const postNoTop = ctx.db.select().from(post)
                 .where(and(eq(post.columnId, input.columnId), eq(post.isTop, false)))
@@ -93,15 +94,8 @@ export const postRouter = createTRPCRouter({
                 const postNoTopTag = (await postNoTop).filter(item => item.tag.includes(input.activeCategory))
                 return [...postIsTopTag, ...postNoTopTag]
             }
-
-            // const postNoTop = ctx.db.select().from(post)
-            //     .where(and(eq(post.columnId, input.columnId), eq(post.isTop, false)))
-            //     .orderBy(post.createdAt);
-            // const postIsTop = ctx.db.select().from(post)
-            //     .where(and(eq(post.columnId, input.columnId), eq(post.isTop, true)))
-            //     .orderBy(post.createdAt);
-            // return [...(await postIsTop), ...(await postNoTop)]
         }),
+
     getAllInUser: publicProcedure
         .input(z.object({ userId: z.string(), limit: z.number(), offset: z.number() }))
         .query(async ({ ctx, input }) => {

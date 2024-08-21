@@ -2,9 +2,9 @@
 import {api} from "@/trpc/react";
 import {useSearchParams} from 'next/navigation';
 import React, {useState} from 'react';
-import {Suspense} from "react";
 import {SpecialColumnCard} from "@/app/_components/special-column/SpecialColumnCard";
 import Loading from "../common/Loading";
+import NoData from "@/app/_components/common/NoData";
 
 
 export const SpecialColumnList = (props) => {
@@ -38,24 +38,19 @@ export const SpecialColumnList = (props) => {
         }
 
     }
-    const {data: postInfo, isFetched} = api.post.getAllInOrder.useQuery({
+    const {data: postInfo, isLoading} = api.post.getAllInOrder.useQuery({
         columnId: columnId,
-        limit: 100000,
-        offset: 0,
         activeCategory: activeCategory,
     });
 
     const Body = () => {
+        if (isLoading) return <Loading/>
+        if (!postInfo || postInfo.length === 0) return <NoData title={'暂无数据噢😯~'}/>
         return <>
-            <Suspense>
-                {!isFetched ? <div className="relative w-full mt-7 bg-#fff h-100"><Loading></Loading></div> : null}
-                {postInfo && postInfo.length > 0
-                    && postInfo.map((item: any, index) => (
-                        <SpecialColumnCard key={item.id} index={index} item={item} user={user} data={status}/>
-                    ))
-                }
-                {postInfo && postInfo.length === 0 && <div className="w-full flex pl-6 pt-3">暂无数据</div>}
-            </Suspense>
+            {postInfo.map((item, index) => (
+                    <SpecialColumnCard key={item.id} index={index} item={item} user={user} data={status}/>
+                ))
+            }
         </>
     };
 

@@ -9,7 +9,7 @@ const Page = () => {
                     <SpecialColumnHeader></SpecialColumnHeader>
                 </div>
                 {/*专栏主体*/}
-                <div className={"w-full absolute z-2 top-39"}>
+                <div className={"w-full min-h-60 bg-white rounded-t-30px  absolute z-2 top-39"}>
                     <SpecialColumnBody></SpecialColumnBody>
                 </div>
             </div>

@@ -5,6 +5,7 @@ import React, {useState} from "react";
 import {timeToDateString} from "@/tools/timeToString";
 import {api} from "@/trpc/react";
 import {useEffect} from "react";
+import NoData from "@/app/_components/common/NoData";
 
 export const SpecialColumnCard = (props) => {
     const {item, user, data} = props;

@@ -75,8 +75,12 @@ export const SpecialColumnBody = () => {
     }, [userInfo, setToken]);
     const router = useRouter();
 
+    const search = () => {
+
+    }
+
     return (
-        <div className={" w-full  bg-#fff rounded-t-30px lh-6 "}>
+        <div className={"w-full"}>
             {contextHolder}
             {/*订阅栏*/}
             <div className={"ml-37.8% text-[#999] text-3 font-not-italic font-400 lh-6 pt-10px"}>
@@ -97,8 +101,8 @@ export const SpecialColumnBody = () => {
                     onClick={() => setCurrentContent(1)}>内容
                 </div>
                 <div className="ml-auto mr-24px">
-                    <Image src={"/images/special-column/Magnifying glass.png"} alt={"心智与阅读"} width={18}
-                           height={18}/>
+                    <Image src={"/images/special-column/Magnifying glass.png"} alt={"心智与阅读"} width={18} height={18}
+                            onClick={search}/>
                 </div>
                 <div className={"mr-16px"}>
                     <Image src={"/images/special-column/Sort.png"} alt={"心智与阅读"} width={18} height={18}/>
@@ -111,7 +115,6 @@ export const SpecialColumnBody = () => {
             <div className="fixed  top-200px   w-full">
                 {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}
             </div>
-            <div className="bg-white h-25 w-100%"></div>
         </div>
     )
 }
