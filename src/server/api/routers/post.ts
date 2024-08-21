@@ -68,6 +68,11 @@ export const postRouter = createTRPCRouter({
                 where: and(eq(post.columnId, input.columnId), eq(post.status, true)),
             })
         }),
+    getAllPost: publicProcedure
+        .input(z.object({columnId:z.string()}))
+        .query(({ctx,input}) => {
+            return ctx.db.select().from(post).where(eq(post.columnId,input.columnId));
+        }),
     // 专栏详情页展示有序的章节数
     getAllInOrder: publicProcedure.input(z.object({ columnId: z.string(), limit: z.number(), offset: z.number(), activeCategory: z.string() }))
         .query(async ({ ctx, input }) => {
