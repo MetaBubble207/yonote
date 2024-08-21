@@ -308,7 +308,10 @@ export const runningWater = createTable(
 export type User = typeof user.$inferInsert
 export type RunningWater = typeof runningWater.$inferSelect
 export type Column = typeof column.$inferSelect
-export type ColumnUser = typeof user.$inferSelect & typeof column.$inferSelect
+export type ColumnUser = {
+        column: typeof column.$inferSelect,
+        user: typeof user.$inferSelect
+}
 export type ColumnOrder = {
     column: typeof column.$inferSelect,
     order: typeof order.$inferSelect

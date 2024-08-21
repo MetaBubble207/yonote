@@ -1,7 +1,7 @@
 import {z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {Column, column, ColumnOrder, order, post, postRead, priceList, user} from "@/server/db/schema";
+import {Column, column, ColumnOrder, ColumnUser, order, post, postRead, priceList, user} from "@/server/db/schema";
 import {and, desc, eq, like, sql} from "drizzle-orm";
 import {uniqueArray} from "@/tools/uniqueArray";
 
@@ -288,16 +288,27 @@ export const columnRouter = createTRPCRouter({
         .input(z.object({userId: z.string()}))
         .query(async ({ctx, input}) => {
             // 获取订单
-            const orders = await ctx.db.select().from(order).where(eq(order.buyerId,input.userId));
+            const orders = await ctx.db.select().from(order).where(eq(order.buyerId, input.userId));
             // 获取专栏
-            const resTemp:ColumnOrder[] = [];
+            const resTemp: ColumnOrder[] = [];
             const promises = orders.map(async order => {
                 resTemp.push({
-                    column: await ctx.db.query.column.findFirst({where:eq(column.id,order.columnId)}),
+                    column: await ctx.db.query.column.findFirst({where: eq(column.id, order.columnId)}),
                     order: order
                 });
             })
             await Promise.all(promises);
-            return resTemp.sort((a,b) => a.order.createdAt > b.order.createdAt ? 1 : -1);
-        })
+            return resTemp.sort((a, b) => a.order.createdAt > b.order.createdAt ? 1 : -1);
+        }),
+    // 获取专栏及其用户信息
+    getColumnUser: publicProcedure
+        .input(z.object({columnId: z.string()}))
+        .query(async ({ctx, input}) => {
+            const columnData = await ctx.db.query.column.findFirst({where: eq(column.id, input.columnId)})
+            const userData = await ctx.db.query.user.findFirst({where: eq(user.id, column.id)})
+            const res: ColumnUser = {
+                column: columnData, user: userData
+            };
+            return res;
+        }),
 });
