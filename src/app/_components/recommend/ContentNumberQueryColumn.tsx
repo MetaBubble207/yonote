@@ -5,6 +5,7 @@ import { timeToDateString } from "@/tools/timeToString";
 import Link from "next/link";
 import {ColumnCard} from "@/app/_components/find/ColumnCard";
 import Loading from "@/app/_components/common/Loading";
+import {Button} from "antd";
 
 export const ContentNumberQueryColumn = () => {
   const [data, setData] = useState(null);
@@ -27,7 +28,7 @@ export const ContentNumberQueryColumn = () => {
   };
   return (
       <div>
-        <button className="flex pl-3.5" onClick={toggleSortOrder}>
+        <Button type={'link'} size={'small'} className="flex pl-3.5" onClick={toggleSortOrder}>
           <div className="mt-2 text-[#B5B5B5] text-2.5 font-400 lh-6">
             {sortOrder ? "默认倒序排序" : "顺序排序"}
           </div>
@@ -38,7 +39,7 @@ export const ContentNumberQueryColumn = () => {
               height={12}
               className="w-3 h-3 mt-3.5 ml-1.25"
           />
-        </button>
+        </Button>
         {isFetching
             ?
             <div className={"mt-50"}>
