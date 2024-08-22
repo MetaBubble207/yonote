@@ -48,8 +48,8 @@ export const SpecialColumnList = (props) => {
         if (!postInfo || postInfo.length === 0) return <NoData title={'暂无数据噢😯~'}/>
         return <>
             {postInfo.map((item, index) => (
-                    <SpecialColumnCard key={item.id} index={index} item={item} user={user} data={status}/>
-                ))
+                <SpecialColumnCard key={item.id} index={index} item={item} user={user} data={status}/>
+            ))
             }
         </>
     };
@@ -89,10 +89,8 @@ export const SpecialColumnList = (props) => {
                         {item.length > 10 ? item.substring(0, 10) + "..." : item}
                     </div>
                 ))}
-
             </div>
             <Body/>
-
         </div>
     );
 

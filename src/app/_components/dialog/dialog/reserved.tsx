@@ -8,6 +8,7 @@ import {useSearchParams} from "next/navigation";
 import process from "process";
 import {message} from "antd";
 import {W100H50Modal} from "@/app/_components/common/W100H50Modal";
+import Loading from "@/app/_components/common/Loading";
 
 const Reserved = ({onClose, check}) => {
     const [messageApi, contextHolder] = message.useMessage();
@@ -16,7 +17,7 @@ const Reserved = ({onClose, check}) => {
     const invitationCode = params.get("invitationCode");
     const [token] = useLocalStorage("token", null);
     const columnUserId = api.column.getUserId.useQuery({id: columnId});
-    const {data: column} = api.column.getColumnDetail.useQuery({columnId: columnId});
+    const {data: column, isLoading: isColumnLoading} = api.column.getColumnDetail.useQuery({columnId: columnId});
     const priceListData = api.priceList
         .getByColumnId.useQuery({columnId: columnId}, {enabled: !!columnId}).data
         ?.sort((a, b) => a.id - b.id);
@@ -33,9 +34,9 @@ const Reserved = ({onClose, check}) => {
             console.log("订阅失败");
         }
     })
-    const [showTopUpModal,setShowTopUpModal] = useState(false);
-    const [showConfirmPayModal,setConfirmPayModal] = useState(false);
-    const handleClickPay =  () => {
+    const [showTopUpModal, setShowTopUpModal] = useState(false);
+    const [showConfirmPayModal, setConfirmPayModal] = useState(false);
+    const handleClickPay = () => {
         setShowTopUpModal(false);
         setConfirmPayModal(true);
     }
@@ -193,6 +194,7 @@ const Reserved = ({onClose, check}) => {
             <button onClick={pay}>确认</button>
         </W100H50Modal>
     }
+    if (isColumnLoading) return <Loading/>
     return (
         <div className="flex items-center w-full h-full z-1 justify-center">
             {contextHolder}
