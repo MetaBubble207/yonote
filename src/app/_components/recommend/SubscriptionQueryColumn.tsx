@@ -21,9 +21,11 @@ export const SubscriptionQueryColumn = () => {
       setData(sortedData);
     }
   }, [queryData, sortOrder]);
+
   const toggleSortOrder = () => {
     setSortOrder(!sortOrder);
   };
+
   return (
       <div>
         <Button type={'link'} size={'small'} className="flex pl-3.5" onClick={toggleSortOrder}>

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import ReactECharts from 'echarts-for-react';
 import imitate from './imitate.json'
 
@@ -7,7 +7,7 @@ interface EchartsProps {
     daterange: [string, string];
 }
 
-const Echarts = ({ daterange }: EchartsProps, ref: React.RefObject<any>) => {
+const Echarts = ({daterange}: EchartsProps, ref: React.RefObject<any>) => {
 
     interface ImitateItem {
         date: string;
@@ -35,7 +35,7 @@ const Echarts = ({ daterange }: EchartsProps, ref: React.RefObject<any>) => {
         const targetStartDate = daterange[0];
         const targetEndDate = daterange[1];
         const targetIndexes: number[] = [];
-    
+
         for (let i = 0; i < date.length; i++) {
             const currentDate = date[i]?.date;
             if (currentDate && currentDate >= targetStartDate && currentDate <= targetEndDate) {
@@ -43,10 +43,9 @@ const Echarts = ({ daterange }: EchartsProps, ref: React.RefObject<any>) => {
             }
         }
         console.log(targetIndexes);
-    
+
         return targetIndexes;
     };
-    
 
 
     // 获取符合条件的数据索引
@@ -56,7 +55,7 @@ const Echarts = ({ daterange }: EchartsProps, ref: React.RefObject<any>) => {
     // 根据筛选出的数据索引，更新图表的数据
     const [targetIndexes, settargetIndexes] = useState<number[]>(all);
 
-    useEffect(() => { 
+    useEffect(() => {
         if (daterange[0] == '' && daterange[1] == '') {
             settargetIndexes(all);
         } else {
@@ -73,15 +72,14 @@ const Echarts = ({ daterange }: EchartsProps, ref: React.RefObject<any>) => {
     const filteredNewyaxis = targetIndexes.map(index => newyaxis[index]);
 
     const option = {
-        width: 1010,
-        height: 220,
+        // width: 1146,
+        // height: 469,
         tooltip: {},
         legend: {
             data: ['销量']
         },
         xAxis: {
             data: filteredNewyaxis,
-
         },
         yAxis: {},
         series: [
@@ -113,10 +111,7 @@ const Echarts = ({ daterange }: EchartsProps, ref: React.RefObject<any>) => {
     };
 
     return (
-        <div>
-            <ReactECharts option={option} />
-        </div>
-
+        <ReactECharts option={option}/>
     );
 };
 
