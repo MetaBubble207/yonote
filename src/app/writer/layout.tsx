@@ -19,7 +19,7 @@ const dialogLayout = ({ children }: { children: React.ReactNode }) => {
           <Compass></Compass>
           <div className="flex w-100%">
             <LeftCompass></LeftCompass>
-            <div className="w-100%  ml-64.77925 mt-17.5 mb-10">{children}</div>
+            <div className="w-100%  pl-64.77925 pt-17.5 pb-10">{children}</div>
           </div>
         </div>
       </body>
