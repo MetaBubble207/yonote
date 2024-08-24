@@ -74,3 +74,36 @@ export const getLastWeekDates = () => {
         lastSunday: lastSunday
     };
 }
+
+export const getLastMonthDates = () => {
+    // 获取当前时间，并调整为东八区
+    let now = new Date();
+    let timezoneOffset = 8 * 60; // 东八区偏移量，单位为分钟
+    let localTime = now.getTime();
+    let localOffset = now.getTimezoneOffset() * 60000; // 以毫秒计算的时区偏移量
+    let utc = localTime + localOffset;
+    let beijingTime = new Date(utc + (timezoneOffset * 60000));
+
+    // 获取当前的年份和月份
+    let year = beijingTime.getFullYear();
+    let month = beijingTime.getMonth();
+
+    // 如果当前月份是1月，则上个月是去年的12月
+    if (month === 0) {
+        month = 12;
+        year -= 1;
+    }
+
+    // 上个月的第一天
+    let firstDayOfLastMonth = new Date(year, month - 1, 1);
+    firstDayOfLastMonth.setUTCHours(0, 0, 0, 0);
+
+    // 上个月的最后一天
+    let lastDayOfLastMonth = new Date(year, month, 0); // 设置成当前月的0号，即为上个月的最后一天
+    lastDayOfLastMonth.setUTCHours(23, 59, 59, 999);
+
+    return {
+        firstDayOfLastMonth: firstDayOfLastMonth,
+        lastDayOfLastMonth: lastDayOfLastMonth
+    };
+}
