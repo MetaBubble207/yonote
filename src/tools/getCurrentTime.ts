@@ -37,3 +37,40 @@ export const getTodayMidnight = () => {
     // 返回调整后的日期
     return today;
 };
+
+export const getLastWeekDates = () => {
+    // 获取当前时间，并调整为东八区
+    let now = new Date();
+    let timezoneOffset = 8 * 60; // 东八区偏移量，单位为分钟
+    let localTime = now.getTime();
+    let localOffset = now.getTimezoneOffset() * 60000; // 以毫秒计算的时区偏移量
+    let utc = localTime + localOffset;
+    let beijingTime = new Date(utc + (timezoneOffset * 60000));
+
+    // 获取今天是星期几
+    let currentDay = beijingTime.getDay();
+
+    // 如果是星期天，则将其设为7，以便计算（因为一周的开始为周一）
+    if (currentDay === 0) {
+        currentDay = 7;
+    }
+
+    // 计算上周一和上周日的日期
+    let lastMonday = new Date(beijingTime);
+    let lastSunday = new Date(beijingTime);
+
+    // 上周一是当前日期减去当前是星期几，再减去6天
+    lastMonday.setDate(beijingTime.getDate() - currentDay - 6);
+    // 设置上周一为00:00:00
+    lastMonday.setUTCHours(0, 0, 0, 0);
+
+    // 上周日是上周一再加上6天
+    lastSunday.setDate(lastMonday.getDate() + 6);
+    // 设置上周日为23:59:59
+    lastSunday.setUTCHours(23, 59, 59, 999);
+
+    return {
+        lastMonday: lastMonday,
+        lastSunday: lastSunday
+    };
+}

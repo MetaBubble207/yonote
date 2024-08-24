@@ -2,7 +2,11 @@ import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {post, column, postRead} from "@/server/db/schema";
 import {eq, desc, lt, gt} from "drizzle-orm";
-import {getCurrentTime, getTodayMidnight, getYesterdayMidnight} from "@/tools/getCurrentTime";
+import {
+    getCurrentTime, getLastWeekDates,
+    getTodayMidnight,
+    getYesterdayMidnight
+} from "@/tools/getCurrentTime";
 import {and} from "drizzle-orm";
 
 export const readRouter = createTRPCRouter({
@@ -115,5 +119,30 @@ export const readRouter = createTRPCRouter({
             })
             await Promise.all(readPromises);
             return readCount;
-        })
+        }),
+
+    //获取专栏上周阅读量
+    getLastWeekReading: publicProcedure
+        .input(z.object({columnId: z.string()}))
+        .query(async ({ctx, input}) => {
+            const {lastMonday,lastSunday} = getLastWeekDates();
+            // // 查询所有专栏下所有的帖子
+            const posts =
+                await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
+
+            let readCount:number = 0;
+            const readPromises = posts.map(async item => {
+                const reads =
+                    await ctx.db.select().from(postRead).where(
+                        and(
+                            eq(postRead.postId,item.id),
+                            and(gt(postRead.createdAt, lastMonday), lt(postRead.createdAt, lastSunday))
+                        )
+                    );
+                readCount += reads.length;
+            })
+            await Promise.all(readPromises);
+            console.log("read====>",readCount);
+            return readCount;
+        }),
 });
