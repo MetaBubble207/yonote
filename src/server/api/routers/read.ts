@@ -1,13 +1,14 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {post, column, postRead} from "@/server/db/schema";
-import {eq, desc, lt, gt} from "drizzle-orm";
+import {column, post, postRead} from "@/server/db/schema";
+import {and, desc, eq, gt, lt} from "drizzle-orm";
 import {
-    getCurrentTime, getLastMonthDates, getLastWeekDates,
+    getCurrentTime,
+    getLastMonthDates,
+    getLastWeekDates,
     getTodayMidnight,
     getYesterdayMidnight
 } from "@/tools/getCurrentTime";
-import {and} from "drizzle-orm";
 
 export const readRouter = createTRPCRouter({
     create: publicProcedure.input(z.object({
@@ -89,11 +90,10 @@ export const readRouter = createTRPCRouter({
             // const recent = await ctx.db.select().from(postRead).where(eq(postRead.userId, input.userId)).orderBy(postRead.updatedAt).limit(1);
             const recent = await ctx.db.select().from(postRead).where(eq(postRead.userId, input.userId)).orderBy(desc(postRead.updatedAt));
             // return recent;
-            const data = await ctx.db.query.post.findFirst({
+            return await ctx.db.query.post.findFirst({
                 where:
                     eq(post.id, recent[0].postId)
             });
-            return data;
         }),
 
     //获取专栏昨天阅读量
@@ -209,7 +209,6 @@ export const readRouter = createTRPCRouter({
                 readCount[2] += readsLastMonth.length;
             })
             await Promise.all(readPromises);
-            console.log("dddd=>>>>>>",readCount)
             return readCount;
         }),
 });

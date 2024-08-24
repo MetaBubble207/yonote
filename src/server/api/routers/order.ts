@@ -1,10 +1,9 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {column, order, priceList, referrals, runningWater, user, wallet} from "@/server/db/schema";
-import {and, between, eq, gte, inArray, like, lte, sql} from "drizzle-orm";
+import {and, between, eq, gt, gte, inArray, like, lt, lte, sql} from "drizzle-orm";
 import {addDays} from "date-fns";
-
-;
+import {getLastMonthDates, getLastWeekDates, getTodayMidnight, getYesterdayMidnight} from "@/tools/getCurrentTime";
 
 export const orderRouter = createTRPCRouter({
     hello: publicProcedure
@@ -32,11 +31,10 @@ export const orderRouter = createTRPCRouter({
     getOrder: publicProcedure
         .input(z.object({limit: z.number().optional(), offset: z.number().optional()}))
         .query(async ({ctx, input}) => {
-            const orders = await ctx.db.query.order.findMany({
+            return await ctx.db.query.order.findMany({
                 limit: input.limit,
                 offset: input.offset,
             });
-            return orders;
         }),
     // 通过用户ID跟ColumnID查询订单
     getOrderByUCId: publicProcedure
@@ -48,10 +46,9 @@ export const orderRouter = createTRPCRouter({
             endPick: z.string().optional()
         }))
         .query(async ({ctx, input}) => {
-                const orders = await ctx.db.query.order.findMany(
+                return await ctx.db.query.order.findMany(
                     {where: and(eq(order.buyerId, input.buyerId), eq(order.columnId, input.columnId))}
-                );
-                return orders
+                )
             }
         ),
 
@@ -84,10 +81,9 @@ export const orderRouter = createTRPCRouter({
                     conditions.push(lte(order.createdAt, new Date(input.endPick)));
                 }
 
-                const orders = await ctx.db.query.order.findMany(
+                return await ctx.db.query.order.findMany(
                     {where: and(eq(order.buyerId, input.buyerId), eq(order.columnId, input.columnId))}
-                );
-                return orders
+                )
             }
         ),
 
@@ -129,12 +125,10 @@ export const orderRouter = createTRPCRouter({
             ));
 
             // 合并用户信息和订阅信息
-            const combinedResults = subscriptions.map(subscription => ({
+            return subscriptions.map(subscription => ({
                 ...subscription,
                 user: userMap[subscription.buyerId]
             }));
-
-            return combinedResults;
         }),
 
 
@@ -344,7 +338,7 @@ export const orderRouter = createTRPCRouter({
                             }
                         )
                         // 新建订单
-                        const insertedOrder = await ctx.db.insert(order).values({
+                        return await ctx.db.insert(order).values({
                             ownerId: input.ownerId,
                             columnId: input.columnId,
                             price: priceListData.price,
@@ -355,7 +349,6 @@ export const orderRouter = createTRPCRouter({
                             recommendationId: input.referrerId,
                             referralLevel: 2,
                         });
-                        return insertedOrder;
                     } else {
                         // 只有一级分销
                         // 作者拿50%的钱 一级分销拿50%
@@ -388,7 +381,7 @@ export const orderRouter = createTRPCRouter({
                                 expenditureOrIncome: 1
                             }
                         )
-                        const insertedOrder = await ctx.db.insert(order).values({
+                        return await ctx.db.insert(order).values({
                             ownerId: input.ownerId,
                             columnId: input.columnId,
                             price: priceListData.price,
@@ -399,7 +392,6 @@ export const orderRouter = createTRPCRouter({
                             recommendationId: input.referrerId,
                             referralLevel: 1,
                         });
-                        return insertedOrder;
                     }
                 } else {
                     // 没有人推荐，单独购买
@@ -417,7 +409,7 @@ export const orderRouter = createTRPCRouter({
                         }
                     )
                     // 插入到新表
-                    const insertedOrder = await ctx.db.insert(order).values({
+                    return await ctx.db.insert(order).values({
                         ownerId: input.ownerId,
                         columnId: input.columnId,
                         price: priceListData.price,
@@ -427,7 +419,6 @@ export const orderRouter = createTRPCRouter({
                         buyerId: input.buyerId,
                         referralLevel: 0,
                     });
-                    return insertedOrder;
                 }
             } catch (error) {
                 console.error("Error creating order:", error);
@@ -441,10 +432,9 @@ export const orderRouter = createTRPCRouter({
             columnId: z.string(),
         }))
         .query(async ({ctx, input}) => {
-            const orderData = await ctx.db.query.order.findMany({
+            return await ctx.db.query.order.findMany({
                 where: eq(order.columnId, input.columnId),
             });
-            return orderData;
         }),
 
     // 根据用户ID 查询订单
@@ -494,8 +484,7 @@ export const orderRouter = createTRPCRouter({
                     where: and(eq(order.columnId, input.columnId), eq(order.buyerId, input.userId))
                 })
                 if (list) {
-                    const status = list.status
-                    return status;
+                    return list.status;
                 } else {
                     return false;
                 }
@@ -522,8 +511,37 @@ export const orderRouter = createTRPCRouter({
             userId: z.string(),
         }))
         .query(async ({ctx, input}) => {
-            const orderData = await ctx.db.select().from(order).where(eq(order.buyerId, input.userId))
-            return orderData;
+            return await ctx.db.select().from(order).where(eq(order.buyerId, input.userId));
         }),
 
+    getSubscriptionVolume: publicProcedure
+        .input(z.object({columnId: z.string()}))
+        .query(async ({ctx, input}): Promise<number[]> => {
+            const yesterday = getYesterdayMidnight();
+            const today = getTodayMidnight();
+            const {lastMonday, lastSunday} = getLastWeekDates();
+            const {firstDayOfLastMonth, lastDayOfLastMonth} = getLastMonthDates();
+            const yesterdayData =
+                await ctx.db.select().from(order).where(
+                    and(
+                        eq(order.columnId, input.columnId),
+                        and(gt(order.createdAt, yesterday), lt(order.createdAt, today))
+                    )
+                );
+            const lastWeekData =
+                await ctx.db.select().from(order).where(
+                    and(
+                        eq(order.columnId, input.columnId),
+                        and(gt(order.createdAt, lastMonday), lt(order.createdAt, lastSunday))
+                    )
+                );
+            const lastMonthData =
+                await ctx.db.select().from(order).where(
+                    and(
+                        eq(order.columnId, input.columnId),
+                        and(gt(order.createdAt, firstDayOfLastMonth), lt(order.createdAt, lastDayOfLastMonth))
+                    )
+                );
+            return [yesterdayData.length, lastWeekData.length, lastMonthData.length];
+        })
 });
