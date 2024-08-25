@@ -1,9 +1,15 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column, order, priceList, referrals, runningWater, user, wallet} from "@/server/db/schema";
+import {column, order, post, postRead, priceList, referrals, runningWater, user, wallet} from "@/server/db/schema";
 import {and, between, eq, gt, gte, inArray, like, lt, lte, sql} from "drizzle-orm";
 import {addDays} from "date-fns";
-import {getLastMonthDates, getLastWeekDates, getTodayMidnight, getYesterdayMidnight} from "@/tools/getCurrentTime";
+import {
+    getCurrentTime,
+    getLastMonthDates,
+    getLastWeekDates,
+    getTodayMidnight,
+    getYesterdayMidnight
+} from "@/tools/getCurrentTime";
 
 export const orderRouter = createTRPCRouter({
     hello: publicProcedure
@@ -511,7 +517,7 @@ export const orderRouter = createTRPCRouter({
             userId: z.string(),
         }))
         .query(async ({ctx, input}) => {
-            return await ctx.db.select().from(order).where(eq(order.buyerId, input.userId));
+            return ctx.db.select().from(order).where(eq(order.buyerId, input.userId));
         }),
 
     getSubscriptionVolume: publicProcedure
@@ -543,5 +549,28 @@ export const orderRouter = createTRPCRouter({
                     )
                 );
             return [yesterdayData.length, lastWeekData.length, lastMonthData.length];
+        }),
+
+    getSubscriptionRateOfIncrease: publicProcedure
+        .input(z.object({columnId: z.string()}))
+        .query(async ({ctx, input}): Promise<number> => {
+            const yesterdayMidnight = getYesterdayMidnight();
+            const todayMidnight = getTodayMidnight();
+            const now = getCurrentTime();
+            const yesterdayData =
+                await ctx.db.select().from(order).where(
+                    and(
+                        eq(order.columnId, input.columnId),
+                        and(gt(order.createdAt, yesterdayMidnight), lt(order.createdAt, todayMidnight))
+                    )
+                );
+            const todayData =
+                await ctx.db.select().from(order).where(
+                    and(
+                        eq(order.columnId, input.columnId),
+                        and(gt(order.createdAt, todayMidnight), lt(order.createdAt, now))
+                    )
+                );
+            return Math.floor(todayData.length / yesterdayData.length * 100) / 100;
         })
 });

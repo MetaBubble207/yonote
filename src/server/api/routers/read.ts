@@ -245,5 +245,5 @@ export const readRouter = createTRPCRouter({
             })
             await Promise.all(readPromises);
             return Math.floor(todayReadCount/yesterdayReadCount * 100) / 100
-        })
+        }),
 });
