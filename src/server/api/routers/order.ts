@@ -572,5 +572,39 @@ export const orderRouter = createTRPCRouter({
                     )
                 );
             return Math.floor(todayData.length / yesterdayData.length * 100) / 100;
-        })
+        }),
+
+    getSubscriptionRange: publicProcedure
+        .input(z.object({columnId: z.string(), start: z.date(), end: z.date()}))
+        .query(async ({ctx, input}): Promise<number[]> => {
+            // 用于存储每天数据的数组
+            let dailyData: number[] = [];
+
+            // 克隆开始日期，以便我们可以在循环中修改它
+            let currentDate = new Date(input.start);
+
+            // 循环遍历从开始日期到结束日期的每一天
+            while (currentDate <= input.end) {
+                // 获取当前日期的订单数量
+                const ordersForCurrentDate = await ctx.db.select().from(order).where(
+                    and(
+                        eq(order.columnId, input.columnId),
+                        and(
+                            gt(order.createdAt, new Date(currentDate.setUTCHours(0, 0, 0, 0))),
+                            lt(order.createdAt, new Date(currentDate.setUTCHours(23, 59, 59, 999))
+                            )
+                        )
+                    )
+                );
+
+                // 将当前日期的订单数量添加到数组中
+                dailyData.push(ordersForCurrentDate.length);
+
+                // 将当前日期增加一天
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // 返回每一天的数据
+            return dailyData;
+        }),
 });
