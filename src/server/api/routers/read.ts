@@ -211,4 +211,39 @@ export const readRouter = createTRPCRouter({
             await Promise.all(readPromises);
             return readCount;
         }),
+
+    getReadingRateOfIncrease: publicProcedure
+        .input(z.object({columnId: z.string()}))
+        .query(async ({ctx, input}): Promise<number> => {
+            const yesterdayMidnight = getYesterdayMidnight();
+            const todayMidnight = getTodayMidnight();
+            const now = getCurrentTime();
+            // // 查询所有专栏下所有的帖子
+            const posts =
+                await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
+
+            let yesterdayReadCount: number = 0;
+            let todayReadCount: number = 0;
+            const readPromises = posts.map(async item => {
+                const yesterdayReads =
+                    await ctx.db.select().from(postRead).where(
+                        and(
+                            eq(postRead.postId, item.id),
+                            and(gt(postRead.createdAt, yesterdayMidnight), lt(postRead.createdAt, todayMidnight))
+                        )
+                    );
+                yesterdayReadCount += yesterdayReads.length;
+                const todayReads =
+                    await ctx.db.select().from(postRead).where(
+                        and(
+                            eq(postRead.postId, item.id),
+                            and(gt(postRead.createdAt, todayMidnight), lt(postRead.createdAt, now))
+                        )
+                    );
+                todayReadCount += todayReads.length;
+
+            })
+            await Promise.all(readPromises);
+            return Math.floor(todayReadCount/yesterdayReadCount * 100) / 100
+        })
 });
