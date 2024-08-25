@@ -1,6 +1,6 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column, post, postRead} from "@/server/db/schema";
+import {column, order, post, postRead} from "@/server/db/schema";
 import {and, desc, eq, gt, lt} from "drizzle-orm";
 import {
     getCurrentTime,
@@ -126,7 +126,7 @@ export const readRouter = createTRPCRouter({
         .input(z.object({columnId: z.string()}))
         .query(async ({ctx, input}) => {
             const {lastMonday, lastSunday} = getLastWeekDates();
-            // // 查询所有专栏下所有的帖子
+            // 查询所有专栏下所有的帖子
             const posts =
                 await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
 
@@ -150,7 +150,7 @@ export const readRouter = createTRPCRouter({
         .input(z.object({columnId: z.string()}))
         .query(async ({ctx, input}) => {
             const {firstDayOfLastMonth, lastDayOfLastMonth} = getLastMonthDates();
-            // // 查询所有专栏下所有的帖子
+            // 查询所有专栏下所有的帖子
             const posts =
                 await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
 
@@ -177,7 +177,7 @@ export const readRouter = createTRPCRouter({
             const today = getTodayMidnight();
             const {lastMonday, lastSunday} = getLastWeekDates();
             const {firstDayOfLastMonth, lastDayOfLastMonth} = getLastMonthDates();
-            // // 查询所有专栏下所有的帖子
+            // 查询所有专栏下所有的帖子
             const posts =
                 await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
 
@@ -218,7 +218,7 @@ export const readRouter = createTRPCRouter({
             const yesterdayMidnight = getYesterdayMidnight();
             const todayMidnight = getTodayMidnight();
             const now = getCurrentTime();
-            // // 查询所有专栏下所有的帖子
+            // 查询所有专栏下所有的帖子
             const posts =
                 await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
 
@@ -244,6 +244,45 @@ export const readRouter = createTRPCRouter({
 
             })
             await Promise.all(readPromises);
-            return Math.floor(todayReadCount/yesterdayReadCount * 100) / 100
+            return Math.floor(todayReadCount / yesterdayReadCount * 100) / 100
+        }),
+
+    getReadRange: publicProcedure
+        .input(z.object({columnId: z.string(), start: z.date(), end: z.date()}))
+        .query(async ({ctx, input}): Promise<number[]> => {
+            // 用于存储每天数据的数组
+            let dailyData: number[] = [];
+
+            // 克隆开始日期，以便我们可以在循环中修改它
+            let currentDate = new Date(input.start);
+            // 查询所有专栏下所有的帖子
+            const posts =
+                await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
+            // 循环遍历从开始日期到结束日期的每一天
+            while (currentDate <= input.end) {
+                let readCount: number = 0;
+                const readPromises = posts.map(async item => {
+                    const todayReads =
+                        await ctx.db.select().from(postRead).where(
+                            and(
+                                eq(postRead.postId, item.id),
+                                and(gt(postRead.createdAt, new Date(currentDate.setUTCHours(0, 0, 0, 0))),
+                                    lt(postRead.createdAt, new Date(currentDate.setUTCHours(23, 59, 59, 999)))
+                                )
+                            )
+                        );
+                    readCount += todayReads.length;
+
+                })
+                await Promise.all(readPromises);
+                // 将当前日期的订单数量添加到数组中
+                dailyData.push(readCount);
+
+                // 将当前日期增加一天
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // 返回每一天的数据
+            return dailyData;
         }),
 });
