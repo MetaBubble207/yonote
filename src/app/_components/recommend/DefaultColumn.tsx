@@ -1,13 +1,11 @@
 import Image from "next/image";
 import { api } from "@/trpc/react";
 import React, { useState, useEffect } from "react";
-import { timeToDateString } from "@/tools/timeToString";
-import Link from "next/link";
-import {ColumnCard} from "@/app/_components/find/ColumnCard";
+import ColumnCard from "@/app/_components/find/ColumnCard";
 import Loading from "@/app/_components/common/Loading";
 import {Button} from "antd";
 
-export const DefaultColumn = () => {
+const DefaultColumn = () => {
     const [data, setData] = useState(null);
     const [sortOrder, setSortOrder] = useState<boolean>(true); // 默认为 true，表示倒序排序
 
@@ -56,3 +54,5 @@ export const DefaultColumn = () => {
         </div>
     );
 };
+
+export default DefaultColumn;

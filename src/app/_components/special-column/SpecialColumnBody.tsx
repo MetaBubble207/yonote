@@ -1,15 +1,15 @@
 "use client"
 import Image from "next/image";
 import React, {useEffect, useState} from 'react';
-import {SpecialColumnIntroduce} from "@/app/_components/special-column/SpecialColumnIntroduce";
+import SpecialColumnIntroduce from "@/app/_components/special-column/SpecialColumnIntroduce";
 import {api} from "@/trpc/react";
-import Reserved from "@/app/_components/dialog/dialog/reserved";
+import Reserved from "@/app/_components/dialog/Reserved";
 import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import {message} from "antd";
-import {SpecialColumnList} from "@/app/_components/special-column/SpecialColumnList";
+import SpecialColumnList from "@/app/_components/special-column/SpecialColumnList";
 
-export const SpecialColumnBody = () => {
+const SpecialColumnBody = () => {
     const params = useSearchParams();
     const columnId = params.get("id");
     const code = params.get("code");
@@ -102,7 +102,7 @@ export const SpecialColumnBody = () => {
                 </div>
                 <div className="ml-auto mr-24px">
                     <Image src={"/images/special-column/Magnifying glass.png"} alt={"心智与阅读"} width={18} height={18}
-                            onClick={search}/>
+                           onClick={search}/>
                 </div>
                 <div className={"mr-16px"}>
                     <Image src={"/images/special-column/Sort.png"} alt={"心智与阅读"} width={18} height={18}/>
@@ -118,3 +118,5 @@ export const SpecialColumnBody = () => {
         </div>
     )
 }
+
+export default SpecialColumnBody;

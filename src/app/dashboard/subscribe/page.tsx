@@ -7,7 +7,7 @@ import useLocalStorage from "@/tools/useStore";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import Loading from "@/app/_components/common/Loading";
-import {SearchColumn} from "@/app/_components/common/SearchColumn";
+import SearchColumn from "@/app/_components/common/SearchColumn";
 import {Button} from "antd";
 import SubscribeMain from "@/app/_components/subscribe/SubscribeMain";
 

@@ -1,12 +1,12 @@
 "use client"
 import {useState} from "react";
-import {SpecialColumn} from "@/app/_components/recommend/SpecialColumn";
-import {YonoteCourse} from "@/app/_components/recommend/YonoteCourse";
-import {CoCreate} from "@/app/_components/recommend/CoCreate";
+import SpecialColumn from "@/app/_components/recommend/SpecialColumn";
+import YonoteCourse from "@/app/_components/recommend/YonoteCourse";
+import CoCreate from "@/app/_components/recommend/CoCreate";
 import {Button} from "antd";
 
 
-export const ComponentJump = () => {
+const ComponentJump = () => {
     const [currentContent, setCurrentContent] = useState<number>(1);
     const active = "text-black font-600";
     const inactive = "text-[#B5B5B5] font-500"
@@ -53,4 +53,5 @@ export const ComponentJump = () => {
         {renderContent()}
     </div>;
 }
+
 export default ComponentJump;

@@ -1,10 +1,10 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Image from "next/image";
-import { api } from "@/trpc/react";
-import { timeToDateFullTimeString } from "@/tools/timeToString";
+import {api} from "@/trpc/react";
+import {timeToDateFullTimeString} from "@/tools/timeToString";
 import DatePickerComponent from "@/app/_components/datarange/DatePickerComponent";
-import { Dayjs } from "dayjs";
+import {Dayjs} from "dayjs";
 
 interface UserSubscriptionsProps {
     columnId: string;
@@ -28,7 +28,7 @@ type OrderQueryResult = {
     total: number;
 };
 
-const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ columnId, currentPage, pageSize, setTotal }) => {
+const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({columnId, currentPage, pageSize, setTotal}) => {
     const [userIdValue, setUserIdValue] = useState<string>('');
     const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUserIdValue(e.target.value);
@@ -65,8 +65,8 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ columnId, current
     }, [columnId, status, userIdValue, startPick, endPick, currentPage, pageSize]);
 
 
-    console.log("ppppppppppppppppppppppppp=>",queryParams)
-    const { data, refetch } = api.order.getOrderByColumnIdTest.useQuery<OrderQueryResult>(queryParams, {
+    console.log("ppppppppppppppppppppppppp=>", queryParams)
+    const {data, refetch} = api.order.getOrderByColumnIdTest.useQuery<OrderQueryResult>(queryParams, {
         enabled: !!columnId // 只在 columnId 存在时启用查询
     });
 
@@ -100,14 +100,14 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ columnId, current
             refetch();
             setItems(prevItems =>
                 prevItems.map(item =>
-                    item.buyerId === updatedOrder.buyerId ? { ...item, status: updatedOrder.status } : item
+                    item.buyerId === updatedOrder.buyerId ? {...item, status: updatedOrder.status} : item
                 )
             );
         },
     });
 
     const handleChangeStatus = (buyerId: string, currentStatus: boolean) => {
-        updateStatusApi.mutate({ userId: buyerId, status: currentStatus, columnId: columnId });
+        updateStatusApi.mutate({userId: buyerId, status: currentStatus, columnId: columnId});
     };
 
     const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -121,7 +121,8 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ columnId, current
         return (
             <tbody className="text-center">
             {items.map((item, index) => (
-                <tr key={index} className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
+                <tr key={index}
+                    className="w-269.75 h-13.5 shrink-0 bg-white text-[rgba(0,0,0,0.85)] text-3.5 font-7.500 lh-5.5">
                     <td>{offset + index + 1}</td>
                     <td className="relative">
                         <Image
@@ -171,11 +172,14 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ columnId, current
                 </select>
                 <label className='ml-5 mr-3 text-[rgba(0,0,0,0.65)] text-3.5 font-400 lh-5.5'>订阅开始时间: </label>
                 <DatePickerComponent onDateChange={handleDateChange}></DatePickerComponent>
-                <button onClick={handleSubmit} className='w-16.25 h-8 ml-7 shrink-0 bg-#1DB48D border-rd-2.5 text-[#FFF] text-3.5 font-400 lh-5.5'>查询</button>
+                <button onClick={handleSubmit}
+                        className='w-16.25 h-8 ml-7 shrink-0 bg-#1DB48D border-rd-2.5 text-[#FFF] text-3.5 font-400 lh-5.5'>查询
+                </button>
             </div>
             <div className="w-100% min-h-150 relative mt-4.02 shrink-0 rounded-tl-lg rounded-tr-lg bg-[#FFF]">
                 <div className="mt-4">
-                    <table className="table-auto w-269.75 h-13.5 shrink-0 border-rd-[4px_4px_0px_0px] bg-[#FAFAFA] lh-13.5 text-[rgba(0,0,0,0.85)] text-3.5 font-400">
+                    <table
+                        className="table-auto w-269.75 h-13.5 shrink-0 border-rd-[4px_4px_0px_0px] bg-[#FAFAFA] lh-13.5 text-[rgba(0,0,0,0.85)] text-3.5 font-400">
                         <thead>
                         <tr>
                             <th>序号</th>
@@ -188,7 +192,7 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({ columnId, current
                             <th>操作</th>
                         </tr>
                         </thead>
-                        <ItemList />
+                        <ItemList/>
                     </table>
                 </div>
             </div>

@@ -10,7 +10,7 @@ import {domToPng} from 'modern-screenshot';
 import {Button} from "antd";
 import Loading from "@/app/_components/common/Loading";
 
-export const Article = () => {
+const Article = () => {
     const params = useSearchParams();
     const chapter = params ? parseInt(params.get("c")) : null;
     const columnId = params ? params.get("id") : null;
@@ -194,3 +194,5 @@ export const Article = () => {
         </div>
     );
 };
+
+export default Article;

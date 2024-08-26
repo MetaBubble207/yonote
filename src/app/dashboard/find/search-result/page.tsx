@@ -1,11 +1,11 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
-import { api } from "@/trpc/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { SearchColumn } from "@/app/_components/common/SearchColumn";
+import React, {Suspense, useEffect, useState} from "react";
+import {api} from "@/trpc/react";
+import {useRouter, useSearchParams} from "next/navigation";
+import SearchColumn from "@/app/_components/common/SearchColumn";
 import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
-import { timeToDateString } from "@/tools/timeToString";
+import {timeToDateString} from "@/tools/timeToString";
 import Link from "next/link";
 import Loading from "@/app/_components/common/Loading";
 
@@ -15,9 +15,9 @@ const Page = () => {
 
     const router = useRouter();
 
-    const { data, isLoading } = api.column.getColumnName.useQuery(
-        { searchValue: searchValue },
-        { enabled: !!searchValue } // Enable query if searchValue is present
+    const {data, isLoading} = api.column.getColumnName.useQuery(
+        {searchValue: searchValue},
+        {enabled: !!searchValue} // Enable query if searchValue is present
     );
 
     const [searchResults, setSearchResults] = useState([]);
@@ -33,7 +33,7 @@ const Page = () => {
     };
 
     return (
-        <Suspense fallback={<LoadingIndicator />}>
+        <Suspense fallback={<LoadingIndicator/>}>
             <div className="min-h-screen relative bg-#F5F7FB">
                 <div className="w-85.75 m-auto pt-8">
 
@@ -45,7 +45,7 @@ const Page = () => {
 
                     {/* 数据加载中的显示 */}
                     {isLoading && <div className={"mt-70"}>
-                        <Loading />
+                        <Loading/>
                     </div>}
                     {/* 第一次进入页面的时候，需要显示请搜索你想搜索的专栏 */}
                     {!searchValue && (
@@ -59,7 +59,8 @@ const Page = () => {
                     {!isLoading && searchResults.map(item => (
                         <div key={item.id}>
                             <Link href={`../../special-column?id=${item.id}`}>
-                                <div className={"w-100% mt-10px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-10px"}>
+                                <div
+                                    className={"w-100% mt-10px shrink-0 border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] px-10px"}>
                                     <div className={"flex items-start my-10px items-center w-full"}>
                                         {/* 左边图片 */}
                                         <div className={"border-rd-2 w-69px h-92px flex items-start flex-grow"}>
@@ -94,15 +95,21 @@ const Page = () => {
                                                         {/* 左边头像 */}
                                                         <div className={""}>
                                                             <div>
-                                                                <Image src={"/images/special-column/Ellipse 2.png"} alt={"心智与阅读"} width={14} height={14}/>
+                                                                <Image src={"/images/special-column/Ellipse 2.png"}
+                                                                       alt={"心智与阅读"} width={14} height={14}/>
                                                             </div>
                                                         </div>
-                                                        <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>{item.user.name}</div>
+                                                        <div
+                                                            className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>{item.user.name}</div>
                                                         <div>
-                                                            <Image src={"/images/special-column/Group 225.png"} alt={"心智与阅读"} width={12} height={12} className={"lh-0"} style={{ marginLeft: "2.5px" }}/>
+                                                            <Image src={"/images/special-column/Group 225.png"}
+                                                                   alt={"心智与阅读"} width={12} height={12}
+                                                                   className={"lh-0"} style={{marginLeft: "2.5px"}}/>
                                                         </div>
                                                     </div>
-                                                    <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px"}>{timeToDateString(item.createdAt)}发布</div>
+                                                    <div
+                                                        className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px"}>{timeToDateString(item.createdAt)}发布
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -126,7 +133,7 @@ const Page = () => {
 // LoadingIndicator 组件，用于显示加载中状态
 const LoadingIndicator = () => (
     <div className="flex items-center justify-center h-screen">
-        <Image src="/images/loading.gif" alt="Loading" width={50} height={50} />
+        <Image src="/images/loading.gif" alt="Loading" width={50} height={50}/>
     </div>
 );
 

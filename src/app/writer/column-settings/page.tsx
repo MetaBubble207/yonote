@@ -1,12 +1,11 @@
 "use client"
-
 import React, {Suspense, useEffect, useRef, useState} from 'react';
 import {message, Switch} from 'antd';
 import {api} from "@/trpc/react";
 import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import OSS from "ali-oss";
-import {W100H50Modal} from "@/app/_components/common/W100H50Modal";
+import W100H50Modal from "@/app/_components/common/W100H50Modal";
 
 let client = new OSS({
     region: 'oss-cn-shenzhen',
@@ -23,7 +22,7 @@ const Page = () => {
     const columnData = api.column.getColumnDetail.useQuery({columnId: columnId}, {enabled: !!columnId}).data;
     const priceListData = api.priceList
         .getByColumnId.useQuery({columnId: columnId}, {enabled: !!columnId}).data
-        ?.sort((a,b)=> a.id - b.id);
+        ?.sort((a, b) => a.id - b.id);
     const [name, setName] = useState(columnData?.name);
     const [priceList, setPriceList] = useState(priceListData);
 
@@ -37,9 +36,9 @@ const Page = () => {
     const onChange = (checked) => {
         setCheckColor(checked ? "#1DB48D" : "#fff");
     };
-    useEffect(()=>{
+    useEffect(() => {
         setPriceList(priceListData);
-    },[priceListData])
+    }, [priceListData])
     useEffect(() => {
         setCover(columnData?.logo);
     }, [columnData]);
@@ -80,34 +79,34 @@ const Page = () => {
     };
 
     const submit = () => {
-        console.log(priceList,priceListData);
-            updateApi.mutate({
-                id: columnId,
-                name: name ?? columnData!.name ?? "",
-                priceList: priceList,
-                introduce: intro ?? columnData!.introduce ?? "",
-                description: description ?? columnData!.description ?? ""
-            });
+        console.log(priceList, priceListData);
+        updateApi.mutate({
+            id: columnId,
+            name: name ?? columnData!.name ?? "",
+            priceList: priceList,
+            introduce: intro ?? columnData!.introduce ?? "",
+            description: description ?? columnData!.description ?? ""
+        });
         setIsEditing(false);
         setShowConfirmSubmitModal(false);
     };
 
     const handleClickSubmit = () => {
-            submit();
+        submit();
     };
 
     const updatePriceList = (index, key, value) => {
-        try{
-            if(key === "price")
-            value = parseFloat(value)
-        }catch(e){
+        try {
+            if (key === "price")
+                value = parseFloat(value)
+        } catch (e) {
             messageApi.info("输入的价格不是合法的数字噢😯~");
             return false;
         }
-        try{
-            if(key === "timeLimit")
+        try {
+            if (key === "timeLimit")
                 value = parseFloat(value)
-        }catch(e){
+        } catch (e) {
             messageApi.info("输入的天数不是纯数字噢😯~");
             return false;
         }
@@ -265,7 +264,7 @@ const Page = () => {
                                             className={'text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5 underline'}
                                             onClick={addNewStrategy}
                                         >
-                                        + 添加新策略
+                                            + 添加新策略
                                         </button>
                                     </td>
                                 </tr>

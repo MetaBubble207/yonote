@@ -6,7 +6,7 @@ import {CreateAtQueryColumn} from "@/app/_components/recommend/CreateAtQueryColu
 import {ContentNumberQueryColumn} from "@/app/_components/recommend/ContentNumberQueryColumn";
 
 
-export const SpecialColumn = () => {
+const SpecialColumn = () => {
     const [activeCategory, setActiveCategory] = useState<string>("默认");
 
     const handleCategoryClick = (category: string) => {
@@ -92,3 +92,5 @@ export const SpecialColumn = () => {
 
     );
 }
+
+export default SpecialColumn;

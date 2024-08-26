@@ -2,12 +2,11 @@
 import {api} from "@/trpc/react";
 import {useSearchParams} from 'next/navigation';
 import React, {useState} from 'react';
-import {SpecialColumnCard} from "@/app/_components/special-column/SpecialColumnCard";
+import SpecialColumnCard from "@/app/_components/special-column/SpecialColumnCard";
 import Loading from "../common/Loading";
 import NoData from "@/app/_components/common/NoData";
 
-
-export const SpecialColumnList = (props) => {
+const SpecialColumnList = (props) => {
     const status = props.data;
 
     const [activeCategory, setActiveCategory] = useState<string>("全部");
@@ -93,5 +92,6 @@ export const SpecialColumnList = (props) => {
             <Body/>
         </div>
     );
-
 };
+
+export default SpecialColumnList;

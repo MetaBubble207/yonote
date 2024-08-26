@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 import {api} from "@/trpc/react";
 
-export const ColumnCard = ({columnData}) => {
+const ColumnCard = ({columnData}) => {
     const order = api.order.getColumnOrder.useQuery({columnId: columnData?.id});
     const read = api.read.getColumnRead.useQuery({columnId: columnData?.id});
     return (
@@ -95,3 +95,5 @@ export const ColumnCard = ({columnData}) => {
         </Link>
     )
 }
+
+export default ColumnCard;

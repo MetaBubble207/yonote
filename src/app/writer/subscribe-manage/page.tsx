@@ -1,8 +1,8 @@
 'use client';
-import React, { Suspense, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, {Suspense, useState} from 'react';
+import {useSearchParams} from 'next/navigation';
 import UserSubscriptions from '@/app/_components/writer/UserSubscriptions';
-import MyPagination from '@/app/_components/pagination/page';
+import MyPagination from '@/app/_components/pagination/MyPagination';
 
 const Page = () => {
     const params = useSearchParams();
@@ -20,7 +20,8 @@ const Page = () => {
     return (
         <Suspense>
             <div className='w-full h-full'>
-                <div className='w-97% min-h-150 relative ml-4.465 mt-4.02 pt-8 pl-8 shrink-0 rounded-tl-lg rounded-tr-lg bg-[#FFF]'>
+                <div
+                    className='w-97% min-h-150 relative ml-4.465 mt-4.02 pt-8 pl-8 shrink-0 rounded-tl-lg rounded-tr-lg bg-[#FFF]'>
                     <h3 className='text-[#323232] text-4 font-700 lh-6'>订阅管理</h3>
                     <UserSubscriptions
                         columnId={columnId}

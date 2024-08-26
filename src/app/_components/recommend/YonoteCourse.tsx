@@ -1,12 +1,9 @@
-import Image from "next/image";
 import { api } from "@/trpc/react";
 import React, { useState, useEffect } from "react";
-import { timeToDateString } from "@/tools/timeToString";
-import Link from "next/link";
 import {ColumnCard} from "@/app/_components/find/ColumnCard";
 import Loading from "@/app/_components/common/Loading";
 
-export const YonoteCourse = () => {
+const YonoteCourse = () => {
   const [data, setData] = useState(null);
 
   // 使用 useQuery 钩子获取数据
@@ -35,3 +32,5 @@ export const YonoteCourse = () => {
     </div>
   );
 };
+
+export default YonoteCourse;

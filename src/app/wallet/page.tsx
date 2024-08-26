@@ -34,12 +34,12 @@ const Wallet = () => {
     const [confirmLoading, setConfirmLoading] = useState(false);
 
     const showModal = () => {
-        if(walletData.amountWithdraw <= 0){
+        if (walletData.amountWithdraw <= 0) {
             messageApi.open({
                 type: 'error',
                 content: '可提现的余额不足',
             });
-        }else{
+        } else {
             setOpen(true);
         }
     };

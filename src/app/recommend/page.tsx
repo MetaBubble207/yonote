@@ -1,9 +1,9 @@
 import React from "react";
 import ComponentJump from "@/app/_components/recommend/ComponentJump"
 
-const Page =()=>{
+const Page = () => {
     return (
-            <ComponentJump/>
+        <ComponentJump/>
     )
 }
 export default Page;

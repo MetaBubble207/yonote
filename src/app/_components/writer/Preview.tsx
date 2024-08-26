@@ -1,9 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import TagInput from "../edit/tag";
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { Editor, Toolbar } from '@wangeditor/editor-for-react'
-import { IDomEditor, IEditorConfig, IToolbarConfig, DomEditor } from '@wangeditor/editor'
 import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 

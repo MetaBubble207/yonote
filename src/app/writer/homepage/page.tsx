@@ -3,7 +3,6 @@ import HomepageData from "@/app/_components/homepage/HomepageData";
 import Chart from "@/app/_components/homepage/Chart";
 
 const homepage = () => {
-
     return (
         <div className="w-full flex flex-col">
             <div className="pt-16px px-18px w-full">
@@ -14,7 +13,6 @@ const homepage = () => {
             </div>
         </div>
     )
-
 }
 
 export default homepage;

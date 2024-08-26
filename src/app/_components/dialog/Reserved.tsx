@@ -7,7 +7,7 @@ import useLocalStorage from "@/tools/useStore";
 import {useSearchParams} from "next/navigation";
 import process from "process";
 import {message} from "antd";
-import {W100H50Modal} from "@/app/_components/common/W100H50Modal";
+import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import Loading from "@/app/_components/common/Loading";
 
 const Reserved = ({onClose, check}) => {

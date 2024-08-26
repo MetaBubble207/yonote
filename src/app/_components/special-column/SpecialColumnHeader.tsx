@@ -6,7 +6,7 @@ import Loading from "../common/Loading";
 import {useRouter} from "next/navigation";
 import {Button} from "antd";
 
-export const SpecialColumnHeader = () => {
+const SpecialColumnHeader = () => {
     const params = useSearchParams();
     const columnId = params.get("id");
     const {data, isLoading} =
@@ -98,3 +98,5 @@ export const SpecialColumnHeader = () => {
         </>
     );
 };
+
+export default SpecialColumnHeader;

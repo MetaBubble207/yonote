@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, {useState, useEffect, useRef} from "react";
 import {usePathname, useRouter} from "next/navigation";
 import { message } from 'antd';
-export const SearchColumn = (props) => {
+const SearchColumn = (props) => {
     const [messageApi, contextHolder] = message.useMessage();
     const info = () => {
         messageApi.info("请输入内容再进行搜索😯~");
@@ -48,3 +48,5 @@ export const SearchColumn = (props) => {
         </div>
     );
 };
+
+export default SearchColumn;

@@ -1,17 +1,17 @@
 "use client"
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
-export const AnswerQuestion = () => {
+const AnswerQuestion = () => {
     const options = [
-        { text: '这是正确答案', answer: true },
-        { text: '这是错误答案1', answer: false },
-        { text: '这是错误答案2', answer: false },
-        { text: '这是错误答案3', answer: false },
+        {text: '这是正确答案', answer: true},
+        {text: '这是错误答案1', answer: false},
+        {text: '这是错误答案2', answer: false},
+        {text: '这是错误答案3', answer: false},
     ];
 
     const [selectedOption, setSelectedOption] = useState<number>(-1);
 
-    const handleOptionClick = (index:number) => {
+    const handleOptionClick = (index: number) => {
         setSelectedOption(index);
     };
 
@@ -34,7 +34,11 @@ export const AnswerQuestion = () => {
                     </div>
                 ))}
             </div>
-            <div className={"mt-5 text-[#B5B5B5] text-center text-3.5 font-not-italic font-400 lh-[120%]"}>选择正确后继续阅读</div>
+            <div
+                className={"mt-5 text-[#B5B5B5] text-center text-3.5 font-not-italic font-400 lh-[120%]"}>选择正确后继续阅读
+            </div>
         </div>
     );
 };
+
+export default AnswerQuestion;

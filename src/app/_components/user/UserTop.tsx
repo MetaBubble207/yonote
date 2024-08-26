@@ -7,7 +7,7 @@ import {useRouter, useSearchParams} from "next/navigation";
 import {api} from "@/trpc/react";
 import {Button} from "antd";
 
-export const UserTop = () => {
+const UserTop = () => {
     let userInfo;
     const [token, setToken] = useLocalStorage("token", null);
     const router = useRouter();
@@ -100,3 +100,5 @@ export const UserTop = () => {
         </div>
     )
 }
+
+export default UserTop;

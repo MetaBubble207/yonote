@@ -15,9 +15,9 @@ const DisplayDetailed = (props) => {
         api.column.getAllByUserId.useQuery({userId: userInfo.id});
     const {data: updateColumnInfos, isLoading: isUpdateColumnInfoLoading} =
         api.column.getUpdate.useQuery({
-        writerId: userInfo.id,
-        visitorId: token
-    });
+            writerId: userInfo.id,
+            visitorId: token
+        });
     // 订阅数量
     const subscribeInfos = api.order.getUserOrder.useQuery({userId: userInfo.id}).data
     // 帖子数量
@@ -62,7 +62,8 @@ const DisplayDetailed = (props) => {
                     {/*「心智与阅读」*/}
                     「{name ?? "未知专栏"}」
                 </div>
-                <div className='w-59.25 text-#666 text-3.25 font-400 ml-3 mt-2 text-ellipsis whitespace-nowrap overflow-hidden'>
+                <div
+                    className='w-59.25 text-#666 text-3.25 font-400 ml-3 mt-2 text-ellipsis whitespace-nowrap overflow-hidden'>
                     {introduce ?? "暂无数据"}
                 </div>
             </div>
@@ -121,8 +122,7 @@ const DisplayDetailed = (props) => {
             {/* 内容区域 */}
             <RenderContent/>
         </div>
-
-
     </>
 }
+
 export default DisplayDetailed

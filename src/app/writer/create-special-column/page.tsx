@@ -1,4 +1,4 @@
-import Column from "@/app/_components/writer/create/column";
+import Column from "@/app/_components/writer/create/Column";
 import {Suspense} from "react";
 
 const Page =()=>{

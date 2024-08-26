@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { ConfigProvider, InputNumberProps } from 'antd';
-import { Col, InputNumber, Row, Slider, Space } from 'antd';
+import { Col, Row, Slider } from 'antd';
 
 const IntegerStep: React.FC = () => {
     const [inputValue, setInputValue] = useState(1);

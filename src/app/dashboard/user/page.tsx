@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
 import Link from "next/link";
-import {UserTop} from "@/app/_components/user/UserTop";
+import UserTop from "@/app/_components/user/UserTop";
 import useLocalStorage from "@/tools/useStore";
 import React, {useState} from "react";
 import {api} from "@/trpc/react";
@@ -125,10 +125,12 @@ const Page = () => {
                         className="rounded"
                     />
                     <div>
-                        <div className="ml-2 w-59.25 text-3.75 font-500 lh-6 text-ellipsis whitespace-nowrap overflow-hidden">
+                        <div
+                            className="ml-2 w-59.25 text-3.75 font-500 lh-6 text-ellipsis whitespace-nowrap overflow-hidden">
                             「{item?.name ?? "未知专栏"}」
                         </div>
-                        <div className='w-59.25 text-#666 text-3.25 font-400 ml-3 mt-2 text-ellipsis whitespace-nowrap overflow-hidden'>
+                        <div
+                            className='w-59.25 text-#666 text-3.25 font-400 ml-3 mt-2 text-ellipsis whitespace-nowrap overflow-hidden'>
                             {item?.introduce ?? "暂无简介"}
                         </div>
                     </div>

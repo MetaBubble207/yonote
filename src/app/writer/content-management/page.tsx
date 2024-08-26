@@ -1,10 +1,10 @@
 "use client";
-import React, { useRef, useState } from 'react';
-import MyPagination from '@/app/_components/pagination/page';
+import React, {useRef, useState} from 'react';
+import MyPagination from '@/app/_components/pagination/MyPagination';
 import Date from "@/app/_components/datarange/Date";
-import { ContentForm } from "@/app/_components/writer/ContentForm";
+import ContentForm from "@/app/_components/writer/ContentForm";
 import Link from 'next/link';
-import { useSearchParams } from "next/navigation";
+import {useSearchParams} from "next/navigation";
 
 const Page = () => {
     let columnId;
@@ -16,14 +16,14 @@ const Page = () => {
 
     const titleRef = useRef(null);
     const tagRef = useRef(null);
-    const [searchParams, setSearchParams] = useState({ title: "", tag: "" });
+    const [searchParams, setSearchParams] = useState({title: "", tag: ""});
 
     const handleSearch = () => {
         const titleValue = titleRef.current.value;
         const tagValue = tagRef.current.value;
         console.log("内容标题:", titleValue);
         console.log("标签:", tagValue);
-        setSearchParams({ title: titleValue, tag: tagValue });
+        setSearchParams({title: titleValue, tag: tagValue});
     };
 
     return (
@@ -32,7 +32,9 @@ const Page = () => {
                 <div className={'flex items-center pt-51px '}>
                     <div className="text-[#323232] text-4 font-not-italic font-700 lh-6 ml-32.5px">内容管理</div>
                     {/*发布*/}
-                    <Link href={`/edit/edit?columnId=${columnId}`} className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+ 发布</Link>
+                    <Link href={`/edit/edit?columnId=${columnId}`}
+                          className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+
+                        发布</Link>
                 </div>
 
                 {/*justify-between*/}
@@ -69,11 +71,11 @@ const Page = () => {
                 </div>
 
                 {/*表格*/}
-                <ContentForm title={searchParams.title} tag={searchParams.tag} />
+                <ContentForm title={searchParams.title} tag={searchParams.tag}/>
 
                 {/*底部分页*/}
                 <div className={'absolute bottom-10 left-60 flex justify-center items-center'}>
-                    <MyPagination></MyPagination>
+                    {/*<MyPagination/>*/}
                 </div>
             </div>
         </div>

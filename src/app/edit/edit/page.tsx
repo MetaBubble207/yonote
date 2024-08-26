@@ -1,15 +1,15 @@
-// "use client";
+"use client";
 import dynamic from "next/dynamic";
 
-const DynamicMyEditor = dynamic(() => import("../../_components/edit/editor"), {
-  ssr: false,
+const DynamicMyEditor = dynamic(() => import("../../_components/edit/MyEditor"), {
+    ssr: false,
 });
 const Page = () => {
-  return (
-    <div className="w-full h-full">
-      <DynamicMyEditor></DynamicMyEditor>
-    </div>
-  );
+    return (
+        <div className="w-full h-full">
+            <DynamicMyEditor></DynamicMyEditor>
+        </div>
+    );
 };
 
 export default Page;

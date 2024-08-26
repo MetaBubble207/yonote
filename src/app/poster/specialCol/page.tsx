@@ -1,5 +1,5 @@
 import React from "react";
-import { SpecialColumn } from "../../_components/poster/SpecialColumn";
+import SpecialColumn from "../../_components/poster/SpecialColumn";
 
 const Page = () => {
     return (

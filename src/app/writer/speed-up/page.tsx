@@ -1,13 +1,14 @@
 'use client'
 import Image from "next/image";
-import React, { Suspense, useState } from "react";
+import React, {Suspense, useState} from "react";
 import Date from '../../_components/datarange/Date'
-import MyPagination from "@/app/_components/pagination/page";
-import { Slider } from 'antd';
-import type { SliderSingleProps } from 'antd';
+import MyPagination from "@/app/_components/pagination/MyPagination";
+import {Slider} from 'antd';
+import type {SliderSingleProps} from 'antd';
 
-import type { CollapseProps } from 'antd';
-import { Collapse } from 'antd';
+import type {CollapseProps} from 'antd';
+import {Collapse} from 'antd';
+
 const Page = () => {
     const distribution: SliderSingleProps['marks'] = {
         0: '0%',
@@ -34,14 +35,15 @@ const Page = () => {
         {
             key: '1',
             label: '分销激励',
-            children: <Slider marks={distribution} step={null} defaultValue={37} max={70} />,
+            children: <Slider marks={distribution} step={null} defaultValue={37} max={70}/>,
         },
         {
             key: '2',
             label: '加速激励',
-            children: <Slider marks={acceleration} step={null} defaultValue={37} max={30} />,
+            children: <Slider marks={acceleration} step={null} defaultValue={37} max={30}/>,
         },
     ];
+
     interface Item {
         ranking: number;
         avatar: string;
@@ -91,27 +93,24 @@ const Page = () => {
         setUserId(e.target.value)
     }
     const ItemList: React.FC = () => {
-
         return (
             <tbody className='text-center'>
-                {items.map((item, index) => (
-                    <tr key={index} className='border-t solid'>
-                        <td>{item.ranking}</td>
-                        <td className='relative'><Image
-                            className=' w-8 h-8 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shrink-0 border-rd-8'
-                            src={item.avatar} alt={'avatar'} width={32} height={32} />
-                        </td>
-                        <td>{item.username}</td>
-                        <td>{item.userId}</td>
-                        <td>{item.acceleration}</td>
-                        <td>￥<span>{item.totalAmount}</span></td>
-                    </tr>
-                ))}
+            {items.map((item, index) => (
+                <tr key={index} className='border-t solid'>
+                    <td>{item.ranking}</td>
+                    <td className='relative'><Image
+                        className=' w-8 h-8 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shrink-0 border-rd-8'
+                        src={item.avatar} alt={'avatar'} width={32} height={32}/>
+                    </td>
+                    <td>{item.username}</td>
+                    <td>{item.userId}</td>
+                    <td>{item.acceleration}</td>
+                    <td>￥<span>{item.totalAmount}</span></td>
+                </tr>
+            ))}
             </tbody>
-
         )
     }
-
 
     return (
         <Suspense>
@@ -135,7 +134,7 @@ const Page = () => {
                                 {/* <div className='ml-11.25'> */}
                                 {/* <Slider marks={marks} step={null} defaultValue={37} /> */}
                                 {/* </div> */}
-                                <Collapse items={item} defaultActiveKey={['1']} onChange={onChange} />
+                                <Collapse items={item} defaultActiveKey={['1']} onChange={onChange}/>
                                 {/*激励榜单*/}
                                 <div className='mt-8'>
                                     <h3 className='w-17.75 h-5.5 shrink-0 text-[rgba(0,0,0,0.85)] text-4 font-400 lh-6'>激励榜单</h3>
@@ -146,7 +145,7 @@ const Page = () => {
                                             <input
                                                 onChange={(e) => handleChange(e)}
                                                 className='pl-3.0425  ml-4  w-56 h-8  shrink-0 border-rd-1 outline-none border-1 border-solid border-[#D9D9D9] bg-[#FFF]'
-                                                type="text" placeholder="用户ID" />
+                                                type="text" placeholder="用户ID"/>
                                             <div className='ml-20.5'>
                                                 <Date></Date>
                                             </div>
@@ -155,12 +154,8 @@ const Page = () => {
                                                 className='ml-75 w-20.5 h-8 shrink-0 border-rd-1 bg-[#1DB48D]  text-[#FFF] text-3.5 font-400 lh-5.5'>数据导出
                                             </button>
                                         </div>
-
                                     </div>
-
-
                                 </div>
-
                                 {/*排行榜*/}
                                 <div className='mt-4.18 '>
 
@@ -168,61 +163,54 @@ const Page = () => {
                                         className='table-auto w-269.75 h-13.5 shrink-0 border-rd-[4px_4px_0px_0px] bg-[#FAFAFA] lh-13.5 text-[rgba(0,0,0,0.85)] text-3.5 font-400 '>
                                         {/*表头*/}
                                         <thead>
-                                            <tr>
-                                                <th>排名</th>
-                                                <th>用户头像</th>
-                                                <th>用户名</th>
-                                                <th>用户ID</th>
-                                                <th className={'flex justify-center items-center'}>
-                                                    <span>加速量</span>
-                                                    <div className='ml-1.25'>
-                                                        <button className='flex '>
-                                                            <Image src={'/images/writer/up.svg'} alt={'up'} width={6.65}
-                                                                height={4.27} />
+                                        <tr>
+                                            <th>排名</th>
+                                            <th>用户头像</th>
+                                            <th>用户名</th>
+                                            <th>用户ID</th>
+                                            <th className={'flex justify-center items-center'}>
+                                                <span>加速量</span>
+                                                <div className='ml-1.25'>
+                                                    <button className='flex '>
+                                                        <Image src={'/images/writer/up.svg'} alt={'up'} width={6.65}
+                                                               height={4.27}/>
+                                                    </button>
+                                                    <button className='flex '>
+                                                        <Image src={'/images/writer/down.svg'} alt={'down'} width={6.65}
+                                                               height={4.27}/>
+                                                    </button>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div className='flex justify-center items-center'>
+                                                    <span>总金额</span>
+                                                    <div className='ml-1.25 flex-col justify-center'>
+                                                        <button className='flex'>
+                                                            <Image src={'/images/writer/up.svg'} alt={'up'}
+                                                                   width={6.65}
+                                                                   height={4.27}/>
                                                         </button>
-                                                        <button className='flex '>
-                                                            <Image src={'/images/writer/down.svg'} alt={'down'} width={6.65}
-                                                                height={4.27} />
+                                                        <button className='flex'>
+                                                            <Image src={'/images/writer/down.svg'} alt={'down'}
+                                                                   width={6.65}
+                                                                   height={4.27}/>
                                                         </button>
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div className='flex justify-center items-center'>
-                                                        <span>总金额</span>
-                                                        <div className='ml-1.25 flex-col justify-center'>
-                                                            <button className='flex'>
-                                                                <Image src={'/images/writer/up.svg'} alt={'up'}
-                                                                    width={6.65}
-                                                                    height={4.27} />
-                                                            </button>
-                                                            <button className='flex'>
-                                                                <Image src={'/images/writer/down.svg'} alt={'down'}
-                                                                    width={6.65}
-                                                                    height={4.27} />
-                                                            </button>
 
 
-                                                        </div>
                                                     </div>
-                                                </th>
-                                            </tr>
+                                                </div>
+                                            </th>
+                                        </tr>
                                         </thead>
                                         {/*表体*/}
-                                        <ItemList />
+                                        <ItemList/>
                                     </table>
-
-
                                 </div>
-
                                 <div className="mt-4 flex flex-col justify-end items-center">
-                                    <MyPagination />
+                                    {/*<MyPagination />*/}
                                 </div>
-
                             </div>
-
                         </div>
-
-
                     </div>
                 </div>
 

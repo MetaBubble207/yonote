@@ -1,8 +1,8 @@
-import Course from "@/app/_components/writer/create/course";
+import Course from "@/app/_components/writer/create/Course";
 import {Suspense} from "react";
 
-const Page =()=>{
-    return(
+const Page = () => {
+    return (
         <Suspense>
             <Course/>
         </Suspense>

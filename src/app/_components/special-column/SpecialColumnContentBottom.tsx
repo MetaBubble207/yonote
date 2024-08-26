@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import {useRouter} from "next/navigation";
 import Link from "next/link";
 
-export const SpecialColumnContentBottom = () => {
+const SpecialColumnContentBottom = () => {
     // 路由
     const router = useRouter();
     // 点赞
@@ -67,7 +67,8 @@ export const SpecialColumnContentBottom = () => {
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }
+
+export default SpecialColumnContentBottom;

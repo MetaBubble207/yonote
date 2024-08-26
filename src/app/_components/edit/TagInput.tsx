@@ -5,7 +5,7 @@ interface TagInputProps{
   setTags:(tags: string[]) => void,
 }
 
-function TagInput(props:TagInputProps) {
+const TagInput = (props:TagInputProps) => {
   console.log(props);
 
   // const [tags, setTags] = useState<string[]>([]);

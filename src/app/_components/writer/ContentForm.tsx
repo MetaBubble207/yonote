@@ -3,13 +3,11 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { api } from "@/trpc/react";
 import { timeToDateString } from "@/tools/timeToString";
-import useLocalStorage from "@/tools/useStore";
 import { useSearchParams } from "next/navigation";
-import { W100H50Modal } from "@/app/_components/common/W100H50Modal";
+import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import Link from "next/link";
-import { router } from "next/client";
 
-export const ContentForm = ({ title, tag }) => {
+const ContentForm = ({ title, tag }) => {
     const params = useSearchParams();
     const columnId = params.get("columnId");
     const [data, setData] = useState(null);
@@ -199,3 +197,5 @@ export const ContentForm = ({ title, tag }) => {
         </div>
     );
 };
+
+export default ContentForm;

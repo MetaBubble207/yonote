@@ -9,7 +9,7 @@ import {domToPng} from 'modern-screenshot';
 import {Button} from "antd";
 import Loading from "@/app/_components/common/Loading";
 
-export const SpecialColumn = () => {
+const SpecialColumn = () => {
     const params = useSearchParams();
     const columnId = params.get("id");
     const userId = api.column.getUserId.useQuery({
@@ -83,7 +83,8 @@ export const SpecialColumn = () => {
         }
     };
 
-    if(isUserLoading || isOrderLoading || isReadLoading) return <div className={"h-screen w-full flex items-center justify-center"}><Loading/></div>
+    if (isUserLoading || isOrderLoading || isReadLoading) return <div
+        className={"h-screen w-full flex items-center justify-center"}><Loading/></div>
 
     return <div className="min-h-screen bg-[#999999] flex justify-center items-center px-4">
         <div ref={png} className="w-full h-124 bg-[#ffffff]">
@@ -208,3 +209,5 @@ export const SpecialColumn = () => {
         </div>
     </div>
 };
+
+export default SpecialColumn;

@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
+import React, {Suspense, useEffect, useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -17,7 +17,7 @@ const Page: React.FC = () => {
             seconds = Math.floor((difference / 1000) % 60);
         }
 
-        return { days, hours, minutes, seconds };
+        return {days, hours, minutes, seconds};
     };
 
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
@@ -66,7 +66,7 @@ const Page: React.FC = () => {
                     </div>
 
                     <Image src={"/images/writer/co-author/painting.svg"} alt={"painting"} width={20} height={20}
-                        className="ml-82.5 mt-20.85 w-128.82325 h-95.48875" />
+                           className="ml-82.5 mt-20.85 w-128.82325 h-95.48875"/>
                     <div
                         className="mt-16.75 ml-112 w-63.3 text-[rgba(0,0,0,0.65)] font-Abel text-4 font-400 lh-5.5">更多功能和权益开发中-
                         <Link target='_blank' href={"https://eahu7fmu6k6.feishu.cn/wiki/S4elwZgXgig8HTkS9nCcAhd7nwb"}>
