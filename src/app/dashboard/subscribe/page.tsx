@@ -10,6 +10,7 @@ import Loading from "@/app/_components/common/Loading";
 import SearchColumn from "@/app/_components/common/SearchColumn";
 import {Button} from "antd";
 import SubscribeMain from "@/app/_components/subscribe/SubscribeMain";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const Subscribe = () => {
     const router = useRouter();
@@ -45,15 +46,18 @@ const Subscribe = () => {
 
     const RecentlyReadCard = () => {
         return <div className="h-20.5 w-full rounded-2.5 bg-[#FFF] flex relative p-2.5">
-            <Image
-                unoptimized
-                src={recentColumn?.logo ?? "/images/subscribe/cover.png"}
-                alt="cover"
-                width={45.5}
-                height={62}
-                placeholder="empty"
-                className="rounded-2"
-            ></Image>
+            <div className="relative w-11.375 h-15.5">
+                <Image
+                    placeholder="blur"
+                    blurDataURL={DefaultLoadingPicture()}
+                    src={recentColumn?.logo ?? "/images/subscribe/cover.png"}
+                    alt='cover'
+                    quality={100}
+                    fill
+                    loading='lazy'
+                    className='rounded-2 object-cover '
+                />
+            </div>
             <div className="pl-2 pt-1">
                 {recentRead && (
                     <>
