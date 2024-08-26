@@ -5,6 +5,7 @@ import {useSearchParams} from "next/navigation";
 import Loading from "../common/Loading";
 import {useRouter} from "next/navigation";
 import {Button} from "antd";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const SpecialColumnHeader = () => {
     const params = useSearchParams();
@@ -27,12 +28,15 @@ const SpecialColumnHeader = () => {
         <>
             <div className={"w-full absolute top-0 z-1 filter blur-sm"}>
                 <Image
+                    placeholder="blur"
+                    blurDataURL={DefaultLoadingPicture()}
                     src={column.logo || "/images/recommend/cover.svg"}
                     alt={"bg"}
                     width={375}
                     height={74.5}
                     style={{width: "100%"}}
                 />
+
                 <div className="absolute inset-0 bg-black opacity-20"></div>
             </div>
             <div className={"w-full absolute top-2.5 left-0 z-3"}>
