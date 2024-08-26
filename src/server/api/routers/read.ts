@@ -182,7 +182,7 @@ export const readRouter = createTRPCRouter({
                 await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
 
             let readCount: number[] = [0, 0, 0];
-            const readPromises = posts.map(async item => {
+            const readPromises = posts.map(async (item) => {
                 const readsYesterday =
                     await ctx.db.select().from(postRead).where(
                         and(
@@ -244,7 +244,14 @@ export const readRouter = createTRPCRouter({
 
             })
             await Promise.all(readPromises);
-            return Math.floor(todayReadCount / yesterdayReadCount * 100) / 100
+            if (yesterdayReadCount === 0) {
+                return todayReadCount * 100 / 100
+            } else if (todayReadCount === 0) {
+                return -yesterdayReadCount * 100 / 100
+            } else {
+                const rate = Math.floor(todayReadCount / yesterdayReadCount * 100) / 100;
+                return rate >= 1 ? rate - 1 : -rate;
+            }
         }),
 
     getReadRange: publicProcedure
