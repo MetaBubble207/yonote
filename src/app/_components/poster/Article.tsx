@@ -9,6 +9,7 @@ import QRCode from 'qrcode.react';
 import {domToPng} from 'modern-screenshot';
 import {Button} from "antd";
 import Loading from "@/app/_components/common/Loading";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const Article = () => {
     const params = useSearchParams();
@@ -95,13 +96,18 @@ const Article = () => {
                 <div className="flex">
                     <div className="flex items-center w-full h-19.375">
                         {/* 作者头像与名称 */}
-                        <Image
-                            src={user?.avatar ? user?.avatar : "/images/recommend/cover.svg"}
-                            alt={"usericon"}
-                            width={49}
-                            height={49}
-                            className="w-12.25 h-12.25 shrink-0 ml-5.25 mt-7.125"
-                        />
+                        <div className="relative w-12.25 h-12.25 ml-5.25 mt-7.125">
+                            <Image
+                                placeholder="blur"
+                                blurDataURL={DefaultLoadingPicture()}
+                                src={user?.avatar ?? "/images/recommend/cover.svg"}
+                                alt='cover'
+                                quality={100}
+                                fill
+                                loading='lazy'
+                                className='rounded-4 object-cover '
+                            />
+                        </div>
                         <div className="flex flex-col h-20">
                             <div className="text-[#333333] text-3.5 font-500 lh-6 h-5 ml-2.25 mt-8"
                                  style={{
@@ -161,15 +167,18 @@ const Article = () => {
 
                         {/* 用户头像和名称 */}
                         <div className="flex items-center mt-3.5">
-                            <Image
-                                placeholder="blur"
-                                blurDataURL={userInfo?.avatar ?? "/images/user/Loading.svg"}
-                                src={userInfo?.avatar ?? "/images/user/Loading.svg"}
-                                alt="avatar"
-                                width={83}
-                                height={83}
-                                className="w-4.5 h-4.5 rounded-full stroke-0.25 stroke-[#FFF]"
-                            />
+                            <div className="relative w-4.5 h-4.5 ">
+                                <Image
+                                    placeholder="blur"
+                                    blurDataURL={DefaultLoadingPicture()}
+                                    src={userInfo?.avatar ?? "/images/user/Loading.svg"}
+                                    alt='cover'
+                                    quality={100}
+                                    fill
+                                    loading='lazy'
+                                    className='rounded-full object-cover '
+                                />
+                            </div>
                             <div className="h-5.75 text-[#999] text-2.5 font-500 lh-6 ml-1.25">
                                 {token ? userInfo?.name : "未知用户"}
                             </div>

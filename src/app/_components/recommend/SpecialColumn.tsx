@@ -30,7 +30,6 @@ const SpecialColumn = () => {
         }
     }
 
-
     const getCategoryStyle = (category: string) => {
         if (category === activeCategory) {
             return {
@@ -44,7 +43,6 @@ const SpecialColumn = () => {
             };
         }
     };
-
 
     return (
         <div>

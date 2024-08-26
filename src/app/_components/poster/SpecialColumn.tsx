@@ -8,6 +8,7 @@ import QRCode from "qrcode.react";
 import {domToPng} from 'modern-screenshot';
 import {Button} from "antd";
 import Loading from "@/app/_components/common/Loading";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const SpecialColumn = () => {
     const params = useSearchParams();
@@ -92,8 +93,18 @@ const SpecialColumn = () => {
             <div className="flex">
                 <div className="flex items-center w-full h-19.375">
                     {/* 作者头像与名称 */}
-                    <Image src={user?.avatar ? user?.avatar : "/images/recommend/cover.svg"} alt={""} width={49}
-                           height={49} className=" w-12.25 h-12.25 shrink-0 ml-5.25 mt-7.125"/>
+                    <div className="relative w-12.25 h-12.25 ml-5.25 mt-7.125">
+                        <Image
+                            placeholder="blur"
+                            blurDataURL={DefaultLoadingPicture()}
+                            src={user?.avatar ?? "/images/recommend/cover.svg"}
+                            alt='cover'
+                            quality={100}
+                            fill
+                            loading='lazy'
+                            className='rounded-full object-cover '
+                        />
+                    </div>
                     <div className="flex flex-col h-20">
                         <div className="text-[#333333] text-3.5 font-500 lh-6 h-5 ml-2.25 mt-8 "
                              style={{
@@ -133,19 +144,17 @@ const SpecialColumn = () => {
             <div className=" w-73 h-44.5 ml-4.5 mt-4">
                 <Image src={"/images/poster/title1.svg"} alt="title1" width={2} height={2} className="w-14.75 h-5.25"/>
                 <div className="flex justify-center items-center mt-3.375">
-                    <div className="w-25 h-32 relative">
-                        {/* 专栏封面 */}
-                        <div>
-                            <Image
-                                placeholder="blur"
-                                blurDataURL={column?.logo ? column?.logo : "/images/recommend/cover.svg"}
-                                src={column?.logo ? column?.logo : "/images/recommend/cover.svg"}
-                                alt="cover"
-                                objectFit="cover"
-                                className="rounded"
-                                layout="fill"
-                            />
-                        </div>
+                    <div className="relative w-25 h-32">
+                        <Image
+                            placeholder="blur"
+                            blurDataURL={DefaultLoadingPicture()}
+                            src={column?.logo ?? "/images/recommend/cover.svg"}
+                            alt='cover'
+                            quality={100}
+                            fill
+                            loading='lazy'
+                            className='rounded object-cover '
+                        />
                     </div>
                     {/* 简介内容 */}
                     <div className="w-44.744 h-35 text-[#666] text-2.5 font-500 lh-6 ml-2.75 mt-2"
@@ -173,17 +182,18 @@ const SpecialColumn = () => {
 
                     {/* 用户头像和名称 */}
                     <div className="flex items-center mt-3.5">
-                        <Image
-                            placeholder="blur"
-                            blurDataURL={userInfo?.avatar ?? "/images/user/Loading.svg"}
-                            src={userInfo?.avatar ?? "/images/user/Loading.svg"}
-                            alt="avatar"
-                            width={83}
-                            height={83}
-                            className={
-                                "w-4.5 h-4.5 rounded-full stroke-0.25 stroke-[#FFF]"
-                            }
-                        />
+                        <div className="relative w-4.5 h-4.5">
+                            <Image
+                                placeholder="blur"
+                                blurDataURL={DefaultLoadingPicture()}
+                                src={userInfo?.avatar ?? "/images/user/Loading.svg"}
+                                alt='cover'
+                                quality={100}
+                                fill
+                                loading='lazy'
+                                className='rounded-full object-cover '
+                            />
+                        </div>
                         <div className="h-5.75 text-[#999] text-2.5 font-500 lh-6 ml-1.25">
                             {token ? userInfo?.name : "未知用户"}
                         </div>

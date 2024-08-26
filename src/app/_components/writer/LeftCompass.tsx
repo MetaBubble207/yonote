@@ -15,7 +15,6 @@ const LeftCompass = () => {
         setColumn(pathname === "/writer/homepage");
     }, [pathname]);
 
-
     return (
         <>
             {pathname !== "/writer/login" && (

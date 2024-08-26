@@ -6,6 +6,7 @@ import {api} from "@/trpc/react";
 import {Button} from "antd";
 import Loading from "@/app/_components/common/Loading";
 import NoData from "@/app/_components/common/NoData";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const DisplayDetailed = (props) => {
     const {token, userInfo} = props
@@ -49,14 +50,18 @@ const DisplayDetailed = (props) => {
     }
     const ColumnCard = ({id, logo, name, introduce}: any) => {
         return <Link href={`/special-column?id=${id}`} className="flex mb-4">
-            <Image
-                src={logo ?? '/images/user/avatar.svg'}
-                alt="icon"
-                width={74}
-                height={100}
-                className="rounded object-cover"
-                unoptimized
-            />
+            <div className="relative w-18.5 h-25">
+                <Image
+                    placeholder="blur"
+                    blurDataURL={DefaultLoadingPicture()}
+                    src={logo ?? '/images/user/avatar.svg'}
+                    alt='cover'
+                    quality={100}
+                    fill
+                    loading='lazy'
+                    className='rounded object-cover '
+                />
+            </div>
             <div>
                 <div className="ml-2 w-59.25 text-3.75 font-500 lh-6 text-ellipsis whitespace-nowrap overflow-hidden">
                     {/*「心智与阅读」*/}

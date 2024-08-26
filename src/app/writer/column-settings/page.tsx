@@ -6,6 +6,7 @@ import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import OSS from "ali-oss";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 let client = new OSS({
     region: 'oss-cn-shenzhen',
@@ -374,8 +375,18 @@ const Page = () => {
                         </div>
                         <div>
                             <div>
-                                <Image src={cover ?? "/images/user/Loading.svg"} alt={"cover"} width={116}
-                                       height={150}/>
+                                <div className="relative w-29 h-37.5">
+                                    <Image
+                                        placeholder="blur"
+                                        blurDataURL={DefaultLoadingPicture()}
+                                        src={cover ?? "/images/user/Loading.svg"}
+                                        alt='cover'
+                                        quality={100}
+                                        fill
+                                        loading='lazy'
+                                        className='object-cover'
+                                    />
+                                </div>
                                 <div
                                     className={"flex items-center w-19.5 h-6 shrink-0 border-rd-4 bg-[#45E1B8] mx-auto pl-2.5  mt-5"}>
                                     <Image className={"w-3.477 h-3.477 "} src={"/images/user/Edit.svg"}

@@ -8,6 +8,7 @@ import React, {useState} from "react";
 import {api} from "@/trpc/react";
 import Loading from "@/app/_components/common/Loading";
 import {Button} from "antd";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const Page = () => {
     const logout = () => {
@@ -117,13 +118,18 @@ const Page = () => {
         const Column = () => {
             return columnInfo?.slice(0, columnInfo?.length > 1 ? 2 : 1).map((item, index) => (
                 <Link href={`/special-column?id=${item.id}`} className="flex mb-4" key={item.id}>
-                    <Image
-                        src={item?.logo ?? '/images/user/cover.svg'}
-                        alt="cover"
-                        width={62}
-                        height={76}
-                        className="rounded"
-                    />
+                    <div className="relative w-15.5 h-19">
+                        <Image
+                            placeholder="blur"
+                            blurDataURL={DefaultLoadingPicture()}
+                            src={item?.logo ?? '/images/user/cover.svg'}
+                            alt='cover'
+                            quality={100}
+                            fill
+                            loading='lazy'
+                            className='rounded object-cover'
+                        />
+                    </div>
                     <div>
                         <div
                             className="ml-2 w-59.25 text-3.75 font-500 lh-6 text-ellipsis whitespace-nowrap overflow-hidden">

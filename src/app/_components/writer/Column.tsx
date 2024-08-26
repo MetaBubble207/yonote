@@ -5,6 +5,7 @@ import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 import {useSearchParams} from "next/navigation";
 import Loading from "../common/Loading";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 interface ColumnData {
     id: string;
@@ -62,24 +63,23 @@ const Column = () => {
         <>
             <div className="w-64.77925 shrink-0 border-rd-1.25 bg-#fff flex items-center pl-12.995"
                  onClick={() => setShowColumnPopup(!showColumnPopup)}>
-                <div className="relative w-58px h-75px">
+                <div className="relative w-14.5 h-19">
                     <Image
                         placeholder="blur"
-                        blurDataURL={currentColumn?.logo ?? "/images/user/Loading.svg"}
+                        blurDataURL={DefaultLoadingPicture()}
                         src={currentColumn?.logo ?? "/images/user/Loading.svg"}
                         alt={"cover"}
-                        // width={58}
-                        // height={75}
                         objectFit="cover"
-                        layout="fill"
+                        fill
+                        loading='lazy'
                         quality={100}
-                        className=" border-rd-2">
+                        className=" rounded-2">
                     </Image>
                 </div>
 
                 <div>
                     <button>
-                        <Image src={"/images/writer/edit/Switch.svg"} alt={""} width={14.09} height={14}
+                        <Image src={"/images/writer/edit/Switch.svg"} alt={"cover"} width={14.09} height={14}
                                className={"w-3.52225 h-3.5 shrink-0 ml-2"}></Image>
                     </button>
 

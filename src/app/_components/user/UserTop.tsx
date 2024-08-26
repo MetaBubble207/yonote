@@ -6,6 +6,7 @@ import useLocalStorage from "@/tools/useStore";
 import {useRouter, useSearchParams} from "next/navigation";
 import {api} from "@/trpc/react";
 import {Button} from "antd";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const UserTop = () => {
     let userInfo;
@@ -28,15 +29,18 @@ const UserTop = () => {
     return (
         <div className="pt-9 flex flex-row items-center">
             {token ? (
-                <Image
-                    placeholder="blur"
-                    blurDataURL={userInfo?.avatar ?? "/images/user/Loading.svg"}
-                    src={userInfo?.avatar ?? "/images/user/Loading.svg"}
-                    alt="avatar"
-                    width={83}
-                    height={83}
-                    className={"rounded-full"}
-                />
+                <div className="relative w-20.75 h-20.75">
+                    <Image
+                        placeholder="blur"
+                        blurDataURL={DefaultLoadingPicture()}
+                        src={userInfo?.avatar ?? "/images/user/Loading.svg"}
+                        alt='cover'
+                        quality={100}
+                        fill
+                        loading='lazy'
+                        className='rounded-full object-cover '
+                    />
+                </div>
             ) : (
                 <Image
                     src={"/images/user/NotLoggedIn.svg"}

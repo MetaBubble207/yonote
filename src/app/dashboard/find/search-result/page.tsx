@@ -8,6 +8,7 @@ import Navbar from "@/app/_components/common/Navbar";
 import {timeToDateString} from "@/tools/timeToString";
 import Link from "next/link";
 import Loading from "@/app/_components/common/Loading";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const Page = () => {
     const params = useSearchParams();
@@ -67,15 +68,17 @@ const Page = () => {
                                             {/*<div className={"flex items-center justify-center  w-100% h-100% border-rd-2 overflow-hidden"}>*/}
                                             {/*    <Image src={item.logo ?? "/images/user/Loading.svg"} alt={"小专栏图片"} width={69} height={92} className={"rounded-6px"} style={{ width: "100%", height:"100%"}}/>*/}
                                             {/*</div>*/}
-                                            <div className={"w-69px h-92px relative shrink-0"}>
+                                            <div className="relative w-17.25 h-23">
                                                 <Image
+                                                    placeholder="blur"
+                                                    blurDataURL={DefaultLoadingPicture()}
                                                     src={item.logo ?? "/images/user/Loading.svg"}
-                                                    alt="cover"
-                                                    layout='fill'
-                                                    objectFit='cover'
+                                                    alt='cover'
                                                     quality={100}
-                                                    className="border-rd-2"
-                                                ></Image>
+                                                    fill
+                                                    loading='lazy'
+                                                    className='rounded-2 object-cover '
+                                                />
                                             </div>
                                         </div>
                                         {/* 右边文字 */}
@@ -86,7 +89,7 @@ const Page = () => {
                                                      textOverflow: 'ellipsis',
                                                      whiteSpace: 'nowrap'
                                                  }}>
-                                                {item.name}
+                                            {item.name}
                                             </div>
                                             {/* 右边图标 */}
                                             <div className="flex mt-18px items-center space-y-0 mb-22px">

@@ -5,6 +5,7 @@ import React, {useState} from "react";
 import {timeToDateString} from "@/tools/timeToString";
 import {api} from "@/trpc/react";
 import {useEffect} from "react";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const SpecialColumnCard = (props) => {
     const {item, user, data} = props;
@@ -39,14 +40,18 @@ const SpecialColumnCard = (props) => {
             {/*上边*/}
             <div className={"flex items-center w-full"} onClick={data || item.isFree ? link : alertMessage}>
                 {/*左边图片*/}
-                {item?.logo && (
-                    <div className={"border-rd-2 w-30%"}>
-                        <Image src={item?.logo ? item?.logo : "images/recommend/cover.svg"} alt={"小专栏图片"}
-                               width={85} height={74.5}
-                               className={"rounded-6px"} style={{width: "100%"}}/>
-                    </div>
-                )}
-
+                <div className="relative w-21.25 h-18.625">
+                    <Image
+                        placeholder="blur"
+                        blurDataURL={DefaultLoadingPicture()}
+                        src={item?.logo || "images/recommend/cover.svg"}
+                        alt="小专栏图片"
+                        quality={100}
+                        fill
+                        loading='lazy'
+                        className="rounded-2 object-cover"
+                    />
+                </div>
                 {/*右边文字*/}
                 <div className={"ml-8px w-67% "}>
                     <div className={" text-[#252525] text-3.75 font-500 lh-6 text-3.75 "}>
@@ -95,9 +100,17 @@ const SpecialColumnCard = (props) => {
             <div className="flex mt-18px items-end">
                 {user && <>
                     {/*左边头像*/}
-                    <div>
-                        <Image src={user?.avatar ? user?.avatar : "images/recommend/cover.svg"} alt={"心智与阅读"}
-                               width={23} height={23} className={"rounded-full"}/>
+                    <div className="relative w-5.75 h-5.75 ">
+                        <Image
+                            placeholder="blur"
+                            blurDataURL={DefaultLoadingPicture()}
+                            src={user.avatar ?? 'images/recommend/cover.svg'}
+                            alt='cover'
+                            quality={100}
+                            fill
+                            loading='lazy'
+                            className='rounded-full object-cover'
+                        />
                     </div>
                     {/*昵称，日期，VIP*/}
                     <div>

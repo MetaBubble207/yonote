@@ -8,6 +8,7 @@ import type {SliderSingleProps} from 'antd';
 
 import type {CollapseProps} from 'antd';
 import {Collapse} from 'antd';
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const Page = () => {
     const distribution: SliderSingleProps['marks'] = {
@@ -98,9 +99,21 @@ const Page = () => {
             {items.map((item, index) => (
                 <tr key={index} className='border-t solid'>
                     <td>{item.ranking}</td>
-                    <td className='relative'><Image
-                        className=' w-8 h-8 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shrink-0 border-rd-8'
-                        src={item.avatar} alt={'avatar'} width={32} height={32}/>
+                    <td className='relative'>
+                        <div className={"absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shrink-0 border-rd-8"}>
+                            <div className="relative w-8 h-8">
+                                <Image
+                                    placeholder="blur"
+                                    blurDataURL={DefaultLoadingPicture()}
+                                    src={item.avatar ?? "/images/recommend/cover.svg"}
+                                    alt='cover'
+                                    quality={100}
+                                    fill
+                                    loading='lazy'
+                                    className='rounded object-cover '
+                                />
+                            </div>
+                        </div>
                     </td>
                     <td>{item.username}</td>
                     <td>{item.userId}</td>

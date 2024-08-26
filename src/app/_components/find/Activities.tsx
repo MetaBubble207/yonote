@@ -5,6 +5,7 @@ import {api} from "@/trpc/react";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 import Link from "next/link";
 import Loading from "../common/Loading";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const Activities = () => {
     const [data, setData] = useState(null);
@@ -56,11 +57,20 @@ const Activities = () => {
                                     {item.introduction}
                                 </div>
                             </div>
-                            <Image placeholder="blur"
-                                   blurDataURL={item.cover ?? "/images/user/Loading.svg"}
-                                   src={item.cover ?? "/images/user/Loading.svg"} alt="acti-cover" width={16}
-                                   height={12}
-                                   className="border-rd=4 w-41 h-31.25 absolute top-2.5 left-2.5 "/>
+                            <div className={"absolute"}>
+                                <div className='relative w-41 h-31.25'>
+                                    <Image
+                                        placeholder="blur"
+                                        blurDataURL={DefaultLoadingPicture()}
+                                        src={item.cover ?? '/images/user/Loading.svg'}
+                                        alt='cover'
+                                        quality={100}
+                                        fill
+                                        loading='lazy'
+                                        className='rounded-4 object-cover'
+                                    />
+                                </div>
+                            </div>
 
                             <div
                                 className={` absolute top-2.5 left-2.5 w-11.75 h-5.25 border-rd-[0px_25px_25px_0px] bg-[#4EDFE9]`}>
