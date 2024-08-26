@@ -4,6 +4,7 @@ import Link from "next/link";
 import {timeToDateString} from "@/tools/timeToString";
 import React from "react";
 import {api} from "@/trpc/react";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const SubscribeColumn = (prop) => {
     const column = prop.column;
@@ -12,17 +13,17 @@ const SubscribeColumn = (prop) => {
         <Link href={`../special-column?id=${column.id}`}>
             <div className="h-29.25 mt-4 flex">
                 <div className="relative h-18">
-                    <div className="w-11.25 h-11.25 relative mt-4">
+                    <div className="relative w-11.25 h-11.25 mt-4">
                         <Image
                             placeholder="blur"
-                            blurDataURL={userInfo?.avatar ?? "/images/user/Loading.svg"}
+                            blurDataURL={DefaultLoadingPicture()}
                             src={userInfo?.avatar ?? "/images/user/Loading.svg"}
-                            alt="avatar"
-                            layout="fill"
-                            objectFit="cover"
+                            alt='cover'
                             quality={100}
-                            className="rounded-full"
-                        ></Image>
+                            fill
+                            loading='lazy'
+                            className='rounded-full object-cover '
+                        />
                     </div>
                     <div className="bottom-2 right-1 absolute">
                         <Image
