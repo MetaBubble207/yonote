@@ -1,0 +1,4 @@
+/* styles.css */
+:where(.css-dev-only-do-not-override-1ysw8m8).ant-table-wrapper .ant-table{
+    min-height: 36rem;
+}
