@@ -244,10 +244,11 @@ export const readRouter = createTRPCRouter({
 
             })
             await Promise.all(readPromises);
+            console.log(yesterdayReadCount,todayReadCount)
             if (yesterdayReadCount === 0) {
-                return todayReadCount * 100 / 100
+                return todayReadCount * 100
             } else if (todayReadCount === 0) {
-                return -yesterdayReadCount * 100 / 100
+                return -yesterdayReadCount * 100
             } else {
                 const rate = Math.floor(todayReadCount / yesterdayReadCount * 100) / 100;
                 return rate >= 1 ? rate - 1 : -rate;
