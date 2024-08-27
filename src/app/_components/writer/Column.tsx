@@ -72,7 +72,7 @@ const Column = () => {
                         fill
                         loading='lazy'
                         quality={100}
-                        className=" rounded-2">
+                        className="rounded-2 object-cover">
                     </Image>
                 </div>
 
