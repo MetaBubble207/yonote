@@ -97,7 +97,7 @@ const SpecialColumn = () => {
                         <Image
                             placeholder="blur"
                             blurDataURL={DefaultLoadingPicture()}
-                            src={user?.avatar ?? "/images/recommend/cover.svg"}
+                            src={user?.avatar ?? DefaultLoadingPicture()}
                             alt='cover'
                             quality={100}
                             fill
@@ -148,7 +148,7 @@ const SpecialColumn = () => {
                         <Image
                             placeholder="blur"
                             blurDataURL={DefaultLoadingPicture()}
-                            src={column?.logo ?? "/images/recommend/cover.svg"}
+                            src={column?.logo ?? DefaultLoadingPicture()}
                             alt='cover'
                             quality={100}
                             fill
@@ -186,7 +186,7 @@ const SpecialColumn = () => {
                             <Image
                                 placeholder="blur"
                                 blurDataURL={DefaultLoadingPicture()}
-                                src={userInfo?.avatar ?? "/images/user/Loading.svg"}
+                                src={userInfo?.avatar ?? DefaultLoadingPicture()}
                                 alt='cover'
                                 quality={100}
                                 fill

@@ -16,7 +16,7 @@ const ColumnCard = ({columnData}) => {
                         <Image
                             placeholder="blur"
                             blurDataURL={DefaultLoadingPicture()}
-                            src={columnData.logo}
+                            src={columnData.logo ?? DefaultLoadingPicture()}
                             alt="cover"
                             quality={100}
                             fill
@@ -51,7 +51,7 @@ const ColumnCard = ({columnData}) => {
                             <Image
                                 placeholder="blur"
                                 blurDataURL={DefaultLoadingPicture()}
-                                src={columnData.user?.avatar}
+                                src={columnData.user?.avatar ?? DefaultLoadingPicture()}
                                 alt="cover"
                                 quality={100}
                                 fill

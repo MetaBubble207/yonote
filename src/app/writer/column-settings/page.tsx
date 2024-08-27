@@ -17,7 +17,6 @@ let client = new OSS({
 });
 
 const Page = () => {
-    const router = useRouter();
     const params = useSearchParams();
     const columnId = params.get("columnId");
     const columnData = api.column.getColumnDetail.useQuery({columnId: columnId}, {enabled: !!columnId}).data;
@@ -43,16 +42,7 @@ const Page = () => {
     useEffect(() => {
         setCover(columnData?.logo);
     }, [columnData]);
-    const updateApi = api.column.update.useMutation({
-        onSuccess: (data) => {
-
-        }
-    });
-    const deleteApi = api.priceList.delById.useMutation({
-        onSuccess: (data) => {
-
-        }
-    })
+    const updateApi = api.column.update.useMutation({});
     const fileInputRef = useRef(null);
     const handleNameChange = (e) => setName(e.target.value);
 
@@ -379,7 +369,7 @@ const Page = () => {
                                     <Image
                                         placeholder="blur"
                                         blurDataURL={DefaultLoadingPicture()}
-                                        src={cover ?? "/images/user/Loading.svg"}
+                                        src={cover ?? DefaultLoadingPicture()}
                                         alt='cover'
                                         quality={100}
                                         fill

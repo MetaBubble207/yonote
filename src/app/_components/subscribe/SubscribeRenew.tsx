@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import {api} from "@/trpc/react";
 import {timeToDateString} from "@/tools/timeToString";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import React from "react";
 
 const SubscribeRenew = (prop) => {
     const column = prop.column;
@@ -54,16 +56,18 @@ const SubscribeRenew = (prop) => {
                     </div>
                 </Link>
                 <div className="mt-3.5 ml-3 flex w-full h-9.5 items-center flex-shrink-0">
-                    <Image
-                        placeholder="blur"
-                        blurDataURL={userInfo?.avatar ?? "/images/user/Loading.svg"}
-                        style={{objectFit: "cover"}}
-                        src={userInfo?.avatar}
-                        alt="user_image"
-                        width={24}
-                        height={24}
-                        className="rounded-full w-5.75 h-5.75"
-                    ></Image>
+                    <div className="relative w-5.75 h-5.75">
+                        <Image
+                            placeholder="blur"
+                            blurDataURL={DefaultLoadingPicture()}
+                            src={userInfo?.avatar ?? DefaultLoadingPicture()}
+                            alt={"cover"}
+                            fill
+                            loading='lazy'
+                            quality={100}
+                            className="rounded-full object-cover">
+                        </Image>
+                    </div>
                     <div className="ml-1 w-43">
                         <div className="flex items-center">
                             <div className="text-[#999] text-2.75 lh-4">

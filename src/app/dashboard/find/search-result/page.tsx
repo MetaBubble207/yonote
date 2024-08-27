@@ -72,7 +72,7 @@ const Page = () => {
                                                 <Image
                                                     placeholder="blur"
                                                     blurDataURL={DefaultLoadingPicture()}
-                                                    src={item.logo ?? "/images/user/Loading.svg"}
+                                                    src={item.logo ?? DefaultLoadingPicture()}
                                                     alt='cover'
                                                     quality={100}
                                                     fill

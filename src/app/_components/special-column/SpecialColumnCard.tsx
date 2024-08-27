@@ -44,7 +44,7 @@ const SpecialColumnCard = (props) => {
                     <Image
                         placeholder="blur"
                         blurDataURL={DefaultLoadingPicture()}
-                        src={item?.logo || "images/recommend/cover.svg"}
+                        src={item?.logo ?? DefaultLoadingPicture()}
                         alt="小专栏图片"
                         quality={100}
                         fill
@@ -104,7 +104,7 @@ const SpecialColumnCard = (props) => {
                         <Image
                             placeholder="blur"
                             blurDataURL={DefaultLoadingPicture()}
-                            src={user.avatar ?? 'images/recommend/cover.svg'}
+                            src={user.avatar ?? DefaultLoadingPicture()}
                             alt='cover'
                             quality={100}
                             fill

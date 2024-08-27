@@ -67,9 +67,8 @@ const Column = () => {
                     <Image
                         placeholder="blur"
                         blurDataURL={DefaultLoadingPicture()}
-                        src={currentColumn?.logo ?? "/images/user/Loading.svg"}
+                        src={currentColumn?.logo ?? DefaultLoadingPicture()}
                         alt={"cover"}
-                        objectFit="cover"
                         fill
                         loading='lazy'
                         quality={100}

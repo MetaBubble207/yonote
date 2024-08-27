@@ -100,7 +100,7 @@ const Article = () => {
                             <Image
                                 placeholder="blur"
                                 blurDataURL={DefaultLoadingPicture()}
-                                src={user?.avatar ?? "/images/recommend/cover.svg"}
+                                src={user?.avatar ?? DefaultLoadingPicture()}
                                 alt='cover'
                                 quality={100}
                                 fill
@@ -171,7 +171,7 @@ const Article = () => {
                                 <Image
                                     placeholder="blur"
                                     blurDataURL={DefaultLoadingPicture()}
-                                    src={userInfo?.avatar ?? "/images/user/Loading.svg"}
+                                    src={userInfo?.avatar ?? DefaultLoadingPicture()}
                                     alt='cover'
                                     quality={100}
                                     fill

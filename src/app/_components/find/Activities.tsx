@@ -62,7 +62,7 @@ const Activities = () => {
                                     <Image
                                         placeholder="blur"
                                         blurDataURL={DefaultLoadingPicture()}
-                                        src={item.cover ?? '/images/user/Loading.svg'}
+                                        src={item.cover ?? DefaultLoadingPicture()}
                                         alt='cover'
                                         quality={100}
                                         fill

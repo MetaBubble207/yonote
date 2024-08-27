@@ -2,7 +2,6 @@
 import Image from "next/image";
 import React, {Suspense, useState} from "react";
 import Date from '../../_components/datarange/Date'
-import MyPagination from "@/app/_components/pagination/MyPagination";
 import {Slider} from 'antd';
 import type {SliderSingleProps} from 'antd';
 
@@ -105,7 +104,7 @@ const Page = () => {
                                 <Image
                                     placeholder="blur"
                                     blurDataURL={DefaultLoadingPicture()}
-                                    src={item.avatar ?? "/images/recommend/cover.svg"}
+                                    src={item.avatar ?? DefaultLoadingPicture()}
                                     alt='cover'
                                     quality={100}
                                     fill

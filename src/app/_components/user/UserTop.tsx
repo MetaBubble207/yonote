@@ -104,7 +104,7 @@ const UserTop = () => {
 
             {/* 编辑资料 */}
             <Button
-                className="w-20 text-[#252525] text-2.5 font-500 lh-6 rounded-full mr-4 flex flex-row bg-white pl-2.5 items-center "
+                className="w-20 text-[#252525] text-2.5 font-500 lh-6 rounded-full mr-4 flex flex-row bg-white pl-2.5 items-center border-0"
                 disabled={!token || !userInfo}>
                 <Image
                     src="/images/user/icon_edit.png"
@@ -112,7 +112,7 @@ const UserTop = () => {
                     width={16}
                     height={16}
                 />
-                <Link href="/user/message" prefetch={false}>编辑资料</Link>
+                <Link href={"/dashboard/user/message"} prefetch={false}>编辑资料</Link>
             </Button>
         </div>
     )

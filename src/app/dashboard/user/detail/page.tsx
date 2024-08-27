@@ -8,6 +8,7 @@ import DisplayDetailed from "@/app/_components/user/DisplayDetailed";
 import Loading from "@/app/_components/common/Loading";
 import Error from "@/app/_components/common/Error";
 import {useSearchParams} from "next/navigation";
+import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const Page = () => {
     const [token] = useLocalStorage("token", null);
@@ -18,11 +19,17 @@ const Page = () => {
     if (isError) return <Error text={'没有找到该用户的信息😯~'}/>
     return (
         <div>
-            <div className="blur-24 h-28.25 w-full relative">
-                <Image src={userInfo?.avatar} alt={"头像"}
-                       layout="fill"
-                       objectFit="cover"
-                       objectPosition="50% 50%"/>
+            <div className="relative h-28.25 w-full blur-24">
+                <Image
+                    placeholder="blur"
+                    blurDataURL={DefaultLoadingPicture()}
+                    src={userInfo?.avatar ?? DefaultLoadingPicture()}
+                    alt={"cover"}
+                    fill
+                    loading='lazy'
+                    quality={100}
+                    className=" rounded-2 object-cover">
+                </Image>
             </div>
             <div
                 className={"w-93.75 h-152.75 border-rd-[10px_10px_0px_0px] bg-[#FFF] relative flex justify-center "}>
@@ -56,7 +63,7 @@ const Page = () => {
                     {/*更多优质内容*/}
                     <div className={"w-full flex justify-center items-center sticky pb-9"}>
                         <div className={"flex justify-center w-26 h-7 bg-[#daf9f1] rounded-full"}>
-                            <Link href="../find" className={" text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
+                            <Link href={"/dashboard/find"} className={" text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
                         </div>
                     </div>
                 </div>

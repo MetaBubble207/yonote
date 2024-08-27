@@ -50,11 +50,11 @@ const DisplayDetailed = (props) => {
     }
     const ColumnCard = ({id, logo, name, introduce}: any) => {
         return <Link href={`/special-column?id=${id}`} className="flex mb-4">
-            <div className="relative w-18.5 h-25">
+            <div className="relative w-15.5 h-19">
                 <Image
                     placeholder="blur"
                     blurDataURL={DefaultLoadingPicture()}
-                    src={logo ?? '/images/user/avatar.svg'}
+                    src={logo ?? DefaultLoadingPicture()}
                     alt='cover'
                     quality={100}
                     fill

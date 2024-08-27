@@ -17,7 +17,7 @@ const SubscribeColumn = (prop) => {
                         <Image
                             placeholder="blur"
                             blurDataURL={DefaultLoadingPicture()}
-                            src={userInfo?.avatar ?? "/images/user/Loading.svg"}
+                            src={userInfo?.avatar ?? DefaultLoadingPicture()}
                             alt='cover'
                             quality={100}
                             fill
@@ -65,13 +65,13 @@ const SubscribeColumn = (prop) => {
                         <div className="w-15.5 h-19 ml-3 relative">
                             <Image
                                 placeholder="blur"
-                                blurDataURL={column.logo ?? "/images/subscribe/cover.png"}
-                                src={column.logo ?? "/images/subscribe/cover.png"}
+                                blurDataURL={DefaultLoadingPicture()}
+                                src={column.logo ?? DefaultLoadingPicture()}
                                 alt="cover"
-                                layout="fill"
-                                objectFit="cover"
+                                fill
+                                loading='lazy'
                                 quality={100}
-                                className="rd-2"
+                                className="rounded-2 object-cover"
                             ></Image>
                         </div>
                     </div>
