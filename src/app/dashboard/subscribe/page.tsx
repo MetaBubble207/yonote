@@ -82,19 +82,21 @@ const Subscribe = () => {
     if (isLoading) return <Loading/>
 
     return (
-        <div className="min-h-screen px-4 pt-8 pb-15 bg-#F5F7FB">
-            {/*搜索框*/}
-            <Link href={'find/search-result'}><SearchColumn/></Link>
-            {/*最近观看*/}
-            <div className={'mt-8'}>
-                <RecentlyReadCard/>
-            </div>
-            {/*列表*/}
-            <div className={'mt-4'}>
-                <SubscribeMain/>
+        <div>
+            <div className="w-full min-h-screen px-4 pt-8 pb-15 bg-#F5F7FB">
+                {/*搜索框*/}
+                <Link href={'find/search-result'}><SearchColumn/></Link>
+                {/*最近观看*/}
+                <div className={'mt-8'}>
+                    <RecentlyReadCard/>
+                </div>
+                {/*列表*/}
+                <div className={'mt-4'}>
+                    <SubscribeMain/>
+                </div>
             </div>
             {/*工具栏*/}
-            <div className="bottom-4 justify-center w-full fixed">
+            <div className="bottom-4 w-full justify-center fixed">
                 <Navbar/>
             </div>
         </div>
