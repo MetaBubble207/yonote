@@ -4,7 +4,7 @@ import ColumnPopup from "./ColumnPopup";
 import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 import {useSearchParams} from "next/navigation";
-import Loading from "../common/Loading";
+import Loading from "@/app/_components/common/Loading";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 interface ColumnData {

@@ -2,10 +2,10 @@
 import Image from "next/image";
 import {api} from "@/trpc/react";
 import {useSearchParams} from "next/navigation";
-import Loading from "../common/Loading";
 import {useRouter} from "next/navigation";
 import {Button} from "antd";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import Loading from "@/app/_components/common/Loading";
 
 const SpecialColumnHeader = () => {
     const params = useSearchParams();

@@ -1,9 +1,9 @@
 "use client"
 import {useState} from "react"
-import SubscriptionQueryColumn from "@/app/_components/recommend/SubscriptionQueryColumn";
-import DefaultColumn from "@/app/_components/recommend/DefaultColumn";
-import CreateAtQueryColumn from "@/app/_components/recommend/CreateAtQueryColumn";
-import ContentNumberQueryColumn from "@/app/_components/recommend/ContentNumberQueryColumn";
+import SubscriptionQueryColumn from "@/app/_components/dashboard/recommend/SubscriptionQueryColumn";
+import DefaultColumn from "@/app/_components/dashboard/recommend/DefaultColumn";
+import CreateAtQueryColumn from "@/app/_components/dashboard/recommend/CreateAtQueryColumn";
+import ContentNumberQueryColumn from "@/app/_components/dashboard/recommend/ContentNumberQueryColumn";
 
 
 const SpecialColumn = () => {

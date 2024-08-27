@@ -1,5 +1,5 @@
 "use client";
-import React, {Suspense, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {api} from "@/trpc/react";
 import {useRouter, useSearchParams} from "next/navigation";
 import SearchColumn from "@/app/_components/common/SearchColumn";
@@ -40,7 +40,8 @@ const Page = () => {
                 {/* 搜索框和取消按钮 */}
                 <div className={"flex items-center justify-between"}>
                     <SearchColumn SearchValue={searchValue}></SearchColumn>
-                    <Button type={'link'} className={"w-50px ml-20px p0 text-neutral"} onClick={handleButtonClick}>取消</Button>
+                    <Button type={'link'} className={"w-50px ml-20px p0 text-neutral"}
+                            onClick={handleButtonClick}>取消</Button>
                 </div>
 
                 {/* 数据加载中的显示 */}

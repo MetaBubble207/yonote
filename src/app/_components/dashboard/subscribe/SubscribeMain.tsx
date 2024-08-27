@@ -5,9 +5,9 @@ import SubscribeManage from './SubscribeManage';
 import React, {useState} from "react"
 import {api} from "@/trpc/react";
 import useLocalStorage from '@/tools/useStore';
-import Loading from '../common/Loading';
 import {Button} from "antd";
 import NoData from "@/app/_components/common/NoData";
+import Loading from "@/app/_components/common/Loading";
 
 const SubscribeMain = () => {
     const [token] = useLocalStorage('token', null);

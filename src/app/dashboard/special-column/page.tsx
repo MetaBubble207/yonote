@@ -1,5 +1,5 @@
-import SpecialColumnBody from "@/app/_components/special-column/SpecialColumnBody";
-import SpecialColumnHeader from "@/app/_components/special-column/SpecialColumnHeader";
+import SpecialColumnBody from "@/app/_components/dashboard/special-column/SpecialColumnBody";
+import SpecialColumnHeader from "@/app/_components/dashboard/special-column/SpecialColumnHeader";
 
 const Page = () => {
     return (

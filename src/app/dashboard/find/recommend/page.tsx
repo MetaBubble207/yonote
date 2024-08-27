@@ -1,5 +1,5 @@
 import React from "react";
-import ComponentJump from "@/app/_components/recommend/ComponentJump"
+import ComponentJump from "@/app/_components/dashboard/recommend/ComponentJump"
 
 const Page = () => {
     return (

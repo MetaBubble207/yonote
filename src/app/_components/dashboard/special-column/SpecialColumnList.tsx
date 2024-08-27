@@ -2,8 +2,8 @@
 import {api} from "@/trpc/react";
 import {useSearchParams} from 'next/navigation';
 import React, {useState} from 'react';
-import SpecialColumnCard from "@/app/_components/special-column/SpecialColumnCard";
-import Loading from "../common/Loading";
+import SpecialColumnCard from "@/app/_components/dashboard/special-column/SpecialColumnCard";
+import Loading from "@/app/_components/common/Loading";
 import NoData from "@/app/_components/common/NoData";
 
 const SpecialColumnList = (props) => {

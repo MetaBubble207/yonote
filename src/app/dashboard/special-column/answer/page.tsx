@@ -1,5 +1,5 @@
 import Image from "next/image";
-import AnswerQuestion from "@/app/_components/special-column/AnswerQuestion";
+import AnswerQuestion from "@/app/_components/dashboard/special-column/AnswerQuestion";
 
 const Page = () => {
     return <div className={"relative bg-#F5F7FB min-h-screen"}>

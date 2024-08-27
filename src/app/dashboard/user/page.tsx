@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
 import Link from "next/link";
-import UserTop from "@/app/_components/user/UserTop";
+import UserTop from "@/app/_components/dashboard/user/UserTop";
 import useLocalStorage from "@/tools/useStore";
 import React, {useState} from "react";
 import {api} from "@/trpc/react";

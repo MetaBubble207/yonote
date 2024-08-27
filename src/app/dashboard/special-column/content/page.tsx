@@ -1,6 +1,5 @@
 "use client";
 import {Image} from "antd";
-import Link from "next/link";
 import {api} from "@/trpc/react";
 import {useEffect, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";

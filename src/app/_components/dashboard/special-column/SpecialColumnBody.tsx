@@ -1,13 +1,13 @@
 "use client"
 import Image from "next/image";
 import React, {useEffect, useState} from 'react';
-import SpecialColumnIntroduce from "@/app/_components/special-column/SpecialColumnIntroduce";
+import SpecialColumnIntroduce from "@/app/_components/dashboard/special-column/SpecialColumnIntroduce";
 import {api} from "@/trpc/react";
 import Reserved from "@/app/_components/dialog/Reserved";
 import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import {message} from "antd";
-import SpecialColumnList from "@/app/_components/special-column/SpecialColumnList";
+import SpecialColumnList from "@/app/_components/dashboard/special-column/SpecialColumnList";
 
 const SpecialColumnBody = () => {
     const params = useSearchParams();

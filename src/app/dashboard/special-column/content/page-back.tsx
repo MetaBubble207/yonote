@@ -1,5 +1,5 @@
 import Image from "next/image";
-import SpecialColumnContentBottom from "@/app/_components/special-column/SpecialColumnContentBottom";
+import SpecialColumnContentBottom from "@/app/_components/dashboard/special-column/SpecialColumnContentBottom";
 
 const Page = () => {
     return <div className={"relative bg-#F5F7FB min-h-screen px-4"}>

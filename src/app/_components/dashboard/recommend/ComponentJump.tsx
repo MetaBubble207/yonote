@@ -1,8 +1,8 @@
 "use client"
 import {useState} from "react";
-import SpecialColumn from "@/app/_components/recommend/SpecialColumn";
-import YonoteCourse from "@/app/_components/recommend/YonoteCourse";
-import CoCreate from "@/app/_components/recommend/CoCreate";
+import SpecialColumn from "@/app/_components/dashboard/recommend/SpecialColumn";
+import YonoteCourse from "@/app/_components/dashboard/recommend/YonoteCourse";
+import CoCreate from "@/app/_components/dashboard/recommend/CoCreate";
 import {Button} from "antd";
 
 
