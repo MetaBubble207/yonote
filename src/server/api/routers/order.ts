@@ -572,9 +572,9 @@ export const orderRouter = createTRPCRouter({
                     )
                 );
             if (yesterdayData.length === 0) {
-                return todayData.length * 100 / 100
+                return todayData.length * 100;
             } else if (todayData.length === 0) {
-                return -yesterdayData.length * 100 / 100
+                return -yesterdayData.length * 100;
             } else {
                 const rate = Math.floor(todayData.length / yesterdayData.length * 100) / 100;
                 return rate >= 1 ? rate - 1 : -rate;
