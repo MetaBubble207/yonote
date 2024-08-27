@@ -1,7 +1,7 @@
 "use client"
 import React from "react";
 import Image from "next/image";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import {api} from "@/trpc/react";
 
@@ -17,13 +17,23 @@ const Compass = () => {
     const user = api.users.getOne.useQuery({
         id: token ?? "",
     }).data
+
+    const param = useSearchParams();
+    const linkHomepage = () => {
+        const columnId = param.get('columnId');
+        if (columnId) {
+            router.push(`/writer/homepage?columnId=${columnId}`)
+        } else {
+            router.push(`/writer/homepage`)
+        }
+    }
     return (
         <div>
             <div
                 className="fixed top-0 w-100% h-17.5 shrink-0 bg-[#FFF] flex items-center justify-between pr-23px z-101">
                 {/*左半边导航区*/}
                 <div className="flex items-center w-107.55675 h-11.75 shrink-0 ml-7.1975 mt-2.875">
-                    <div className="inline-flex w-20 h-9.48025 items-center">
+                    <div className="inline-flex w-20 h-9.48025 items-center" onClick={linkHomepage}>
                         <Image src={"/images/logo.svg"} alt={"logo"} width={30.3} height={30.42}
                                className="w-7.57425 h-8.35625 shrink-0"></Image>
                         <div className="ml-2">
