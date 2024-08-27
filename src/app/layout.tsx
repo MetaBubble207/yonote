@@ -4,6 +4,7 @@ import {Inter} from "next/font/google";
 
 import {TRPCReactProvider} from "@/trpc/react";
 import {ConfigProvider} from "antd";
+import zhCN from "antd/es/locale/zh_CN";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
                         }
                     }
                 }}
+                locale={zhCN}
             >
                 {children}
             </ConfigProvider>
