@@ -4,7 +4,7 @@ import React, {useState, useEffect} from "react";
 import {api} from "@/trpc/react";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 import Link from "next/link";
-import Loading from "../common/Loading";
+import Loading from "../../common/Loading";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import {Button} from "antd";
 

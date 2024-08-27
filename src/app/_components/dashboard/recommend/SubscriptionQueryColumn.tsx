@@ -1,18 +1,15 @@
 import Image from "next/image";
 import {api} from "@/trpc/react";
 import React, {useState, useEffect} from "react";
-import ColumnCard from "@/app/_components/find/ColumnCard";
+import ColumnCard from "@/app/_components/dashboard/find/ColumnCard";
 import Loading from "@/app/_components/common/Loading";
 import {Button} from "antd";
 
-const CreateAtQueryColumn = () => {
+const SubscriptionQueryColumn = () => {
     const [data, setData] = useState(null);
     const [sortOrder, setSortOrder] = useState<boolean>(true); // 默认为 true，表示倒序排序
-
     // 使用 useQuery 钩子获取数据
-    const {
-        data: queryData, isFetching
-    } = api.column.getCreateAt.useQuery();
+    const {data: queryData, isFetching} = api.column.getColumnOrderNumbers.useQuery();
 
     // 在数据加载完成时更新状态
     useEffect(() => {
@@ -22,9 +19,11 @@ const CreateAtQueryColumn = () => {
             setData(sortedData);
         }
     }, [queryData, sortOrder]);
+
     const toggleSortOrder = () => {
         setSortOrder(!sortOrder);
     };
+
     return (
         <div>
             <Button type={'link'} size={'small'} className="flex pl-3.5" onClick={toggleSortOrder}>
@@ -54,4 +53,4 @@ const CreateAtQueryColumn = () => {
     );
 };
 
-export default CreateAtQueryColumn;
+export default SubscriptionQueryColumn;

@@ -1,6 +1,6 @@
 import React from "react";
-import HomepageData from "@/app/_components/homepage/HomepageData";
-import Chart from "@/app/_components/homepage/Chart";
+import HomepageData from "@/app/_components/writer/homepage/HomepageData";
+import Chart from "@/app/_components/writer/homepage/Chart";
 
 const homepage = () => {
     return (

@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image";
 import React, {Suspense, useState} from "react";
-import Date from '../../_components/datarange/Date'
+import Date from '@/app/_components/writer/datarange/Date'
 import {Slider} from 'antd';
 import type {SliderSingleProps} from 'antd';
 

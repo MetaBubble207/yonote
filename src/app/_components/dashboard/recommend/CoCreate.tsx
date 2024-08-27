@@ -1,7 +1,7 @@
 "use client"
 import {api} from "@/trpc/react";
 import React, {useState, useEffect} from "react";
-import ColumnCard from "@/app/_components/find/ColumnCard";
+import ColumnCard from "@/app/_components/dashboard/find/ColumnCard";
 import Loading from "@/app/_components/common/Loading";
 
 const CoCreate = () => {

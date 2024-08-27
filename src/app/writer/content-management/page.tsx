@@ -1,7 +1,7 @@
 "use client";
 import React, {useRef, useState} from 'react';
-import MyPagination from '@/app/_components/pagination/MyPagination';
-import Date from "@/app/_components/datarange/Date";
+import MyPagination from '@/app/_components/writer/pagination/MyPagination';
+import Date from "@/app/_components/writer/datarange/Date";
 import ContentForm from "@/app/_components/writer/ContentForm";
 import Link from 'next/link';
 import {useSearchParams} from "next/navigation";

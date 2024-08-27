@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import Image from "next/image";
 import {api} from "@/trpc/react";
 import {timeToDateFullTimeString} from "@/tools/timeToString";
-import DatePickerComponent from "@/app/_components/datarange/DatePickerComponent";
+import DatePickerComponent from "@/app/_components/writer/datarange/DatePickerComponent";
 import {Dayjs} from "dayjs";
 
 interface UserSubscriptionsProps {

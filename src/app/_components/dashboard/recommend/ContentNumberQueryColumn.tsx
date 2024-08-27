@@ -1,29 +1,29 @@
 import Image from "next/image";
 import {api} from "@/trpc/react";
 import React, {useState, useEffect} from "react";
-import ColumnCard from "@/app/_components/find/ColumnCard";
+import ColumnCard from "@/app/_components/dashboard/find/ColumnCard";
 import Loading from "@/app/_components/common/Loading";
 import {Button} from "antd";
 
-const SubscriptionQueryColumn = () => {
+const ContentNumberQueryColumn = () => {
     const [data, setData] = useState(null);
     const [sortOrder, setSortOrder] = useState<boolean>(true); // 默认为 true，表示倒序排序
+
     // 使用 useQuery 钩子获取数据
-    const {data: queryData, isFetching} = api.column.getColumnOrderNumbers.useQuery();
+    const {
+        data: queryData, isFetching
+    } = api.column.getContentNumber.useQuery();
 
     // 在数据加载完成时更新状态
     useEffect(() => {
-        if (queryData) {
-            // 根据 sortOrder 设置 data 的值
+        if (queryData) {// 根据 sortOrder 设置 data 的值
             const sortedData = sortOrder ? [...queryData].reverse() : queryData;
             setData(sortedData);
         }
     }, [queryData, sortOrder]);
-
     const toggleSortOrder = () => {
         setSortOrder(!sortOrder);
     };
-
     return (
         <div>
             <Button type={'link'} size={'small'} className="flex pl-3.5" onClick={toggleSortOrder}>
@@ -53,4 +53,4 @@ const SubscriptionQueryColumn = () => {
     );
 };
 
-export default SubscriptionQueryColumn;
+export default ContentNumberQueryColumn;

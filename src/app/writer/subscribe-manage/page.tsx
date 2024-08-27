@@ -2,7 +2,7 @@
 import React, {Suspense, useState} from 'react';
 import {useSearchParams} from 'next/navigation';
 import UserSubscriptions from '@/app/_components/writer/UserSubscriptions';
-import MyPagination from '@/app/_components/pagination/MyPagination';
+import MyPagination from '@/app/_components/writer/pagination/MyPagination';
 
 const Page = () => {
     const params = useSearchParams();

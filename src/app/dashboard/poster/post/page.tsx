@@ -1,5 +1,5 @@
 import React from "react";
-import Article from "@/app/_components/poster/Article";
+import Article from "@/app/_components/dashboard/poster/Article";
 
 const Page = () => {
     return (

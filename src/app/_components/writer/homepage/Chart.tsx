@@ -3,7 +3,7 @@ import {ConfigProvider, DatePicker} from "antd";
 import locale from "antd/locale/zh_CN";
 import React, {useState} from "react";
 import dayjs, {Dayjs} from "dayjs";
-import Echarts from "@/app/_components/homepage/Echarts";
+import Echarts from "@/app/_components/writer/homepage/Echarts";
 
 const Chart = () => {
     const [daterange, setdaterange] = useState<[string, string]>(['', '']);
