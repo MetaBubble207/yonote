@@ -91,7 +91,6 @@ const Page = () => {
                 userId: userInfo?.id,
             });
 
-        if (isUserInfoLoading || isColumnInfoLoading) return <Loading/>
 
         const buttonInfos = [
             {id: 1, label: '专栏'},
@@ -122,7 +121,7 @@ const Page = () => {
                         <Image
                             placeholder="blur"
                             blurDataURL={DefaultLoadingPicture()}
-                            src={item?.logo ?? '/images/user/cover.svg'}
+                            src={item?.logo ?? DefaultLoadingPicture()}
                             alt='cover'
                             quality={100}
                             fill
@@ -152,7 +151,8 @@ const Page = () => {
                 </div>
             )
         }
-
+        if (isUserInfoLoading || isColumnInfoLoading) return <Loading/>
+        if (!token || !userInfo) return <></>;
         return (
             <>
                 <div className="w-full pb-2 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4">
