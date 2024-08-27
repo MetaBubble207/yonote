@@ -18,7 +18,7 @@ const SpecialColumnHeader = () => {
     if (isLoading) return <div className={"bg-white"}><Loading/></div>
     const {column, user} = data;
     const toShare = () => {
-        router.push(`/poster/specialCol?id=${column.id}`)
+        router.push(`/dashboard/poster/column?id=${column.id}`)
     };
     const toUserDetail = () => {
         router.push(`/dashboard/user/detail?id=${user.id}`)

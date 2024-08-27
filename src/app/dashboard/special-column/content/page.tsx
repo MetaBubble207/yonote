@@ -6,7 +6,6 @@ import {useEffect, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import {timeToDateString} from "@/tools/timeToString";
-import Loading from "../_components/common/Loading";
 
 const Page = () => {
     const router = useRouter();
@@ -184,17 +183,17 @@ const Page = () => {
     }
     // 目录跳转
     const link = () => {
-        router.push(`/special-column?c=1&id=${columnId}`);
+        router.push(`/dashboard/special-column?c=1&id=${columnId}`);
     }
     const preLink = () => {
-        router.push(`/special-column-content?c=${chapter - 1}&id=${columnId}`);
+        router.push(`/dashboard/special-column/content?c=${chapter - 1}&id=${columnId}`);
     }
     const nextLink = () => {
-        router.push(`/special-column-content?c=${chapter + 1}&id=${columnId}`);
+        router.push(`/dashboard/special-column/content?c=${chapter + 1}&id=${columnId}`);
     }
 
     const shareLink = () => {
-        router.push(`/poster/article?c=${chapter}&id=${columnId}`)
+        router.push(`/dashboard/poster/post?c=${chapter}&id=${columnId}`)
     }
 
 

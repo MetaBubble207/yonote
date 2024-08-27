@@ -10,7 +10,7 @@ const SubscribeColumn = (prop) => {
     const column = prop.column;
     const {data: userInfo} = api.users.getOne.useQuery({id: column.userId});
     return (
-        <Link href={`../special-column?id=${column.id}`}>
+        <Link href={`/dashboard/special-column?id=${column.id}`}>
             <div className="h-29.25 mt-4 flex">
                 <div className="relative h-18">
                     <div className="relative w-11.25 h-11.25 mt-4">

@@ -67,7 +67,7 @@ const SpecialColumn = () => {
 
     //生成分享二维码
     const originURL = window?.location?.origin;
-    const qrcodeURL = originURL + `/special-column?id=${columnId}&code=${token} `
+    const qrcodeURL = originURL + `/dashboard/special-column?id=${columnId}&code=${token} `
 
     const png = useRef(null);
     // 处理截图按钮点击事件

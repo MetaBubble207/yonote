@@ -21,7 +21,7 @@ const SpecialColumnCard = (props) => {
         postId: item.id,
     }).data
     const link = () => {
-        router.push(`/special-column-content?c=${item.chapter}&id=${item.columnId}`)
+        router.push(`/dashboard/special-column/content?c=${item.chapter}&id=${item.columnId}`)
     };
     const alertMessage = () => {
         alert("请先购买专栏")

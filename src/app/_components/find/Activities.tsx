@@ -6,6 +6,7 @@ import {getCurrentTime} from "@/tools/getCurrentTime";
 import Link from "next/link";
 import Loading from "../common/Loading";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import {Button} from "antd";
 
 const Activities = () => {
     const [data, setData] = useState(null);
@@ -37,7 +38,7 @@ const Activities = () => {
     return (
         <div>
             {data?.map(item => (
-                <Link href={"/recommend"} key={item.id}>
+                <Link href={"/dashboard/find/recommend"} key={item.id}>
                     <div className="inline mt-4 h-36.25 w-full border-rd-4 bg-[#FFF] flex relative " key={item.id}>
                         <div className="inline mt-2.5 ml-2.5 h-31.25 w-80.75 item-center flex  ">
                             <div className=" flex flex-col">
@@ -76,10 +77,10 @@ const Activities = () => {
                                 className={` absolute top-2.5 left-2.5 w-11.75 h-5.25 border-rd-[0px_25px_25px_0px] bg-[#4EDFE9]`}>
                                 <div className="ml-1.75 mt-1 text-[#FFF] text-2.5 font-500 lh-[120%]">进行中</div>
                             </div>
-                            <button
-                                className={`ml-61 mt-23.5 w-18.25 h-6.25 bg-[#DAF9F1] border-rd-5.25 text-[#1DB48D] font-500 lh-6 text-center text-3 absolute right-4 bottom-4`}>
+                            <Button
+                                className={`ml-61 mt-23.5 p0 border-0 w-18.25 h-6.25 bg-[#DAF9F1] border-rd-5.25 text-[#1DB48D] font-500 lh-6 text-center text-3 absolute right-4 bottom-4`}>
                                 立即查看
-                            </button>
+                            </Button>
 
 
                         </div>

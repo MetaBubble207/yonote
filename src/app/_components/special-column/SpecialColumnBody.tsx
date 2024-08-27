@@ -31,7 +31,7 @@ const SpecialColumnBody = () => {
         const isBack = params.get("isBack");
         if (!token && !userInfo && !isBack) {
             // messageApi.info("请先登录再进行订阅噢😯~");
-            const origin = encodeURIComponent(`/special-column?id=${columnId}&invitationCode=${token}&isBack=true`);
+            const origin = encodeURIComponent(`/dashboard/special-column?id=${columnId}&invitationCode=${token}&isBack=true`);
             router.push(`/login?origin=${origin}`)
         }
     }, []);

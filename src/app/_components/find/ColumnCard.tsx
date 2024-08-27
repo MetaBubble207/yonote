@@ -9,7 +9,7 @@ const ColumnCard = ({columnData}) => {
     const order = api.order.getColumnOrder.useQuery({columnId: columnData?.id});
     const read = api.read.getColumnRead.useQuery({columnId: columnData?.id});
     return (
-        <Link href={`/special-column?id=${columnData.id}`}>
+        <Link href={`/dashboard/special-column?id=${columnData.id}`}>
             <div className="w-85.75 h-32 border-rd-5 bg-[#FFF] pr-4 pl-2.5 ">
                 <div className="flex h-19 pt-2">
                     <div className='relative w-15.5 h-19'>

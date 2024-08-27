@@ -49,7 +49,7 @@ const DisplayDetailed = (props) => {
         return columnInfos.map(item => <ColumnCard {...item} key={item.id}/>)
     }
     const ColumnCard = ({id, logo, name, introduce}: any) => {
-        return <Link href={`/special-column?id=${id}`} className="flex mb-4">
+        return <Link href={`/dashboard/special-column?id=${id}`} className="flex mb-4">
             <div className="relative w-15.5 h-19">
                 <Image
                     placeholder="blur"

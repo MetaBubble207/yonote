@@ -2,7 +2,7 @@
 import Image from "next/image"
 import React, {useState} from "react"
 import {api} from "@/trpc/react";
-import Loading from "../_components/common/Loading";
+import Loading from "../../../_components/common/Loading";
 import useLocalStorage from "@/tools/useStore";
 import {timeToDateTimeString} from "@/tools/timeToString";
 import {message, Modal} from "antd";

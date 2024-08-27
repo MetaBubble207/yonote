@@ -21,7 +21,7 @@ const Page = () => {
         const cardStyles = "flex flex-col items-center w-1/4 mt-2 mb-2";
         const navItems = [
             {
-                href: `user/detail?id=${token}`,
+                href: `/dashboard/user/detail?id=${token}`,
                 iconSrc: '/images/user/HomePage.svg',
                 text: '个人主页'
             },
@@ -36,7 +36,7 @@ const Page = () => {
                 text: '使用说明'
             },
             {
-                href: '../wallet',
+                href: '/dashboard/user/wallet',
                 iconSrc: '/images/user/Income.svg',
                 text: '收入提现'
             },
@@ -116,7 +116,7 @@ const Page = () => {
 
         const Column = () => {
             return columnInfo?.slice(0, columnInfo?.length > 1 ? 2 : 1).map((item, index) => (
-                <Link href={`/special-column?id=${item.id}`} className="flex mb-4" key={item.id}>
+                <Link href={`/dashboard/special-column?id=${item.id}`} className="flex mb-4" key={item.id}>
                     <div className="relative w-15.5 h-19">
                         <Image
                             placeholder="blur"

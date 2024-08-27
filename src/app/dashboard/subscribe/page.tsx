@@ -19,7 +19,7 @@ const Subscribe = () => {
         api.read.getRecentRead.useQuery({userId: token});
 
     const link = () => {
-        router.push(`/special-column-content?c=${recentRead?.chapter}&id=${recentRead?.columnId}`);
+        router.push(`/dashboard/special-column/content?c=${recentRead?.chapter}&id=${recentRead?.columnId}`);
     };
 
     const recentColumn = api.column.getColumnDetail.useQuery({
@@ -85,7 +85,7 @@ const Subscribe = () => {
         <div>
             <div className="w-full min-h-screen px-4 pt-8 pb-15 bg-#F5F7FB">
                 {/*搜索框*/}
-                <Link href={'find/search-result'}><SearchColumn/></Link>
+                <Link href={'/dashboard/find/search-result'}><SearchColumn/></Link>
                 {/*最近观看*/}
                 <div className={'mt-8'}>
                     <RecentlyReadCard/>

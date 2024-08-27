@@ -35,7 +35,7 @@ const SpecialColumnContentBottom = () => {
 
                 <div className={"px-4 pt-2.5 bg-[#FFF] mt-1.5 rounded"}>
                     {/*目录*/}
-                    <Link href={'/special-column'}>
+                    <Link href={'/dashboard/special-column'}>
                     <div className={"flex items-center "}>
                         <div className={"text-[#666] text-2.5 font-not-italic font-400 lh-14px"}>心智与阅读•目录</div>
                         <div className={"ml-5px"}>
@@ -46,7 +46,7 @@ const SpecialColumnContentBottom = () => {
                     {/*上一篇下一篇*/}
                     <div className="flex mt-8px">
 
-                        <div className="flex flex-col" onClick={() => router.push('/special-column/answer')}>
+                        <div className="flex flex-col" onClick={() => router.push('/dashboard/special-column/answer')}>
                             <div className={"flex items-center"} >
                                 <div>
                                     <Image src={"/images/special-column/Double-left (双左).png"} alt={"心智与阅读"} width={14} height={14}/>
@@ -55,7 +55,7 @@ const SpecialColumnContentBottom = () => {
                             </div>
                             <div className={"w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6"}>回忆·后来的我们毕业了</div>
                         </div>
-                        <div className="flex flex-col ml-auto" onClick={() => router.push('/special-column/answer')}>
+                        <div className="flex flex-col ml-auto" onClick={() => router.push('/dashboard/special-column/answer')}>
                             <div className={"flex items-center justify-end"}  >
                                 <div className={"text-[#333] text-3 font-not-italic font-400 lh-6 "}>下一篇</div>
                                 <div>

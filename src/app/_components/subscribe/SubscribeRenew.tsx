@@ -18,7 +18,7 @@ const SubscribeRenew = (prop) => {
     return (
         <div className="w-85.75 h-42.75 border-rd-5 bg-[#FFF] mb-2">
             <div>
-                <Link href={`../special-column?id=${column.id}`}>
+                <Link href={`/dashboard/special-column?id=${column.id}`}>
                     <div className="flex h-27 pl-2.5 pt-2.5">
                         <Image
                             placeholder="blur"
