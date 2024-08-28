@@ -1,10 +1,11 @@
 import "../styles/globals.css";
 
 import {Inter} from "next/font/google";
-
+import React from 'react'
 import {TRPCReactProvider} from "@/trpc/react";
 import {ConfigProvider} from "antd";
 import zhCN from "antd/es/locale/zh_CN";
+import 'dayjs/locale/zh-cn';
 
 const inter = Inter({
     subsets: ["latin"],
@@ -17,14 +18,12 @@ export const metadata = {
     icons: [{rel: "icon", url: "/favicon.ico"}],
 };
 
-export default function RootLayout({
-                                       children,
-                                   }: {
+export default function RootLayout({children}: Readonly<{
     children: React.ReactNode;
-}) {
+}>) {
     return (
-        <html lang="en">
-        <body className={`font-sans ${inter.variable}`}>
+        <html>
+        <body className={inter.className} suppressHydrationWarning={true}>
         <TRPCReactProvider>
             <ConfigProvider
                 theme={{

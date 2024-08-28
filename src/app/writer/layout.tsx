@@ -4,7 +4,7 @@ import Compass from "@/app/_components/writer/Compass";
 import LeftCompass from "@/app/_components/writer/LeftCompass";
 import useLocalStorage from "@/tools/useStore";
 
-const dialogLayout = ({children}: { children: React.ReactNode }) => {
+const Layout = ({children}: { children: React.ReactNode }) => {
     if (typeof window !== 'undefined') {
         const [token] = useLocalStorage("token", null);
         if (!token) {
@@ -14,8 +14,7 @@ const dialogLayout = ({children}: { children: React.ReactNode }) => {
     }
     return (
         <html>
-        {/* <Script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js" /> */}
-        <body>
+        <body suppressHydrationWarning={true}>
         <div className="w-full min-h-screen bg-[#F6F6F6]">
             <Compass></Compass>
             <div className="flex w-100%">
@@ -28,4 +27,4 @@ const dialogLayout = ({children}: { children: React.ReactNode }) => {
     );
 };
 
-export default dialogLayout;
+export default Layout;
