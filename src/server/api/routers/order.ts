@@ -1,6 +1,18 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column, order, post, postRead, priceList, referrals, runningWater, user, wallet} from "@/server/db/schema";
+import {
+    column,
+    Order,
+    order,
+    post,
+    postRead,
+    priceList,
+    referrals,
+    runningWater,
+    user,
+    wallet
+} from "@/server/db/schema";
+import * as schema from "../../db/schema";
 import {and, between, eq, gt, gte, inArray, like, lt, lte, sql} from "drizzle-orm";
 import {addDays} from "date-fns";
 import {
@@ -10,7 +22,30 @@ import {
     getTodayMidnight,
     getYesterdayMidnight
 } from "@/tools/getCurrentTime";
+import {PostgresJsDatabase} from "drizzle-orm/postgres-js";
+// 检查该订阅状态是否需要更新，即过期日期已经截止了，但是状态还是true
+const checkSubscriptionStatus = async (db: PostgresJsDatabase<typeof schema>, id: number): Promise<boolean> => {
+    const o = await db.query.order.findFirst({
+        where: and(
+            eq(order.id, id),
+            eq(order.status, true)
+        )
+    })
 
+    if (!o.endDate) {
+        return false;
+    }
+
+    return o.endDate < getCurrentTime();
+
+};
+
+// 让该订阅过期
+const expireSubscription = (db: PostgresJsDatabase<typeof schema>, id: number) => {
+    return db.update(order).set({
+        status: false
+    }).where(eq(order.id, id))
+}
 export const orderRouter = createTRPCRouter({
     hello: publicProcedure
         .input(z.object({text: z.string()}))
@@ -613,5 +648,41 @@ export const orderRouter = createTRPCRouter({
 
             // 返回每一天的数据
             return dailyData;
+        }),
+
+    // 获取订阅列表
+    getSubscriptionFilter: publicProcedure
+        .input(z.object({
+            columnId: z.string(),
+            userId: z.string().nullable(),
+            status: z.boolean().nullable(),
+            startDate: z.date().nullable(),
+            endDate: z.date().nullable()
+        }))
+        .query(async ({ctx, input}): Promise<Order[]> => {
+            const {db} = ctx;
+
+            // 构建查询条件
+            const whereConditions = [
+                eq(order.columnId, input.columnId),
+                ...(input.userId ? [eq(order.buyerId, input.userId)] : []),
+                ...(input.status ? [eq(order.status, input.status)] : []),
+                ...(input.startDate ? [gt(order.createdAt, input.startDate)] : []),
+                ...(input.endDate ? [lt(order.endDate, input.endDate)] : []),
+            ];
+
+            // 执行查询
+            const orders = await db.query.order.findMany({
+                where: and(...whereConditions),
+            })
+            console.log(orders)
+            const promises = orders.map(async item => {
+                if (await checkSubscriptionStatus(db, item.id)) {
+                    await expireSubscription(db, item.id);
+                    item.status = false;
+                }
+                return item;
+            })
+            return Promise.all(promises);
         }),
 });
