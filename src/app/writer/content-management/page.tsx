@@ -4,9 +4,9 @@ import Date from "@/app/_components/writer/datarange/Date";
 import ContentForm from "@/app/_components/writer/ContentForm";
 import Link from 'next/link';
 import {useRouter, useSearchParams} from "next/navigation";
-import {Button, Table, TableColumnsType, TableProps} from "antd";
+import {Button, Table, type TableColumnsType, type TableProps} from "antd";
 import {api} from "@/trpc/react";
-import {Post} from "@/server/db/schema";
+import {type Post} from "@/server/db/schema";
 import {timeToDateTimeString} from "@/tools/timeToString";
 import './table.css'
 
@@ -109,14 +109,14 @@ const Page = () => {
         {
             title: '更新时间',
             dataIndex: 'updatedAt',
-            sorter: (a, b) => a.updatedAt > a.updatedAt ? 1 : -1,
+            sorter: (a, b) => a.updatedAt > b.updatedAt ? 1 : -1,
             filterSearch: true,
             render: (value) => <span>{timeToDateTimeString(value)}</span>
         },
         {
             title: '发布时间',
             dataIndex: 'createdAt',
-            sorter: (a, b) => a.createdAt > a.createdAt ? 1 : -1,
+            sorter: (a, b) => a.createdAt > b.createdAt ? 1 : -1,
             filterSearch: true,
             render: (value) => <span>{timeToDateTimeString(value)}</span>
         },
