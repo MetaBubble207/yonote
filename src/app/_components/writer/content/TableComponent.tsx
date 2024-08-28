@@ -1,23 +1,50 @@
 import {type Post} from "@/server/db/schema";
 import {Button, Table, type TableColumnsType, type TableProps} from "antd";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {timeToDateTimeString} from "@/tools/timeToString";
 import Link from "next/link";
+import {api} from "@/trpc/react";
 
 const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
+    const [data, setData] = useState<Post[]>([]);
+    useEffect(() => {
+        setData(dataSource || []);
+    }, [dataSource])
     const router = useRouter()
     const handleEdit = (postId) => {
         // 编辑文章逻辑
         router.push(`/edit?postId=${postId}`);
     };
-
-    const handleToggleTop = (index: number) => {
-
+    const updateIsTopApi = api.post.updateIsTop.useMutation();
+    const updateIsFreeApi = api.post.updateIsFree.useMutation();
+    const deleteApi = api.post.deletePost.useMutation();
+    const handleToggleTop = (id: number, isTop: boolean) => {
+        updateIsTopApi.mutate({
+            id: id,
+            isTop: !isTop,
+        })
+        const newData = dataSource.map(item => {
+            if (item.id === id) {
+                item.isTop = !isTop;
+            }
+            return item
+        })
+        setData(newData)
     }
 
-    const handleToggleFree = (index: number) => {
-
+    const handleToggleFree = (id: number, isFree: boolean) => {
+        updateIsFreeApi.mutate({
+            id: id,
+            isFree: !isFree,
+        })
+        const newData = dataSource.map(item => {
+            if (item.id === id) {
+                item.isFree = !isFree;
+            }
+            return item
+        })
+        setData(newData)
     }
 
     const handleClickDelete = (id: number) => {
@@ -127,9 +154,9 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
                     <Link href={`/edit/edit?columnId=${record.columnId}&postId=${record.id}`}
                           onClick={handleEdit}>编辑</Link>
                     <Button type={'link'} className="w-14 text-[#1DB48D]"
-                            onClick={() => handleToggleTop(index)}>{record.isTop ? '取消置顶' : '置顶'}</Button>
+                            onClick={() => handleToggleTop(record.id, record.isTop)}>{record.isTop ? '取消置顶' : '置顶'}</Button>
                     <Button type={'link'} className="w-14 text-[#1DB48D]"
-                            onClick={() => handleToggleFree(index)}>{record.isFree ? '取消免费' : '免费'} </Button>
+                            onClick={() => handleToggleFree(record.id, record.isFree)}>{record.isFree ? '取消免费' : '免费'} </Button>
                     <Button type={'link'} className={'text-[#1DB48D]'}
                             onClick={() => handleClickDelete(record.id)}>删除</Button>
                 </div>
@@ -142,7 +169,7 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
     };
     return (
         <Table columns={columns} onChange={onChange}
-               dataSource={dataSource} pagination={{position: ['bottomCenter']}}
+               dataSource={data} pagination={{position: ['bottomCenter']}}
                rowKey={(record) => record.id}/>
     )
 }

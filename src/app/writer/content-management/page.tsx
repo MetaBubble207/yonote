@@ -8,7 +8,7 @@ import './table.css'
 import TableComponent from "@/app/_components/writer/content/TableComponent";
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
-import {timeToDateTimeString} from "@/tools/timeToString";
+import Loading from "@/app/_components/common/Loading";
 
 const Page = () => {
     const params = useSearchParams();
@@ -20,8 +20,8 @@ const Page = () => {
         startDate: null,
         endDate: null,
     })
-    console.log("searchParams.endDate", queryParams.endDate)
-    const {data: posts, refetch} = api.post.getPostFilter.useQuery({
+
+    const {data: posts, refetch, isLoading} = api.post.getPostFilter.useQuery({
         columnId: columnId,
         title: queryParams.title,
         tag: queryParams.tag,
@@ -29,6 +29,7 @@ const Page = () => {
         endDate: queryParams.endDate,
     }, {enabled: Boolean(columnId)});
 
+    if (isLoading) return <Loading/>
     return (
         <div className={'w-full rounded-2.5 bg-[#FFF] pl-8 pr-9'}>
             <div className={'flex items-center pt-51px'}>
@@ -58,7 +59,6 @@ const Page = () => {
         });
 
         useEffect(() => {
-            console.log("useEffc=>>", queryParams)
             setSearchParams({...queryParams});
         }, []);
 

@@ -14,8 +14,6 @@ const ContentForm = ({ title, tag }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [currentDeleteId, setCurrentDeleteId] = useState(0);
     const queryResult = api.post.getAll.useQuery({
-        limit: 5,
-        offset: 0,
         columnId: columnId,
     });
 
