@@ -2,7 +2,7 @@ import {z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {column, type Post, post, user} from "@/server/db/schema";
-import {and, eq, like} from "drizzle-orm";
+import {and, eq, gt, like, lt} from "drizzle-orm";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 
 export const postRouter = createTRPCRouter({
@@ -75,6 +75,33 @@ export const postRouter = createTRPCRouter({
         .query(({ctx, input}) => {
             return ctx.db.query.post.findMany({
                 where: and(eq(post.columnId, input.columnId), eq(post.status, true)),
+            })
+        }),
+
+    getPostFilter: publicProcedure
+        .input(z.object({
+            columnId: z.string(),
+            title: z.string(),
+            tag: z.string(),
+            startDate: z.date().nullable(),
+            endDate: z.date().nullable()
+        }))
+        .query(async ({ctx, input}) => {
+            const {db} = ctx;
+
+            // 构建查询条件
+            const whereConditions = [
+                eq(post.columnId, input.columnId),
+                eq(post.status, true),
+                ...(input.title ? [like(post.name, `%${input.title}%`)] : []),
+                ...(input.tag ? [like(post.tag, `%${input.tag}%`)] : []),
+                ...(input.startDate ? [gt(post.createdAt, input.startDate)] : []),
+                ...(input.endDate ? [lt(post.createdAt, input.endDate)] : []),
+            ];
+            return db.query.post.findMany({
+                where: and(
+                    ...whereConditions
+                ),
             })
         }),
     getAllPost: publicProcedure
