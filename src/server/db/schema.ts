@@ -321,7 +321,25 @@ export type Post = typeof post.$inferSelect
 
 export type Order = typeof order.$inferSelect
 
+// export type OrderBuyer = {
+//     order: typeof order.$inferSelect,
+//     user: typeof user.$inferSelect
+// }
+
 export type OrderBuyer = {
-    order: typeof order.$inferSelect,
-    user: typeof user.$inferSelect
+    id: number;
+    columnId: string;
+    price: number;
+    buyerId: string;
+    ownerId: string;
+    payment: string;
+    endStatus: boolean;
+    recommendationId: string;
+    referralLevel: number;
+    status: boolean;
+    endDate: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    isVisable: boolean;
+    userName: string;
 }

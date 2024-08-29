@@ -537,14 +537,14 @@ export const orderRouter = createTRPCRouter({
             const orders = await db.query.order.findMany({
                 where: and(...whereConditions),
             })
-            console.log(orders)
+
             const promises = orders.map(async item => {
                 if (await checkSubscriptionStatus(db, item.id)) {
                     await expireSubscription(db, item.id);
                     item.status = false;
                 }
                 const u = await db.query.user.findFirst({where: eq(user.id, item.buyerId)});
-                return {order: item, user: u};
+                return {...item, userName: u.name};
             })
             return Promise.all(promises);
         }),
