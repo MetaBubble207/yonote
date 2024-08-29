@@ -1,8 +1,7 @@
 "use client"
-import {ConfigProvider, DatePicker} from "antd";
-import locale from "antd/locale/zh_CN";
+import {DatePicker} from "antd";
 import React, {useState} from "react";
-import dayjs, {Dayjs} from "dayjs";
+import dayjs from "dayjs";
 import Echarts from "@/app/_components/writer/homepage/Echarts";
 
 const Chart = () => {
@@ -22,7 +21,7 @@ const Chart = () => {
     };
 
     return (
-        <div className="w-full h-117.49775 pt-32px pl-8 pr-7 border-rd-[10px_10px_0px_0px] bg-[#FFF]">
+        <div className="w-full h-118.5 pt-32px pl-8 pr-7 rounded-2.5 bg-[#FFF]">
             <div className={"w-full flex items-center justify-between"}>
                 <span className="text-[#323232] text-4 font-700 lh-6">数据分析图表</span>
                 <div className=" text-3.5 flex items-center space-x-40px">

@@ -1,5 +1,5 @@
 'use client';
-import React, {Suspense, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSearchParams} from 'next/navigation';
 import TableComponent from "@/app/_components/writer/column-manage/TableComponent";
 import {api} from "@/trpc/react";
@@ -17,7 +17,7 @@ const Page = () => {
         startDate: null,
         endDate: null,
     })
-    const {data, isLoading, refetch} = api.order.getSubscriptionFilter.useQuery({
+    const {data, isLoading} = api.order.getSubscriptionFilter.useQuery({
         columnId,
         userId: queryParams.userId,
         status: queryParams.status,
@@ -81,7 +81,7 @@ const Page = () => {
         }
 
         return (
-            <div className={'flex mt-7.5 text-3.5 font-400'}>
+            <div className={'w-full h-full rounded-2.5 flex text-3.5 font-400'}>
                 <div>
                     <label className='lh-5.5'>用户ID：</label>
                     <Input

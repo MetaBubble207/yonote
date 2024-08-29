@@ -30,7 +30,7 @@ const Page = () => {
 
     if (isLoading) return <Loading/>
     return (
-        <div className={'w-full rounded-2.5 bg-[#FFF] pl-8 pr-9'}>
+        <div className={'w-full h-full rounded-2.5 bg-[#FFF] pl-8 pr-9'}>
             <div className={'flex items-center pt-51px'}>
                 <div className="text-[#323232] text-4 font-not-italic font-700 lh-6">内容管理</div>
                 {/*发布*/}
@@ -88,7 +88,7 @@ const Page = () => {
             }));
         }
 
-        const disabledDate = (currentDate, info) => {
+        const disabledDate = (currentDate) => {
             return currentDate.isAfter(dayjs(), 'day');
         };
 

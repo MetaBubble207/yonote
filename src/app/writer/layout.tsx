@@ -19,7 +19,7 @@ const Layout = ({children}: { children: React.ReactNode }) => {
             <Compass></Compass>
             <div className="flex w-100%">
                 <LeftCompass></LeftCompass>
-                <div className="w-full pl-69.12 pt-21.5 pb-10 pr-8">{children}</div>
+                <div className="w-full h-230 pl-69.12 pt-21.5 pb-4 pr-8">{children}</div>
             </div>
         </div>
         </body>
