@@ -6,9 +6,8 @@ import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
-import Loading from "@/app/_components/common/Loading";
 import SearchColumn from "@/app/_components/common/SearchColumn";
-import {Button} from "antd";
+import {Button, Skeleton} from "antd";
 import SubscribeMain from "@/app/_components/dashboard/subscribe/SubscribeMain";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
@@ -45,6 +44,14 @@ const Subscribe = () => {
     }, [recentRead]);
 
     const RecentlyReadCard = () => {
+        if (isLoading) {
+            return <Skeleton
+                active
+                paragraph={{rows: 2}}
+                title={false}
+                className="h-20.5 w-full rounded-2.5 p-2.5 bg-[#FFF]"
+            />
+        }
         return <div className="h-20.5 w-full rounded-2.5 bg-[#FFF] flex relative p-2.5">
             <div className="relative w-11.375 h-15.5">
                 <Image
@@ -79,7 +86,6 @@ const Subscribe = () => {
             </Button>
         </div>
     }
-    if (isLoading) return <Loading/>
 
     return (
         <div>

@@ -4,9 +4,8 @@ import React, {useState, useEffect} from "react";
 import {api} from "@/trpc/react";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 import Link from "next/link";
-import Loading from "../../common/Loading";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
-import {Button} from "antd";
+import {Button, Skeleton} from "antd";
 
 const Activities = () => {
     const [data, setData] = useState(null);
@@ -29,11 +28,26 @@ const Activities = () => {
         }
     }, [queryData]);
 
-    if (loading) {
-        return (
-            <Loading/>
-        )
-    }
+    if (loading) return <>
+        <Skeleton
+            active
+            paragraph={{rows: 5}}
+            title={false}
+            className="mt-4 h-36.25 w-full border-rd-4 bg-[#FFF] p5"
+        />
+        <Skeleton
+            active
+            paragraph={{rows: 5}}
+            title={false}
+            className="mt-4 h-36.25 w-full border-rd-4 bg-[#FFF] p5"
+        />
+        <Skeleton
+            active
+            paragraph={{rows: 5}}
+            title={false}
+            className="mt-4 h-36.25 w-full border-rd-4 bg-[#FFF] p5"
+        />
+    </>
 
     return (
         <div>

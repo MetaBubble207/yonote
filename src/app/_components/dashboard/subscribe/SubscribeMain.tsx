@@ -5,7 +5,7 @@ import SubscribeManage from './SubscribeManage';
 import React, {useState} from "react"
 import {api} from "@/trpc/react";
 import useLocalStorage from '@/tools/useStore';
-import {Button} from "antd";
+import {Button, Skeleton} from "antd";
 import NoData from "@/app/_components/common/NoData";
 import Loading from "@/app/_components/common/Loading";
 
@@ -18,7 +18,26 @@ const SubscribeMain = () => {
             data: updateColumnData,
             isLoading: isUpdateColumnLoading
         } = api.column.getUpdateColumn.useQuery({userId: token});
-        if (isUpdateColumnLoading) return <Loading/>
+        if (isUpdateColumnLoading) return <>
+            <Skeleton
+                active
+                paragraph={{rows: 5}}
+                title={false}
+                className="w-85.75 h-42.75 border-rd-5 bg-[#FFF] mb-2 p4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 5}}
+                title={false}
+                className="w-85.75 h-42.75 border-rd-5 bg-[#FFF] mb-2 p4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 5}}
+                title={false}
+                className="w-85.75 h-42.75 border-rd-5 bg-[#FFF] mb-2 p4"
+            />
+        </>
         if (!updateColumnData || updateColumnData.length < 1) return <NoData title={'你订阅的所有专栏都暂未更新噢😁~'}/>
         return <div>
             {updateColumnData.map((column: any) => (

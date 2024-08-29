@@ -127,7 +127,7 @@ const Page = () => {
                         ]}
                         format={dateFormat}
                         onChange={onDateChange}
-                        disabledDate={(currentDate, info) => disabledDate(currentDate, info)}
+                        disabledDate={(currentDate) => disabledDate(currentDate)}
                     />
                 </div>
                 <Button

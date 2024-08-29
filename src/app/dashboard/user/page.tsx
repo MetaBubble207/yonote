@@ -6,8 +6,7 @@ import UserTop from "@/app/_components/dashboard/user/UserTop";
 import useLocalStorage from "@/tools/useStore";
 import React, {useState} from "react";
 import {api} from "@/trpc/react";
-import Loading from "@/app/_components/common/Loading";
-import {Button} from "antd";
+import {Button, Skeleton} from "antd";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const Page = () => {
@@ -16,7 +15,25 @@ const Page = () => {
     };
     const [token] = useLocalStorage('token', null);
 
-    const Service = () => {
+    return (
+        <div>
+            {/* 背景颜色*/}
+            <div className="w-full min-h-screen pb-15 px-4
+                bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3">
+                {/* 顶部 */}
+                <UserTop/>
+                {/* 专栏、小课区域 */}
+                <Display/>
+                {/*  我的服务模块*/}
+                <Service/>
+            </div>
+            <div className="bottom-4 justify-center w-full fixed">
+                <Navbar/>
+            </div>
+        </div>
+    );
+
+    function Service() {
         const linkStyles = "flex flex-col items-center";
         const cardStyles = "flex flex-col items-center w-1/4 mt-2 mb-2";
         const navItems = [
@@ -66,7 +83,7 @@ const Page = () => {
                     </li>
                 ))}
                 <li className={cardStyles}>
-                    <Link href="../login" className={linkStyles}>
+                    <Link href="/login" className={linkStyles}>
                         <Image src={"/images/user/SignOut.svg"} alt={"退出登录"} width={24} height={24}/>
                         <div
                             className={"w-11.5 text-[#252525] text-2.75 font-400 lh-6"}
@@ -80,29 +97,29 @@ const Page = () => {
         </div>
     }
 
-    const Display = () => {
-        const [currentPage, setCurrentPage] = useState<number>(1)
+    // 示例函数，默认导出
+    function Display() {
+        const [currentPage, setCurrentPage] = useState<number>(1);
         const {data: userInfo, isLoading: isUserInfoLoading} =
             api.users.getOne.useQuery({id: token});
 
-        // 检测当前用户ID是否有专栏，如果没有，display组件就不渲染
         const {data: columnInfo, isLoading: isColumnInfoLoading} =
             api.column.getAllByUserId.useQuery({
                 userId: userInfo?.id,
             });
 
-
         const buttonInfos = [
             {id: 1, label: '专栏'},
             {id: 2, label: '小课'}
-        ]
+        ];
 
         const renderButtons = () => {
             return buttonInfos.map((button, index) => (
                 <div key={index}>
                     <Button
-                        type={'link'} size={'small'}
-                        className={` text-3.5 p0 font-500 lh-6 mr-8 ${currentPage === button.id ? "text-#252525" : "text-#B5B5B5"} `}
+                        type={'link'}
+                        size={'small'}
+                        className={`text-3.5 p0 font-500 lh-6 mr-8 ${currentPage === button.id ? "text-#252525" : "text-#B5B5B5"}`}
                         onClick={() => setCurrentPage(button.id)}
                     >
                         {button.label}
@@ -111,11 +128,11 @@ const Page = () => {
                         className={`ml-2.25 mt-1 w-2.75 h-1 rounded-2  ${currentPage === button.id ? 'bg-#45E1B8' : 'bg-#FFF'}`}
                     ></div>
                 </div>
-            ))
-        }
+            ));
+        };
 
         const Column = () => {
-            return columnInfo?.slice(0, columnInfo?.length > 1 ? 2 : 1).map((item, index) => (
+            return columnInfo?.slice(0, columnInfo?.length > 1 ? 2 : 1).map((item) => (
                 <Link href={`/dashboard/special-column?id=${item.id}`} className="flex mb-4" key={item.id}>
                     <div className="relative w-15.5 h-19">
                         <Image
@@ -140,19 +157,31 @@ const Page = () => {
                         </div>
                     </div>
                 </Link>
-            ))
-        }
+            ));
+        };
 
-        // 小课
         const Course = () => {
             return (
                 <div className={'flex justify-center items-center'}>
                     <div className="text-center text-[#B5B5B5] mt-4 h-10">暂无数据哦~</div>
                 </div>
-            )
-        }
-        if (isUserInfoLoading || isColumnInfoLoading) return <Loading/>
+            );
+        };
+
+        // 显示加载中的骨架屏
+        // if (isUserInfoLoading || isColumnInfoLoading) {
+        //     return (
+        //         <Skeleton
+        //             active
+        //             paragraph={{rows: 4}}
+        //             title={false}
+        //             className="w-full pb-2 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4"
+        //         />
+        //     );
+        // }
+
         if (!token || !userInfo) return <></>;
+
         return (
             <>
                 <div className="w-full pb-2 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4">
@@ -160,33 +189,24 @@ const Page = () => {
                     <div className="flex">
                         {renderButtons()}
                     </div>
-                    {/*内容区域*/}
+                    {/* 内容区域 */}
                     <div className='mt-3'>
-                        {currentPage === 1 ? <Column/> : <Course/>}
+                        {isUserInfoLoading || isColumnInfoLoading
+                            ?
+                            <Skeleton
+                                active
+                                paragraph={{rows: 4}}
+                                title={false}
+                                className="w-full pb-2 border-rd-2.5 bg-#FFF pl-4 pt-4 mt-4"
+                            />
+                            :
+                            currentPage === 1 ? <Column/> : <Course/>}
                     </div>
                 </div>
             </>
-        )
+        );
     }
 
-    return (
-        <div>
-            {/* 背景颜色*/}
-            <div className="w-full min-h-screen pb-15 px-4
-                bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3">
-                {/* 顶部 */}
-                <UserTop/>
-                {/* 专栏、小课区域 */}
-                <Display/>
-                {/*  我的服务模块*/}
-                <Service/>
-            </div>
-            <div className="bottom-4 justify-center w-full fixed">
-                <Navbar/>
-            </div>
-        </div>
-    )
-        ;
 };
 
 export default Page;
