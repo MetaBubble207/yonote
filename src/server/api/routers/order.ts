@@ -29,8 +29,8 @@ const checkSubscriptionStatus = async (db: PostgresJsDatabase<typeof schema>, id
             eq(order.status, true)
         )
     })
-
-    if (!o.endDate) {
+    console.log(o)
+    if (!o?.endDate) {
         return false;
     }
 
@@ -528,15 +528,14 @@ export const orderRouter = createTRPCRouter({
             const whereConditions = [
                 eq(order.columnId, input.columnId),
                 ...(input.userId ? [eq(order.buyerId, input.userId)] : []),
-                ...(input.status ? [eq(order.status, input.status)] : []),
+                ...(input.status !== null ? [eq(order.status, input.status)] : []),
                 ...(input.startDate ? [gt(order.createdAt, input.startDate)] : []),
                 ...(input.endDate ? [lt(order.endDate, input.endDate)] : []),
             ];
-
             // 执行查询
             const orders = await db.select().from(order).where(and(...whereConditions)).orderBy(order.createdAt);
-
-            const promises = orders.map(async item => {
+            console.log(input.status)
+            const promises = orders?.map(async item => {
                 if (await checkSubscriptionStatus(db, item.id)) {
                     await expireSubscription(db, item.id);
                     item.status = false;
@@ -546,4 +545,10 @@ export const orderRouter = createTRPCRouter({
             })
             return Promise.all(promises);
         }),
+
+    endSubscription: publicProcedure
+        .input(z.object({id: z.number()}))
+        .mutation(({ctx, input}) => {
+            return expireSubscription(ctx.db, input.id)
+        })
 });

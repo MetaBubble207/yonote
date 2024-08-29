@@ -4,7 +4,6 @@ import Link from 'next/link';
 import {useSearchParams} from "next/navigation";
 import {Button, DatePicker, Input} from "antd";
 import {api} from "@/trpc/react";
-import './table.css'
 import TableComponent from "@/app/_components/writer/content/TableComponent";
 import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';

@@ -2,15 +2,27 @@ import {type OrderBuyer} from "@/server/db/schema";
 import {Button, Table, type TableColumnsType, type TableProps} from "antd";
 import React, {useEffect, useState} from "react";
 import {timeToDateTimeString} from "@/tools/timeToString";
+import {api} from "@/trpc/react";
 
 const TableComponent = ({dataSource}: { dataSource: OrderBuyer[] }) => {
+
+    const endSubscriptionApi = api.order.endSubscription.useMutation();
     const [data, setData] = useState<OrderBuyer[]>([]);
     useEffect(() => {
         setData(dataSource || []);
     }, [dataSource])
-    const endSubscription = (id) => {
 
+    const endSubscription = (id:number) => {
+        endSubscriptionApi.mutate({id:id})
+        const newData = dataSource.map(item => {
+            if (item.id === id) {
+                item.status = false;
+            }
+            return item
+        })
+        setData(newData)
     }
+
     const columns: TableColumnsType<OrderBuyer> = [
         {
             title: <span className={'pl-2'}>序号</span>,
@@ -33,7 +45,7 @@ const TableComponent = ({dataSource}: { dataSource: OrderBuyer[] }) => {
         {
             title: '订阅状态',
             dataIndex: 'status',
-            render: (value) => <span className={'text-14 font-400'}>{value
+            render: (value) => <span className={'text-3.5 font-400'}>{value
                 ? <span className={'flex items-center'}>
                     <span className={'w-1.5 h-1.5 rounded-full bg-#1DB48D'}></span>
                     <span className={'ml-2'}>订阅中</span>
@@ -62,17 +74,19 @@ const TableComponent = ({dataSource}: { dataSource: OrderBuyer[] }) => {
         {
             title: '操作',
             render: (_, record) => (
-                <div className={'text-3.5 font-400 lh-5.5 text-[#1DB48D] space-x-2'}>
-                    <Button type={'link'} className="w-14 text-[#1DB48D]"
+                <div className={'text-3.5 font-400'}>
+                    <Button type={'link'} className="text-[#1DB48D] p0"
                             onClick={() => endSubscription(record.id)}>结束订阅</Button>
                 </div>
             ),
             width: '8%',
         },
     ];
+
     const onChange: TableProps<OrderBuyer>['onChange'] = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
+
     return (
         <Table columns={columns} onChange={onChange}
                dataSource={data} pagination={{position: ['bottomCenter']}}
