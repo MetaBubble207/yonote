@@ -112,7 +112,7 @@ const UserTop = () => {
                     width={16}
                     height={16}
                 />
-                <Link href={"/dashboard/user/message"} prefetch={false}>编辑资料</Link>
+                <Link href="/dashboard/user/message" prefetch={false}>编辑资料</Link>
             </Button>
         </div>
     )

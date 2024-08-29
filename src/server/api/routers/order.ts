@@ -1,7 +1,17 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {column, order, post, postRead, priceList, referrals, runningWater, user, wallet} from "@/server/db/schema";
-import {and, between, eq, gt, gte, inArray, like, lt, lte, sql} from "drizzle-orm";
+import {
+    column,
+    Order,
+    order,
+    priceList,
+    referrals,
+    runningWater,
+    user,
+    wallet
+} from "@/server/db/schema";
+import * as schema from "../../db/schema";
+import {and, between, eq, gt, inArray, like, lt, sql} from "drizzle-orm";
 import {addDays} from "date-fns";
 import {
     getCurrentTime,
@@ -10,134 +20,31 @@ import {
     getTodayMidnight,
     getYesterdayMidnight
 } from "@/tools/getCurrentTime";
+import {PostgresJsDatabase} from "drizzle-orm/postgres-js";
+// 检查该订阅状态是否需要更新，即过期日期已经截止了，但是状态还是true
+const checkSubscriptionStatus = async (db: PostgresJsDatabase<typeof schema>, id: number): Promise<boolean> => {
+    const o = await db.query.order.findFirst({
+        where: and(
+            eq(order.id, id),
+            eq(order.status, true)
+        )
+    })
 
+    if (!o.endDate) {
+        return false;
+    }
+
+    return o.endDate < getCurrentTime();
+
+};
+
+// 让该订阅过期
+const expireSubscription = (db: PostgresJsDatabase<typeof schema>, id: number) => {
+    return db.update(order).set({
+        status: false
+    }).where(eq(order.id, id))
+}
 export const orderRouter = createTRPCRouter({
-    hello: publicProcedure
-        .input(z.object({text: z.string()}))
-        .query(({input}) => {
-            return {
-                greeting: `Hello ${input.text}`,
-            };
-        }),
-
-    // 获取订单信息
-    getOrderById: publicProcedure
-        .input(z.object({id: z.number()}))
-        .query(async ({ctx, input}) => {
-            const orderData = await ctx.db.query.order.findFirst({
-                where: eq(order.id, input.id),
-            });
-            if (!orderData) {
-                throw new Error("Order not found");
-            }
-            return orderData;
-        }),
-
-    // 获取所有订单
-    getOrder: publicProcedure
-        .input(z.object({limit: z.number().optional(), offset: z.number().optional()}))
-        .query(async ({ctx, input}) => {
-            return await ctx.db.query.order.findMany({
-                limit: input.limit,
-                offset: input.offset,
-            });
-        }),
-    // 通过用户ID跟ColumnID查询订单
-    getOrderByUCId: publicProcedure
-        .input(z.object({
-            buyerId: z.string(),
-            columnId: z.string(),
-            status: z.boolean().optional(),
-            startPick: z.string().optional(),
-            endPick: z.string().optional()
-        }))
-        .query(async ({ctx, input}) => {
-                return await ctx.db.query.order.findMany(
-                    {where: and(eq(order.buyerId, input.buyerId), eq(order.columnId, input.columnId))}
-                )
-            }
-        ),
-
-    // 测试用例
-    getOrderByUCIdTest: publicProcedure
-        .input(z.object({
-            buyerId: z.string(),
-            columnId: z.string(),
-            status: z.boolean().optional(),
-            startPick: z.string().optional(),
-            endPick: z.string().optional()
-        }))
-        .query(async ({ctx, input}) => {
-                // 初始化where条件数组
-                const conditions = [
-                    eq(order.buyerId, input.buyerId),
-                    eq(order.columnId, input.columnId)
-                ];
-
-                // 根据可选参数动态添加条件
-                if (input.status !== undefined) {
-                    conditions.push(eq(order.status, input.status));
-                }
-
-                if (input.startPick) {
-                    conditions.push(gte(order.createdAt, new Date(input.startPick)));
-                }
-
-                if (input.endPick) {
-                    conditions.push(lte(order.createdAt, new Date(input.endPick)));
-                }
-
-                return await ctx.db.query.order.findMany(
-                    {where: and(eq(order.buyerId, input.buyerId), eq(order.columnId, input.columnId))}
-                )
-            }
-        ),
-
-
-    // 通过ColumnID查询订单表中的用户
-    getOrderByColumnId: publicProcedure.input(z.object({columnId: z.string()}))
-        .query(async ({ctx, input}) => {
-            // 查询订单表中的匹配记录
-            const orders = await ctx.db.query.order.findMany({
-                where: eq(order.columnId, input.columnId)
-            });
-
-            const buyerIds = orders.map(order => order.buyerId);
-
-
-            // 查询用户信息
-            const users = await ctx.db.select({
-                id: user.id,
-                avatar: user.avatar,
-                name: user.name,
-                idNumber: user.idNumber
-            }).from(user).where(inArray(user.id, buyerIds));
-
-            // 创建用户字典
-            const userMap = users.reduce((acc, usr) => {
-                acc[usr.id] = usr;
-                return acc;
-            }, {});
-
-            // 查询订阅信息
-            const subscriptions = await ctx.db.select({
-                buyerId: order.buyerId,
-                status: order.status,
-                createdAt: order.createdAt,
-                endDate: order.endDate
-            }).from(order).where(and(
-                inArray(order.buyerId, buyerIds),
-                eq(order.columnId, input.columnId)
-            ));
-
-            // 合并用户信息和订阅信息
-            return subscriptions.map(subscription => ({
-                ...subscription,
-                user: userMap[subscription.buyerId]
-            }));
-        }),
-
-
     // Test
     getOrderByColumnIdTest: publicProcedure.input(z.object({
         columnId: z.string(),
@@ -226,7 +133,6 @@ export const orderRouter = createTRPCRouter({
 
             return {data: combinedResults, total: totalOrdersCount};
         }),
-
 
     // 创建订单
     createOrder: publicProcedure
@@ -437,8 +343,8 @@ export const orderRouter = createTRPCRouter({
         .input(z.object({
             columnId: z.string(),
         }))
-        .query(async ({ctx, input}) => {
-            return await ctx.db.query.order.findMany({
+        .query(({ctx, input}) => {
+            return ctx.db.query.order.findMany({
                 where: eq(order.columnId, input.columnId),
             });
         }),
@@ -471,7 +377,6 @@ export const orderRouter = createTRPCRouter({
 
             return result[0]; // 确保只返回更新后的单个对象
         }),
-
 
     // 查看用户是否购买专栏
     getUserStatus: publicProcedure
@@ -510,14 +415,6 @@ export const orderRouter = createTRPCRouter({
             return ctx.db.update(order).set({
                 isVisable: input.isVisable,
             }).where(eq(order.columnId, input.columnId));
-        }),
-
-    getUserOrderDefault: publicProcedure
-        .input(z.object({
-            userId: z.string(),
-        }))
-        .query(async ({ctx, input}) => {
-            return ctx.db.select().from(order).where(eq(order.buyerId, input.userId));
         }),
 
     getSubscriptionVolume: publicProcedure
@@ -613,5 +510,41 @@ export const orderRouter = createTRPCRouter({
 
             // 返回每一天的数据
             return dailyData;
+        }),
+
+    // 获取订阅列表
+    getSubscriptionFilter: publicProcedure
+        .input(z.object({
+            columnId: z.string(),
+            userId: z.string().nullable(),
+            status: z.boolean().nullable(),
+            startDate: z.date().nullable(),
+            endDate: z.date().nullable()
+        }))
+        .query(async ({ctx, input}): Promise<Order[]> => {
+            const {db} = ctx;
+
+            // 构建查询条件
+            const whereConditions = [
+                eq(order.columnId, input.columnId),
+                ...(input.userId ? [eq(order.buyerId, input.userId)] : []),
+                ...(input.status ? [eq(order.status, input.status)] : []),
+                ...(input.startDate ? [gt(order.createdAt, input.startDate)] : []),
+                ...(input.endDate ? [lt(order.endDate, input.endDate)] : []),
+            ];
+
+            // 执行查询
+            const orders = await db.query.order.findMany({
+                where: and(...whereConditions),
+            })
+            console.log(orders)
+            const promises = orders.map(async item => {
+                if (await checkSubscriptionStatus(db, item.id)) {
+                    await expireSubscription(db, item.id);
+                    item.status = false;
+                }
+                return item;
+            })
+            return Promise.all(promises);
         }),
 });

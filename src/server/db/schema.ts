@@ -318,3 +318,5 @@ export type ColumnOrder = {
 }
 
 export type Post = typeof post.$inferSelect
+
+export type Order = typeof order.$inferSelect

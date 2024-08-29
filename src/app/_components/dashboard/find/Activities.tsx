@@ -38,7 +38,7 @@ const Activities = () => {
     return (
         <div>
             {data?.map(item => (
-                <Link href={"/dashboard/find/recommend"} key={item.id}>
+                <Link href="/dashboard/find/recommend" key={item.id}>
                     <div className="inline mt-4 h-36.25 w-full border-rd-4 bg-[#FFF] flex relative " key={item.id}>
                         <div className="inline mt-2.5 ml-2.5 h-31.25 w-80.75 item-center flex  ">
                             <div className=" flex flex-col">

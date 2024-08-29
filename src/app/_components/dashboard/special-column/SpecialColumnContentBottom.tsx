@@ -35,7 +35,7 @@ const SpecialColumnContentBottom = () => {
 
                 <div className={"px-4 pt-2.5 bg-[#FFF] mt-1.5 rounded"}>
                     {/*目录*/}
-                    <Link href={'/dashboard/special-column'}>
+                    <Link href='/dashboard/special-column'>
                     <div className={"flex items-center "}>
                         <div className={"text-[#666] text-2.5 font-not-italic font-400 lh-14px"}>心智与阅读•目录</div>
                         <div className={"ml-5px"}>
