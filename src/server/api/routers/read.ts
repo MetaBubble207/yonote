@@ -244,7 +244,6 @@ export const readRouter = createTRPCRouter({
 
             })
             await Promise.all(readPromises);
-            console.log(yesterdayReadCount,todayReadCount)
             if (yesterdayReadCount === 0) {
                 return todayReadCount * 100
             } else if (todayReadCount === 0) {
@@ -255,23 +254,34 @@ export const readRouter = createTRPCRouter({
             }
         }),
 
-    getReadRange: publicProcedure
-        .input(z.object({columnId: z.string(), start: z.date(), end: z.date()}))
-        .query(async ({ctx, input}): Promise<number[]> => {
+    getHomePageDataRange: publicProcedure
+        .input(z.object({columnId: z.string(), start: z.date().nullable(), end: z.date().nullable()}))
+        .query(async ({ctx, input}): Promise<{
+            readCount: number[],
+            subscriptionCount: number[],
+            speedUpCount: number[]
+        }> => {
+            if (input.start === null || input.end === null) return null;
+            const {db} = ctx;
             // 用于存储每天数据的数组
-            let dailyData: number[] = [];
+            const readsData: number[] = [];
+            const subscriptionsData: number[] = [];
+            const speedUpData: number[] = [];
 
             // 克隆开始日期，以便我们可以在循环中修改它
-            let currentDate = new Date(input.start);
+            let currentDate = new Date(input.start.getTime() + 8 * 60 * 60 * 1000);
+            const endDate = new Date((input.end.getTime() + 31 * 59 * 59 * 1000));
             // 查询所有专栏下所有的帖子
             const posts =
-                await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
+                await db.select().from(post).where(eq(post.columnId, input.columnId));
             // 循环遍历从开始日期到结束日期的每一天
-            while (currentDate <= input.end) {
+            while (new Date(currentDate.setUTCHours(0, 0, 0, 0)) <= endDate) {
+
+                // 查询阅读量
                 let readCount: number = 0;
                 const readPromises = posts.map(async item => {
                     const todayReads =
-                        await ctx.db.select().from(postRead).where(
+                        await db.select().from(postRead).where(
                             and(
                                 eq(postRead.postId, item.id),
                                 and(gt(postRead.createdAt, new Date(currentDate.setUTCHours(0, 0, 0, 0))),
@@ -280,17 +290,34 @@ export const readRouter = createTRPCRouter({
                             )
                         );
                     readCount += todayReads.length;
-
                 })
                 await Promise.all(readPromises);
                 // 将当前日期的订单数量添加到数组中
-                dailyData.push(readCount);
+                readsData.push(readCount);
+
+                // 查询订阅量
+                const subscriptionCount: number = (await db.select().from(order)
+                    .where(and(
+                        eq(order.columnId, input.columnId),
+                        and(gt(order.createdAt, new Date(currentDate.setUTCHours(0, 0, 0, 0))),
+                            lt(order.createdAt, new Date(currentDate.setUTCHours(23, 59, 59, 999)))
+                        )
+                    ))).length;
+                subscriptionsData.push(subscriptionCount);
+
+                // 查询加速计划
+                const speedUpCount = 0;
+                speedUpData.push(speedUpCount);
 
                 // 将当前日期增加一天
-                currentDate.setDate(currentDate.getDate() + 1);
+                currentDate.setDate((currentDate.getDate() + 1));
             }
 
             // 返回每一天的数据
-            return dailyData;
+            return {
+                readCount: readsData,
+                subscriptionCount: subscriptionsData,
+                speedUpCount: speedUpData,
+            };
         }),
 });

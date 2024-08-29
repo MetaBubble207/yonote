@@ -321,11 +321,6 @@ export type Post = typeof post.$inferSelect
 
 export type Order = typeof order.$inferSelect
 
-// export type OrderBuyer = {
-//     order: typeof order.$inferSelect,
-//     user: typeof user.$inferSelect
-// }
-
 export type OrderBuyer = {
     id: number;
     columnId: string;
