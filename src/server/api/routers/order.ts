@@ -534,9 +534,7 @@ export const orderRouter = createTRPCRouter({
             ];
 
             // 执行查询
-            const orders = await db.query.order.findMany({
-                where: and(...whereConditions),
-            })
+            const orders = await db.select().from(order).where(and(...whereConditions)).orderBy(order.createdAt);
 
             const promises = orders.map(async item => {
                 if (await checkSubscriptionStatus(db, item.id)) {
