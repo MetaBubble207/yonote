@@ -3,14 +3,14 @@ import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {
     column,
     Order,
-    order,
+    order, type OrderBuyer,
     priceList,
     referrals,
     runningWater,
     user,
     wallet
 } from "@/server/db/schema";
-import * as schema from "../../db/schema";
+import type * as schema from "../../db/schema";
 import {and, between, eq, gt, inArray, like, lt, sql} from "drizzle-orm";
 import {addDays} from "date-fns";
 import {
@@ -20,7 +20,7 @@ import {
     getTodayMidnight,
     getYesterdayMidnight
 } from "@/tools/getCurrentTime";
-import {PostgresJsDatabase} from "drizzle-orm/postgres-js";
+import {type PostgresJsDatabase} from "drizzle-orm/postgres-js";
 // 检查该订阅状态是否需要更新，即过期日期已经截止了，但是状态还是true
 const checkSubscriptionStatus = async (db: PostgresJsDatabase<typeof schema>, id: number): Promise<boolean> => {
     const o = await db.query.order.findFirst({
@@ -521,7 +521,7 @@ export const orderRouter = createTRPCRouter({
             startDate: z.date().nullable(),
             endDate: z.date().nullable()
         }))
-        .query(async ({ctx, input}): Promise<Order[]> => {
+        .query(async ({ctx, input}): Promise<OrderBuyer[]> => {
             const {db} = ctx;
 
             // 构建查询条件
@@ -543,7 +543,8 @@ export const orderRouter = createTRPCRouter({
                     await expireSubscription(db, item.id);
                     item.status = false;
                 }
-                return item;
+                const u = await db.query.user.findFirst({where: eq(user.id, item.buyerId)});
+                return {order: item, user: u};
             })
             return Promise.all(promises);
         }),

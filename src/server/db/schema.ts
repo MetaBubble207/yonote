@@ -309,8 +309,8 @@ export type User = typeof user.$inferInsert
 export type RunningWater = typeof runningWater.$inferSelect
 export type Column = typeof column.$inferSelect
 export type ColumnUser = {
-        column: typeof column.$inferSelect,
-        user: typeof user.$inferSelect
+    column: typeof column.$inferSelect,
+    user: typeof user.$inferSelect
 }
 export type ColumnOrder = {
     column: typeof column.$inferSelect,
@@ -320,3 +320,8 @@ export type ColumnOrder = {
 export type Post = typeof post.$inferSelect
 
 export type Order = typeof order.$inferSelect
+
+export type OrderBuyer = {
+    order: typeof order.$inferSelect,
+    user: typeof user.$inferSelect
+}
