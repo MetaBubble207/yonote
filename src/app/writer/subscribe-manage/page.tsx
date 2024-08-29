@@ -1,46 +1,36 @@
 'use client';
 import React, {Suspense, useState} from 'react';
 import {useSearchParams} from 'next/navigation';
-import UserSubscriptions from '@/app/_components/writer/UserSubscriptions';
-import MyPagination from '@/app/_components/writer/pagination/MyPagination';
+import TableComponent from "@/app/_components/writer/column-manage/TableComponent";
+import {api} from "@/trpc/react";
+import Loading from "@/app/_components/common/Loading";
 
 const Page = () => {
     const params = useSearchParams();
     const columnId = params.get("columnId");
+    const [queryParams, setQueryParams] = useState({
+        userId: null,
+        status: null,
+        startDate: null,
+        endDate: null,
+    })
+    const {data, isLoading} = api.order.getSubscriptionFilter.useQuery({
+        columnId,
+        userId: queryParams.userId,
+        status: queryParams.status,
+        startDate: queryParams.startDate,
+        endDate: queryParams.endDate,
+    });
 
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const [pageSize, setPageSize] = useState<number>(5); // 设置初始 pageSize 为 1
-    const [total, setTotal] = useState<number>(0);
-
-    const handlePageChange = (page: number, pageSize?: number) => {
-        setCurrentPage(page);
-        if (pageSize) setPageSize(pageSize);
-    };
-
+    if (isLoading) return <Loading/>;
     return (
-        <Suspense>
-            <div className='w-full h-full'>
-                <div
-                    className='w-97% min-h-150 relative ml-4.465 mt-4.02 pt-8 pl-8 shrink-0 rounded-tl-lg rounded-tr-lg bg-[#FFF]'>
-                    <h3 className='text-[#323232] text-4 font-700 lh-6'>订阅管理</h3>
-                    <UserSubscriptions
-                        columnId={columnId}
-                        currentPage={currentPage}
-                        pageSize={pageSize}
-                        setTotal={setTotal}
-                    />
-                    <div className="absolute bottom-10 left-60 flex justify-center items-center">
-                        <MyPagination
-                            total={total}
-                            pageSize={pageSize}
-                            current={currentPage}
-                            onChange={handlePageChange}
-                        />
-                    </div>
-                </div>
-            </div>
-        </Suspense>
-    );
+        <div className='w-full h-full bg-#fff p8'>
+            <h3 className='text-[#323232] font-700'>订阅管理</h3>
+            {/*// @ts-ignore*/}
+            <TableComponent dataSource={data}/>
+        </div>
+    )
+        ;
 };
 
 export default Page;
