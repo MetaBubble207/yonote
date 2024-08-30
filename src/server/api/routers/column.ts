@@ -14,6 +14,7 @@ import {
 } from "@/server/db/schema";
 import {and, desc, eq, like, sql} from "drizzle-orm";
 import {uniqueArray} from "@/tools/uniqueArray";
+import {createCaller} from "@/server/api/root";
 
 export const columnRouter = createTRPCRouter({
     update: publicProcedure
@@ -67,7 +68,7 @@ export const columnRouter = createTRPCRouter({
         .input(z.object({id: z.string(), cover: z.string()}))
         .mutation(({ctx, input}) => {
             return ctx.db.update(column).set({
-                logo: input.cover,
+                cover: input.cover,
             }).where(eq(column.id, input.id))
         }),
 
@@ -198,40 +199,44 @@ export const columnRouter = createTRPCRouter({
     getUpdateColumn: publicProcedure
         .input(z.object({userId: z.string()}))
         .query(async ({ctx, input}) => {
+            const caller = createCaller(ctx);
+            const {db} = ctx;
             // 获取所有订阅记录
             const orders =
-                await ctx.db.select().from(order)
-                    .where(and(eq(order.buyerId, input.userId), eq(order.isVisable, true)));
+                await db.select().from(order)
+                    .where(and(eq(order.buyerId, input.userId), eq(order.isVisible, true)));
             // 获取所有订阅的专栏
             const subscribeColumns: Column[] = [];
             const ordersPromises = orders.map(async (order) => {
-                subscribeColumns.push(await ctx.db.query.column.findFirst({where: eq(column.id, order.columnId)}));
+                subscribeColumns.push(await db.query.column.findFirst({where: eq(column.id, order.columnId)}));
             });
             await Promise.all(ordersPromises);
             // 获取所有观看记录
-            const readRecords = await ctx.db.select().from(postRead).where(eq(postRead.userId, input.userId));
+            const readRecords = await db.select().from(postRead).where(eq(postRead.userId, input.userId));
             const ownerPosts = readRecords.map(item => item.postId);
             const res: Column[] = [];
             // 遍历作者下的每一个专栏的帖子
             const subscribeColumnsPromises = subscribeColumns.map(async (column) => {
-                const writerPosts = await ctx.db.select().from(post).where(eq(post.columnId, column.id));
+                const writerPosts = await db.select().from(post).where(eq(post.columnId, column.id));
                 const flag = writerPosts.every(item => ownerPosts.includes(item.id))
                 if (!flag) {
                     res.push(column);
                 }
             })
             await Promise.all(subscribeColumnsPromises);
+
+            caller.users.getOne()
             return res;
         }),
 
     // 获取用户所有可见订阅专栏列表
-    getVisableColumn: publicProcedure
+    getVisibleColumn: publicProcedure
         .input(z.object({userId: z.string()}))
         .query(async ({ctx, input}) => {
             // 获取所有订阅记录
             const orders =
                 await ctx.db.select().from(order)
-                    .where(and(eq(order.buyerId, input.userId), eq(order.isVisable, true)));
+                    .where(and(eq(order.buyerId, input.userId), eq(order.isVisible, true)));
             // 获取所有订阅的专栏
             const subscribeColumnsTemp: any[] = [];
             const ordersPromises = orders.map(async (order) => {

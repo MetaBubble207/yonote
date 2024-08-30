@@ -27,7 +27,7 @@ const Page = () => {
     const [priceList, setPriceList] = useState(priceListData);
 
     const [intro, setIntro] = useState(columnData?.introduce);
-    const [cover, setCover] = useState(columnData?.logo);
+    const [cover, setCover] = useState(columnData?.cover);
     const [description, setDescription] = useState(columnData?.description);
     const [checkColor, setCheckColor] = useState("#1DB48D");
     const [showConfirmSubmitModal, setShowConfirmSubmitModal] = useState(false);
@@ -40,7 +40,7 @@ const Page = () => {
         setPriceList(priceListData);
     }, [priceListData])
     useEffect(() => {
-        setCover(columnData?.logo);
+        setCover(columnData?.cover);
     }, [columnData]);
     const updateApi = api.column.update.useMutation({});
     const fileInputRef = useRef(null);
@@ -73,10 +73,10 @@ const Page = () => {
         console.log(priceList, priceListData);
         updateApi.mutate({
             id: columnId,
-            name: name ?? columnData!.name ?? "",
+            name: name ?? columnData.name ?? "",
             priceList: priceList,
-            introduce: intro ?? columnData!.introduce ?? "",
-            description: description ?? columnData!.description ?? ""
+            introduce: intro ?? columnData.introduce ?? "",
+            description: description ?? columnData.description ?? ""
         });
         setIsEditing(false);
         setShowConfirmSubmitModal(false);

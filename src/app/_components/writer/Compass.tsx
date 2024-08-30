@@ -34,7 +34,7 @@ const Compass = () => {
                 {/*左半边导航区*/}
                 <div className="flex items-center w-107.55675 h-11.75 shrink-0 ml-7.1975 mt-2.875">
                     <div className="inline-flex w-20 h-9.48025 items-center" onClick={linkHomepage}>
-                        <Image src={"/images/logo.svg"} alt={"logo"} width={30.3} height={30.42}
+                        <Image src={"/images/cover.svg"} alt={"cover"} width={30.3} height={30.42}
                                className="w-7.57425 h-8.35625 shrink-0"></Image>
                         <div className="ml-2">
                             <div className=" shrink-0 font-size-4">

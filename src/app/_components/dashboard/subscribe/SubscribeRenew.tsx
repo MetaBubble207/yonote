@@ -23,10 +23,10 @@ const SubscribeRenew = (prop) => {
                     <div className="flex h-27 pl-2.5 pt-2.5">
                         <Image
                             placeholder="blur"
-                            blurDataURL={column?.logo ?? "/images/user/Loading.svg"}
+                            blurDataURL={column?.cover ?? "/images/user/Loading.svg"}
                             unoptimized
                             style={{objectFit: "cover"}}
-                            src={column?.logo ?? "/images/user/Loading.svg"}
+                            src={column?.cover ?? "/images/user/Loading.svg"}
                             alt="cover"
                             width={81}
                             height={108}

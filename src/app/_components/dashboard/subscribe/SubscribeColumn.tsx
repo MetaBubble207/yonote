@@ -66,7 +66,7 @@ const SubscribeColumn = (prop) => {
                             <Image
                                 placeholder="blur"
                                 blurDataURL={DefaultLoadingPicture()}
-                                src={column.logo ?? DefaultLoadingPicture()}
+                                src={column.cover ?? DefaultLoadingPicture()}
                                 alt="cover"
                                 fill
                                 loading='lazy'

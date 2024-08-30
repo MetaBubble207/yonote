@@ -266,9 +266,9 @@ const Page = () => {
 
                 {/*内容*/}
                 <div>
-                    {postData?.logo && (
+                    {postData?.cover && (
                         <Image
-                            src={postData?.logo}
+                            src={postData?.cover}
                             alt={"心智与阅读"}
                             width={343}
                             height={161}

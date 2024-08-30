@@ -57,7 +57,7 @@ const Subscribe = () => {
                 <Image
                     placeholder="blur"
                     blurDataURL={DefaultLoadingPicture()}
-                    src={recentColumn?.logo ?? DefaultLoadingPicture()}
+                    src={recentColumn?.cover ?? DefaultLoadingPicture()}
                     alt='cover'
                     quality={100}
                     fill

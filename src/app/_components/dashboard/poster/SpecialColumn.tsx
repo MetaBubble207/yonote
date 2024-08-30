@@ -148,7 +148,7 @@ const SpecialColumn = () => {
                         <Image
                             placeholder="blur"
                             blurDataURL={DefaultLoadingPicture()}
-                            src={column?.logo ?? DefaultLoadingPicture()}
+                            src={column?.cover ?? DefaultLoadingPicture()}
                             alt='cover'
                             quality={100}
                             fill

@@ -5,7 +5,7 @@ import {useRouter, useSearchParams} from 'next/navigation';
 interface Column {
     id: string;
     name: string;
-    logo: string;
+    cover: string;
     createdAt: string;
 }
 
@@ -65,8 +65,8 @@ const ColumnPopup: React.FC<CarouselProps> = ({columns, onImageClick}) => {
                             <div className='w-160px h-206px relative'>
                                 <Image
                                     placeholder="blur"
-                                    blurDataURL={columns[index]?.logo ?? "/images/user/Loading.svg"}
-                                    src={columns[index]?.logo}
+                                    blurDataURL={columns[index]?.cover ?? "/images/user/Loading.svg"}
+                                    src={columns[index]?.cover}
                                     alt={`cover${index + 1}`}
                                     // width={160}
                                     // height={51.5}

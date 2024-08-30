@@ -25,23 +25,23 @@ const ManagementColumn = forwardRef(
         useEffect(()=>{
             setColumnsState(columns);
         },[columns])
-        const changeVisable = api.order.changeStatus.useMutation();
+        const changeVisible = api.order.changeStatus.useMutation();
 
         const handleSave = () => {
             columnsState.forEach(item => {
-                changeVisable.mutate({
+                changeVisible.mutate({
                     columnId: item.column.id,
-                    isVisable: item.order.isVisable,
+                    isVisible: item.order.isVisible,
                     userId: token,
                 });
             });
             message.success('保存成功');
         };
 
-        const handleChange = (index: number, visable: boolean) => {
+        const handleChange = (index: number, visible: boolean) => {
             const newColumns = columnsState.map((item, i) => {
                 if (index === i) {
-                    item.order.isVisable = visable
+                    item.order.isVisible = visible
                 }
                 return item;
             })
@@ -56,12 +56,12 @@ const ManagementColumn = forwardRef(
                             value={index}
                             className={'flex flex-row'}
                             key={column.id}
-                            checked={order.isVisable}
+                            checked={order.isVisible}
                             onChange={e => handleChange(index, e.target.checked)}
                             disabled={!checkState}
                         >
                             <div className={"flex"}>
-                                <Image src={column.logo} width={100} height={100}
+                                <Image src={column.cover} width={100} height={100}
                                        alt={"cover"}
                                        className="w-11.375 h-15.478 rounded inline-block"></Image>
                                 <span className="ml-3 mt-3 flex flex-col">

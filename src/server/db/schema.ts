@@ -49,7 +49,7 @@ export const post = createTable(
         isTop: boolean("is_top").default(false),
         isFree: boolean("is_free").default(false),
         status: boolean("status"),
-        logo: text("logo"),
+        cover: text("logo"),
         chapter: integer("chapter"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
@@ -90,7 +90,7 @@ export const column = createTable(
         distributorship: boolean("distributorship").notNull().default(false),
         introduce: varchar("introduce"),
         type: varchar("type"),
-        logo: text("logo").default("http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png"),
+        cover: text("logo").default("http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png"),
         description: varchar("description"),
         payment: varchar("payment"),
         userId: varchar("user_id"),
@@ -135,7 +135,7 @@ export const order = createTable(
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
         updatedAt: timestamp("updated_at"),
-        isVisable: boolean("is_visable"),
+        isVisible: boolean("is_visable"),
     }
 );
 
@@ -335,6 +335,13 @@ export type OrderBuyer = {
     endDate: Date;
     createdAt: Date;
     updatedAt: Date;
-    isVisable: boolean;
+    isVisible: boolean;
     userName: string;
+}
+
+export type columnCard = {
+    id: string;
+    name: string;
+    cover: string;
+
 }

@@ -79,7 +79,7 @@ const UserTop = () => {
                     />
                 </div>
                 <div className="flex items-center">
-                    <div className="logo flex w-3.5 h-3.5 items-center">
+                    <div className="cover flex w-3.5 h-3.5 items-center">
                         <Image
                             src="/images/user/I_logo.svg"
                             alt="group"

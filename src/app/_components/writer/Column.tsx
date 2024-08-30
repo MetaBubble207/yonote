@@ -10,7 +10,7 @@ import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 interface ColumnData {
     id: string;
     name: string;
-    logo: string;
+    cover: string;
     createdAt: string; // Assuming API returns createdAt
 }
 
@@ -20,7 +20,7 @@ const Column = () => {
     let currentColumn = api.column.getColumnDetail.useQuery(
         {columnId: columnId}
     ).data;
-    const [currentImage, setCurrentImage] = useState<string>(currentColumn?.logo);
+    const [currentImage, setCurrentImage] = useState<string>(currentColumn?.cover);
     const [columnName, setColumnName] = useState<string>(currentColumn?.name);
     const [showColumnPopup, setShowColumnPopup] = useState(false);
 
@@ -39,14 +39,14 @@ const Column = () => {
                 .map(column => ({
                     id: column.id,
                     name: column.name,
-                    logo: column.logo,
+                    cover: column.cover,
                     createdAt: column.createdAt
                 }))
                 .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
             setColumns(filteredAndSortedColumns);
             if (filteredAndSortedColumns.length > 0) {
-                setCurrentImage(filteredAndSortedColumns[0].logo);
+                setCurrentImage(filteredAndSortedColumns[0].cover);
                 setColumnName(filteredAndSortedColumns[0].name);
             }
         }
@@ -54,7 +54,7 @@ const Column = () => {
 
     const handleImageClick = (index: number, column: ColumnData) => {
         console.log(`Clicked on column: ${column.name}`);
-        currentColumn.logo = column?.logo;
+        currentColumn.cover = column?.cover;
         currentColumn.name = column?.name;
         setShowColumnPopup(false);
     };
@@ -67,7 +67,7 @@ const Column = () => {
                     <Image
                         placeholder="blur"
                         blurDataURL={DefaultLoadingPicture()}
-                        src={currentColumn?.logo ?? DefaultLoadingPicture()}
+                        src={currentColumn?.cover ?? DefaultLoadingPicture()}
                         alt={"cover"}
                         fill
                         loading='lazy'

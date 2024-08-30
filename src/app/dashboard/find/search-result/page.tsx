@@ -69,7 +69,7 @@ const Page = () => {
                                             <Image
                                                 placeholder="blur"
                                                 blurDataURL={DefaultLoadingPicture()}
-                                                src={item.logo ?? DefaultLoadingPicture()}
+                                                src={item.cover ?? DefaultLoadingPicture()}
                                                 alt='cover'
                                                 quality={100}
                                                 fill

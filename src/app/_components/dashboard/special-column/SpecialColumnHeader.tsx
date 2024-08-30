@@ -30,7 +30,7 @@ const SpecialColumnHeader = () => {
                 <Image
                     placeholder="blur"
                     blurDataURL={DefaultLoadingPicture()}
-                    src={column.logo ?? DefaultLoadingPicture()}
+                    src={column.cover ?? DefaultLoadingPicture()}
                     alt={"bg"}
                     width={375}
                     height={74.5}
@@ -56,7 +56,7 @@ const SpecialColumnHeader = () => {
                 </div>
                 <div className={"flex items-start mt-6px w-full pl-5"}>
                     <Image
-                        src={column?.logo ? column?.logo : "/images/recommend/cover.svg"}
+                        src={column?.cover ? column?.cover : "/images/recommend/cover.svg"}
                         width={111}
                         height={156}
                         alt="img"

@@ -405,7 +405,7 @@ export const orderRouter = createTRPCRouter({
         }),
 
     changeStatus: publicProcedure
-        .input(z.object({columnId: z.string(), isVisable: z.boolean(), userId: z.string()}))
+        .input(z.object({columnId: z.string(), isVisible: z.boolean(), userId: z.string()}))
         .mutation(async ({ctx, input}) => {
             const orders = await ctx.db.select().from(order).where(and(eq(order.columnId, input.columnId), eq(order.buyerId, input.userId)));
             if (orders.length === 0) {
@@ -413,7 +413,7 @@ export const orderRouter = createTRPCRouter({
             }
 
             return ctx.db.update(order).set({
-                isVisable: input.isVisable,
+                isVisible: input.isVisible,
             }).where(eq(order.columnId, input.columnId));
         }),
 
@@ -500,10 +500,8 @@ export const orderRouter = createTRPCRouter({
                         )
                     )
                 );
-
                 // 将当前日期的订单数量添加到数组中
                 dailyData.push(ordersForCurrentDate.length);
-
                 // 将当前日期增加一天
                 currentDate.setDate(currentDate.getDate() + 1);
             }

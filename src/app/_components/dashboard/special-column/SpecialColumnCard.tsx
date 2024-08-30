@@ -44,7 +44,7 @@ const SpecialColumnCard = (props) => {
                     <Image
                         placeholder="blur"
                         blurDataURL={DefaultLoadingPicture()}
-                        src={item?.logo ?? DefaultLoadingPicture()}
+                        src={item?.cover ?? DefaultLoadingPicture()}
                         alt="小专栏图片"
                         quality={100}
                         fill

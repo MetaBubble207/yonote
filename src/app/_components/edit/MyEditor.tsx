@@ -294,8 +294,8 @@ const MyEditor = () => {
 //     //   return new Promise((resolve) => {
 //     //     // 插入一张图片，模拟异步
 //     //     setTimeout(() => {
-//     //       const src = `https://www.baidu.com/img/flexible/logo/pc/result@2.png?r=${Math.random()}`
-//     //       insertFn(src, '百度 logo', src)
+//     //       const src = `https://www.baidu.com/img/flexible/cover/pc/result@2.png?r=${Math.random()}`
+//     //       insertFn(src, '百度 cover', src)
 //     //       resolve('ok')
 //     //     }, 500)
 //     //   })
@@ -307,8 +307,8 @@ const MyEditor = () => {
 //
 //     //   // 插入一张图片，模拟异步
 //     //   setTimeout(() => {
-//     //     const src = 'https://www.baidu.com/img/flexible/logo/pc/result@2.png'
-//     //     insertFn(src, '百度 logo', src) // 插入图片
+//     //     const src = 'https://www.baidu.com/img/flexible/cover/pc/result@2.png'
+//     //     insertFn(src, '百度 cover', src) // 插入图片
 //     //   }, 500)
 //     // },
 //   }

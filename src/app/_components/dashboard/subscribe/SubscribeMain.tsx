@@ -88,14 +88,14 @@ const SubscribeMain = () => {
 
     function Column() {
         const {
-            data: visableColumnData,
+            data: visibleColumnData,
             isLoading: isViableColumnLoading
-        } = api.column.getVisableColumn.useQuery({userId: token});
+        } = api.column.getVisibleColumn.useQuery({userId: token});
         if (isViableColumnLoading) return <Loading/>
-        if (!visableColumnData || visableColumnData.length < 1) return <NoData title={'还没有订阅过专栏噢😯~'}/>
+        if (!visibleColumnData || visibleColumnData.length < 1) return <NoData title={'还没有订阅过专栏噢😯~'}/>
         return (
             <div>
-                {visableColumnData.map((column: any) => (
+                {visibleColumnData.map((column: any) => (
                     <SubscribeColumn key={column.id} column={column}/>
                 ))}
             </div>
