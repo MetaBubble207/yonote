@@ -56,7 +56,7 @@ export const readRouter = createTRPCRouter({
     // 获取专栏阅读量
     getColumnRead: publicProcedure
         .input(z.object({columnId: z.string()}))
-        .query(async ({ctx, input}) => {
+        .query(async ({ctx, input}):Promise<number> => {
             const readList = await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
             if (readList?.length === 0) {
                 return 0;
@@ -65,7 +65,7 @@ export const readRouter = createTRPCRouter({
                 for (const item of readList) {
                     const postId = item.id;
                     const data = await ctx.db.select().from(postRead).where(eq(postRead.postId, postId));
-                    // const data = await ctx.db.query.postRead.findFirst({ where: eq(postRead.postId, postId) })                        
+                    // const data = await ctx.db.query.postRead.findFirst({ where: eq(postRead.postId, postId) })
                     data.map((item) => {
                         res += item.readCount;
                     })
@@ -106,7 +106,7 @@ export const readRouter = createTRPCRouter({
             const posts =
                 await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
 
-            let readCount: number = 0;
+            let readCount = 0;
             const readPromises = posts.map(async item => {
                 const reads =
                     await ctx.db.select().from(postRead).where(
@@ -130,7 +130,7 @@ export const readRouter = createTRPCRouter({
             const posts =
                 await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
 
-            let readCount: number = 0;
+            let readCount = 0;
             const readPromises = posts.map(async item => {
                 const reads =
                     await ctx.db.select().from(postRead).where(
@@ -154,7 +154,7 @@ export const readRouter = createTRPCRouter({
             const posts =
                 await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
 
-            let readCount: number = 0;
+            let readCount = 0;
             const readPromises = posts.map(async item => {
                 const reads =
                     await ctx.db.select().from(postRead).where(
@@ -222,8 +222,8 @@ export const readRouter = createTRPCRouter({
             const posts =
                 await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
 
-            let yesterdayReadCount: number = 0;
-            let todayReadCount: number = 0;
+            let yesterdayReadCount = 0;
+            let todayReadCount = 0;
             const readPromises = posts.map(async item => {
                 const yesterdayReads =
                     await ctx.db.select().from(postRead).where(
@@ -278,7 +278,7 @@ export const readRouter = createTRPCRouter({
             while (new Date(currentDate.setUTCHours(0, 0, 0, 0)) <= endDate) {
 
                 // 查询阅读量
-                let readCount: number = 0;
+                let readCount = 0;
                 const readPromises = posts.map(async item => {
                     const todayReads =
                         await db.select().from(postRead).where(

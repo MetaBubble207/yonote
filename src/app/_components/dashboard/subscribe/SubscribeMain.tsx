@@ -55,7 +55,7 @@ const SubscribeMain = () => {
             data: updateColumnData,
             isLoading: isUpdateColumnLoading
         } = api.column.getUpdateColumn.useQuery({userId: token});
-
+        console.log(updateColumnData);
         if (isUpdateColumnLoading) return <>
             <Skeleton
                 active

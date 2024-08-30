@@ -339,9 +339,20 @@ export type OrderBuyer = {
     userName: string;
 }
 
-export type columnCard = {
+export type BaseColumnCard = {
     id: string;
     name: string;
+    introduce?: string;
     cover: string;
+    userId: string;
+    userName: string;
+    avatar: string;
+    createdAt: Date;
+}
 
+export type DetailColumnCard = BaseColumnCard & {
+    readCount: number;
+    likeCount: number;
+    isTop: boolean;
+    isFree: boolean;
 }

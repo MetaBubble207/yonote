@@ -5,7 +5,7 @@ import {
     type Column,
     column,
     type ColumnOrder,
-    type ColumnUser,
+    type ColumnUser, type DetailColumnCard,
     order,
     post,
     postRead,
@@ -198,34 +198,33 @@ export const columnRouter = createTRPCRouter({
     // 获取用户更新了帖子还未读的专栏列表
     getUpdateColumn: publicProcedure
         .input(z.object({userId: z.string()}))
-        .query(async ({ctx, input}) => {
+        .query(async ({ctx, input}): Promise<DetailColumnCard[]> => {
             const caller = createCaller(ctx);
             const {db} = ctx;
-            // 获取所有订阅记录
+            // 获取该用户所有订阅记录
             const orders =
                 await db.select().from(order)
                     .where(and(eq(order.buyerId, input.userId), eq(order.isVisible, true)));
-            // 获取所有订阅的专栏
-            const subscribeColumns: Column[] = [];
             const ordersPromises = orders.map(async (order) => {
-                subscribeColumns.push(await db.query.column.findFirst({where: eq(column.id, order.columnId)}));
-            });
-            await Promise.all(ordersPromises);
-            // 获取所有观看记录
-            const readRecords = await db.select().from(postRead).where(eq(postRead.userId, input.userId));
-            const ownerPosts = readRecords.map(item => item.postId);
-            const res: Column[] = [];
-            // 遍历作者下的每一个专栏的帖子
-            const subscribeColumnsPromises = subscribeColumns.map(async (column) => {
-                const writerPosts = await db.select().from(post).where(eq(post.columnId, column.id));
-                const flag = writerPosts.every(item => ownerPosts.includes(item.id))
-                if (!flag) {
-                    res.push(column);
+                // 获取所有订阅的专栏
+                const columnData = await db.query.column.findFirst({where: eq(column.id, order.columnId)});
+                // 获取专栏下的所有帖子的阅读量
+                const readCount = await caller.read.getColumnRead({columnId: columnData.id})
+                // 获取专栏下的所有帖子的点赞量
+                const likeCount = await caller.like.getColumnLike({columnId: columnData.id});
+                // 获取用户基本信息
+                const userData = await caller.users.getOne({id: columnData.userId});
+                return {
+                    ...columnData,
+                    readCount,
+                    likeCount,
+                    userId: userData.id,
+                    userName: userData.name,
+                    avatar: userData.avatar,
                 }
-            })
-            await Promise.all(subscribeColumnsPromises);
-
-            caller.users.getOne()
+            });
+            const res: DetailColumnCard[] = [];
+            Object.assign(res, await Promise.all(ordersPromises))
             return res;
         }),
 
