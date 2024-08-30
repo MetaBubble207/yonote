@@ -26,16 +26,12 @@ const ManagementColumn = forwardRef(
             setColumnsState(columns);
         }, [columns])
 
-        const changeVisible = api.order.changeStatus.useMutation();
+        const changeVisible = api.order.changeStatusBatch.useMutation();
 
         const handleSave = () => {
-            columnsState.forEach(item => {
-                changeVisible.mutate({
-                    columnId: item.column.id,
-                    isVisible: item.order.isVisible,
-                    userId: token,
-                });
-            });
+            console.log("columnsState ===>", columnsState)
+            const req = columnsState.map(item => ({orderId: item.order.id, isVisible: item.order.isVisible}));
+            changeVisible.mutate({orders: req});
             message.success('保存成功');
         };
 

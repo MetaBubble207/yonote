@@ -417,6 +417,17 @@ export const orderRouter = createTRPCRouter({
             }).where(eq(order.columnId, input.columnId));
         }),
 
+    changeStatusBatch: publicProcedure
+        .input(z.object({orders: z.array(z.object({orderId: z.number(), isVisible: z.boolean()}))}))
+        .mutation(async ({ctx, input}) => {
+            const {db} = ctx;
+            input.orders.map(async item => {
+                await db.update(order).set({
+                    isVisible: item.isVisible,
+                }).where(eq(order.id, item.orderId))
+            })
+        }),
+
     getSubscriptionVolume: publicProcedure
         .input(z.object({columnId: z.string()}))
         .query(async ({ctx, input}): Promise<number[]> => {

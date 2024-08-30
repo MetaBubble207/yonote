@@ -49,12 +49,23 @@ const SubscribeMain = () => {
         </div>
     }
 
+    function List() {
+        switch (currentPage) {
+            case 1:
+                return <Update/>;
+            case 2:
+                return <Column/>;
+            case 3:
+                return <Course/>;
+        }
+    }
+
     function Update() {
         const {
             data: updateColumnData,
             isLoading: isUpdateColumnLoading
         } = api.column.getUpdateColumn.useQuery({userId: token});
-        console.log(updateColumnData);
+
         if (isUpdateColumnLoading) return <>
             <Skeleton
                 active
@@ -130,16 +141,6 @@ const SubscribeMain = () => {
         return <NoData title={'还没有购买过小课噢😯~'}/>
     }
 
-    function List() {
-        switch (currentPage) {
-            case 1:
-                return <Update/>;
-            case 2:
-                return <Column/>;
-            case 3:
-                return <Course/>;
-        }
-    }
 };
 
 export default SubscribeMain;
