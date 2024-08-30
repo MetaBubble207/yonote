@@ -3,12 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import {timeToDateString} from "@/tools/timeToString";
 import React from "react";
-import {api} from "@/trpc/react";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import {type BaseColumnCard} from "@/server/db/schema";
 
-const SubscribeColumn = (prop) => {
-    const column = prop.column;
-    const {data: userInfo} = api.users.getOne.useQuery({id: column.userId});
+const SubscribeColumn = ({column}: { column: BaseColumnCard }) => {
     return (
         <Link href={`/dashboard/special-column?id=${column.id}`}>
             <div className="h-29.25 mt-4 flex">
@@ -17,12 +15,12 @@ const SubscribeColumn = (prop) => {
                         <Image
                             placeholder="blur"
                             blurDataURL={DefaultLoadingPicture()}
-                            src={userInfo?.avatar ?? DefaultLoadingPicture()}
-                            alt='cover'
+                            src={column.avatar ?? DefaultLoadingPicture()}
+                            alt='avatar'
                             quality={100}
                             fill
                             loading='lazy'
-                            className='rounded-full object-cover '
+                            className='rounded-full object-cover'
                         />
                     </div>
                     <div className="bottom-2 right-1 absolute">
@@ -36,7 +34,7 @@ const SubscribeColumn = (prop) => {
                     </div>
                     <div
                         className="text-center text-[#999]  font-500 lh-5.6 text-2.5 w-11 overflow-hidden whitespace-nowrap">
-                        {userInfo?.name?.length >= 8 ? userInfo?.name + "…" : userInfo?.name}
+                        {column.name?.length >= 8 ? column.name + "…" : column.name}
                     </div>
                 </div>
                 <div className="flex-1">

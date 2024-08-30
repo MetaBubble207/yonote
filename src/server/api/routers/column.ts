@@ -2,6 +2,7 @@ import {z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {
+    type BaseColumnCard,
     type Column,
     column,
     type ColumnOrder,
@@ -212,7 +213,7 @@ export const columnRouter = createTRPCRouter({
                 const readCount = await caller.read.getColumnRead({columnId: columnData.id})
                 // 获取专栏下的所有帖子的点赞量
                 const likeCount = await caller.like.getColumnLike({columnId: columnData.id});
-                // 获取用户基本信息
+                // 获取作者基本信息
                 const userData = await caller.users.getOne({id: columnData.userId});
                 return {
                     ...columnData,
@@ -229,25 +230,29 @@ export const columnRouter = createTRPCRouter({
         }),
 
     // 获取用户所有可见订阅专栏列表
-    getVisibleColumn: publicProcedure
+    getSubscriptColumn: publicProcedure
         .input(z.object({userId: z.string()}))
         .query(async ({ctx, input}) => {
+            const caller = createCaller(ctx);
+            const {db} = ctx;
             // 获取所有订阅记录
             const orders =
                 await ctx.db.select().from(order)
                     .where(and(eq(order.buyerId, input.userId), eq(order.isVisible, true)));
-            // 获取所有订阅的专栏
-            const subscribeColumnsTemp: any[] = [];
             const ordersPromises = orders.map(async (order) => {
-                const columnTemp = await ctx.db.query.column.findFirst({where: eq(column.id, order.columnId)});
-
-                subscribeColumnsTemp.push({
-                    ...columnTemp,
-                    subscriptionTime: order.createdAt
-                });
+                // 获取所有订阅的专栏
+                const columnData = await db.query.column.findFirst({where: eq(column.id, order.columnId)});
+                // 获取作者基本信息
+                const userData = await caller.users.getOne({id: columnData.userId});
+                return {
+                    ...columnData,
+                    userId: userData.id,
+                    userName: userData.name,
+                    avatar: userData.avatar,
+                }
             });
-            await Promise.all(ordersPromises);
-            const res: Column[] = subscribeColumnsTemp.sort((a, b) => a.subscriptionTime > b.subscriptionTime ? 1 : -1);
+            const res: BaseColumnCard[] = [];
+            Object.assign(res, await Promise.all(ordersPromises))
             return res;
         }),
 

@@ -7,7 +7,6 @@ import {api} from "@/trpc/react";
 import useLocalStorage from '@/tools/useStore';
 import {Button, Skeleton} from "antd";
 import NoData from "@/app/_components/common/NoData";
-import Loading from "@/app/_components/common/Loading";
 
 const SubscribeMain = () => {
     const [token] = useLocalStorage('token', null);
@@ -90,8 +89,33 @@ const SubscribeMain = () => {
         const {
             data: visibleColumnData,
             isLoading: isViableColumnLoading
-        } = api.column.getVisibleColumn.useQuery({userId: token});
-        if (isViableColumnLoading) return <Loading/>
+        } = api.column.getSubscriptColumn.useQuery({userId: token});
+        if (isViableColumnLoading) return <>
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="h-29.25 mt-4 mb-2 p4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="h-29.25 mt-4 mb-2 p4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="h-29.25 mt-4 mb-2 p4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="h-29.25 mt-4 mb-2 p4"
+            />
+        </>
         if (!visibleColumnData || visibleColumnData.length < 1) return <NoData title={'还没有订阅过专栏噢😯~'}/>
         return (
             <div>
