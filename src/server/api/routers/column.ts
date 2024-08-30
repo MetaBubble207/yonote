@@ -239,14 +239,12 @@ export const columnRouter = createTRPCRouter({
     getUpdateColumn: publicProcedure
         .input(z.object({userId: z.string()}))
         .query(async ({ctx, input}): Promise<DetailColumnCard[]> => {
-            const caller = createCaller(ctx);
             const {db} = ctx;
             // 获取该用户所有订阅记录
             const orders =
                 await db.select().from(order)
                     .where(and(eq(order.buyerId, input.userId), eq(order.isVisible, true), eq(order.status, true)));
             const res: DetailColumnCard[] = [];
-            console.log(orders)
             // 查看所有的订阅专栏的帖子
             const ordersPromises = orders.map(async (order) => {
                 const postsData = await db.select().from(post).where(eq(post.columnId, order.columnId));
@@ -294,7 +292,7 @@ export const columnRouter = createTRPCRouter({
             // 获取所有订阅记录
             const orders =
                 await ctx.db.select().from(order)
-                    .where(and(eq(order.buyerId, input.userId), eq(order.isVisible, true)));
+                    .where(and(eq(order.buyerId, input.userId), eq(order.isVisible, true), eq(order.status, true)));
             const ordersPromises = orders.map(async (order) => {
                 // 获取所有订阅的专栏
                 const columnData = await db.query.column.findFirst({where: eq(column.id, order.columnId)});
@@ -316,7 +314,8 @@ export const columnRouter = createTRPCRouter({
         .input(z.object({userId: z.string()}))
         .query(async ({ctx, input}) => {
             // 获取订单
-            const orders = await ctx.db.select().from(order).where(eq(order.buyerId, input.userId));
+            const orders =
+                await ctx.db.select().from(order).where(and(eq(order.buyerId, input.userId), eq(order.status, true)));
             // 获取专栏
             const resTemp: ColumnOrder[] = [];
             const promises = orders.map(async order => {
