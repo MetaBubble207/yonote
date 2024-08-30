@@ -6,21 +6,6 @@ import {getCurrentTime} from "@/tools/getCurrentTime";
 import * as process from "process";
 import {getSoleId} from "@/tools/getSoleId";
 export const userRouter = createTRPCRouter({
-    getList: publicProcedure
-        .input(
-            z.object(
-        {
-                    limit: z.number(), offset: z.number()
-                }
-        ))
-        .query( ({ctx,input}) => {
-            return  ctx.db.query.user.findMany(
-                {
-                    limit: input.limit,
-                    offset: input.offset
-                }
-            )
-        }),
     getOne: publicProcedure
         .input(z.object({id: z.string()}))
         .query(({ctx,input}) => {
@@ -33,38 +18,9 @@ export const userRouter = createTRPCRouter({
                 }
             )
         }),
-    create: publicProcedure
-        .input(z.object({ name: z.string().min(1) }))
-        .mutation( async ({ ctx, input }) => {
 
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-
-            return await ctx.db.insert(user).values({
-                id: "123123",
-                name: input.name,
-                updatedAt: getCurrentTime()
-            }).returning({name: user.name});
-        }),
-
-    update: publicProcedure
-        .input(z.object({ id: z.string(), name: z.string().min(1) }))
-        .mutation( ({ ctx, input })=>{
-            return ctx.db.update(user)
-                .set({
-                    name: input.name,
-                    updatedAt: getCurrentTime()
-                    })
-                .where(eq(user.id,input.id))
-                .returning({name:user.name})
-        }),
-
-    del: publicProcedure
-        .input(z.object({ id: z.string() }))
-        .mutation(async ({ ctx, input })=>{
-          return ctx.db.delete(user).where(eq(user.id, input.id)).returning({name: user.name});
-        }),
-
-    login:  publicProcedure.input(z.object({code:z.string()}))
+    login:  publicProcedure
+        .input(z.object({code:z.string()}))
         .query(async({ctx,input }) => {
             // 测试使用的appid
             //https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index
@@ -110,7 +66,8 @@ export const userRouter = createTRPCRouter({
 
     }),
 
-    updateAvatar: publicProcedure.input(z.object({ id: z.string(), avatar: z.string().min(1)}))
+    updateAvatar: publicProcedure
+        .input(z.object({ id: z.string(), avatar: z.string().min(1)}))
         .mutation(({ctx,input})=>{
             return ctx.db.update(user)
                 .set({
@@ -131,6 +88,7 @@ export const userRouter = createTRPCRouter({
                 .where(eq(user.id,input.id))
                 .returning({phone:user.phone})
         }),
+
     updateName: publicProcedure.input(z.object({ id: z.string(), name: z.string()}))
         .mutation(({ctx,input})=>{
             return ctx.db.update(user)
