@@ -35,7 +35,7 @@ const Login = () => {
         <div>
             <div className="flex justify-center items-center mt-46">
                 <Image
-                    src={"/images/cover.svg"}
+                    src={"/images/logo.svg"}
                     alt={"cover"}
                     width={41}
                     height={45}
