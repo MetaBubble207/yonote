@@ -1,11 +1,11 @@
 import "../styles/globals.css";
-
 import {Inter} from "next/font/google";
 import React from 'react'
 import {TRPCReactProvider} from "@/trpc/react";
 import {ConfigProvider} from "antd";
 import zhCN from "antd/es/locale/zh_CN";
 import 'dayjs/locale/zh-cn';
+import {AntdRegistry} from '@ant-design/nextjs-registry';
 
 const inter = Inter({
     subsets: ["latin"],
@@ -24,25 +24,13 @@ export default function RootLayout({children}: Readonly<{
     return (
         <html>
         <body className={inter.className} suppressHydrationWarning={true}>
-        <TRPCReactProvider>
-            <ConfigProvider
-                theme={{
-                    token: {
-                        // Seed Token，影响范围大
-                        colorPrimary: '#5CE5C1',
-                    },
-                    components: {
-                        Button: {
-                            primaryColor: '#252525',
-                            colorLinkHover: '#252525',
-                        }
-                    }
-                }}
-                locale={zhCN}
-            >
+        <AntdRegistry>
+
+            <TRPCReactProvider>
                 {children}
-            </ConfigProvider>
-        </TRPCReactProvider>
+            </TRPCReactProvider>
+        </AntdRegistry>
+
         </body>
         </html>
     );
