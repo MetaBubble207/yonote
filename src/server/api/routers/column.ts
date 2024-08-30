@@ -1,4 +1,4 @@
-import {z} from "zod";
+import {undefined, z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {
@@ -16,7 +16,46 @@ import {
 import {and, desc, eq, like, sql} from "drizzle-orm";
 import {uniqueArray} from "@/tools/uniqueArray";
 import {createCaller} from "@/server/api/root";
+import type {PostgresJsDatabase} from "drizzle-orm/postgres-js";
+import type * as schema from "@/server/db/schema";
 
+const getDetailColumnCard = async (
+    ctx: { headers: Headers, db: PostgresJsDatabase<typeof schema> },
+    columnId: string
+): Promise<DetailColumnCard> => {
+    const {db} = ctx;
+    const caller = createCaller(ctx);
+    const columnData = await db.query.column.findFirst({where: eq(column.id, columnId)});
+    // 获取专栏下的所有帖子的阅读量
+    const readCount = await caller.read.getColumnRead({columnId: columnData.id});
+    // 获取专栏下的所有帖子的点赞量
+    const likeCount = await caller.like.getColumnLike({columnId: columnData.id});
+    // 获取作者基本信息
+    const userData = await caller.users.getOne({id: columnData.userId});
+    let detailColumnCard: DetailColumnCard = {
+        avatar: "",
+        cover: "",
+        createdAt: null,
+        id: "",
+        isFree: false,
+        isTop: false,
+        likeCount: 0,
+        name: "",
+        readCount: 0,
+        userId: "",
+        userName: ""
+    };
+
+    Object.assign(detailColumnCard, {
+        ...columnData,
+        readCount,
+        likeCount,
+        userId: userData.id,
+        userName: userData.name,
+        avatar: userData.avatar,
+    });
+    return detailColumnCard;
+}
 export const columnRouter = createTRPCRouter({
     update: publicProcedure
         .input(z.object({
@@ -205,27 +244,44 @@ export const columnRouter = createTRPCRouter({
             // 获取该用户所有订阅记录
             const orders =
                 await db.select().from(order)
-                    .where(and(eq(order.buyerId, input.userId), eq(order.isVisible, true)));
-            const ordersPromises = orders.map(async (order) => {
-                // 获取所有订阅的专栏
-                const columnData = await db.query.column.findFirst({where: eq(column.id, order.columnId)});
-                // 获取专栏下的所有帖子的阅读量
-                const readCount = await caller.read.getColumnRead({columnId: columnData.id})
-                // 获取专栏下的所有帖子的点赞量
-                const likeCount = await caller.like.getColumnLike({columnId: columnData.id});
-                // 获取作者基本信息
-                const userData = await caller.users.getOne({id: columnData.userId});
-                return {
-                    ...columnData,
-                    readCount,
-                    likeCount,
-                    userId: userData.id,
-                    userName: userData.name,
-                    avatar: userData.avatar,
-                }
-            });
+                    .where(and(eq(order.buyerId, input.userId), eq(order.isVisible, true), eq(order.status, true)));
             const res: DetailColumnCard[] = [];
-            Object.assign(res, await Promise.all(ordersPromises))
+            console.log(orders)
+            // 查看所有的订阅专栏的帖子
+            const ordersPromises = orders.map(async (order) => {
+                const postsData = await db.select().from(post).where(eq(post.columnId, order.columnId));
+
+                return Promise.all(postsData.map(async (post) => {
+
+                    // 查看阅读表数据
+                    const readData = await db.query.postRead.findFirst({
+                        where: and(
+                            eq(postRead.postId, post.id),
+                            eq(postRead.userId, input.userId)
+                        )
+                    });
+
+                    // 情况1，读者从来没看过文章
+                    if (!readData) {
+                        const detailColumnCard = await getDetailColumnCard(ctx, order.columnId)
+                        const isExist = res.find(item => item.id === detailColumnCard.id);
+                        if (!isExist) {
+                            res.push(detailColumnCard);
+                        }
+                    }
+                    // 阅读记录的更新时间小于文章的更新时间则说明文章更新了，读者还没读
+                    if (readData?.updatedAt < post.updatedAt) {
+                        const detailColumnCard = await getDetailColumnCard(ctx, order.columnId)
+                        const isExist = res.find(item => item.id === detailColumnCard.id);
+                        if (!isExist) {
+                            res.push(detailColumnCard);
+                        }
+                    }
+                }));
+            });
+
+            await Promise.all(ordersPromises);
+
             return res;
         }),
 

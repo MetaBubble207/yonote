@@ -88,15 +88,18 @@ const ManagementColumn = forwardRef(
                                 <Image src={column.cover} width={100} height={100}
                                        alt={"cover"}
                                        className="w-11.375 h-15.478 rounded inline-block"></Image>
-                                <span className="ml-3 mt-3 flex flex-col">
-                                            <div
-                                                className="text-[#252525] text-3 font-500 lh-6">{(column.name?.length >= 20 ? column.name?.substring(0, 20) + "..." : column.name)}</div>
-                                            <div className="text-[#666] text-2.5 lh-[120%] mt-1">
-                                                {column.introduce ? (column.introduce?.length >= 50
-                                                    ? column.introduce?.substring(0, 50) + "..."
-                                                    : column.introduce) : "该专栏还没有设置简介"}
-                                            </div>
-                                        </span>
+                                <div className="ml-3 mt-3 flex flex-col">
+                                    <div className="text-[#252525] text-3 font-500 lh-6">
+                                        {(column.name?.length >= 20
+                                            ? column.name?.substring(0, 20) + "..."
+                                            : column.name)}
+                                    </div>
+                                    <div className="text-[#666] text-2.5 lh-[120%] mt-1">
+                                        {column.introduce ? (column.introduce?.length >= 50
+                                            ? column.introduce?.substring(0, 50) + "..."
+                                            : column.introduce) : "该专栏还没有设置简介"}
+                                    </div>
+                                </div>
                             </div>
                         </Checkbox>
                     ))}
