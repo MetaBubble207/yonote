@@ -1,10 +1,9 @@
 "use client"
 import Image from "next/image"
-import {Checkbox, message} from 'antd';
-import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
+import {Checkbox, message, Skeleton} from 'antd';
+import React, {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import useLocalStorage from "@/tools/useStore";
 import {api} from "@/trpc/react";
-import Loading from "@/app/_components/common/Loading";
 
 const ManagementColumn = forwardRef(
     (props: any, ref) => {
@@ -22,9 +21,11 @@ const ManagementColumn = forwardRef(
         useEffect(() => {
             setCheckState(props.manage);
         }, [props.manage]);
-        useEffect(()=>{
+
+        useEffect(() => {
             setColumnsState(columns);
-        },[columns])
+        }, [columns])
+
         const changeVisible = api.order.changeStatus.useMutation();
 
         const handleSave = () => {
@@ -47,9 +48,36 @@ const ManagementColumn = forwardRef(
             })
             setColumnsState(newColumns)
         }
-        if (isLoading) return <Loading/>
+
+        if (isLoading) return <>
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="w-85.75 h-42.75 border-rd-5 bg-[#FFF] mb-2 p4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="w-85.75 h-42.75 border-rd-5 bg-[#FFF] mb-2 p4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="w-85.75 h-20.471 bg-#fff rounded-2.5"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="w-85.75 h-20.471 bg-#fff rounded-2.5"
+            />
+        </>
+
         return (
-            <div className="w-85.75 h-20.471 bg-#fff m-auto border-rd-2.5 flex">
+            <div className="w-85.75 h-20.471 bg-#fff m-auto rounded-2.5 flex">
                 <div className={"flex w-100% flex-col mt-2"}>
                     {columnsState?.map(({column, order}, index) => (
                         <Checkbox
