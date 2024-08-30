@@ -11,7 +11,7 @@ const withTheme = (node: JSX.Element) => (
                 token: {
                     colorPrimary: '#5CE5C1',
                     colorLink:'#B5B5B5',
-                    colorLinkActive: '#252525'
+                    colorLinkActive: '#252525',
                 },
                 components: {
                     Button: {

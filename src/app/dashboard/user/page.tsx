@@ -8,8 +8,9 @@ import {api} from "@/trpc/react";
 import {Button, Skeleton} from "antd";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import {useRouter, useSearchParams} from "next/navigation";
+import withTheme from "@/theme";
 
-const Page = () => {
+const User = function User() {
     const logout = () => {
         localStorage.removeItem("token");
     };
@@ -118,19 +119,30 @@ const Page = () => {
               </span>
                     </div>
                 </div>
+                <div className="pl-2.5">
+                    {/* 编辑资料 */}
+                    <Button
+                        type={'primary'}
 
-                {/* 编辑资料 */}
-                <Button
-                    className="w-20 text-[#252525] text-2.5 font-500 lh-6 rounded-full mr-4 flex flex-row bg-white pl-2.5 items-center border-0"
-                    disabled={!token || !userInfo}>
-                    <Image
-                        src="/images/user/icon_edit.png"
-                        alt="icon"
-                        width={16}
-                        height={16}
-                    />
-                    <Link href="/dashboard/user/message" prefetch={false}>编辑资料</Link>
-                </Button>
+                        style={{
+                            width: '20',
+                            height: '6',
+                            fontSize: '10px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            backgroundColor: '#ffffff',
+                            borderRadius: '9999px'
+                        }}
+                        disabled={!token || !userInfo}>
+                        <Image
+                            src="/images/user/icon_edit.png"
+                            alt="icon"
+                            width={16}
+                            height={16}
+                        />
+                        <Link href="/dashboard/user/message" prefetch={false} className={'ml-2'}>编辑资料</Link>
+                    </Button>
+                </div>
             </div>
         )
     }
@@ -213,7 +225,11 @@ const Page = () => {
                     <Button
                         type={'link'}
                         size={'small'}
-                        className={`text-3.5 p0 font-500 lh-6 mr-8 ${currentPage === button.id ? "text-#252525" : "text-#B5B5B5"}`}
+                        className={'mr-8'}
+                        style={currentPage === button.id ? {color: '#252525', padding: 0} : {
+                            color: '#B5B5B5',
+                            padding: 0
+                        }}
                         onClick={() => setCurrentPage(button.id)}
                     >
                         {button.label}
@@ -291,4 +307,7 @@ const Page = () => {
 
 };
 
+const Page = () => {
+    return withTheme(<User/>)
+}
 export default Page;
