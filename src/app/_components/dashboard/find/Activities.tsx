@@ -6,8 +6,9 @@ import {getCurrentTime} from "@/tools/getCurrentTime";
 import Link from "next/link";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import {Button, Skeleton} from "antd";
+import withTheme from "@/theme";
 
-const Activities = () => {
+const Activities = function Activities() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -91,10 +92,24 @@ const Activities = () => {
                                 className={` absolute top-2.5 left-2.5 w-11.75 h-5.25 border-rd-[0px_25px_25px_0px] bg-[#4EDFE9]`}>
                                 <div className="ml-1.75 mt-1 text-[#FFF] text-2.5 font-500 lh-[120%]">进行中</div>
                             </div>
-                            <Button
-                                className={`ml-61 mt-23.5 p0 border-0 w-18.25 h-6.25 bg-[#DAF9F1] border-rd-5.25 text-[#1DB48D] font-500 lh-6 text-center text-3 absolute right-4 bottom-4`}>
-                                立即查看
-                            </Button>
+                            <div
+                                className={`ml-61 mt-23.5 p0 border-0 absolute right-4 bottom-4`}>
+                                <Button
+                                    type={'primary'}
+                                    size={'small'}
+                                    style={{
+                                        fontSize: '12px',
+                                        width: '18.25',
+                                        height: '6.25',
+                                        backgroundColor: '#DAF9F1',
+                                        color: '#1DB48D',
+                                        fontWeight: 500,
+                                        borderRadius: '9999px'
+                                    }}
+                                >
+                                    立即查看
+                                </Button>
+                            </div>
 
 
                         </div>
@@ -104,5 +119,8 @@ const Activities = () => {
         </div>
     )
 }
-export default Activities;
+const Page = () => {
+    return withTheme(<Activities/>)
+}
+export default Page;
 
