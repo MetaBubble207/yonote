@@ -1,7 +1,6 @@
 import { postRouter } from "@/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { userRouter } from "@/server/api/routers/user";
-import { testRouter } from "@/server/api/routers/test";
 import { columnRouter } from "@/server/api/routers/column";
 import { draftRouter } from "./routers/draft";
 import { postLikeRouter } from "./routers/postLike";
@@ -22,7 +21,6 @@ import {runningWaterRouter} from "@/server/api/routers/runningWater";
 export const appRouter = createTRPCRouter({
   post: postRouter,
   users: userRouter,
-  test: testRouter,
   column: columnRouter,
   draft: draftRouter,
   like: postLikeRouter,

@@ -1,45 +1,21 @@
 import {z} from "zod";
 
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
-import {Column, column, ColumnOrder, ColumnUser, order, post, postRead, priceList, user} from "@/server/db/schema";
+import {
+    type Column,
+    column,
+    type ColumnOrder,
+    type ColumnUser,
+    order,
+    post,
+    postRead,
+    priceList,
+    user
+} from "@/server/db/schema";
 import {and, desc, eq, like, sql} from "drizzle-orm";
 import {uniqueArray} from "@/tools/uniqueArray";
 
 export const columnRouter = createTRPCRouter({
-
-    create: publicProcedure.input(z.object({
-        id: z.string(),
-        name: z.string(),
-        price: z.number(),
-        userId: z.string()
-    })).mutation(({ctx, input}) => {
-
-        return ctx.db.insert(column).values({
-            id: input.id,
-            name: input.name,
-            userId: input.userId,
-        }).returning({id: column.id, name: column.name})
-    }),
-
-    getColumnId: publicProcedure
-        .input(z.object({userId: z.string()}))
-        .query(async ({ctx, input}) => {
-            const data = await ctx.db.query.column.findFirst({where: eq(column.userId, input.userId)})
-            return data?.id;
-        }),
-
-    getColumnInfo: publicProcedure
-        .input(z.object({columnId: z.string()}))
-        .query(async ({ctx, input}) => {
-            return await ctx.db.query.column.findFirst({where: eq(column.id, input.columnId)})
-        }),
-
-    getColumn: publicProcedure
-        .input(z.object({userId: z.string()}))
-        .query(async ({ctx, input}) => {
-            return ctx.db.query.column.findFirst({where: eq(column.userId, input.userId)});
-        }),
-
     update: publicProcedure
         .input(z.object({
             id: z.string(),
@@ -89,7 +65,7 @@ export const columnRouter = createTRPCRouter({
 
     updateCover: publicProcedure
         .input(z.object({id: z.string(), cover: z.string()}))
-        .mutation(async ({ctx, input}) => {
+        .mutation(({ctx, input}) => {
             return ctx.db.update(column).set({
                 logo: input.cover,
             }).where(eq(column.id, input.id))
@@ -200,19 +176,6 @@ export const columnRouter = createTRPCRouter({
             return columnDetail[0];
         }),
 
-    getOrderColumn: publicProcedure
-        .input(z.object({userId: z.string()}))
-        .query(async ({ctx, input}) => {
-            const orders = await ctx.db.select().from(order).where(eq(order.buyerId, input.userId))
-
-            const promises = orders.map(async order => {
-                const columnData = await ctx.db.select().from(column).where(eq(column.id, order.columnId))
-                return columnData[0];
-            })
-            return await Promise.all(promises);
-
-        }),
-
     //订阅量查询
     getColumnOrderNumbers: publicProcedure
         .query(async ({ctx}) => {
@@ -300,6 +263,7 @@ export const columnRouter = createTRPCRouter({
             await Promise.all(promises);
             return resTemp.sort((a, b) => a.order.createdAt > b.order.createdAt ? 1 : -1);
         }),
+
     // 获取专栏及其用户信息
     getColumnUser: publicProcedure
         .input(z.object({columnId: z.string()}))

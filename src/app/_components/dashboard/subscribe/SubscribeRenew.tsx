@@ -15,6 +15,7 @@ const SubscribeRenew = (prop) => {
         columnId: column.id,
     }).data;
     const {data: userInfo} = api.users.getOne.useQuery({id: column.userId});
+
     return (
         <div className="w-85.75 h-42.75 border-rd-5 bg-[#FFF] mb-2">
             <div>

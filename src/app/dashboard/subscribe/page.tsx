@@ -80,7 +80,8 @@ const Subscribe = () => {
             </div>
             <Button size={'small'}
                     onClick={link}
-                    className="w-18.25 h-7.75 text-3 text-[#1db48d] bg-#DAF9F1 p0 lh-7.75 rounded-full absolute right-2.5 bottom-2.5"
+                    className="w-18.25 h-7.75 text-3 text-[#1db48d] bg-#DAF9F1
+                    p0 lh-7.75 rounded-full absolute right-2.5 bottom-2.5 b-0"
             >
                 继续阅读
             </Button>
