@@ -55,8 +55,9 @@ const SubscribeManage = () => {
                         onClick={() => handleButtonClick(2)}>小课
                     </button>
                 </div>
-                <Button type={'link'} size={'small'} onClick={handleManage}
-                        className='text-[#1DB48D] font-400 lh-6'>{manage ? '保存' : '管理'}</Button>
+                <Button type={'link'} size={'small'} onClick={handleManage} style={{color: '#1DB48D'}}>
+                    {manage ? '保存' : '管理'}
+                </Button>
             </div>
             {selectedButton === 1
                 && (<ManagementColumn manage={manage} ref={saveColumn}/>)

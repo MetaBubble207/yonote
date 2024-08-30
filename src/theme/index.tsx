@@ -10,6 +10,8 @@ const withTheme = (node: JSX.Element) => (
             theme={{
                 token: {
                     colorPrimary: '#5CE5C1',
+                    colorLink:'#B5B5B5',
+                    colorLinkActive: '#252525'
                 },
                 components: {
                     Button: {

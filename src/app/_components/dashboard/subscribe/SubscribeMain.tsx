@@ -37,8 +37,7 @@ const SubscribeMain = () => {
                     type={'link'}
                     key={button.id}
                     onClick={() => setCurrentPage(button.id)}
-                    className={`p0 ${currentPage === button.id ? 'text-[#252525] fw-500' : 'text-[#B5B5B5] fw-400'}`}
-                >
+                    style={currentPage === button.id ? {color: '#252525', fontWeight: 500, padding: 0} : {padding: 0}}>
                     {button.label}
                     <div
                         className={`w-2.75 h-1 m-auto rounded-2

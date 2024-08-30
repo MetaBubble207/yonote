@@ -10,8 +10,9 @@ import SearchColumn from "@/app/_components/common/SearchColumn";
 import {Button, Skeleton} from "antd";
 import SubscribeMain from "@/app/_components/dashboard/subscribe/SubscribeMain";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import withTheme from "@/theme";
 
-const Subscribe = () => {
+const Subscribe = function Subscribe() {
     const router = useRouter();
     const [token] = useLocalStorage("token", null);
     const {data: recentRead, isLoading} =
@@ -78,13 +79,21 @@ const Subscribe = () => {
                     </>
                 )}
             </div>
-            <Button size={'small'}
-                    onClick={link}
-                    className="w-18.25 h-7.75 text-3 text-[#1db48d] bg-#DAF9F1
-                    p0 lh-7.75 rounded-full absolute right-2.5 bottom-2.5 b-0"
-            >
-                继续阅读
-            </Button>
+            <div className={'rounded-full absolute right-2.5 bottom-2.5 b-0'}>
+                <Button size={'small'}
+                        type={'primary'}
+                        onClick={link}
+                        style={{
+                            borderRadius: '9999px',
+                            fontSize: '12px',
+                            width: '18.25',
+                            height: '7.75',
+                            color: '#1db48d',
+                            backgroundColor: '#DAF9F1'
+                        }}>
+                    继续阅读
+                </Button>
+            </div>
         </div>
     }
 
@@ -110,4 +119,8 @@ const Subscribe = () => {
     );
 };
 
-export default Subscribe;
+const Page = () => {
+    return withTheme(<Subscribe/>)
+}
+
+export default Page;

@@ -29,7 +29,6 @@ const ManagementColumn = forwardRef(
         const changeVisible = api.order.changeStatusBatch.useMutation();
 
         const handleSave = () => {
-            console.log("columnsState ===>", columnsState)
             const req = columnsState.map(item => ({orderId: item.order.id, isVisible: item.order.isVisible}));
             changeVisible.mutate({orders: req});
             message.success('保存成功');
@@ -108,6 +107,5 @@ const ManagementColumn = forwardRef(
         )
     }
 );
-
 
 export default ManagementColumn;
