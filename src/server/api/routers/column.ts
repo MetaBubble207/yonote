@@ -131,19 +131,29 @@ export const columnRouter = createTRPCRouter({
     getUpdate: publicProcedure
         .input(z.object({visitorId: z.string(), writerId: z.string()}))
         .query(async ({ctx, input}) => {
+            const {db} = ctx;
             // 查找作者下所有的专栏
-            const columns = await ctx.db.select().from(column).where(eq(column.userId, input.writerId));
-            // 查找拜访者的观看记录
-            const readRecords = await ctx.db.select().from(postRead).where(eq(postRead.userId, input.visitorId));
-            const visitorPosts = readRecords.map(item => item.postId);
+            const columns = await db.select().from(column).where(eq(column.userId, input.writerId));
             const res: Column[] = [];
             // 遍历作者下的每一个专栏的帖子
             const promises = columns.map(async (column) => {
-                const posts = await ctx.db.select().from(post).where(eq(post.columnId, column.id));
-                const flag = posts.every(item => visitorPosts.includes(item.id))
-                if (!flag) {
-                    res.push(column);
-                }
+                const posts = await db.select().from(post).where(eq(post.columnId, column.id));
+                return Promise.all(posts.map(async item => {
+                    // 查看阅读表数据
+                    const readData = await db.query.postRead.findFirst({
+                        where: and(
+                            eq(postRead.postId, post.id),
+                            eq(postRead.userId, input.visitorId)
+                        )
+                    });
+                    // 阅读记录的更新时间小于文章的更新时间则说明文章更新了，读者还没读
+                    if (readData?.updatedAt < item.updatedAt) {
+                        const isExist = res.find(item => item.id === column.id);
+                        if (!isExist) {
+                            res.push(column);
+                        }
+                    }
+                }))
             })
             await Promise.all(promises)
             return res;
