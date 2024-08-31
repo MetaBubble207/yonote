@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, {useState} from "react";
 import {api} from "@/trpc/react";
-import {Button} from "antd";
+import {Button, Skeleton} from "antd";
 import Loading from "@/app/_components/common/Loading";
 import NoData from "@/app/_components/common/NoData";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
@@ -14,16 +14,11 @@ const DisplayDetailed = (props) => {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const {data: columnInfos, isLoading: isColumnInfoLoading} =
         api.column.getAllByUserId.useQuery({userId: userInfo.id});
-    const {data: updateColumnInfos, isLoading: isUpdateColumnInfoLoading} =
-        api.column.getUpdate.useQuery({
-            writerId: userInfo.id,
-            visitorId: token
-        });
+
     // 订阅数量
     const subscribeInfos = api.order.getUserOrder.useQuery({userId: userInfo.id}).data
     // 帖子数量
     const postLength = api.post.getNumById.useQuery({id: userInfo.id}).data
-    if (isColumnInfoLoading || isUpdateColumnInfoLoading) return <Loading/>
     // 渲染按钮下对应的局部页面
     const RenderContent = () => {
         switch (currentPage) {
@@ -38,6 +33,12 @@ const DisplayDetailed = (props) => {
     }
 
     const Update = () => {
+        const {data: updateColumnInfos, isLoading: isUpdateColumnInfoLoading} =
+            api.column.getUpdate.useQuery({
+                writerId: userInfo.id,
+                visitorId: token
+            });
+
         return updateColumnInfos.length < 1
             ?
             <NoData title={"你已经阅读完该作者所有的帖子了噢😁~"}/>
@@ -92,7 +93,8 @@ const DisplayDetailed = (props) => {
             {buttonInfos.map((button, index) => (
                 <div key={index} className={"flex-col"}>
                     <Button type="link" size={'small'}
-                            className={`mr-8  text-neutral text-3.5 font-500 lh-6 p0`}
+                            className={`mr-8`}
+                            style={{padding: 0}}
                             onClick={() => {
                                 handleButtonClick(button.id)
                             }}

@@ -9,8 +9,9 @@ import Loading from "@/app/_components/common/Loading";
 import Error from "@/app/_components/common/Error";
 import {useSearchParams} from "next/navigation";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import withTheme from "@/theme";
 
-const Page = () => {
+const Detail = function () {
     const [token] = useLocalStorage("token", null);
     const params = useSearchParams()
     const {data: userInfo, isLoading, isError} =
@@ -63,15 +64,17 @@ const Page = () => {
                     {/*更多优质内容*/}
                     <div className={"w-full flex justify-center items-center sticky pb-9"}>
                         <div className={"flex justify-center w-26 h-7 bg-[#daf9f1] rounded-full"}>
-                            <Link href="/dashboard/find" className={" text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
+                            <Link href="/dashboard/find"
+                                  className={" text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     )
 }
-
+const Page = () => {
+    return withTheme(<Detail/>)
+}
 
 export default Page;

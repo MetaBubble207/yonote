@@ -6,6 +6,7 @@ import useLocalStorage from '@/tools/useStore';
 import {Button} from 'antd';
 import Loading from '@/app/_components/common/Loading';
 import OSS from 'ali-oss';
+import withTheme from "@/theme";
 
 let client = new OSS({
     region: 'oss-cn-shenzhen',
@@ -14,7 +15,7 @@ let client = new OSS({
     stsToken: process.env.NEXT_PUBLIC_STS_TOKEN,
     bucket: process.env.NEXT_PUBLIC_BUCKET
 });
-const UserMessage = () => {
+const UserMessage = function () {
     const [token] = useLocalStorage('token', null);
     const [isEditingPhone, setIsEditingPhone] = useState(false);
     const [isEditingName, setIsEditingName] = useState(false);
@@ -82,7 +83,10 @@ const UserMessage = () => {
             <Image src={userInfo?.avatar || "/image/user/Loading.svg"} alt="头像" width={64} height={64}
                    className={'rounded-full mx-auto mt-5'}
             />
-            <Button type={'primary'} className={"h-6 flex items-center rounded-4 mx-auto mt-2"}>
+            <Button type={'primary'}
+                    className={"mx-auto mt-2"}
+                    style={{width:'19',height:'4',display: 'flex', alignItems:'center',borderRadius:'9999px'}}
+            >
                 <Image src={"/images/user/Edit.svg"} alt={"头像"} width={10} height={10}/>
                 <div className="w-10 ml-1.25 text-#252525 text-2.5 font-500 lh-6" onClick={handleButtonClick}>
                     修改头像
@@ -161,4 +165,7 @@ const UserMessage = () => {
     );
 };
 
-export default UserMessage;
+const Page = () => {
+    return withTheme(<UserMessage/>)
+}
+export default Page;
