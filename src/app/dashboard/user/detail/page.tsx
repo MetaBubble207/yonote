@@ -16,7 +16,9 @@ const Detail = function () {
     const params = useSearchParams()
     const {data: userInfo, isLoading, isError} =
         api.users.getOne.useQuery({id: params.get('id')});
-    if (isLoading) return <Loading/>
+    if (isLoading) return <div className={'mt-80'}>
+        <Loading/>
+    </div>
     if (isError) return <Error text={'没有找到该用户的信息😯~'}/>
     return (
         <div>

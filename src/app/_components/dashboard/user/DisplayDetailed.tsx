@@ -12,15 +12,75 @@ const DisplayDetailed = (props) => {
     const {token, userInfo} = props
     // 导航栏返回响应页面
     const [currentPage, setCurrentPage] = useState<number>(1)
-    const {data: columnInfos, isLoading: isColumnInfoLoading} =
-        api.column.getAllByUserId.useQuery({userId: userInfo.id});
 
-    // 订阅数量
-    const subscribeInfos = api.order.getUserOrder.useQuery({userId: userInfo.id}).data
-    // 帖子数量
-    const postLength = api.post.getNumById.useQuery({id: userInfo.id}).data
+    return <>
+        {/* 订阅数量展示 */}
+        <StatsDisplayList/>
+        {/* 专栏、小课区域 */}
+        <div className="rounded-2.5 ml-8 mr-8 mt-4">
+            {/* 导航区域 */}
+            <Tabs/>
+            {/* 内容区域 */}
+            <RenderContent/>
+        </div>
+    </>
+
+    function StatsDisplayList() {
+        // 订阅数量
+        const subscribeInfos = api.order.getUserOrder.useQuery({userId: userInfo.id}).data
+        const {data: columnInfos} =
+            api.column.getAllByUserId.useQuery({userId: userInfo.id});
+        // 帖子数量
+        const postLength = api.post.getNumById.useQuery({id: userInfo.id}).data
+
+        return <div className={'w-full flex justify-center space-x-14 text-neutral text-4 font-bold leading-6'}>
+            <StatsDisplay stat={'订阅'} length={subscribeInfos?.length}></StatsDisplay>
+            <StatsDisplay stat={'专栏'} length={columnInfos?.length}></StatsDisplay>
+            <StatsDisplay stat={'内容'} length={postLength}></StatsDisplay>
+        </div>
+    }
+
+    function StatsDisplay({length, stat}: { length: number, stat: string }) {
+        return <div className="flex flex-col items-center">
+            {length || 0}
+            <h2 className="text-[#999] text-3 font-normal leading-6">{stat}</h2>
+        </div>
+    }
+
+    function Tabs() {
+        const buttonInfos = [
+            {id: 1, label: '更新'},
+            {id: 2, label: '专栏'},
+            {id: 3, label: '小课'},
+        ]
+
+        const handleButtonClick = (button: number) => {
+            if (currentPage !== button) {
+                setCurrentPage(button)
+            }
+        }
+
+        return <div className="flex mb-6">
+            {buttonInfos.map((button, index) => (
+                <div key={index} className={"flex-col"}>
+                    <Button type="link" size={'small'}
+                            className={`mr-8`}
+                            style={{padding: 0}}
+                            onClick={() => {
+                                handleButtonClick(button.id)
+                            }}
+                    >
+                        {button.label}</Button>
+                    <div className={`ml-2.25 mt-1 w-2.75 h-1 rounded-2  
+                                     ${currentPage === button.id ? 'bg-primary' : 'bg-#FFF'}`}/>
+                </div>
+            ))}
+
+        </div>
+    }
+
     // 渲染按钮下对应的局部页面
-    const RenderContent = () => {
+    function RenderContent() {
         switch (currentPage) {
             case 1:
                 return <Update/>;
@@ -32,24 +92,92 @@ const DisplayDetailed = (props) => {
         }
     }
 
-    const Update = () => {
+    function Update() {
         const {data: updateColumnInfos, isLoading: isUpdateColumnInfoLoading} =
             api.column.getUpdate.useQuery({
                 writerId: userInfo.id,
                 visitorId: token
             });
 
-        return updateColumnInfos.length < 1
-            ?
-            <NoData title={"你已经阅读完该作者所有的帖子了噢😁~"}/>
-            :
-            updateColumnInfos.map(item => <ColumnCard {...item} key={item.id}/>)
+        if (isUpdateColumnInfoLoading) return <>
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="mb-4 h-19 border-rd-4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="mb-4 h-19 border-rd-4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="mb-4 h-19 border-rd-4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="mb-4 h-19 border-rd-4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="mb-4 h-19 border-rd-4"
+            />
+        </>
+
+        if (updateColumnInfos?.length < 1) return <NoData title={"你已经阅读完该作者所有的帖子了噢😁~"}/>
+
+        return updateColumnInfos.map(item => <ColumnCard {...item} key={item.id}/>)
     }
 
-    const Column = () => {
+    function Column() {
+        const {data: columnInfos, isLoading: isColumnInfoLoading} =
+            api.column.getAllByUserId.useQuery({userId: userInfo.id});
+
+        if (isColumnInfoLoading) return <>
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="mb-4 h-19 border-rd-4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="mb-4 h-19 border-rd-4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="mb-4 h-19 border-rd-4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="mb-4 h-19 border-rd-4"
+            />
+            <Skeleton
+                active
+                paragraph={{rows: 3}}
+                title={false}
+                className="mb-4 h-19 border-rd-4"
+            />
+        </>
+
         return columnInfos.map(item => <ColumnCard {...item} key={item.id}/>)
     }
-    const ColumnCard = ({id, cover, name, introduce}: any) => {
+
+    function ColumnCard({id, cover, name, introduce}: any) {
         return <Link href={`/dashboard/special-column?id=${id}`} className="flex mb-4">
             <div className="relative w-15.5 h-19">
                 <Image
@@ -76,60 +204,6 @@ const DisplayDetailed = (props) => {
         </Link>
     }
 
-    const buttonInfos = [
-        {id: 1, label: '更新'},
-        {id: 2, label: '专栏'},
-        {id: 3, label: '小课'},
-    ]
-
-    const handleButtonClick = (button: number) => {
-        if (currentPage !== button) {
-            setCurrentPage(button)
-        }
-    }
-
-    const Tabs = () => {
-        return <div className="flex mb-6">
-            {buttonInfos.map((button, index) => (
-                <div key={index} className={"flex-col"}>
-                    <Button type="link" size={'small'}
-                            className={`mr-8`}
-                            style={{padding: 0}}
-                            onClick={() => {
-                                handleButtonClick(button.id)
-                            }}
-                    >
-                        {button.label}</Button>
-                    <div className={`ml-2.25 mt-1 w-2.75 h-1 rounded-2  
-                                     ${currentPage === button.id ? 'bg-primary' : 'bg-#FFF'}`}/>
-                </div>
-            ))}
-
-        </div>
-    }
-
-    const StatsDisplay = ({length, stat}: { length: number, stat: string }) => {
-        return <div className="flex flex-col items-center">
-            {length || 0}
-            <h2 className="text-[#999] text-3 font-normal leading-6">{stat}</h2>
-        </div>
-    }
-    return <>
-        {/* 订阅数量展示 */}
-        <div className="w-full flex justify-center space-x-14 text-neutral text-4 font-bold leading-6">
-            {/* 订阅数量 */}
-            <StatsDisplay stat={'订阅'} length={subscribeInfos?.length}></StatsDisplay>
-            <StatsDisplay stat={'专栏'} length={columnInfos?.length}></StatsDisplay>
-            <StatsDisplay stat={'内容'} length={postLength}></StatsDisplay>
-        </div>
-        {/* 专栏、小课区域 */}
-        <div className="rounded-2.5 ml-8 mr-8 mt-4">
-            {/* 导航区域 */}
-            <Tabs/>
-            {/* 内容区域 */}
-            <RenderContent/>
-        </div>
-    </>
 }
 
 export default DisplayDetailed
