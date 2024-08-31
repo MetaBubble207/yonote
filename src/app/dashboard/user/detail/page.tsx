@@ -64,10 +64,10 @@ const Detail = function () {
                         <DisplayDetailed token={token} userInfo={userInfo}></DisplayDetailed>
                     </div>
                     {/*更多优质内容*/}
-                    <div className={"w-full flex justify-center items-center sticky pb-9"}>
-                        <div className={"flex justify-center w-26 h-7 bg-[#daf9f1] rounded-full"}>
+                    <div className={"w-full flex justify-center items-center pb-9"}>
+                        <div className={"flex justify-center items-center w-26 h-7 bg-[#daf9f1] rounded-full"}>
                             <Link href="/dashboard/find"
-                                  className={" text-[#1DB48D] text-3 font-500 lh-6"}>更多优质内容</Link>
+                                  className={" text-[#1DB48D] text-3 font-500"}>更多优质内容</Link>
                         </div>
                     </div>
                 </div>
