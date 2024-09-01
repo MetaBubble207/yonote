@@ -342,10 +342,13 @@ export const columnRouter = createTRPCRouter({
     getColumnUser: publicProcedure
         .input(z.object({columnId: z.string()}))
         .query(async ({ctx, input}) => {
-            const columnData = await ctx.db.query.column.findFirst({where: eq(column.id, input.columnId)})
-            const userData = await ctx.db.query.user.findFirst({where: eq(user.id, column.id)})
-            const res: ColumnUser = {
-                column: columnData, user: userData
+            const columnData = await ctx.db.query.column.findFirst({where: eq(column.id, input.columnId)});
+            const userData = await ctx.db.query.user.findFirst({where: eq(user.id, columnData.userId)});
+            const res: BaseColumnCard = {
+                ...columnData,
+                userId: userData.id,
+                userName: userData.name,
+                avatar: userData.avatar,
             };
             return res;
         }),

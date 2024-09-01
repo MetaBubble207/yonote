@@ -16,12 +16,11 @@ const SpecialColumnHeader = () => {
     const router = useRouter();
 
     if (isLoading) return <div className={"bg-white"}><Loading/></div>
-    const {column, user} = data;
     const toShare = () => {
-        router.push(`/dashboard/poster/column?id=${column.id}`)
+        router.push(`/dashboard/poster/column?id=${data.id}`)
     };
     const toUserDetail = () => {
-        router.push(`/dashboard/user/detail?id=${user.id}`)
+        router.push(`/dashboard/user/detail?id=${data.userId}`)
     }
 
     return (
@@ -30,7 +29,7 @@ const SpecialColumnHeader = () => {
                 <Image
                     placeholder="blur"
                     blurDataURL={DefaultLoadingPicture()}
-                    src={column.cover ?? DefaultLoadingPicture()}
+                    src={data.cover ?? DefaultLoadingPicture()}
                     alt={"bg"}
                     width={375}
                     height={74.5}
@@ -42,7 +41,7 @@ const SpecialColumnHeader = () => {
             <div className={"w-full absolute top-2.5 left-0 z-3"}>
                 <div className={"flex justify-end items-center"}>
                     <Button type={'primary'} size={'small'}
-                            style={{width: '14', height: '6', borderRadius: '9999px',fontSize: '10px'}} >
+                            style={{width: '14', height: '6', borderRadius: '9999px', fontSize: '10px'}}>
                         加速计划
                     </Button>
                     {/* 点击分享，跳转海报 */}
@@ -57,7 +56,9 @@ const SpecialColumnHeader = () => {
                 </div>
                 <div className={"flex items-start mt-6px w-full pl-5"}>
                     <Image
-                        src={column?.cover ? column?.cover : "/images/recommend/cover.svg"}
+                        placeholder="blur"
+                        blurDataURL={DefaultLoadingPicture()}
+                        src={data?.cover ?? DefaultLoadingPicture()}
                         width={111}
                         height={156}
                         alt="img"
@@ -68,27 +69,31 @@ const SpecialColumnHeader = () => {
                         <div
                             className={"text-[#FFF] text-4.5"}
                         >
-                            {column?.name ? (
-                                    column?.name.length >= 10
-                                        ? column?.name.substring(0, 10) + "..."
-                                        : column?.name) :
+                            {data?.name ? (
+                                    data.name.length >= 10
+                                        ? data.name.substring(0, 10) + "..."
+                                        : data.name) :
                                 "未知专栏"}
                         </div>
                         <div
                             className={" text-[#F2F2F2] text-3.5 pt-5px w-50"}>
-                            {column?.description ? (
-                                    column?.description?.length >= 20
-                                        ? column?.description.substring(0, 20) + "..."
-                                        : column?.description) :
+                            {data?.description ? (
+                                    data.description.length >= 20
+                                        ? data.description.substring(0, 20) + "..."
+                                        : data.description) :
                                 "暂时没有数据"}
                         </div>
                         <div className={"flex mt-2 "}>
-                            <Image src={user?.avatar ? user?.avatar : "/images/recommend/cover.svg"} alt={"avatar"}
-                                   width={18} height={18}
-                                   onClick={toUserDetail}/>
+                            <Image
+                                placeholder="blur"
+                                blurDataURL={DefaultLoadingPicture()}
+                                src={data?.avatar ?? DefaultLoadingPicture()}
+                                alt={"avatar"}
+                                width={18} height={18}
+                                onClick={toUserDetail}/>
                             <div
                                 className={"text-[#DFDFDF] text-2.75 lh-18px ml-5px"}>
-                                {user?.name ? user?.name : "未知用户"}
+                                {data?.userName ? data.userName : "未知用户"}
                             </div>
                             <Image
                                 src={"/images/special-column/Group 225.png"}

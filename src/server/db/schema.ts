@@ -343,6 +343,7 @@ export type BaseColumnCard = {
     id: string;
     name: string;
     introduce?: string;
+    description?: string;
     cover: string;
     userId: string;
     userName: string;
