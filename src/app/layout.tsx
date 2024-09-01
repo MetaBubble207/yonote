@@ -25,7 +25,6 @@ export default function RootLayout({children}: Readonly<{
         <html>
         <body className={inter.className} suppressHydrationWarning={true}>
         <AntdRegistry>
-
             <TRPCReactProvider>
                 {children}
             </TRPCReactProvider>
