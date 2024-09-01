@@ -203,7 +203,7 @@ const Page = () => {
                 <div className={"flex justify-end items-center pt-16px"}>
                     <div
                         className={
-                            "inline-block w-14.25 h-6 text-[#252525] shrink-0 bg-#5CE5C1 text-2.5 font-500 lh-6 text-center rounded-10px"
+                            "inline-block w-14.25 h-6 text-[#252525] shrink-0 bg-#5CE5C1 text-2.5 font-500 lh-6 text-center rounded-full"
                         }
                     >
                         加速计划
@@ -286,7 +286,9 @@ const Page = () => {
                         dangerouslySetInnerHTML={{__html: content}}
                     ></div>
                 </div>
-                <div className="w-full flex-wrap pt-2 relative ws-normal whitespace-pre-line break-all">
+            </div>
+            <div className={'fixed bottom-6 left-3.5'}>
+                <div className="w-full h-7 flex-wrap pt-2 relative ws-normal whitespace-pre-line break-all">
                     {tags.map((item, index) => {
                         return (
                             <div
@@ -299,7 +301,7 @@ const Page = () => {
                             </div>
                         );
                     })}
-                    <div className="flex h-5">
+                    <div className="flex items-center h-5 absolute right-0">
                         <img
                             src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 1.png"}
                             alt={"爱心"}
@@ -313,106 +315,135 @@ const Page = () => {
                                 "text-[#B5B5B5] text-2.75 font-not-italic font-500 lh-6 ml-2.5 mr-4"
                             }
                         >
-                            {likeCount}
+                            {likeCount ?? 0}
                         </div>
                     </div>
                 </div>
 
-            </div>
-
-            {/*页面底端上一篇下一篇*/}
-            <div className="bg-#F5F7FB flex pb-8.25">
-                <div className={"w-86.5 h-28.75 bg-[#FFF] rounded-2 mx-auto mt-2"}>
-                    <div className="flex justify-between">
-                        <div className="flex flex-col">
-                            <div className="ml-24px flex items-center space-y-0"></div>
-                        </div>
-                    </div>
-
-                    <div className={"mx-16px"}>
-                        {/*目录*/}
-                        <div onClick={link}>
-                            <div className={"flex items-center mt-2"}>
-                                <div
-                                    className={
-                                        "text-[#666] text-2.5 font-not-italic font-400 lh-14px"
-                                    }
-                                >
-                                    {/* {columnDetail?.name}•目录 */}
-                                    {columnDetail?.name.length > 20 ? columnDetail?.name.substring(0, 20) + "…" : columnDetail?.name}
-                                </div>
-                                <div className={"ml-5px"}>
-                                    <img
-                                        src={"/images/special-column/Sort-one (排序1).png"}
-                                        alt={"心智与阅读"}
-                                        width={14}
-                                        height={14}
-                                    />
-                                </div>
+                {/*页面底端上一篇下一篇*/}
+                <div className="bg-#F5F7FB flex ">
+                    <div className={"w-86.5 h-28.75 bg-[#FFF] rounded-2 mx-auto mt-2"}>
+                        <div className="flex justify-between">
+                            <div className="flex flex-col">
+                                <div className="ml-24px flex items-center space-y-0"></div>
                             </div>
                         </div>
 
-                        {/*上一篇下一篇*/}
-                        <div className="flex mt-8px">
-                            {/* 上一篇 */}
-                            {chapter === 1 ? (
-                                    <div className={"flex flex-col"}>
-                                        <div className={"flex items-center"}>
-                                            <img
-                                                src={"/images/special-column/Double-left (双左).png"}
-                                                alt={"心智与阅读"}
-                                                width={14}
-                                                height={14}
-                                            />
-                                            <div
-                                                className={
-                                                    "text-[#333] text-3 font-not-italic font-400 lh-6 ml-5px"
-                                                }
-                                            >
-                                                上一篇
-                                            </div>
-                                        </div>
-                                        <div
-                                            className={
-                                                "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6"
-                                            }
-                                        >
-                                            已经是第一篇了
-                                        </div>
+                        <div className={"mx-16px"}>
+                            {/*目录*/}
+                            <div onClick={link}>
+                                <div className={"flex items-center mt-2"}>
+                                    <div
+                                        className={
+                                            "text-[#666] text-2.5 font-not-italic font-400 lh-14px"
+                                        }
+                                    >
+                                        {/* {columnDetail?.name}•目录 */}
+                                        {columnDetail?.name.length > 20 ? columnDetail?.name.substring(0, 20) + "…" : columnDetail?.name}
                                     </div>
-                                )
-                                : (
-                                    // <Link className="flex flex-col" href={`../special-column-content?c=${chapter - 1}&id=${columnId}`}>
-                                    <div className="flex flex-col"
-                                         onClick={prepost?.isFree || status || columnDetail?.userId === token ? preLink : alertMessage}>
-                                        <div className={"flex items-center"}>
-                                            <div>
+                                    <div className={"ml-5px"}>
+                                        <img
+                                            src={"/images/special-column/Sort-one (排序1).png"}
+                                            alt={"心智与阅读"}
+                                            width={14}
+                                            height={14}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/*上一篇下一篇*/}
+                            <div className="flex mt-8px">
+                                {/* 上一篇 */}
+                                {chapter === 1 ? (
+                                        <div className={"flex flex-col"}>
+                                            <div className={"flex items-center"}>
                                                 <img
                                                     src={"/images/special-column/Double-left (双左).png"}
                                                     alt={"心智与阅读"}
                                                     width={14}
                                                     height={14}
                                                 />
+                                                <div
+                                                    className={
+                                                        "text-[#333] text-3 font-not-italic font-400 lh-6 ml-5px"
+                                                    }
+                                                >
+                                                    上一篇
+                                                </div>
                                             </div>
                                             <div
                                                 className={
-                                                    "text-[#333] text-3 font-not-italic font-400 lh-6 ml-5px"
+                                                    "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6"
                                                 }
                                             >
-                                                上一篇
+                                                已经是第一篇了
                                             </div>
                                         </div>
-                                        <div
-                                            className={
-                                                "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6"
-                                            }
-                                        >
-                                            {pretitle}
+                                    )
+                                    : (
+                                        // <Link className="flex flex-col" href={`../special-column-content?c=${chapter - 1}&id=${columnId}`}>
+                                        <div className="flex flex-col"
+                                             onClick={prepost?.isFree || status || columnDetail?.userId === token ? preLink : alertMessage}>
+                                            <div className={"flex items-center"}>
+                                                <div>
+                                                    <img
+                                                        src={"/images/special-column/Double-left (双左).png"}
+                                                        alt={"心智与阅读"}
+                                                        width={14}
+                                                        height={14}
+                                                    />
+                                                </div>
+                                                <div
+                                                    className={
+                                                        "text-[#333] text-3 font-not-italic font-400 lh-6 ml-5px"
+                                                    }
+                                                >
+                                                    上一篇
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6"
+                                                }
+                                            >
+                                                {pretitle}
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
-                            {numData <= chapter ? (
-                                    <div className="flex flex-col ml-auto">
+                                    )}
+                                {numData <= chapter ? (
+                                        <div className="flex flex-col ml-auto">
+                                            <div className={"flex items-center justify-end"}>
+                                                <div
+                                                    className={
+                                                        "text-[#333] text-3 font-not-italic font-400 lh-6 "
+                                                    }
+                                                >
+                                                    下一篇
+                                                </div>
+                                                <div>
+                                                    <img
+                                                        src={"/images/special-column/Double-left (双右) .png"}
+                                                        alt={"心智与阅读"}
+                                                        width={14}
+                                                        height={14}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div
+                                                className={
+                                                    "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
+                                                }
+                                            >
+                                                已经是末篇了
+                                            </div>
+                                        </div>
+                                    ) :
+
+                                    // nextpost?.data.isFree || status ? (<div>hellop</div>)
+                                    //   : (<div></div>)
+                                    <div className="flex flex-col ml-auto"
+                                         onClick={nextpost?.isFree || status || columnDetail?.userId === token ? nextLink : alertMessage}>
                                         <div className={"flex items-center justify-end"}>
                                             <div
                                                 className={
@@ -435,43 +466,13 @@ const Page = () => {
                                                 "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
                                             }
                                         >
-                                            已经是末篇了
+                                            {nexttitle}
                                         </div>
                                     </div>
-                                ) :
 
-                                // nextpost?.data.isFree || status ? (<div>hellop</div>)
-                                //   : (<div></div>)
-                                <div className="flex flex-col ml-auto"
-                                     onClick={nextpost?.isFree || status || columnDetail?.userId === token ? nextLink : alertMessage}>
-                                    <div className={"flex items-center justify-end"}>
-                                        <div
-                                            className={
-                                                "text-[#333] text-3 font-not-italic font-400 lh-6 "
-                                            }
-                                        >
-                                            下一篇
-                                        </div>
-                                        <div>
-                                            <img
-                                                src={"/images/special-column/Double-left (双右) .png"}
-                                                alt={"心智与阅读"}
-                                                width={14}
-                                                height={14}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div
-                                        className={
-                                            "w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"
-                                        }
-                                    >
-                                        {nexttitle}
-                                    </div>
-                                </div>
+                                }
 
-                            }
-
+                            </div>
                         </div>
                     </div>
                 </div>
