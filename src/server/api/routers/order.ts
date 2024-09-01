@@ -384,22 +384,16 @@ export const orderRouter = createTRPCRouter({
             columnId: z.string(),
         }))
         .query(async ({ctx, input}) => {
-            const MyColumn = await ctx.db.query.column.findFirst({
+            // 假设是自己专栏的，就直接返回
+            const myColumn = await ctx.db.query.column.findFirst({
                 where: and(eq(column.id, input.columnId), eq(column.userId, input.userId))
             })
-            if (MyColumn) {
-                return true
-            } else {
-                const list = await ctx.db.query.order.findFirst({
-                    where: and(eq(order.columnId, input.columnId), eq(order.buyerId, input.userId))
-                })
-                if (list) {
-                    return list.status;
-                } else {
-                    return false;
-                }
-            }
+            if (myColumn) return true
+            const orderData = await ctx.db.query.order.findFirst({
+                where: and(eq(order.columnId, input.columnId), eq(order.buyerId, input.userId))
+            })
 
+            return orderData.status;
 
         }),
 

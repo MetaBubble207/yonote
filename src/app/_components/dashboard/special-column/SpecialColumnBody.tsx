@@ -39,7 +39,7 @@ const SpecialColumnBody = () => {
     // 是否加载订阅按钮
     const ShowButton = () => {
         return <>
-            {status && <div className={'w-85.75 h-10  ml-16px   rounded-full'}>
+            {!status && <div className={'w-85.75 h-10  ml-16px   rounded-full'}>
                 <Button
                     type='primary'
                     size='small'
@@ -113,7 +113,9 @@ const SpecialColumnBody = () => {
                     <Image src={"/images/special-column/Sort.png"} alt={"心智与阅读"} width={18} height={18}/>
                 </div>
             </div>
-            {RenderContent()}
+            <div className={'mb-15'}>
+                <RenderContent/>
+            </div>
 
             <div className={'fixed bottom-2'}>
                 <ShowButton/>
