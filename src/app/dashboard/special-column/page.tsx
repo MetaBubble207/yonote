@@ -1,7 +1,9 @@
+"use client"
 import SpecialColumnBody from "@/app/_components/dashboard/special-column/SpecialColumnBody";
 import SpecialColumnHeader from "@/app/_components/dashboard/special-column/SpecialColumnHeader";
+import withTheme from "@/theme";
 
-const Page = () => {
+const Column = function () {
     return (
         <div className={"w-full bg-[#F5F7FB]"}>
             <div className={"w-full relative"}>
@@ -15,6 +17,10 @@ const Page = () => {
             </div>
         </div>
     )
+}
+
+const Page = () => {
+    return withTheme(<Column/>)
 }
 
 export default Page;

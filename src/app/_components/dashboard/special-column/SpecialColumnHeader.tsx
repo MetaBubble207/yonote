@@ -41,11 +41,12 @@ const SpecialColumnHeader = () => {
             </div>
             <div className={"w-full absolute top-2.5 left-0 z-3"}>
                 <div className={"flex justify-end items-center"}>
-                    <Button size={'small'} className={"w-14 h-6 text-[#252525] bg-#5CE5C1 text-2.5 rounded-full"}>
+                    <Button type={'primary'} size={'small'}
+                            style={{width: '14', height: '6', borderRadius: '9999px',fontSize: '10px'}} >
                         加速计划
                     </Button>
                     {/* 点击分享，跳转海报 */}
-                    <Button type={'link'} size={'small'} className={"ml-10px mr-16px"} onClick={toShare}>
+                    <Button type={'link'} size={'small'} className={"ml-2.5 mr-16px"} onClick={toShare}>
                         <Image
                             src={"/images/special-column/Share-two (分享2).png"}
                             alt={"分享"}

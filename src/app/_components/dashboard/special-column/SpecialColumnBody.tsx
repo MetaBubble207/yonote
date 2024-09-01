@@ -6,7 +6,7 @@ import {api} from "@/trpc/react";
 import Reserved from "@/app/_components/dialog/Reserved";
 import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
-import {message} from "antd";
+import {Button, message} from "antd";
 import SpecialColumnList from "@/app/_components/dashboard/special-column/SpecialColumnList";
 
 const SpecialColumnBody = () => {
@@ -39,11 +39,16 @@ const SpecialColumnBody = () => {
     // 是否加载订阅按钮
     const ShowButton = () => {
         return <>
-            {status && <button
-                className={"w-91% h-40px shrink-0 border-rd-11.25 bg-[#5CE5C1] ml-16px mt-17px mb-36px text-center lh-40px text-[#252525] text-4.5 font-not-italic font-500 fixed bottom-2"}
-                onClick={setting}>
-                订阅
-            </button>
+            {status && <div className={'w-85.75 h-10  ml-16px   rounded-full'}>
+                <Button
+                    type='primary'
+                    size='small'
+                    style={{width: '100%', height: '100%', borderRadius: '9999px',}}
+                    className={" bg-[#5CE5C1]"}
+                    onClick={setting}>
+                    订阅
+                </Button>
+            </div>
             }
         </>
     }
@@ -110,7 +115,9 @@ const SpecialColumnBody = () => {
             </div>
             {RenderContent()}
 
-            <ShowButton/>
+            <div className={'fixed bottom-2'}>
+                <ShowButton/>
+            </div>
 
             <div className="fixed  top-200px   w-full">
                 {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}

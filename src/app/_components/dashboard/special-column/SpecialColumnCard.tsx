@@ -82,7 +82,7 @@ const SpecialColumnCard = (props) => {
                     </div>
 
                     <div
-                        className={"text-[#666] text-3.25 font-00 lh-[120%] pt-5px w-75"}
+                        className={"text-[#666] text-3.25 font-00 pt-5px"}
                         style={
                             {
                                 display: '-webkit-box',

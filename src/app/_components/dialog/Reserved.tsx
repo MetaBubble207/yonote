@@ -6,7 +6,7 @@ import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 import {useSearchParams} from "next/navigation";
 import process from "process";
-import {message} from "antd";
+import {Button, message} from "antd";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import Loading from "@/app/_components/common/Loading";
 
@@ -239,10 +239,10 @@ const Reserved = ({onClose, check}) => {
                     24 小时内可申请退款
                 </div>
                 <div className="w-85.75 h-10 shrink-0 mt-8">
-                    <button onClick={handleClickPay}>
+                    <Button onClick={handleClickPay}>
                         {/* 支付跳转 */}
                         <Image src="/images/dialog/pay.png" alt="pay" width={343} height={40} className="h-10 w-85.75"/>
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>
