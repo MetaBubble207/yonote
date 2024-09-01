@@ -52,7 +52,9 @@ const SpecialColumnBody = () => {
     const search = () => {
 
     }
-    if (isLoading) return <Loading/>
+    if (isLoading) return <div className={'mt-50'}>
+        <Loading/>
+    </div>
     return (
         <div className={"w-full"}>
             {contextHolder}

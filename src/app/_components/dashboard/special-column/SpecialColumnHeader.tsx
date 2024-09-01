@@ -15,13 +15,14 @@ const SpecialColumnHeader = () => {
 
     const router = useRouter();
 
-    if (isLoading) return <div className={"bg-white"}><Loading/></div>
     const toShare = () => {
         router.push(`/dashboard/poster/column?id=${data.id}`)
     };
     const toUserDetail = () => {
         router.push(`/dashboard/user/detail?id=${data.userId}`)
     }
+
+    if (isLoading) return <div className={"bg-white mt-10"}><Loading/></div>
 
     return (
         <>
