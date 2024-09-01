@@ -83,31 +83,38 @@ const UserMessage = function () {
             <Image src={userInfo?.avatar || "/image/user/Loading.svg"} alt="头像" width={64} height={64}
                    className={'rounded-full mx-auto mt-5'}
             />
-            <Button type={'primary'}
-                    className={"mx-auto mt-2"}
-                    style={{width:'19',height:'4',display: 'flex', alignItems:'center',borderRadius:'9999px'}}
-            >
-                <Image src={"/images/user/Edit.svg"} alt={"头像"} width={10} height={10}/>
-                <div className="w-10 ml-1.25 text-#252525 text-2.5 font-500 lh-6" onClick={handleButtonClick}>
-                    修改头像
-                </div>
-                <input
-                    type="file"
-                    ref={fileInputRef}
-                    style={{display: 'none'}}
-                    onChange={handleFileChange}
-                />
-            </Button>
+            <div className={'w-22 h-5 mx-auto flex mt-2'}>
+                <Button type={'primary'}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            borderRadius: '9999px'
+                        }}
+                >
+                    <Image src={"/images/user/Edit.svg"} alt={"头像"} width={14} height={14}/>
+                    <div className="w-10 ml-1.25 text-#252525 text-2.5 font-500 lh-6" onClick={handleButtonClick}>
+                        修改头像
+                    </div>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        style={{display: 'none'}}
+                        onChange={handleFileChange}
+                    />
+                </Button>
+            </div>
 
-            <div className={'ml-4 mt-7 text-[#252525] text-3.5 font-500 lh-6 space-y-6'}>
+            <div className={'mx-4 mt-7 text-[#252525] text-3.5 font-500 lh-6 space-y-6'}>
                 {/* 用户名和用户ID展示 */}
                 <div className="flex items-center">
                     <p>用户名</p>
-                    <div className="flex items-center pl-13">
+                    <div className=" flex-1 flex items-center pl-13">
                         {isEditingName ? (
                             <input
                                 type="text"
-                                className="w-full pl-[15px] text-3.5 font-400"
+                                className=" pl-[15px] text-3.5 font-400"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 onBlur={handleNameBlur}
@@ -118,10 +125,11 @@ const UserMessage = function () {
                                 <span>{userInfo.name}</span>
                                 <Button
                                     type="text"
-                                    className=" text-[#252525] text-2.5 font-500 text-right"
+                                    className=" flex-1 text-[#252525] text-2.5 font-500 text-right relative"
                                     onClick={() => setIsEditingName(true)}
                                 >
-                                    <Image className={"ml-44"} src={"/images/user/RightArrow.svg"} alt={"RightArrow"}
+                                    <Image className={"absolute right-0 bottom-2"} src={"/images/user/RightArrow.svg"}
+                                           alt={"RightArrow"}
                                            width={12} height={12}/>
                                 </Button>
                             </>
@@ -133,13 +141,13 @@ const UserMessage = function () {
                     <span className="pl-13">{userInfo.idNumber}</span>
                 </div>
                 {/* 手机号展示和修改 */}
-                <div className="flex items-center">
+                <div className="w-full flex items-center ">
                     <p>手机号</p>
-                    <div className="flex items-center pl-13">
+                    <div className="flex-1 flex items-center pl-13">
                         {isEditingPhone ? (
                             <input
                                 type="text"
-                                className="w-full pl-[15px] text-3.5 font-400"
+                                className=" pl-[15px] text-3.5 font-400"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 onBlur={handlePhoneBlur}
@@ -150,10 +158,11 @@ const UserMessage = function () {
                                 <span>{userInfo.phone}</span>
                                 <Button
                                     type="text"
-                                    className=" text-[#252525] text-2.5 font-500"
+                                    className=" flex-1 text-[#252525] text-2.5 font-500 relative "
                                     onClick={() => setIsEditingPhone(true)}
                                 >
-                                    <Image className={"ml-30"} src={"/images/user/RightArrow.svg"} alt={"RightArrow"}
+                                    <Image className={'absolute right-0 bottom-2'} src={"/images/user/RightArrow.svg"}
+                                           alt={"RightArrow"}
                                            width={12} height={12}/>
                                 </Button>
                             </>
