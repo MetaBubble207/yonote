@@ -353,11 +353,14 @@ export type BaseColumnCard = {
     userName: string;
     avatar: string;
     createdAt: Date;
+    updatedAt: Date;
 }
 
 export type DetailColumnCard = BaseColumnCard & {
     readCount: number;
     likeCount: number;
+    subscriptionCount: number;
+    postCount: number;
     isTop: boolean;
     isFree: boolean;
 }

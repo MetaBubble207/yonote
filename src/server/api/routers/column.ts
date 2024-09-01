@@ -30,6 +30,10 @@ const getDetailColumnCard = async (
     const readCount = await caller.read.getColumnRead({columnId: columnData.id});
     // 获取专栏下的所有帖子的点赞量
     const likeCount = await caller.like.getColumnLike({columnId: columnData.id});
+    // 获取专栏订阅量
+    const subscriptionCount = (await db.select().from(order).where(eq(order.columnId, columnId))).length;
+    // 获取帖子数量
+    const postCount = (await db.select().from(post).where(eq(post.columnId, columnId))).length
     // 获取作者基本信息
     const userData = await caller.users.getOne({id: columnData.userId});
     let detailColumnCard: DetailColumnCard = {
@@ -39,17 +43,21 @@ const getDetailColumnCard = async (
         id: "",
         isFree: false,
         isTop: false,
-        likeCount: 0,
         name: "",
+        likeCount: 0,
         readCount: 0,
+        subscriptionCount: 0,
+        postCount: 0,
         userId: "",
-        userName: ""
+        userName: "",
     };
 
     Object.assign(detailColumnCard, {
         ...columnData,
         readCount,
         likeCount,
+        subscriptionCount,
+        postCount,
         userId: userData.id,
         userName: userData.name,
         avatar: userData.avatar,
@@ -352,4 +360,43 @@ export const columnRouter = createTRPCRouter({
             };
             return res;
         }),
+
+    getColumnFilter: publicProcedure
+        .input(z.object({conditions: z.number()}))
+        .query(async ({ctx, input}): Promise<DetailColumnCard[]> => {
+            const {db} = ctx;
+            // 获取所有专栏
+            const allColumn = await db.select().from(column);
+            const detailColumnsPromise = allColumn.map(async column => {
+                // 查找用户
+                return await getDetailColumnCard(ctx, column.id)
+            });
+
+            const detailColumns = await Promise.all(detailColumnsPromise);
+            let res: DetailColumnCard[] = [];
+            const {conditions} = input;
+
+            switch (conditions) {
+                // 0 全部
+                case 0:
+                    break;
+                // 1 订阅量
+                case 1:
+                    res = detailColumns.sort((a, b) => a.subscriptionCount - b.subscriptionCount)
+                    break;
+                // 2 内容量
+                case 2:
+                    res = detailColumns.sort((a, b) => a.postCount - b.postCount);
+                    break;
+                // 3 发布时间
+                case 3:
+                    res = detailColumns.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);
+                    break;
+                // 4 创作时间
+                case 4:
+                    res = detailColumns.sort((a, b) => a.updatedAt > b.updatedAt ? 1 : -1);
+                    break;
+            }
+            return res;
+        })
 });
