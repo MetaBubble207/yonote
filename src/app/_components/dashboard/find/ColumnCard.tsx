@@ -7,7 +7,6 @@ import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
 const ColumnCard = ({columnData}) => {
     const order = api.order.getColumnOrder.useQuery({columnId: columnData?.id});
-    const read = api.read.getColumnRead.useQuery({columnId: columnData?.id});
     return (
         <Link href={`/dashboard/special-column?id=${columnData.id}`}>
             <div className="w-85.75 h-32 border-rd-5 bg-[#FFF] pr-4 pl-2.5 ">
@@ -78,7 +77,7 @@ const ColumnCard = ({columnData}) => {
                                 className="w-4.5 h-4.5 "
                             />
                             <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
-                                {order.data?.length}
+                                {order?.data.subscriptCount}
                             </div>
                         </div>
                         <div className="flex items-center">
@@ -90,7 +89,7 @@ const ColumnCard = ({columnData}) => {
                                 className=" w-4.5 h-4.5 ml-7"
                             />
                             <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
-                                {read?.data}
+                                {order?.data.detailPostCard.length}
                             </div>
                         </div>
                     </div>

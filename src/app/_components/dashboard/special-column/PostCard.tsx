@@ -3,7 +3,6 @@ import Image from "next/image";
 import {useRouter} from "next/navigation";
 import React, {useState} from "react";
 import {timeToDateString} from "@/tools/timeToString";
-import {api} from "@/trpc/react";
 import {useEffect} from "react";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import {type DetailPostCard} from "@/server/db/schema";

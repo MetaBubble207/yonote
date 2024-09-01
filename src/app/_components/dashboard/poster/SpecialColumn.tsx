@@ -46,10 +46,6 @@ const SpecialColumn = () => {
 
     const {data: orderData, isLoading: isOrderLoading} = api.order.getColumnOrder.useQuery({
         columnId: columnId,
-    })
-
-    const {data: readData, isLoading: isReadLoading} = api.post.getAllPost.useQuery({
-        columnId: columnId
     });
 
     const [columnIntro, setColumnIntro] = useState("");
@@ -84,7 +80,7 @@ const SpecialColumn = () => {
         }
     };
 
-    if (isUserLoading || isOrderLoading || isReadLoading) return <div
+    if (isUserLoading || isOrderLoading) return <div
         className={"h-screen w-full flex items-center justify-center"}><Loading/></div>
 
     return <div className="min-h-screen bg-[#999999] flex justify-center items-center px-4">
@@ -117,10 +113,10 @@ const SpecialColumn = () => {
                         {/* 专栏订阅数和内容数 */}
                         <div className="flex items-center ml-2.25">
                             <div
-                                className={"text-[#252525] font-D-DIN text-3.5 font-700 lh-6"}>{orderData?.length}</div>
+                                className={"text-[#252525] font-D-DIN text-3.5 font-700 lh-6"}>{orderData?.subscriptCount}</div>
                             <div className="w-10 text-[#999] text-3 font-400 lh-6 ml-1.25 mt-0.5">订阅</div>
                             <div
-                                className="text-[#252525] font-D-DIN text-3.5 font-700 lh-6 ml-1">{readData?.length}</div>
+                                className="text-[#252525] font-D-DIN text-3.5 font-700 lh-6 ml-1">{orderData.detailPostCard.length}</div>
                             <div className="w-10 text-[#999] text-3 font-400 lh-6 ml-1.25 mt-0.5">内容</div>
                         </div>
                     </div>
