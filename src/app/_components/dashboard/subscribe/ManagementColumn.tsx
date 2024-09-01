@@ -31,7 +31,9 @@ const ManagementColumn = forwardRef(
         const handleSave = () => {
             const req = columnsState.map(item => ({orderId: item.order.id, isVisible: item.order.isVisible}));
             changeVisible.mutate({orders: req});
-            message.success('保存成功');
+            message.success('保存成功', 1).then(() => {
+                window.location.reload();
+            });
         };
 
         const handleChange = (index: number, visible: boolean) => {

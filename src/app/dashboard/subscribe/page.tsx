@@ -24,7 +24,7 @@ const Subscribe = function Subscribe() {
 
     const recentColumn = api.column.getColumnDetail.useQuery({
         columnId: recentRead?.columnId,
-    }).data;
+    },{enabled: Boolean(recentRead)}).data;
 
     const [readContent, setReadContent] = useState(recentRead?.content);
 

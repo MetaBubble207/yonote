@@ -23,7 +23,6 @@ const SubscribeManage = () => {
             if (saveColumn.current && manage == true) {
                 saveColumn.current.handleSave();
                 setOpen(false);
-                window.location.reload();
             }
             setManage(!manage);
         }
