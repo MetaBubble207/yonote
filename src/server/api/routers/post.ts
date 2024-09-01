@@ -232,7 +232,10 @@ export const postRouter = createTRPCRouter({
             tag: z.string(),
             status: z.boolean()
         }))
-        .mutation(({ctx, input}) => {
+        .mutation(async ({ctx, input}) => {
+            const caller = createCaller(ctx);
+            // 更新专栏创作时间
+            await caller.column.changeUpdatedAt({id: input.columnId})
             return ctx.db.update(post).set({
                 name: input.name,
                 content: input.content,
