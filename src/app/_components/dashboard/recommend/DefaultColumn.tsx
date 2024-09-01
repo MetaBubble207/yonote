@@ -1,16 +1,15 @@
 import Image from "next/image";
-import { api } from "@/trpc/react";
-import React, { useState, useEffect } from "react";
+import {api} from "@/trpc/react";
+import React, {useState, useEffect} from "react";
 import ColumnCard from "@/app/_components/dashboard/find/ColumnCard";
-import Loading from "@/app/_components/common/Loading";
-import {Button} from "antd";
+import {Button, Skeleton} from "antd";
 
 const DefaultColumn = () => {
     const [data, setData] = useState(null);
     const [sortOrder, setSortOrder] = useState<boolean>(true); // 默认为 true，表示倒序排序
 
     // 使用 useQuery 钩子获取数据
-    const { data: queryData,isFetching } = api.column.getCreateAt.useQuery();
+    const {data: queryData, isLoading} = api.column.getCreateAt.useQuery();
 
     // 在数据加载完成时更新状态
     useEffect(() => {
@@ -24,11 +23,36 @@ const DefaultColumn = () => {
     const toggleSortOrder = () => {
         setSortOrder(!sortOrder);
     };
-
+    if (isLoading) return <>
+        <Skeleton
+            active
+            paragraph={{rows: 5}}
+            title={false}
+            className="w-85.75 h-32 border-rd-5 bg-[#FFF] p5 mt-4"
+        />
+        <Skeleton
+            active
+            paragraph={{rows: 5}}
+            title={false}
+            className="w-85.75 h-32 border-rd-5 bg-[#FFF] p5 mt-4"
+        />
+        <Skeleton
+            active
+            paragraph={{rows: 5}}
+            title={false}
+            className="w-85.75 h-32 border-rd-5 bg-[#FFF] p5 mt-4"
+        />
+        <Skeleton
+            active
+            paragraph={{rows: 5}}
+            title={false}
+            className="w-85.75 h-32 border-rd-5 bg-[#FFF] p5 mt-4"
+        />
+    </>
     return (
         <div>
             <Button type={'link'} size={'small'}
-                    style={{display: 'flex',paddingLeft: '14px'}}
+                    style={{display: 'flex', paddingLeft: '14px'}}
                     onClick={toggleSortOrder}>
                 <div className="mt-2 text-[#B5B5B5] text-2.5 font-400 lh-6">
                     {sortOrder ? "默认倒序排序" : "顺序排序"}
@@ -42,19 +66,18 @@ const DefaultColumn = () => {
                 />
             </Button>
 
-            {isFetching
-                ?
-                <div className={"mt-50"}>
-                    <Loading/>
-                </div>
-                :
-                data?.map((item) => (
-                    <div className="mt-4 flex justify-center" key={item.id}>
-                        <ColumnCard columnData={item}/>
-                    </div>
-                ))}
         </div>
     );
+
+    function List(){
+        return <div>
+            {data?.map((item) => (
+                <div className="mt-4 flex justify-center" key={item.id}>
+                    <ColumnCard columnData={item}/>
+                </div>
+            ))}
+        </div>
+    }
 };
 
 export default DefaultColumn;

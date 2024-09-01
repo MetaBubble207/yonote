@@ -66,6 +66,7 @@ const getDetailColumnCard = async (
     });
     return detailColumnCard;
 }
+
 export const columnRouter = createTRPCRouter({
     update: publicProcedure
         .input(z.object({
@@ -380,6 +381,7 @@ export const columnRouter = createTRPCRouter({
             switch (conditions) {
                 // 0 全部
                 case 0:
+                    res = detailColumns;
                     break;
                 // 1 订阅量
                 case 1:

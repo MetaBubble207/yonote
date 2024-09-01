@@ -2,11 +2,10 @@ import Image from "next/image";
 import {timeToDateString} from "@/tools/timeToString";
 import Link from "next/link";
 import React from "react";
-import {api} from "@/trpc/react";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import {type DetailColumnCard} from "@/server/db/schema";
 
-const ColumnCard = ({columnData}) => {
-    const order = api.order.getColumnOrder.useQuery({columnId: columnData?.id});
+const ColumnCard = ({columnData}: { columnData: DetailColumnCard }) => {
     return (
         <Link href={`/dashboard/special-column?id=${columnData.id}`}>
             <div className="w-85.75 h-32 border-rd-5 bg-[#FFF] pr-4 pl-2.5 ">
@@ -50,7 +49,7 @@ const ColumnCard = ({columnData}) => {
                             <Image
                                 placeholder="blur"
                                 blurDataURL={DefaultLoadingPicture()}
-                                src={columnData.user?.avatar ?? DefaultLoadingPicture()}
+                                src={columnData?.avatar ?? DefaultLoadingPicture()}
                                 alt="cover"
                                 quality={100}
                                 fill
@@ -60,7 +59,7 @@ const ColumnCard = ({columnData}) => {
                         </div>
                         <div className="ml-1">
                             <div className="flex text-[#999] text-2.75 lh-4">
-                                {columnData.user?.name}
+                                {columnData.userName}
                             </div>
                             <div className="text-[#B5B5B5] text-2.75 lh-4">
                                 {timeToDateString(columnData.createdAt)}发布
@@ -77,7 +76,7 @@ const ColumnCard = ({columnData}) => {
                                 className="w-4.5 h-4.5 "
                             />
                             <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
-                                {order?.data?.subscriptCount}
+                                {columnData.subscriptionCount}
                             </div>
                         </div>
                         <div className="flex items-center">
@@ -89,7 +88,7 @@ const ColumnCard = ({columnData}) => {
                                 className=" w-4.5 h-4.5 ml-7"
                             />
                             <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
-                                {order?.data?.detailPostCard.length}
+                                {columnData.readCount}
                             </div>
                         </div>
                     </div>
