@@ -6,7 +6,7 @@ import {
     type Column,
     column,
     type ColumnOrder,
-    type ColumnUser, type DetailColumnCard,
+    type DetailColumnCard,
     order,
     post,
     postRead,
@@ -18,6 +18,7 @@ import {uniqueArray} from "@/tools/uniqueArray";
 import {createCaller} from "@/server/api/root";
 import type {PostgresJsDatabase} from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
+import {getCurrentTime} from "@/tools/getCurrentTime";
 
 const getDetailColumnCard = async (
     ctx: { headers: Headers, db: PostgresJsDatabase<typeof schema> },
@@ -398,5 +399,14 @@ export const columnRouter = createTRPCRouter({
                     break;
             }
             return res;
+        }),
+
+    // 更新创作时间
+    changeUpdatedAt: publicProcedure
+        .input(z.object({id: z.string()}))
+        .mutation(({ctx, input}) => {
+            return ctx.db.update(column).set({
+                updatedAt: getCurrentTime()
+            }).where(eq(column.id, input.id))
         })
 });

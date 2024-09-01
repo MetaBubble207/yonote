@@ -3,6 +3,7 @@ import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {column, post, user} from "@/server/db/schema";
 import {and, eq, gt, like, lt} from "drizzle-orm";
 import {getCurrentTime} from "@/tools/getCurrentTime";
+import {createCaller} from "@/server/api/root";
 
 export const postRouter = createTRPCRouter({
     create: publicProcedure
@@ -14,12 +15,15 @@ export const postRouter = createTRPCRouter({
             columnId: z.string(),
         }))
         .mutation(async ({ctx, input}) => {
-
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            const record = ctx.db.select().from(post).where(eq(post.columnId, input.columnId))
+            const {db} = ctx;
+            // await new Promise((resolve) => setTimeout(resolve, 1000));
+            const record = db.select().from(post).where(eq(post.columnId, input.columnId))
             const chapter = (await record).length + 1;
-            ctx.db.select().from(post).where(eq(post.name, input.name))
-            return ctx.db.insert(post).values({
+
+            const caller = createCaller(ctx);
+            // 更新专栏创作时间
+            await caller.column.changeUpdatedAt({id: input.columnId})
+            return db.insert(post).values({
                 name: input.name,
                 content: input.content,
                 tag: input.tag,
