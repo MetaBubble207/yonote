@@ -77,7 +77,7 @@ const ColumnCard = ({columnData}) => {
                                 className="w-4.5 h-4.5 "
                             />
                             <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
-                                {order?.data.subscriptCount}
+                                {order?.data?.subscriptCount}
                             </div>
                         </div>
                         <div className="flex items-center">
@@ -89,7 +89,7 @@ const ColumnCard = ({columnData}) => {
                                 className=" w-4.5 h-4.5 ml-7"
                             />
                             <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
-                                {order?.data.detailPostCard.length}
+                                {order?.data?.detailPostCard.length}
                             </div>
                         </div>
                     </div>

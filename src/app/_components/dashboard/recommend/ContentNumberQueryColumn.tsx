@@ -26,7 +26,9 @@ const ContentNumberQueryColumn = () => {
     };
     return (
         <div>
-            <Button type={'link'} size={'small'} className="flex pl-3.5" onClick={toggleSortOrder}>
+           <Button type={'link'} size={'small'}
+                    style={{display: 'flex',paddingLeft: '14px'}}
+                    onClick={toggleSortOrder}>
                 <div className="mt-2 text-[#B5B5B5] text-2.5 font-400 lh-6">
                     {sortOrder ? "默认倒序排序" : "顺序排序"}
                 </div>
