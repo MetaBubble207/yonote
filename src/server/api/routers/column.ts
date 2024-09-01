@@ -385,19 +385,19 @@ export const columnRouter = createTRPCRouter({
                     break;
                 // 1 订阅量
                 case 1:
-                    res = detailColumns.sort((a, b) => a.subscriptionCount - b.subscriptionCount);
+                    res = detailColumns.sort((a, b) => b.subscriptionCount - a.subscriptionCount);
                     break;
                 // 2 内容量
                 case 2:
-                    res = detailColumns.sort((a, b) => a.postCount - b.postCount);
+                    res = detailColumns.sort((a, b) => b.postCount - a.postCount);
                     break;
                 // 3 发布时间
                 case 3:
-                    res = detailColumns.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1);
+                    res = detailColumns.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
                     break;
                 // 4 创作时间
                 case 4:
-                    res = detailColumns.sort((a, b) => a.updatedAt > b.updatedAt ? 1 : -1);
+                    res = detailColumns.sort((a, b) => b.updatedAt > a.updatedAt ? 1 : -1);
                     break;
             }
             return res;

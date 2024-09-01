@@ -10,7 +10,7 @@ const SpecialColumn = () => {
     const [activeCategory, setActiveCategory] = useState<string>("默认");
     const [currentContent, setCurrentContent] = useState<number>(0);
     const [data, setData] = useState([]);
-    const [sortOrder, setSortOrder] = useState<boolean>(true); // 默认为 true，表示倒序排序
+    const [sortOrder, setSortOrder] = useState<boolean>(true);
 
     // 使用 useQuery 钩子获取数据
     const {data: columns, isLoading} = api.column.getColumnFilter.useQuery({conditions: currentContent});
@@ -23,7 +23,7 @@ const SpecialColumn = () => {
     useEffect(() => {
         if (columns) {
             // 根据 sortOrder 设置 data 的值
-            const sortedData = sortOrder ? [...columns].reverse() : columns;
+            const sortedData = sortOrder ? columns : [...columns].reverse();
             setData(sortedData);
         }
     }, [columns, sortOrder]);
@@ -133,7 +133,7 @@ const SpecialColumn = () => {
     }
 
     function List() {
-        if(isLoading) return <div className={'px-4'}>
+        if (isLoading) return <div className={'px-4'}>
             <Skeleton
                 active
                 paragraph={{rows: 4}}
