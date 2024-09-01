@@ -2,7 +2,7 @@ import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {
     column,
-    order, type OrderBuyer,
+    order, type OrderBuyer, post, type PostDetail, postLike, postRead,
     priceList,
     referrals,
     runningWater,
@@ -337,15 +337,43 @@ export const orderRouter = createTRPCRouter({
             }
         }),
 
-    // 同一订单的信息
     getColumnOrder: publicProcedure
         .input(z.object({
             columnId: z.string(),
         }))
-        .query(({ctx, input}) => {
-            return ctx.db.query.order.findMany({
-                where: eq(order.columnId, input.columnId),
-            });
+        .query(async ({ctx, input}): Promise<PostDetail> => {
+            const {db} = ctx;
+            const {columnId} = input;
+            // 获取专栏信息
+            const columnData = await db.query.column.findFirst({where: eq(column.id, columnId)})
+            // 获取订阅数量
+            const subscription = await db.select().from(order)
+                .where(eq(order.columnId, columnId));
+            // 获取用户数据
+            const userData = await db.query.user.findFirst({
+                where: eq(user.id, columnData.userId)
+            })
+            // 获取文章信息
+            const posts = await db.select().from(post).where(eq(post.columnId, columnId));
+            const detailPostPromise = posts.map(async post => {
+                const likes = await db.select().from(postLike).where(eq(postLike.postId, post.id));
+                const reads = await db.select().from(postRead).where(eq(postRead.postId, post.id));
+                return {
+                    ...post,
+                    likeCount: likes.length,
+                    readCount: reads.length,
+                }
+            })
+            const detailPost = await Promise.all(detailPostPromise)
+            return {
+                detailPostCard: detailPost.map(item => ({
+                    ...item,
+                    userName: userData.name,
+                    avatar: userData.avatar,
+                    userId: userData.id,
+                })),
+                subscriptCount: subscription.length
+            };
         }),
 
     // 根据用户ID 查询订单

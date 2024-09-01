@@ -17,7 +17,7 @@ const SpecialColumnIntroduce = () => {
     return (
         <div className={"w-full min-h-40 mt-20px bg-[#FFF] px-4 "}>
             <div
-                className={"border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] w-full min-h-38 px-4"}>{column.introduce}</div>
+                className={"border-rd-5 border-1 break-words border-solid border-[rgba(181,181,181,0.20)] w-full min-h-38 px-4"}>{column.introduce}</div>
         </div>
     )
 }

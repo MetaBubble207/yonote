@@ -40,7 +40,7 @@ export const post = createTable(
     {
         id: serial("id").primaryKey(),
         name: varchar("name", {length: 256}),
-        userID: varchar("user_id"),
+        userId: varchar("user_id"),
         readNumber: integer("readNumber"),
         likeCount: integer("likeCount"),
         content: varchar("content"),
@@ -320,7 +320,11 @@ export type ColumnOrder = {
 export type Post = typeof post.$inferSelect
 
 export type Order = typeof order.$inferSelect
-
+export type BaseUserInfo = {
+    userId: string;
+    userName: string;
+    avatar: string;
+}
 export type OrderBuyer = {
     id: number;
     columnId: string;
@@ -356,4 +360,26 @@ export type DetailColumnCard = BaseColumnCard & {
     likeCount: number;
     isTop: boolean;
     isFree: boolean;
+}
+
+export type DetailPostCard = BaseUserInfo & {
+    id?: number;
+    name?: string;
+    content?: string;
+    tag?: string;
+    columnId?: string;
+    isTop?: boolean;
+    isFree?: boolean;
+    status?: boolean;
+    cover?: string;
+    chapter?: number;
+    createdAt?: Date;
+    updatedAt?: Date;
+    readCount?: number;
+    likeCount?: number;
+}
+
+export type PostDetail =  {
+    detailPostCard: DetailPostCard[];
+    subscriptCount: number;
 }

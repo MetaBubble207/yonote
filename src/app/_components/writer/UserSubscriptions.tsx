@@ -85,7 +85,7 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({columnId, currentP
                 id: index,
                 avatar: info.user.avatar,
                 userName: info.user.name,
-                userID: info.user.idNumber,
+                userId: info.user.idNumber,
                 status: info.status,
                 start: info.createdAt,
                 end: info.endDate,
@@ -134,7 +134,7 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({columnId, currentP
                         />
                     </td>
                     <td>{item.userName}</td>
-                    <td>{item.userID}</td>
+                    <td>{item.userId}</td>
                     <td>{item.status ? '订阅中' : '已结束'}</td>
                     <td>{timeToDateFullTimeString(item.start)}</td>
                     <td>{timeToDateFullTimeString(item.end) ? timeToDateFullTimeString(item.end) : '无数据'}</td>
