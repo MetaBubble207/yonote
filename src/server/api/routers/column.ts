@@ -40,6 +40,7 @@ const getDetailColumnCard = async (
         avatar: "",
         cover: "",
         createdAt: null,
+        updatedAt: null,
         id: "",
         isFree: false,
         isTop: false,
@@ -368,7 +369,6 @@ export const columnRouter = createTRPCRouter({
             // 获取所有专栏
             const allColumn = await db.select().from(column);
             const detailColumnsPromise = allColumn.map(async column => {
-                // 查找用户
                 return await getDetailColumnCard(ctx, column.id)
             });
 
@@ -382,7 +382,7 @@ export const columnRouter = createTRPCRouter({
                     break;
                 // 1 订阅量
                 case 1:
-                    res = detailColumns.sort((a, b) => a.subscriptionCount - b.subscriptionCount)
+                    res = detailColumns.sort((a, b) => a.subscriptionCount - b.subscriptionCount);
                     break;
                 // 2 内容量
                 case 2:
