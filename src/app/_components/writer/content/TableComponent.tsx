@@ -150,14 +150,15 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
         {
             title: '操作',
             render: (_, record, index) => (
-                <div className={'text-3.5 font-400 lh-5.5 text-[#1DB48D] space-x-2'}>
+                <div className={'text-3.5 font-400 lh-5.5 space-x-2'}>
                     <Link href={`/edit/edit?columnId=${record.columnId}&postId=${record.id}`}
+                          className={'text-#1DB48D'}
                           onClick={handleEdit}>编辑</Link>
-                    <Button type={'link'} className="w-14 text-[#1DB48D]"
+                    <Button type={'link'} style={{color: '#1DB48D'}}
                             onClick={() => handleToggleTop(record.id, record.isTop)}>{record.isTop ? '取消置顶' : '置顶'}</Button>
-                    <Button type={'link'} className="w-14 text-[#1DB48D]"
+                    <Button type={'link'} style={{color: '#1DB48D'}}
                             onClick={() => handleToggleFree(record.id, record.isFree)}>{record.isFree ? '取消免费' : '免费'} </Button>
-                    <Button type={'link'} className={'text-[#1DB48D]'}
+                    <Button type={'link'} style={{color: '#1DB48D'}}
                             onClick={() => handleClickDelete(record.id)}>删除</Button>
                 </div>
             ),

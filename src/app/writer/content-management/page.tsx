@@ -93,9 +93,9 @@ const Page = () => {
         };
 
         return (
-            <div className={'flex mt-7.5 text-3.5 font-400'}>
-                <div>
-                    <label className='lh-5.5'>内容标题：</label>
+            <div className={'flex mt-7.5 text-3.5 font-400 items-center'}>
+                <div className={'flex items-center'}>
+                    <label className='lh-5.5 whitespace-nowrap'>内容标题：</label>
                     <Input
                         className='ml-4 w-56 h-8 rounded-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF]'
                         type="text"
@@ -106,8 +106,8 @@ const Page = () => {
                     />
                 </div>
 
-                <div className={'ml-32px'}>
-                    <label className='lh-5.5'>标签：</label>
+                <div className={'ml-32px flex items-center'}>
+                    <label className='lh-5.5  whitespace-nowrap'>标签：</label>
                     <Input
                         className='ml-4 w-56 h-8 rounded-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF]'
                         type="text"
@@ -130,12 +130,15 @@ const Page = () => {
                         disabledDate={(currentDate) => disabledDate(currentDate)}
                     />
                 </div>
-                <Button
-                    className={'p0 b-0 w-16 h-8 rounded-1 bg-[#1DB48D] text-[#fff] mx-56px'}
-                    onClick={handleSearch}
-                >
-                    查询
-                </Button>
+                <div className={'w-16 h-8 rounded-1 mx-56px'}>
+                    <Button
+                        className={'p0 b-0 '}
+                        style={{width:'100%',height:'100%',backgroundColor: '#1DB48D', color:'#fff'}}
+                        onClick={handleSearch}
+                    >
+                        查询
+                    </Button>
+                </div>
             </div>
         )
     }
