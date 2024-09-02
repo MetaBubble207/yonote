@@ -10,6 +10,7 @@ import Link from "next/link";
 import Loading from "@/app/_components/common/Loading";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import {Button} from "antd";
+import NoData from "@/app/_components/common/NoData";
 
 const Page = () => {
     const params = useSearchParams();
@@ -19,7 +20,7 @@ const Page = () => {
 
     const {data, isLoading} = api.column.getColumnName.useQuery(
         {searchValue: searchValue},
-        {enabled: !!searchValue} // Enable query if searchValue is present
+        {enabled: Boolean(searchValue)} // Enable query if searchValue is present
     );
 
     const [searchResults, setSearchResults] = useState([]);
@@ -50,14 +51,14 @@ const Page = () => {
                 </div>}
                 {/* 第一次进入页面的时候，需要显示请搜索你想搜索的专栏 */}
                 {!searchValue && (
-                    <div className="text-center mt-8 text-gray-500">请您搜索想要搜索的内容噢~</div>
+                    <NoData title={'请您搜索想要搜索的内容噢😁~'}></NoData>
                 )}
                 {/* 没有搜索结果 */}
                 {!isLoading && searchValue && searchResults.length === 0 && (
-                    <div className="text-center mt-8 text-gray-500">没有找到相关的结果噢~</div>
+                    <NoData title={'没有找到相关的结果噢😯~'}></NoData>
                 )}
                 {/* 渲染搜索结果 */}
-                {!isLoading && searchResults.map(item => (
+                {searchResults?.map(item => (
                     <div key={item.id}>
                         <Link href={`/dashboard/special-column?id=${item.id}`}>
                             <div

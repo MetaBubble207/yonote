@@ -101,7 +101,7 @@ const Subscribe = function Subscribe() {
         <div>
             <div className="w-full min-h-screen px-4 pt-8 pb-15 bg-#F5F7FB">
                 {/*搜索框*/}
-                <Link href='/dashboard/find/search-result'><SearchColumn/></Link>
+                <Link href='/dashboard/find/search-result'><SearchColumn defaultValue={''}/></Link>
                 {/*最近观看*/}
                 <div className={'mt-8'}>
                     <RecentlyReadCard/>
