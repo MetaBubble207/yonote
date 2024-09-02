@@ -15,7 +15,10 @@ export const readRouter = createTRPCRouter({
         postId: z.number(),
         userId: z.string(),
     }))
-        .mutation(({ctx, input}) => {
+        .mutation(async ({ctx, input}) => {
+            const reads = await ctx.db.query.postRead.findFirst({where: and(eq(postRead.postId, input.postId), eq(postRead.userId, input.userId))});
+            if (reads) return;
+
             return ctx.db.insert(postRead).values({
                 postId: input.postId,
                 userId: input.userId,
@@ -56,7 +59,7 @@ export const readRouter = createTRPCRouter({
     // 获取专栏阅读量
     getColumnRead: publicProcedure
         .input(z.object({columnId: z.string()}))
-        .query(async ({ctx, input}):Promise<number> => {
+        .query(async ({ctx, input}): Promise<number> => {
             const readList = await ctx.db.select().from(post).where(eq(post.columnId, input.columnId));
             if (readList?.length === 0) {
                 return 0;
