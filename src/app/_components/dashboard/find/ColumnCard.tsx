@@ -7,8 +7,8 @@ import {type DetailColumnCard} from "@/server/db/schema";
 
 const ColumnCard = ({columnData}: { columnData: DetailColumnCard }) => {
     return (
-        <Link href={`/dashboard/special-column?id=${columnData.id}`}>
-            <div className="w-85.75 h-32 border-rd-5 bg-[#FFF] pr-4 pl-2.5 ">
+        <div className="w-85.75 h-32 border-rd-5 bg-[#FFF] pr-4 pl-2.5 ">
+            <Link href={`/dashboard/special-column?id=${columnData.id}`}>
                 <div className="flex h-19 pt-2">
                     <div className='relative w-15.5 h-19'>
                         <Image
@@ -43,7 +43,9 @@ const ColumnCard = ({columnData}: { columnData: DetailColumnCard }) => {
 
                     </div>
                 </div>
-                <div className={"flex items-center justify-between w-full pt-3 mb-4"}>
+            </Link>
+            <div className={"flex items-center justify-between w-full pt-3 mb-4"}>
+                <Link href={`/dashboard/user/detail?id=${columnData.userId}`}>
                     <div className="flex items-center">
                         <div className="relative w-6 h-6">
                             <Image
@@ -66,35 +68,35 @@ const ColumnCard = ({columnData}: { columnData: DetailColumnCard }) => {
                             </div>
                         </div>
                     </div>
-                    <div className={"flex"}>
-                        <div className="flex items-center">
-                            <Image
-                                src={"/images/recommend/rss.svg"}
-                                alt="rss"
-                                width={5}
-                                height={5}
-                                className="w-4.5 h-4.5 "
-                            />
-                            <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
-                                {columnData.subscriptionCount}
-                            </div>
+                </Link>
+                <div className={"flex"}>
+                    <div className="flex items-center">
+                        <Image
+                            src={"/images/recommend/rss.svg"}
+                            alt="rss"
+                            width={5}
+                            height={5}
+                            className="w-4.5 h-4.5 "
+                        />
+                        <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
+                            {columnData.subscriptionCount}
                         </div>
-                        <div className="flex items-center">
-                            <Image
-                                src={"/images/recommend/open.svg"}
-                                alt="open"
-                                width={5}
-                                height={5}
-                                className=" w-4.5 h-4.5 ml-7"
-                            />
-                            <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
-                                {columnData.readCount}
-                            </div>
+                    </div>
+                    <div className="flex items-center">
+                        <Image
+                            src={"/images/recommend/open.svg"}
+                            alt="open"
+                            width={5}
+                            height={5}
+                            className=" w-4.5 h-4.5 ml-7"
+                        />
+                        <div className="text-[#B5B5B5] text-2.75 font-500 lh-6 ml-1">
+                            {columnData.readCount}
                         </div>
                     </div>
                 </div>
             </div>
-        </Link>
+        </div>
     )
 }
 

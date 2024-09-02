@@ -11,18 +11,20 @@ const SubscribeColumn = ({column}: { column: BaseColumnCard }) => {
         <Link href={`/dashboard/special-column?id=${column.id}`}>
             <div className="h-29.25 mt-4 flex">
                 <div className="relative h-18">
-                    <div className="relative w-11.25 h-11.25 mt-4">
-                        <Image
-                            placeholder="blur"
-                            blurDataURL={DefaultLoadingPicture()}
-                            src={column.avatar ?? DefaultLoadingPicture()}
-                            alt='avatar'
-                            quality={100}
-                            fill
-                            loading='lazy'
-                            className='rounded-full object-cover'
-                        />
-                    </div>
+                    <Link href={`/dashboard/user/detail?id=${column.userId}`}>
+                        <div className="relative w-11.25 h-11.25 mt-4">
+                            <Image
+                                placeholder="blur"
+                                blurDataURL={DefaultLoadingPicture()}
+                                src={column.avatar ?? DefaultLoadingPicture()}
+                                alt='avatar'
+                                quality={100}
+                                fill
+                                loading='lazy'
+                                className='rounded-full object-cover'
+                            />
+                        </div>
+                    </Link>
                     <div className="bottom-2 right-1 absolute">
                         <Image
                             src={"/images/subscribe/vip.svg"}

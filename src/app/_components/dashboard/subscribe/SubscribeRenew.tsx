@@ -47,37 +47,39 @@ const SubscribeRenew = ({column}:{column:DetailColumnCard}) => {
                     </div>
                 </Link>
                 <div className="flex w-full items-center justify-between mt-2.5">
-                    <div className={"flex items-center"}>
-                        <div className="relative w-5.75 h-5.75">
-                            <Image
-                                placeholder="blur"
-                                blurDataURL={DefaultLoadingPicture()}
-                                src={column.avatar ?? DefaultLoadingPicture()}
-                                alt={"cover"}
-                                fill
-                                loading='lazy'
-                                quality={100}
-                                className="rounded-full object-cover">
-                            </Image>
-                        </div>
-                        <div className="ml-1 w-43">
-                            <div className="flex items-center">
-                                <div className="text-[#999] text-2.75 lh-4">
-                                    {column.userName}
-                                </div>
+                    <Link href={`/dashboard/user/detail?id=${column.userId}`}>
+                        <div className={"flex items-center"}>
+                            <div className="relative w-5.75 h-5.75">
                                 <Image
-                                    src={"/images/subscribe/vip.svg"}
-                                    alt="cover"
-                                    width={24}
-                                    height={24}
-                                    className="w-3 h-3 ml-1.2"
-                                ></Image>
+                                    placeholder="blur"
+                                    blurDataURL={DefaultLoadingPicture()}
+                                    src={column.avatar ?? DefaultLoadingPicture()}
+                                    alt={"cover"}
+                                    fill
+                                    loading='lazy'
+                                    quality={100}
+                                    className="rounded-full object-cover">
+                                </Image>
                             </div>
-                            <div className="text-[#B5B5B5] text-2.75 lh-4">
-                                {timeToDateString(column.createdAt)}发布
+                            <div className="ml-1 w-43">
+                                <div className="flex items-center">
+                                    <div className="text-[#999] text-2.75 lh-4">
+                                        {column.userName}
+                                    </div>
+                                    <Image
+                                        src={"/images/subscribe/vip.svg"}
+                                        alt="cover"
+                                        width={24}
+                                        height={24}
+                                        className="w-3 h-3 ml-1.2"
+                                    ></Image>
+                                </div>
+                                <div className="text-[#B5B5B5] text-2.75 lh-4">
+                                    {timeToDateString(column.createdAt)}发布
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                     <div className="flex items-center">
                         <div>
                             <Image

@@ -6,6 +6,7 @@ import {timeToDateString} from "@/tools/timeToString";
 import {useEffect} from "react";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import {type DetailPostCard} from "@/server/db/schema";
+import Link from "next/link";
 
 const PostCard = ({postDetail, status}: { postDetail: DetailPostCard, status: boolean }) => {
 
@@ -101,36 +102,38 @@ const PostCard = ({postDetail, status}: { postDetail: DetailPostCard, status: bo
 
             {/*下方图标*/}
             <div className="flex mt-18px items-end">
-                <>
-                    {/*左边头像*/}
-                    <div className="relative w-5.75 h-5.75 ">
-                        <Image
-                            placeholder="blur"
-                            blurDataURL={DefaultLoadingPicture()}
-                            src={postDetail.avatar ?? DefaultLoadingPicture()}
-                            alt='cover'
-                            quality={100}
-                            fill
-                            loading='lazy'
-                            className='rounded-full object-cover'
-                        />
-                    </div>
-                    {/*昵称，日期，VIP*/}
-                    <div>
-                        <div className={"flex items-center"}>
+                <Link href={`/dashboard/user/detail?id=${postDetail.userId}`}>
+                    <div className={'flex items-center'}>
+                        {/*左边头像*/}
+                        <div className="relative w-5.75 h-5.75 ">
+                            <Image
+                                placeholder="blur"
+                                blurDataURL={DefaultLoadingPicture()}
+                                src={postDetail.avatar ?? DefaultLoadingPicture()}
+                                alt='cover'
+                                quality={100}
+                                fill
+                                loading='lazy'
+                                className='rounded-full object-cover'
+                            />
+                        </div>
+                        {/*昵称，日期，VIP*/}
+                        <div>
+                            <div className={"flex items-center"}>
+                                <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
+                                    {postDetail?.userName ? postDetail?.userName : "未知用户"}
+                                </div>
+                                <div>
+                                    <Image src={"/images/special-column/Group 225.png"} alt={"心智与阅读"} width={12}
+                                           height={12} className={"lh-0"} style={{marginLeft: "2.5px"}}/>
+                                </div>
+                            </div>
                             <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
-                                {postDetail?.userName ? postDetail?.userName : "未知用户"}
+                                {timeToDateString(postDetail.updatedAt)}发布
                             </div>
-                            <div>
-                                <Image src={"/images/special-column/Group 225.png"} alt={"心智与阅读"} width={12}
-                                       height={12} className={"lh-0"} style={{marginLeft: "2.5px"}}/>
-                            </div>
-                        </div>
-                        <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
-                            {timeToDateString(postDetail.updatedAt)}发布
                         </div>
                     </div>
-                </>
+                </Link>
                 {/*右方点赞数量*/}
                 <div className="ml-auto flex items-center">
                     <div>
