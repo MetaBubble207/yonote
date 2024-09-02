@@ -6,13 +6,14 @@ import useLocalStorage from "@/tools/useStore";
 import {timeToDateString} from "@/tools/timeToString";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import Image from "next/image";
+import Loading from "@/app/_components/common/Loading";
 
 const Page = () => {
     const router = useRouter();
 
     const params = useSearchParams();
-    const chapter = params ? parseInt(params.get("c")) : null;
-    const columnId = params ? params.get("id") : null;
+    const chapter = parseInt(params.get("c"));
+    const columnId = params.get("id");
 
     const [token] = useLocalStorage("token", null);
 
@@ -24,20 +25,17 @@ const Page = () => {
     const prepost = api.post.getById.useQuery({
         id: columnId,
         chapter: chapter - 1
-    }).data;
+    }, {enabled: Boolean(chapter)}).data;
     const nextpost = api.post.getById.useQuery({
         id: columnId,
         chapter: chapter + 1
-    }).data;
+    }, {enabled: Boolean(chapter)}).data;
+
     const numData = api.post.getNumById.useQuery({
         id: columnId,
     }).data;
 
-    const readList = api.read.create.useMutation({
-        onSuccess: () => {
-            console.log("success");
-        }
-    })
+    const addRead = api.read.create.useMutation();
 
     const [date, setDate] = useState("");
     const [name, setName] = useState("");
@@ -99,7 +97,6 @@ const Page = () => {
                 setContent("");
             }
 
-
             if (chapter > 1 && prepost) {
                 setPretitle(prepost.name);
             } else {
@@ -111,35 +108,19 @@ const Page = () => {
                 setNexttitle("已经是末篇了");
             }
 
-            readList.mutate({
+            addRead.mutate({
                 userId: token,
                 postId: postData.id
             })
 
         }
     }, [postData]);
+
     // 修改点赞状态
-    const updateLike = api.like.updateLike.useMutation({
-        onSuccess: (r) => {
-            console.log('点赞状况更改成功')
-        },
-        onError: (e) => {
-        }
-    })
+    const updateLike = api.like.updateLike.useMutation();
 
-    const createLike = api.like.create.useMutation({
-        onSuccess: (r) => {
-            console.log('点赞成功')
-
-        }
-    })
-    const uptime = api.like.uptime.useMutation({
-        onSuccess: (r) => {
-            console.log('更新时间成功')
-        },
-        onError: (e) => {
-        }
-    })
+    const createLike = api.like.create.useMutation();
+    const uptime = api.like.uptime.useMutation();
 
     // 点赞
     useEffect(() => {
@@ -166,11 +147,11 @@ const Page = () => {
                 postId: postId,
                 userId: token,
                 isLike: !isHeartFilled
-            }),
-                uptime.mutate({
-                    postId: postId,
-                    userId: token,
-                })
+            });
+            uptime.mutate({
+                postId: postId,
+                userId: token,
+            })
         }
         setIsHeartFilled(!isHeartFilled);
         if (isHeartFilled) {
@@ -195,7 +176,9 @@ const Page = () => {
         router.push(`/dashboard/poster/post?c=${chapter}&id=${columnId}`)
     }
 
-
+    if(isFetching) return <div>
+        <Loading/>
+    </div>
     return (
         <div className={"relative bg-#F5F7FB min-h-screen pb-10"}>
             <div className={"ml-16px"}>
@@ -323,7 +306,7 @@ const Page = () => {
                 </div>
 
                 {/*页面底端上一篇下一篇*/}
-                <div className="bg-#F5F7FB flex ">
+                <div className="bg-#F5F7FB flex">
                     <div className={"w-86.5 h-28.75 bg-[#FFF] rounded-2 mx-auto mt-2"}>
                         <div className="flex justify-between">
                             <div className="flex flex-col">
