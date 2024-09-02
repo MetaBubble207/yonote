@@ -12,12 +12,13 @@ const SearchColumn = ({defaultValue}: { defaultValue: string }) => {
     const pathname = usePathname()
     const inputRef = useRef(null);
     useEffect(() => {
+        setSearchValue(defaultValue)
         if (pathname.includes("/search-result")) {
             inputRef.current.focus()
         }
-    }, []);
+    }, [defaultValue, pathname]);
     const router = useRouter();
-    const [searchValue, setSearchValue] = useState(defaultValue);
+    const [searchValue, setSearchValue] = useState('');
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             if (searchValue === '' || !searchValue) {
@@ -32,7 +33,7 @@ const SearchColumn = ({defaultValue}: { defaultValue: string }) => {
         setSearchValue(e.target.value)
     }
     return (
-        <div className="w-full inline border-rd-13 h-8.5 bg-[#FFF] flex items-center">
+        <div className="w-full inline border-rd-13 h-8.5 bg-[#FFF] flex items-center pr-5">
             {contextHolder}
             <Image src={"/images/subscribe/search.png"} alt="search" width={18} height={18}
                    className="inline ml-5.25 w-4.5 h-4.5"/>

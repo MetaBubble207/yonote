@@ -40,8 +40,8 @@ const Page = () => {
             <div className="w-85.75 m-auto pt-8">
                 {/* 搜索框和取消按钮 */}
                 <div className={"flex items-center justify-between"}>
-                    <SearchColumn SearchValue={searchValue}></SearchColumn>
-                    <Button type={'link'} className={"w-50px ml-20px p0 text-neutral"}
+                    <SearchColumn defaultValue={searchValue}></SearchColumn>
+                    <Button style={{color:'#252525',padding: 0}} type={'link'} className={'ml-5'}
                             onClick={handleButtonClick}>取消</Button>
                 </div>
 
