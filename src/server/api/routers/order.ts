@@ -365,6 +365,7 @@ export const orderRouter = createTRPCRouter({
                 }
             })
             const detailPost = await Promise.all(detailPostPromise)
+            console.log(detailPost)
             return {
                 detailPostCard: detailPost.map(item => ({
                     ...item,

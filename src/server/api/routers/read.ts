@@ -17,6 +17,7 @@ export const readRouter = createTRPCRouter({
     }))
         .mutation(async ({ctx, input}) => {
             const reads = await ctx.db.query.postRead.findFirst({where: and(eq(postRead.postId, input.postId), eq(postRead.userId, input.userId))});
+            console.log(reads);
             if (reads) return;
 
             return ctx.db.insert(postRead).values({

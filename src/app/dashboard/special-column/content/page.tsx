@@ -33,12 +33,11 @@ const Page = () => {
         id: columnId,
     }).data;
 
-    const readList = api.read.getReadList.useMutation({
+    const readList = api.read.create.useMutation({
         onSuccess: () => {
             console.log("success");
         }
     })
-
 
     const [date, setDate] = useState("");
     const [name, setName] = useState("");
@@ -53,6 +52,7 @@ const Page = () => {
         id: columnId,
         chapter: chapter,
     }).data;
+
     const likeList = api.like.getLikeList.useQuery({
         postId: postId,
         userId: token
@@ -112,9 +112,8 @@ const Page = () => {
             }
 
             readList.mutate({
-                id: columnId,
                 userId: token,
-                chapter: chapter
+                postId: postData.id
             })
 
         }
