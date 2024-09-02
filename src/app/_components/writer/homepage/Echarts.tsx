@@ -3,10 +3,10 @@ import React from 'react';
 import ReactECharts from 'echarts-for-react';
 import {api} from "@/trpc/react";
 import {useSearchParams} from "next/navigation";
-import 'dayjs/locale/zh-cn';
 import getDateStringArray from "@/tools/getDateStringArray";
 import Loading from "@/app/_components/common/Loading";
 import NoData from "@/app/_components/common/NoData";
+import 'dayjs/locale/zh-cn';
 
 const Echarts = ({startDate, endDate}: { startDate: Date, endDate: Date }) => {
     const columnId = useSearchParams().get("columnId");

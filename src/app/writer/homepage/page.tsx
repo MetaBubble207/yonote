@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import HomepageData from "@/app/_components/writer/homepage/HomepageData";
 import Chart from "@/app/_components/writer/homepage/Chart";

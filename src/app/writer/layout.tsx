@@ -1,8 +1,10 @@
+"use client"
 import React from "react";
 import "./writer.css";
 import Compass from "@/app/_components/writer/Compass";
 import LeftCompass from "@/app/_components/writer/LeftCompass";
 import useLocalStorage from "@/tools/useStore";
+import withTheme from "@/theme";
 
 const Layout = ({children}: { children: React.ReactNode }) => {
     if (typeof window !== 'undefined') {
@@ -19,7 +21,7 @@ const Layout = ({children}: { children: React.ReactNode }) => {
             <Compass></Compass>
             <div className="flex w-100%">
                 <LeftCompass></LeftCompass>
-                <div className="w-full h-230 pl-69.12 pt-21.5 pb-4 pr-8">{children}</div>
+                {withTheme(<div className="w-full h-230 pl-69.12 pt-21.5 pb-4 pr-8">{children}</div>)}
             </div>
         </div>
         </body>
