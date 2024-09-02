@@ -75,7 +75,7 @@ const TableComponent = ({dataSource}: { dataSource: OrderBuyer[] }) => {
             title: '操作',
             render: (_, record) => (
                 <div className={'text-3.5 font-400'}>
-                    <Button type={'link'} className="text-[#1DB48D] p0"
+                    <Button type={'link'} style={{color: '#1DB48D',padding: 0}}
                             onClick={() => endSubscription(record.id)}>结束订阅</Button>
                 </div>
             ),
