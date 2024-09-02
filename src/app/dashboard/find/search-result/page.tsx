@@ -50,38 +50,39 @@ const Page = () => {
                 active
                 paragraph={{rows: 3}}
                 title={false}
-                className="w-100% h-23 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
+                className="w-100% h-27 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
             />
             <Skeleton
                 active
                 paragraph={{rows: 3}}
                 title={false}
-                className="w-100% h-23 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
+                className="w-100% h-27 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
             />
             <Skeleton
                 active
                 paragraph={{rows: 3}}
                 title={false}
-                className="w-100% h-23 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
+                className="w-100% h-27 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
             />
             <Skeleton
                 active
                 paragraph={{rows: 3}}
                 title={false}
-                className="w-100% h-23 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
+                className="w-100% h-27 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
             />
             <Skeleton
                 active
                 paragraph={{rows: 3}}
                 title={false}
-                className="w-100% h-23 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
+                className="w-100% h-27 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
             />
             <Skeleton
                 active
                 paragraph={{rows: 3}}
                 title={false}
-                className="w-100% h-23 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
+                className="w-100% h-27 mt-10px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF] p2.5"
             />
+
         </>
         if (!searchValue) return <div className={'mt-10'}>
             <NoData title={'请您搜索想要搜索的内容噢😁~'}></NoData>
@@ -104,7 +105,8 @@ const Page = () => {
     function Card({item}) {
         return <Link href={`/dashboard/special-column?id=${item.id}`}>
             <div
-                className={"w-full flex items-start items-center h-25 mt-10px border-rd-5 border-1 border-[rgba(181,181,181,0.20)] bg-[#FFF] px-2.5 py-1"}>
+                className={"w-full flex items-start items-center h-27 mt-10px border-rd-5 " +
+                    "border-1 border-[rgba(181,181,181,0.20)] bg-[#FFF] p-2.5"}>
                 {/* 左边图片 */}
                 <div className="relative w-17.25 h-23">
                     <Image
