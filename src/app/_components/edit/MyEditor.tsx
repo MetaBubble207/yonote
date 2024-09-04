@@ -28,19 +28,21 @@ const MyEditor = () => {
     const createPost = api.post.create.useMutation();
     const updatePost = api.post.updatePost.useMutation();
     const params = useSearchParams();
-    const columnId = params.get("columnId")
+    let columnId;
+    columnId = params.get("columnId")
     const postId = params.get("postId")
     let postData;
     if (postId) {
         postData = api.post.getByPostId.useQuery({
             id: parseInt(postId),
         }).data
+        columnId = postData.columnId;
     }
     let draftData;
     if (!postId) {
         draftData = api.post.getDraft.useQuery({
             columnId: columnId
-        }).data
+        }).data;
     }
     const [editor, setEditor] = useState<IDomEditor | null>(null);
     let [html, setHtml] = useState('');
@@ -50,16 +52,13 @@ const MyEditor = () => {
     const [tags, setTags] = useState<string[]>([]);
     const [publishModal, setPublishModal] = useState(false);
 
-    // 从 localStorage 中加载保存的草稿数据
     useEffect(() => {
         // 此时是路由过来的数据
         if (postData) {
             setTitle(postData.name);
             setHtml(postData.content);
             setTags(postData.tag.split(","));
-            console.log(postData)
         } else if (draftData) {
-            console.log(draftData)
             setTitle(draftData.name);
             setHtml(draftData.content);
             setTags(draftData.tag.split(","));
@@ -101,8 +100,6 @@ const MyEditor = () => {
     }
     // 保存草稿的函数
     const saveDraft = () => {
-        // 调用保存草稿的 API 请求，并传递标题、HTML 内容和标签
-        // 将标题、HTML 内容和标签保存到 localStorage 中
         if (draftData) {
             updatePost.mutate({
                 id: draftData.id,
@@ -123,12 +120,12 @@ const MyEditor = () => {
             router.push(`/writer/content-management?columnId=${columnId}`);
         }
     }
-
+    console.log(postData);
     const publish = () => {
         // 调用保存草稿的 API 请求，并传递标题、HTML 内容和标签
-        if (postData) {
+        if (postData || draftData) {
             updatePost.mutate({
-                id: postData.id,
+                id: postData?.id ?? draftData.id,
                 name: title, // 使用标题作为草稿的名称
                 content: html, // 使用 HTML 内容作为草稿的内容
                 tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串

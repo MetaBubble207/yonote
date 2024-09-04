@@ -143,7 +143,7 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
             width: '9%',
         },
         {
-            title: '更新时间',
+            title: <span className={'whitespace-nowrap'}>更新时间</span>,
             dataIndex: 'updatedAt',
             sorter: (a, b) => a.updatedAt > b.updatedAt ? 1 : -1,
             filterSearch: true,
@@ -151,7 +151,7 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
             width: '15.5%',
         },
         {
-            title: '发布时间',
+            title: <span className={'whitespace-nowrap'}>发布时间</span>,
             dataIndex: 'createdAt',
             sorter: (a, b) => a.createdAt > b.createdAt ? 1 : -1,
             filterSearch: true,
@@ -162,7 +162,7 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
             title: '操作',
             render: (_, record, index) => (
                 <div className={'text-3.5 font-400 lh-5.5 space-x-2 whitespace-nowrap'}>
-                    <Link href={`/edit/edit?columnId=${record.columnId}&postId=${record.id}`}
+                    <Link href={`/edit/edit?postId=${record.id}`}
                           className={'text-#1DB48D'}
                           onClick={handleEdit}>编辑</Link>
                     <Button type={'link'} style={{color: '#1DB48D'}}
