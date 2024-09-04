@@ -52,10 +52,10 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
     }
     const columns: TableColumnsType<Post> = [
         {
-            title: <span className={'pl-20'}>内容标题</span>,
+            title: <span className={'pl-10'}>内容标题</span>,
             dataIndex: 'name',
             sorter: (a, b) => a.name.localeCompare(b.name),
-            render: (value) => <span className={'pl-20'}>{value}</span>,
+            render: (value) => <span className={'pl-10'}>{value}</span>,
             width: '25%'
         },
         {
@@ -104,7 +104,7 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
             render: (status, record) => {
                 const {isTop, isFree} = record;
                 return (
-                    <div className={"flex space-x-2.5 items-center"}>
+                    <div className={"flex space-x-2.5 items-center whitespace-nowrap"}>
                         {isTop && <div className={"flex items-center"}>
                             <span className={'w-6px h-6px rounded-full p0 bg-#1DB48D flex'}></span>
                             <span className={'text-14px ml-2'}>置顶</span>
@@ -128,7 +128,18 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
                 // 根据长度进行排序
                 return tagLengthA - tagLengthB;
             },
-            render: (tags) => tags.split(',').map((tag: string, index: number) => <span key={index}>{tag}</span>),
+            render: (tags) => (
+                <div className={'flex flex-col'}>
+                    {
+                        tags.split(',').length > 0
+                        && tags.split(',')[0] !== ''
+                        && tags.split(',').map((tag, index) => (
+                            <span key={index} className={'text-#1DB48D'}>
+                            #{tag.trim()}&nbsp; {/* 在每个标签后面加上一个非断行空格 */}
+                        </span>
+                        ))}
+                </div>
+            ),
             width: '9%',
         },
         {
@@ -150,7 +161,7 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
         {
             title: '操作',
             render: (_, record, index) => (
-                <div className={'text-3.5 font-400 lh-5.5 space-x-2'}>
+                <div className={'text-3.5 font-400 lh-5.5 space-x-2 whitespace-nowrap'}>
                     <Link href={`/edit/edit?columnId=${record.columnId}&postId=${record.id}`}
                           className={'text-#1DB48D'}
                           onClick={handleEdit}>编辑</Link>

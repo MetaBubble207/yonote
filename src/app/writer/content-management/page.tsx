@@ -118,7 +118,7 @@ const Page = () => {
                     />
                 </div>
                 <div className={"flex items-center ml-32px"}>
-                    <label className='text-3.5 font-400 lh-5.5 mr-2.5'>发布时间：</label>
+                    <label className='text-3.5 font-400 lh-5.5 mr-2.5 whitespace-nowrap'>发布时间：</label>
                     <DatePicker.RangePicker
                         allowClear
                         value={[
