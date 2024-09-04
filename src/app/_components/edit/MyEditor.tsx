@@ -25,19 +25,33 @@ let client = new OSS({
 
 const MyEditor = () => {
     const router = useRouter()
-    const createPost = api.post.create.useMutation();
-    const updatePost = api.post.updatePost.useMutation();
+    const createPost = api.post.create.useMutation({
+        onSuccess: () => {
+            router.push(`/writer/content-management?columnId=${columnId}`);
+        }
+    });
+
+    const updatePost = api.post.updatePost.useMutation({
+        onSuccess: () => {
+            router.push(`/writer/content-management?columnId=${columnId}`);
+        }
+    });
+
     const params = useSearchParams();
     let columnId;
     columnId = params.get("columnId")
     const postId = params.get("postId")
     let postData;
     if (postId) {
-        postData = api.post.getByPostId.useQuery({
+        const {data, isSuccess: isPostSuccess} = api.post.getByPostId.useQuery({
             id: parseInt(postId),
-        }).data
-        columnId = postData.columnId;
+        });
+        if (isPostSuccess) {
+            columnId = data.columnId;
+            postData = data;
+        }
     }
+
     let draftData;
     if (!postId) {
         draftData = api.post.getDraft.useQuery({
@@ -141,7 +155,6 @@ const MyEditor = () => {
                 columnId: columnId
             });
         }
-        router.push(`/writer/content-management?columnId=${columnId}`);
     }
     // 发布的函数
     const handleClickPublish = () => {
