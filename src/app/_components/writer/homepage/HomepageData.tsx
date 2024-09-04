@@ -67,7 +67,7 @@ const HomepageData = () => {
                         <li className="flex-1">一周内(次)</li>
                         <li className="flex-1">一月内(次)</li>
                     </ul>
-                    <div className="absolute top-33 left-48 flex items-center">
+                    <div className="absolute top-66% left-44% flex items-center">
                         {readRate > 0
                             ? <Image src={"/images/homepage/Arrow-right-up.svg"} alt="arrow" width={20}
                                      height={20}></Image>
@@ -97,7 +97,7 @@ const HomepageData = () => {
                         <li className="flex-1">一周内(次)</li>
                         <li className="flex-1">一月内(次)</li>
                     </ul>
-                    <div className="absolute top-33 left-48 flex items-center">
+                    <div className="absolute top-66% left-44% flex items-center">
                         {subscriptionRate > 0
                             ? <Image src={"/images/homepage/Arrow-right-up.svg"} alt="arrow" width={20}
                                      height={20}></Image>
@@ -126,9 +126,9 @@ const HomepageData = () => {
                         <li className="flex-1">一周内(次)</li>
                         <li className="flex-1">一月内(次)</li>
                     </ul>
-                    <div className="absolute top-33 left-48 flex items-center">
+                    <div className="absolute top-66% left-44% flex items-center">
                         <Image src={"/images/homepage/Arrow-right-up.svg"} alt="arrow" width={20} height={20}></Image>
-                        <span className="text-[#4CC5A6] text-3 font-700 lh-6 ml-10.48px">-0.19%相较昨天</span>
+                        <span className="text-#4CC5A6 text-3 font-700 lh-6 ml-10.48px">-0.19%相较昨天</span>
                     </div>
                 </div>
             </div>
