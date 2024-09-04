@@ -91,7 +91,7 @@ const TagInput = ({tags, setTags}: TagInputProps) => {
                             className="border rounded-md p-1 focus:outline-none w-full"
                         />
                     ) : (
-                        <div className={'flex items-center justify-between'}>
+                        <div className={'flex items-center justify-between ml-2'}>
                             <span className="cursor-pointer text-#1DB48D whitespace-nowrap"
                                   onClick={() => handleEdit(index)}>
                                 #{tag}

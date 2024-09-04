@@ -236,7 +236,7 @@ const MyEditor = () => {
                     />
                     <TagInput tags={tags} setTags={setTags}/>
                 </div>
-                <div className="flex space-x-2 items-center">
+                <div className="flex space-x-2 items-center ml-2">
                     <Button
                         style={{width: '88px', height: '32px'}}
                         type="primary"
