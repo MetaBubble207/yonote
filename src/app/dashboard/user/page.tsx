@@ -123,11 +123,11 @@ const User = function User() {
                     {/* 编辑资料 */}
                     <Button
                         type={'primary'}
-
                         style={{
                             width: '20',
                             height: '6',
                             fontSize: '10px',
+                            border: 0,
                             display: 'flex',
                             alignItems: 'center',
                             backgroundColor: '#ffffff',
