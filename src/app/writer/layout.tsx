@@ -3,17 +3,9 @@ import React from "react";
 import "./writer.css";
 import Compass from "@/app/_components/writer/Compass";
 import LeftCompass from "@/app/_components/writer/LeftCompass";
-import useLocalStorage from "@/tools/useStore";
 import withTheme from "@/theme";
 
 const Layout = ({children}: { children: React.ReactNode }) => {
-    if (typeof window !== 'undefined') {
-        const [token] = useLocalStorage("token", null);
-        if (!token) {
-            window.location.href = "/writer/login"
-        }
-
-    }
     return (
         <html>
         <body suppressHydrationWarning={true}>

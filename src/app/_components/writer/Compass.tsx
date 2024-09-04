@@ -1,18 +1,22 @@
 "use client"
 import React from "react";
 import Image from "next/image";
-import {useRouter, useSearchParams} from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import {api} from "@/trpc/react";
 
 const Compass = () => {
     const router = useRouter();
-
+    const pathname = usePathname();
     const handleLogout = () => {
         setToken(null)
         router.push("/edit/login");
     }
     const [token, setToken] = useLocalStorage("token", null)
+
+    if(!token && !pathname.includes('/login')){
+        router.push("/writer/login");
+    }
 
     const user = api.users.getOne.useQuery({
         id: token ?? "",
