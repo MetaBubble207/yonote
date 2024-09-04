@@ -1,5 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
+import withTheme from "@/theme";
 
 const DynamicMyEditor = dynamic(() => import("@/app/_components/edit/MyEditor"), {
     ssr: false,
@@ -7,7 +8,7 @@ const DynamicMyEditor = dynamic(() => import("@/app/_components/edit/MyEditor"),
 const Page = () => {
     return (
         <div className="w-full h-full">
-            <DynamicMyEditor></DynamicMyEditor>
+            {withTheme(<DynamicMyEditor></DynamicMyEditor>)}
         </div>
     );
 };

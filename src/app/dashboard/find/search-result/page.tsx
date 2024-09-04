@@ -7,7 +7,6 @@ import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
 import {timeToDateString} from "@/tools/timeToString";
 import Link from "next/link";
-import Loading from "@/app/_components/common/Loading";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import {Button, Skeleton} from "antd";
 import NoData from "@/app/_components/common/NoData";

@@ -6,7 +6,6 @@ import {
     type IDomEditor,
     type IEditorConfig,
     type IToolbarConfig,
-    DomEditor,
 } from "@wangeditor/editor";
 import Preview from "@/app/_components/writer/Preview";
 import TagInput from "./TagInput";
@@ -225,115 +224,103 @@ const MyEditor = () => {
 
 
     return (
-        <div className="pt-21.5">
-            <div className="w-360 h-197.824 shrink-0 border-rd-[0px_0px_10px_10px] bg-[#FFF] m-auto">
-                <div
-                    style={{zIndex: 100}}
-                    className="w-340.36225 h-180 shrink-0 m-auto"
-                >
-                    <div className="flex pt-6.375">
-                        {/* 工具栏 */}
-                        <Toolbar
-                            editor={editor}
-                            defaultConfig={toolbarConfig}
-                            mode="default"
-                            style={{border: "1px solid #ccc"}}
-                        />
-                        <div className="flex">
-                            <TagInput tags={tags} setTags={setTags}/>
-                            <div className="w-22 h-8 shrink-0 bg-#DAF9F1 b-1 b-rd-1 ml-28 mt-1">
-                                <button
-                                    className="text-[#1DB48D] font-Abel text-3.5 font-not-italic font-400 lh-5.5 ml-4 mt-1"
-                                    onClick={saveDraft}
-                                >
-                                    保存草稿
-                                </button>
-                            </div>
-                            <div
-                                className={`b-1 b-rd-1 w-22 h-8 shrink-0 fill-#FFF flex items-center justify-center stroke-0.25 stroke-[#D9D9D9]  mt-1 ml-1.5 ${
-                                    preview ? "bg-#1db48d" : ""
-                                }`}
-                            >
-                                <Button
-                                    className={`${
-                                        preview ? "text-#ffffff" : "text-[rgba(0,0,0,0.65)]"
-                                    } text-3.5 font-not-italic font-400 `}
-                                    onClick={togglePreview}
-                                >
-                                    {preview ? "取消预览" : "预览"}
-                                </Button>
-                            </div>
-                            <div
-                                className="b-1 b-rd-1 w-16.25 h-8 shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-1 ml-1.5">
-                                <Button
-                                    className="text-[rgba(0,0,0,0.65)] font-Abel text-3.5 font-not-italic font-400 lh-5.5 ml-4 mt-1"
-                                    onClick={handleClickPublish}
-                                >
-                                    发布
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
+        <div className="w-full h-full bg-[#FFF] m-auto pt-9 pl-14  pr-6">
+            <div className="flex pt-6.375 items-center justify-between">
+                {/* 工具栏 */}
+                <div className={'flex items-center space-x-4'}>
+                    <Toolbar
+                        editor={editor}
+                        defaultConfig={toolbarConfig}
+                        mode="default"
+                        style={{border: "1px solid #ccc"}}
+                    />
+                    <TagInput tags={tags} setTags={setTags}/>
+                </div>
+                <div className="flex space-x-2 items-center">
+                    <Button
+                        style={{width: '88px', height: '32px'}}
+                        type="primary"
+                        className="text-[#1DB48D] font-Abel text-3.5 font-400"
+                        onClick={saveDraft}
+                    >
+                        保存草稿
+                    </Button>
+                    <Button
+                        style={{width: '88px', height: '32px'}}
+                        className={`${
+                            preview ? "text-#ffffff" : "text-[rgba(0,0,0,0.65)]"
+                        } text-3.5 font-not-italic font-400 `}
+                        onClick={togglePreview}
+                    >
+                        {preview ? "取消预览" : "预览"}
+                    </Button>
+                    <Button
+                        style={{width: '65px', height: '32px'}}
+                        className=" text-3.5 font-400 lh-5.5 ml-4"
+                        onClick={handleClickPublish}
+                    >
+                        发布
+                    </Button>
+                </div>
+            </div>
 
-                    <div
-                        className="flex relative w-340.36225 h-154.18775 shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-16.625">
-                        <div className="relative">
-                            {!preview &&
-                                <div className={"relative w-335 b-1 b-solid b-#ccc "}>
-                                    {/* 标题输入框 */}
-                                    <input
-                                        type="text"
-                                        value={title}
-                                        onChange={handleTitleChange}
-                                        placeholder="在这里输入标题"
-                                        maxLength={64}
-                                        className="outline-none  mt-7.5 pl-10"
-                                    />
-                                    {/* 富文本编辑器 */}
-                                    <Editor
-                                        defaultConfig={editorConfig}
-                                        onCreated={setEditor}
-                                        onChange={(editor) => setHtml(editor.getHtml())}
-                                        mode="default"
-                                        value={draft}
-                                        style={{height: "500px", overflowY: "hidden"}}
-                                        className="  shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-5 p-l-10"
-                                    />
-                                </div>
-                            }
-                            {preview && (
-                                <>
-                                    <div
-                                        className={"relative w-243.3755 mr-10 b-1 b-solid b-#ccc "}
-                                    >
-                                        {/* 标题输入框 */}
-                                        <input
-                                            type="text"
-                                            value={title}
-                                            onChange={handleTitleChange}
-                                            placeholder="在这里输入标题"
-                                            maxLength={64}
-                                            className="outline-none  mt-7.5 pl-10"
-                                            v-mode="title"
-                                        />
-                                        {/* 富文本编辑器 */}
-                                        <Editor
-                                            defaultConfig={editorConfig}
-                                            onCreated={setEditor}
-                                            onChange={(editor) => setHtml(editor.getHtml())}
-                                            mode="default"
-                                            value={draft}
-                                            style={{height: "500px", overflowY: "hidden"}}
-                                            className="  shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-5 p-l-10"
-                                        />
-                                    </div>
-                                    <div className="absolute top-0 right--89 h-full w-93 bg-white">
-                                        <Preview html={html} title={title} tags={tags}/>
-                                    </div>
-                                </>
-                            )}
+            <div
+                className="flex relative w-340 shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-16.625">
+                <div className="relative">
+                    {!preview &&
+                        <div className={"relative w-335 b-1 b-solid b-#ccc "}>
+                            {/* 标题输入框 */}
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={handleTitleChange}
+                                placeholder="在这里输入标题"
+                                maxLength={64}
+                                className="outline-none  mt-7.5 pl-10"
+                            />
+                            {/* 富文本编辑器 */}
+                            <Editor
+                                defaultConfig={editorConfig}
+                                onCreated={setEditor}
+                                onChange={(editor) => setHtml(editor.getHtml())}
+                                mode="default"
+                                value={draft}
+                                style={{height: "28em", overflowY: "hidden"}}
+                                className=" fill-#FFF"
+                            />
                         </div>
-                    </div>
+                    }
+                    {preview && (
+                        <div className={'w-335 flex justify-between'}>
+                            <div
+                                className={"relative w-243.3755 mr-10 b-1 b-solid b-#ccc "}
+                            >
+                                {/* 标题输入框 */}
+                                <input
+                                    type="text"
+                                    value={title}
+                                    onChange={handleTitleChange}
+                                    placeholder="在这里输入标题"
+                                    maxLength={64}
+                                    className="outline-none  mt-7.5 pl-10"
+                                    v-mode="title"
+                                />
+                                {/* 富文本编辑器 */}
+                                <Editor
+                                    defaultConfig={editorConfig}
+                                    onCreated={setEditor}
+                                    onChange={(editor) => setHtml(editor.getHtml())}
+                                    mode="default"
+                                    value={draft}
+                                    style={{height: "28em", overflowY: "hidden"}}
+                                    className=" fill-#FFF"
+                                />
+                            </div>
+                            <div className=" w-93 bg-white">
+                                <Preview html={html} title={title} tags={tags}/>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
             {

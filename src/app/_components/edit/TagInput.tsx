@@ -1,90 +1,128 @@
-import React, { useState } from 'react';
+'use client'
+import React, {useEffect, useRef, useState} from 'react';
+import {Button} from 'antd';
 
-interface TagInputProps{
-  tags:string[],
-  setTags:(tags: string[]) => void,
+interface TagInputProps {
+    tags: string[];
+    setTags: any;
 }
 
-const TagInput = (props:TagInputProps) => {
-  console.log(props);
+const TagInput = ({tags, setTags}: TagInputProps) => {
+    const [editingIndex, setEditingIndex] = useState<number | null>(null);
+    const [editValue, setEditValue] = useState('');
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // const [tags, setTags] = useState<string[]>([]);
-  const {tags,setTags} = props;
-  const [editIndex, setEditIndex] = useState<number | null>(null);
-  const [editValue, setEditValue] = useState('');
+    const handleAddOrEditTag = () => {
+        if (editingIndex !== null) {
+            setEditingIndex(null);
+            setEditValue('');
+        } else {
+            setEditingIndex(tags.length); // 设置为新增状态
+            setEditValue('');
+        }
+    };
 
-  const handleAddTag = () => {
-    if (editIndex !== null) {
-      const newTags = [...tags];
-      newTags[editIndex] = editValue;
-      setTags(newTags);
-      setEditIndex(null);
-      setEditValue('');
-    } else {
-      const newTag = prompt('请输入标签内容：');
-      if (newTag !== null && newTag !== '') {
-        setTags([...tags, newTag]);
-      }
-    }
-  };
+    const handleConfirmEdit = () => {
+        if (editingIndex !== null && editValue.trim() !== '') {
+            setTags(prevTags => {
+                const newTags = [...prevTags];
+                if (editingIndex === prevTags.length) {
+                    newTags.push(editValue);
+                } else {
+                    newTags[editingIndex] = editValue;
+                }
+                setEditingIndex(null);
+                setEditValue('');
+                return newTags;
+            });
+        }
+    };
 
-  const handleEdit = (index:number) => {
-    setEditIndex(index);
-    setEditValue(tags[index]);
-  };
+    const handleEdit = (index: number) => {
+        setEditingIndex(index);
+        setEditValue(tags[index]);
+    };
 
-  const handleConfirmEdit = () => {
-    if(editIndex !== null){
-        const newTags = [...tags];
-        newTags[editIndex] = editValue;
-        setTags(newTags);
-        setEditIndex(null);
-        setEditValue('');
-    }
-  };
+    const handleDelete = (index: number) => {
+        setTags(prevTags => prevTags.filter((_, i) => i !== index));
+    };
 
-  const handleDelete = (index: number) => {
-    const newTags = [...tags];
-    newTags.splice(index, 1);
-    setTags(newTags);
-  };
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+        if (e.key === 'Enter') {
+            handleConfirmEdit();
+        } else if (e.key === 'Delete' && editingIndex === null) {
+            handleDelete(index);
+        }
+    };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-    if (e.key === 'Enter') {
-      handleConfirmEdit();
-    } else if (e.key === 'Delete' && editIndex === null) {
-      handleDelete(index);
-    }
-  };
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (editingIndex !== null && !inputRef.current?.contains(event.target as Node)) {
+                handleConfirmEdit(); // 保存当前编辑内容
+                setEditingIndex(null);
+                setEditValue('');
+            }
+        };
 
-  return (
-    <div>
-      <div>
-        <button className="w-27.4995 h-8 shrink-0 b-1 b-rd-1 mt-1 ml-4" onClick={handleAddTag}>
-          {editIndex !== null ? '确定' : '+ 添加标签'}
-        </button>
-      </div>
-      {tags?.map((tag:string, index:number)=> (
-        <div key={index} className="w-22 h-8 shrink-0 b-1 b-rd-1 ml-4" >
-          {editIndex === index ? (
-            <input
-              type="text"
-              value={editValue}
-              onChange={(e) => setEditValue(e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-            />
-          ) : (
-            <>
-              <span className="text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5 ml-1.5 mt-1" onClick={() => handleEdit(index)}>
-                {tag}
-              </span>
-              <button onClick={() => handleDelete(index)} className=''>x</button>
-            </>
-          )}
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [editingIndex, editValue]);
+
+    useEffect(() => {
+        if (editingIndex === tags.length) {
+            inputRef.current?.focus(); // 自动聚焦输入框
+        }
+    }, [editingIndex]);
+
+    return (
+        <div className="flex gap-4 items-center">
+            {tags.map((tag, index) => (
+                <div key={index} className="flex items-center gap-2 p-2 border rounded-md bg-gray-100 dark:bg-gray-800">
+                    {editingIndex === index ? (
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, index)}
+                            className="border rounded-md p-1 focus:outline-none w-full"
+                        />
+                    ) : (
+                        <div className={'flex items-center justify-between'}>
+                            <span className="cursor-pointer text-#1DB48D whitespace-nowrap"
+                                  onClick={() => handleEdit(index)}>
+                                #{tag}
+                            </span>
+                            <button onClick={() => handleDelete(index)} className="text-#1DB48D ml-2">
+                                x
+                            </button>
+                        </div>
+                    )}
+                </div>
+            ))}
+            {editingIndex === tags.length && (
+                <input
+                    ref={inputRef}
+                    type="text"
+                    value={editValue}
+                    onChange={(e) => setEditValue(e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(e, tags.length)}
+                    className="border rounded-md p-1 focus:outline-none w-full"
+                />
+            )}
+            {
+                tags.length < 4
+                &&
+                <Button onClick={handleAddOrEditTag}>
+                    {editingIndex !== null ? '确定' : '+ 添加标签'}
+                </Button>
+            }
         </div>
-      ))}
-    </div>
-  );
-}
+    )
+        ;
+};
 
 export default TagInput;

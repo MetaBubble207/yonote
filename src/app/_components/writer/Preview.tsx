@@ -25,7 +25,7 @@ const Preview = ({ title, html, tags }: PreviewProps) => {
 
     return (
         <div>
-            <div className="w-93 h-144 shrink-0 stroke-0.25 stroke-[#D9D9D9] ml-4.5 b-1 b-#d9d9d9 relative">
+            <div className="w-93 shrink-0 stroke-0.25 stroke-[#D9D9D9] ml-4.5 b-1 b-#d9d9d9 relative">
                 <div className="text-[rgba(0,0,0,0.85)] text-5 font-not-italic font-400 lh-5.5 ml-3.725 mt-3.725 h-10 overflow-auto">
                     <div className="break-all" dangerouslySetInnerHTML={{ __html: title }}></div>
                 </div>
@@ -48,12 +48,9 @@ const Preview = ({ title, html, tags }: PreviewProps) => {
                         <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>{specificDate}发布</div>
                     </div>
                 </div>
-                <div>
-                    {/*<Image src={"/images/special-column/Rectangle 442.png"} alt={"心智与阅读"} width={343} height={161} className="w-85.75 h-40.25 shrink-0 border-rd-5 m-auto" />*/}
-                </div>
                 <div className={"w-91% mt-24px shrink-0 text-[#666] text-3.5 font-not-italic font-400 lh-[120%] m-auto"}>
-                    <div className="h-50 overflow-auto">
-                        <div className="break-all h-15" dangerouslySetInnerHTML={{ __html: html }}></div>
+                    <div className="h-79 overflow-auto">
+                        <div className="break-all h-20" dangerouslySetInnerHTML={{ __html: html }}></div>
                     </div>
                 </div>
                 <div className="flex mt-5 ml-3.725 w-23 h-40px ">
