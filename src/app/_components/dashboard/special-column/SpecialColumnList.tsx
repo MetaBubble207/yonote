@@ -88,7 +88,7 @@ const SpecialColumnList = ({status, postData}: { status: boolean, postData: Deta
 
     return (
         <div>
-            <div className="flex mt-23px overflow-scroll pr-3">
+            <div className="flex mt-23px overflow-scroll pr-3 pb-3">
                 {data?.tags?.map((item, index) => (
                     <div
                         key={index}
