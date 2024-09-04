@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 
-const DynamicMyEditor = dynamic(() => import("../../_components/edit/MyEditor"), {
+const DynamicMyEditor = dynamic(() => import("@/app/_components/edit/MyEditor"), {
     ssr: false,
 });
 const Page = () => {
