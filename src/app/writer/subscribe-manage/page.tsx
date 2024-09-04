@@ -109,7 +109,7 @@ const Page = () => {
                     />
                 </div>
                 <div className={"flex items-center ml-32px"}>
-                    <label className='text-3.5 font-400 lh-5.5 mr-2.5'>订阅开始时间：</label>
+                    <label className='text-3.5 font-400 lh-5.5 mr-2.5 whitespace-nowrap'>订阅开始时间：</label>
                     <DatePicker.RangePicker
                         value={[
                             searchParams.startDate ? dayjs(searchParams.startDate) : null,
