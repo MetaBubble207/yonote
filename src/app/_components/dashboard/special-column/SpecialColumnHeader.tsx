@@ -30,7 +30,7 @@ const SpecialColumnHeader = () => {
                 <Image
                     placeholder="blur"
                     blurDataURL={DefaultLoadingPicture()}
-                    src={data.cover ?? DefaultLoadingPicture()}
+                    src={data?.cover ?? DefaultLoadingPicture()}
                     alt={"bg"}
                     width={375}
                     height={74.5}

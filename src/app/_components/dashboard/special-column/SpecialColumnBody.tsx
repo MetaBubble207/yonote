@@ -119,7 +119,7 @@ const SpecialColumnBody = () => {
         switch (currentContent) {
             case 1:
                 // @ts-ignore
-                return <SpecialColumnList status={status} postData={detailPost.detailPostCard}></SpecialColumnList>;
+                return <SpecialColumnList status={status} postData={detailPost?.detailPostCard}></SpecialColumnList>;
             case 2:
                 return <SpecialColumnIntroduce></SpecialColumnIntroduce>;
 

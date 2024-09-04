@@ -11,11 +11,7 @@ const SpecialColumnList = ({status, postData}: { status: boolean, postData: Deta
 
     const [activeCategory, setActiveCategory] = useState<string>("全部");
 
-    const [data, setData] = useState<DetailPostCard[]>([]);
-    const tags = ['全部', '免费', '置顶', ...postData.flatMap(item =>
-        item.tag ? item.tag.split(',').map(tag => tag.trim()) : []
-    )].filter((item, index, self) => self.indexOf(item) === index && item !== '');
-
+    const [data, setData] = useState<{ postList: DetailPostCard[], tags: string[] }>({postList: [], tags: []});
     useEffect(() => {
         let conditions = {
             isTop: null,
@@ -37,7 +33,9 @@ const SpecialColumnList = ({status, postData}: { status: boolean, postData: Deta
                 conditions.tag = activeCategory;
                 break;
         }
-
+        if (!postData) {
+            return;
+        }
         let res = [...postData];
         if (conditions.tag) {
             // 如果设置了tag条件，则过滤出包含该标签的项
@@ -52,7 +50,11 @@ const SpecialColumnList = ({status, postData}: { status: boolean, postData: Deta
             res = res.filter(item => item.isFree === true);
         }
 
-        setData(res);
+        setData({
+            postList: res, tags: ['全部', '免费', '置顶', ...postData.flatMap(item =>
+                item.tag ? item.tag.split(',').map(tag => tag.trim()) : []
+            )].filter((item, index, self) => self.indexOf(item) === index && item !== '')
+        });
     }, [activeCategory, postData]);
 
     const handleCategoryClick = (category: string) => {
@@ -75,9 +77,9 @@ const SpecialColumnList = ({status, postData}: { status: boolean, postData: Deta
     }
 
     const PostList = () => {
-        if (!data || data.length === 0) return <NoData title={'暂无数据噢😯~'}/>
+        if (!data || data?.postList.length === 0) return <NoData title={'暂无数据噢😯~'}/>
         return <>
-            {data.map((item) => (
+            {data.postList.map((item) => (
                 <PostCard key={item.id} postDetail={item} status={status}/>
             ))
             }
@@ -87,7 +89,7 @@ const SpecialColumnList = ({status, postData}: { status: boolean, postData: Deta
     return (
         <div>
             <div className="flex mt-23px overflow-scroll pr-3">
-                {tags?.map((item, index) => (
+                {data?.tags?.map((item, index) => (
                     <div
                         key={index}
                         className="h-6 shrink-0 bg-rgba(69,225,184,0.20) ml-2 mr-2 text-center text-[#1DB48D] text-3.25 font-not-italic font-400 lh-6 border-rd-1 pl-3 pr-3"
