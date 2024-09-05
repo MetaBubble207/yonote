@@ -1,7 +1,7 @@
 "use client";
 import React, {useEffect, useState} from 'react';
 import Link from 'next/link';
-import {useSearchParams} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {Button, DatePicker, Input} from "antd";
 import {api} from "@/trpc/react";
 import TableComponent from "@/app/_components/writer/content/TableComponent";
@@ -11,6 +11,7 @@ import Loading from "@/app/_components/common/Loading";
 
 const Page = () => {
     const params = useSearchParams();
+    const router = useRouter();
     const columnId = params.get("columnId");
 
     const [queryParams, setQueryParams] = useState({
@@ -28,15 +29,20 @@ const Page = () => {
         endDate: queryParams.endDate,
     }, {enabled: Boolean(columnId)});
 
+    const linkEdit = () => {
+        router.push(`/edit/edit?columnId=${columnId}`);
+    }
     if (isLoading) return <Loading/>
     return (
         <div className={'w-full h-full rounded-2.5 bg-[#FFF] pl-8 pr-9'}>
             <div className={'flex items-center pt-51px'}>
                 <div className="text-[#323232] text-4 font-not-italic font-700 lh-6">内容管理</div>
                 {/*发布*/}
-                <Link href={`/edit/edit?columnId=${columnId}`}
-                      className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+
-                    发布</Link>
+                <div
+                    onClick={linkEdit}
+                    className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+
+                    发布
+                </div>
             </div>
             <ConditionalFiltering/>
             {/*表格*/}
@@ -133,7 +139,7 @@ const Page = () => {
                 <div className={'w-16 h-8 rounded-1 mx-56px'}>
                     <Button
                         className={'p0 b-0 '}
-                        style={{width:'100%',height:'100%',backgroundColor: '#1DB48D', color:'#fff'}}
+                        style={{width: '100%', height: '100%', backgroundColor: '#1DB48D', color: '#fff'}}
                         onClick={handleSearch}
                     >
                         查询

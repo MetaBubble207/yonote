@@ -42,22 +42,24 @@ const MyEditor = () => {
     columnId = params.get("columnId")
     const postId = params.get("postId")
     let postData;
-    if (postId) {
-        const {data, isSuccess: isPostSuccess} = api.post.getByPostId.useQuery({
-            id: parseInt(postId),
-        });
-        if (isPostSuccess) {
-            columnId = data.columnId;
-            postData = data;
-        }
+    const {data: postQueryData, isSuccess: isPostSuccess} = api.post.getByPostId.useQuery({
+        id: parseInt(postId),
+    }, {enabled: Boolean(postId)});
+    if (isPostSuccess) {
+        columnId = postQueryData.columnId;
+        postData = postQueryData;
     }
 
     let draftData;
-    if (!postId) {
-        draftData = api.post.getDraft.useQuery({
-            columnId: columnId
-        }).data;
+    const {data: draftQueryData, isSuccess: isDraftSuccess} = api.post.getDraft.useQuery({
+        columnId: columnId
+    }, {
+        enabled: Boolean(!postId)
+    });
+    if (isDraftSuccess) {
+        draftData = draftQueryData;
     }
+
     const [editor, setEditor] = useState<IDomEditor | null>(null);
     let [html, setHtml] = useState('');
     const draft = html;
@@ -68,6 +70,7 @@ const MyEditor = () => {
 
     useEffect(() => {
         // 此时是路由过来的数据
+        console.log(postData, draftData)
         if (postData) {
             setTitle(postData.name);
             setHtml(postData.content);
@@ -76,6 +79,10 @@ const MyEditor = () => {
             setTitle(draftData.name);
             setHtml(draftData.content);
             setTags(draftData.tag ? draftData.tag.split(",") : []);
+        } else {
+            setTitle('');
+            setHtml('');
+            setTags([]);
         }
     }, [postData, draftData]);
 
@@ -278,7 +285,7 @@ const MyEditor = () => {
                 className="flex relative w-340 shrink-0 fill-#FFF stroke-0.25 stroke-[#D9D9D9] mt-16.625">
                 <div className="relative">
                     {!preview &&
-                        <div className={"relative w-335 b-1 b-solid b-#ccc "}>
+                        <div className={"relative w-335 b-1 b-solid pb-3 b-#ccc "}>
                             {/* 标题输入框 */}
                             <input
                                 type="text"
