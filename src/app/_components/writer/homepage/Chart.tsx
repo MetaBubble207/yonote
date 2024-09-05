@@ -21,7 +21,7 @@ const Chart = () => {
     };
 
     return (
-        <div className="w-full h-118.5 pt-32px pl-8 pr-7 rounded-2.5 bg-[#FFF]">
+        <div className="w-full pt-32px pl-8 pr-7 rounded-2.5 bg-[#FFF]">
             <div className={"w-full flex items-center justify-between"}>
                 <span className="text-[#323232] text-4 font-700 lh-6">数据分析图表</span>
                 <div className=" text-3.5 flex items-center space-x-40px">

@@ -14,7 +14,9 @@ const Echarts = ({startDate, endDate}: { startDate: Date, endDate: Date }) => {
         api.read.getHomePageDataRange.useQuery(
             {columnId: columnId, start: startDate, end: endDate});
     const dateArr = getDateStringArray(startDate, endDate);
-    if (isLoading) return <Loading />;
+    if (isLoading) return <div className={'h-60 flex items-center justify-center'}>
+        <Loading/>
+    </div>;
     if (!data) return <NoData title={'请先选择日期噢'}/>
     const option = {
         tooltip: {},
