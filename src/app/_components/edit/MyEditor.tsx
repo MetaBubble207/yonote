@@ -71,11 +71,11 @@ const MyEditor = () => {
         if (postData) {
             setTitle(postData.name);
             setHtml(postData.content);
-            setTags(postData.tag.split(","));
+            setTags(postData.tag ? postData.tag.split(",") : []);
         } else if (draftData) {
             setTitle(draftData.name);
             setHtml(draftData.content);
-            setTags(draftData.tag.split(","));
+            setTags(draftData.tag ? draftData.tag.split(",") : []);
         }
     }, [postData, draftData]);
 

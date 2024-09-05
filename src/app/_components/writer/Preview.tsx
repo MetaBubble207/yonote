@@ -55,7 +55,7 @@ const Preview = ({ title, html, tags }: PreviewProps) => {
                 </div>
                 <div className="flex mt-5 ml-3.725 w-23 h-40px ">
                     {tags.map((tag, index) => (
-                        <a key={index} href="" className=" w-15.5 text-[#1DB48D] text-3 font-not-italic font-400 lh-6">#{tag}</a>
+                        <span key={index} className=" w-15.5 text-[#1DB48D] text-3 font-400 mr-3">#{tag}</span>
                     ))}
                 </div>
             </div>
