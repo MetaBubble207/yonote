@@ -8,18 +8,22 @@ import {message} from "antd";
 
 const Column = () => {
     const params = useSearchParams();
+    const [columnId, setColumnId] = useState(params.get("id"));
+
+    const priceListData = api.priceList
+        .getByColumnId.useQuery({columnId: columnId}, {enabled: !!columnId}).data
+        ?.sort((a, b) => a.id - b.id);
+
+    const [priceList, setPriceList] = useState(priceListData ?? []);
+    const [isEditing, setIsEditing] = useState(false);
+
     // 限制输入框 “专栏ID” 输入为英文或数字
     const [name, setName] = useState("");
-    const [columnId, setColumnId] = useState(params.get("id"));
     const [messageApi, contextHolder] = message.useMessage();
     const info = () => {
         messageApi.info("该邀请码不存在或者已经被使用了噢😯~");
     };
-    // 限制“价格”输入值最小为50
-    const [price, setPrice] = useState("");
-    const handleChangePrice = (event: ChangeEvent<HTMLInputElement>) => {
-        setPrice(event.target.value);
-    };
+
     const router = useRouter()
     // 提交表单时检查价格输入值
     const createApi = api.invitationCode.create.useMutation({
@@ -39,20 +43,45 @@ const Column = () => {
     const [token] = useLocalStorage("token", null);
     // 提交表单时检查价格输入值
     const handleSubmit = () => {
-        if (parseInt(price) < 50 || token === null) {
-            // 如果输入值小于50，则清除输入值
-            setPrice("");
-            return false;
-        }
         createApi.mutate({
             id: columnId,
             name: name,
-            price: parseInt(price),
+            // priceList: priceList,
             userId: token,
         });
     };
 
+    const updatePriceList = (index, key, value) => {
+        try {
+            if (key === "price")
+                value = parseFloat(value)
+        } catch (e) {
+            messageApi.info("输入的价格不是合法的数字噢😯~");
+            return false;
+        }
+        try {
+            if (key === "timeLimit")
+                value = parseFloat(value)
+        } catch (e) {
+            messageApi.info("输入的天数不是纯数字噢😯~");
+            return false;
+        }
+        const newList = [...priceList];
+        newList[index][key] = value;
+        setPriceList(newList);
+    };
 
+    const addNewStrategy = () => {
+        if (!priceList || priceList.length < 4) {
+            // @ts-ignore
+            setPriceList([...priceList, {price: 0, timeLimit: 0}]);
+        }
+    };
+
+    const delStrategy = (index) => {
+        const newList = priceList.filter((_, i) => i !== index);
+        setPriceList(newList);
+    };
     return (
         <div className="relative w-286.75 h-195 border-rd-[0px_0px_10px_10px] bg-[#FFF] mt-16px ml-18px pt-25.75">
             {contextHolder}
@@ -123,32 +152,71 @@ const Column = () => {
                 </div>
             </div>
 
-            <div className="flex items-center w-full h-8 mt-4">
-                <div className="text-[rgba(0,0,0,0.85)] text-right text-3.5 font-400 lh-5.5 w-32.5 ml-42">
-                    价格
-                </div>
-                <div className="text-[rgba(0,0,0,0.25)] text-right text-3.5 font-400 lh-5.5 ">
-                    （最低50元）
-                </div>
-                <div className="text-[rgba(0,0,0,0.85)] text-right text-3.5 font-400 lh-5.5 ">
-                    ：
-                </div>
-                <div className="inline w-22 h-8 fill-#FFF border-rd-1 border-2 border-solid  ">
-                    <input
-                        type="number"
-                        name="price"
-                        id="price"
-                        onChange={handleChangePrice}
-                        value={price}
-                        placeholder="请输入"
-                        className="outline-none  text-3.5 font-400 lh-5.5 w-15 ml-3 mt-1"
-                    ></input>
-                </div>
-                <div className="text-[rgba(0,0,0,0.65)] text-right text-3.5 font-400 lh-5.5 ml-2">
-                    元
-                </div>
-            </div>
-
+            {/*价格*/}
+            {/*{priceList?.map((strategy, index) => (*/}
+            {/*    <tr key={index}>*/}
+            {/*        <td style={{paddingTop: '24px'}}>*/}
+            {/*            {isEditing ? (*/}
+            {/*                <>*/}
+            {/*                    <input*/}
+            {/*                        className={'w-40 h-8 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] pl-3'}*/}
+            {/*                        placeholder="大于99998天即为永久"*/}
+            {/*                        style={{fontSize: '14px'}}*/}
+            {/*                        type="text"*/}
+            {/*                        value={strategy.timeLimit}*/}
+            {/*                        onChange={(e) => {*/}
+            {/*                            const inputValue = e.target.value.replace(/\D/g, ''); // 只保留数字*/}
+            {/*                            updatePriceList(index, 'timeLimit', inputValue);*/}
+            {/*                        }}*/}
+            {/*                        maxLength={7}*/}
+            {/*                        required*/}
+            {/*                    />*/}
+            {/*                    天：*/}
+            {/*                </>*/}
+            {/*            ) : (*/}
+            {/*                <span*/}
+            {/*                    className="text-[rgba(0,0,0,0.85)] text-3.5 font-not-italic font-400 lh-5.5">*/}
+            {/*                                    {strategy.timeLimit >= 99999 ? '永久买断价格：' : `限时购买价格(${strategy.timeLimit}天)：`}*/}
+            {/*                                </span>*/}
+            {/*            )}*/}
+            {/*        </td>*/}
+            {/*        <td style={{textAlign: 'left', paddingTop: '24px'}}>*/}
+            {/*            {isEditing ? (*/}
+            {/*                <>*/}
+            {/*                    <input*/}
+            {/*                        className={'w-117 h-8 border-rd-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF] pl-3'}*/}
+            {/*                        placeholder="输入价格"*/}
+            {/*                        style={{fontSize: '14px'}}*/}
+            {/*                        type="text"*/}
+            {/*                        value={strategy.price}*/}
+            {/*                        onChange={(e) => {*/}
+            {/*                            const inputValue = e.target.value.replace(/[^\d.]/g, ''); // 只保留数字和小数点*/}
+            {/*                            updatePriceList(index, 'price', inputValue);*/}
+            {/*                        }}*/}
+            {/*                        maxLength={7}*/}
+            {/*                        required*/}
+            {/*                    />*/}
+            {/*                    <span onClick={() => delStrategy(index)}>删除</span>*/}
+            {/*                </>*/}
+            {/*            ) : (*/}
+            {/*                <span*/}
+            {/*                    className="text-[rgba(0,0,0,0.85)] text-3.5 font-not-italic font-400 lh-5.5">{strategy.price}元</span>*/}
+            {/*            )}*/}
+            {/*        </td>*/}
+            {/*    </tr>*/}
+            {/*))}*/}
+            {/*{(!priceList || priceList.length < 4) && (*/}
+            {/*    <tr>*/}
+            {/*        <td colSpan={4} style={{textAlign: 'left', paddingTop: '24px'}}>*/}
+            {/*            <button*/}
+            {/*                className={'text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5 underline'}*/}
+            {/*                onClick={addNewStrategy}*/}
+            {/*            >*/}
+            {/*                + 添加新策略*/}
+            {/*            </button>*/}
+            {/*        </td>*/}
+            {/*    </tr>*/}
+            {/*)}*/}
             <button className="w-16.25 h-8 ml-65.75 mt-20" onClick={handleSubmit}>
                 <Image
                     src={"/images/writer/co-author/submit.svg"}
