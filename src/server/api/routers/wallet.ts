@@ -2,6 +2,8 @@ import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {runningWater, user, wallet} from "@/server/db/schema";
 import {eq} from "drizzle-orm";
+import * as fs from "node:fs";
+import process from "process";
 
 export const walletRouter = createTRPCRouter({
     getByUserId: publicProcedure
@@ -32,23 +34,33 @@ export const walletRouter = createTRPCRouter({
         .input(z.object({
             userId: z.string(),
             amount: z.number().min(1),   // 充值金额
+            notifyUrl: z.string(),
         }))
         .mutation(async ({ctx, input}) => {
             try {
                 const {db} = ctx;
-                // // 创建微信支付订单
-                // const order = await wechatPay.getJsapiSignature({
-                //     description: "钱包充值",              // 订单描述
-                //     out_trade_no: `order_${Date.now()}`,  // 订单号
-                //     amount: {
-                //         total: input.amount * 100,         // 金额单位为分
-                //         currency: "CNY"
-                //     },
-                //     payer: {
-                //         openid: input.userId            // 微信用户的openid
-                //     },
-                //     notify_url: "https://your-domain.com/wechat/notify"  // 支付回调地址
-                // });
+
+                const Payment = require('wxpay-v3');
+                const paymnet = new Payment({
+                    appid: process.env.NEXT_PUBLIC_APP_ID,
+                    mchid: process.env.NEXT_PUBLIC_MCH_ID,
+                    private_key: require('fs').readFileSync('*_key.pem证书文件路径').toString(),//或者直接复制证书文件内容
+                    serial_no:process.env.NEXT_PUBLIC_SERIAL_NO,
+                    apiv3_private_key:process.env.NEXT_PUBLIC_APIV3_PRIVATE_KEY,
+                    notify_url: input.notifyUrl,
+                })
+                let result = await paymnet.jsapi({
+                    description:'充值',
+                    out_trade_no:Date.now().toString(),
+                    amount:{
+                        total: input.amount * 100
+                    },
+                    payer:{
+                        openid: input.userId
+                    },
+
+                })
+                console.log(result);
 
                 // 记录流水到数据库
                 await db.insert(runningWater).values({
@@ -58,7 +70,7 @@ export const walletRouter = createTRPCRouter({
                     expenditureOrIncome: 1  // 1表示收入
                 });
 
-                // return {success: true, order};  // 返回微信支付订单信息给前端
+                return {success: true, data:result};  // 返回微信支付订单信息给前端
             } catch (error) {
                 console.error("WeChat Pay Error:", error);
                 return {success: false, message: "支付失败"};
