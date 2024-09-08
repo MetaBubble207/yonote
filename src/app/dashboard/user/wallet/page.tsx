@@ -124,7 +124,8 @@ const Wallet = function () {
     // }
 
     if (isWalletLoading || isRunningWaterLoading) return <Loading/>
-    const List = ({runningWater}) => {
+
+    const List = () => {
         const data = runningWaterData.filter(item => item.expenditureOrIncome === currentType)
         if (!data || data.length === 0) return <NoData title={`当前还没有${currentType === 0 ? '支出' : '收入'}噢😯`}/>
         return data.map(item => (
@@ -147,6 +148,7 @@ const Wallet = function () {
 
 
     }
+
     const Card = () => {
         return <div className="w-85.75 h-41 relative">
             <Image src={"/images/wallet/bg.svg"} alt={"bg"} width={343} height={164}
@@ -174,6 +176,7 @@ const Wallet = function () {
             </div>
         </div>
     }
+
     return (
         <div>
             <div className="flex items-center mt-8 justify-center">
@@ -202,7 +205,7 @@ const Wallet = function () {
             <div>
                 <div className="flex items-center justify-center mt-4 ml-6.5 w-80.5 h-14.25 shrink-0 ">
                     <div className="w-80.5 h-14.25 shrink-0  ">
-                        <List runningWater={runningWaterData}/>
+                        <List/>
                     </div>
                 </div>
             </div>
