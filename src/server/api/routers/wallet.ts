@@ -44,25 +44,26 @@ export const walletRouter = createTRPCRouter({
                 const paymnet = new Payment({
                     appid: process.env.NEXT_PUBLIC_APP_ID,
                     mchid: process.env.NEXT_PUBLIC_MCH_ID,
-                    private_key: require('fs').readFileSync('*_key.pem证书文件路径').toString(),//或者直接复制证书文件内容
-                    serial_no:process.env.NEXT_PUBLIC_SERIAL_NO,
-                    apiv3_private_key:process.env.NEXT_PUBLIC_APIV3_PRIVATE_KEY,
+                    // private_key: require('fs').readFileSync('./public/apiclient_key.pem').toString(),//或者直接复制证书文件内容
+                    private_key: process.env.NEXT_PUBLIC_PRIVATE_KEY,//或者直接复制证书文件内容
+                    serial_no: process.env.NEXT_PUBLIC_SERIAL_NO,
+                    apiv3_private_key: process.env.NEXT_PUBLIC_APIV3_PRIVATE_KEY,
                     notify_url: input.notifyUrl,
                 })
                 let result = await paymnet.jsapi({
-                    description:'充值',
-                    out_trade_no:Date.now().toString(),
-                    amount:{
+                    description: '充值',
+                    out_trade_no: Date.now().toString(),
+                    amount: {
                         total: input.amount * 100
                     },
-                    payer:{
+                    payer: {
                         openid: input.userId
                     },
 
                 })
                 console.log(result);
-                const sign = paymnet.paysign(result.prepay_id);
-                console.log(sign)
+                // const sign = paymnet.paysign(result.prepay_id);
+                // console.log(sign)
                 // 记录流水到数据库
                 await db.insert(runningWater).values({
                     userId: input.userId,
@@ -71,7 +72,7 @@ export const walletRouter = createTRPCRouter({
                     expenditureOrIncome: 1  // 1表示收入
                 });
 
-                return {success: true, data:result};  // 返回微信支付订单信息给前端
+                return {success: true, data: result};  // 返回微信支付订单信息给前端
             } catch (error) {
                 console.error("WeChat Pay Error:", error);
                 return {success: false, message: "支付失败"};
