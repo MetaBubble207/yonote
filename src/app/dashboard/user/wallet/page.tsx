@@ -1,13 +1,15 @@
 "use client";
 import Image from "next/image"
-import React, {useState} from "react"
+import React, {useRef, useState} from "react"
 import {api} from "@/trpc/react";
 import Loading from "../../../_components/common/Loading";
 import useLocalStorage from "@/tools/useStore";
 import {timeToDateTimeString} from "@/tools/timeToString";
 import {message, Modal} from "antd";
+import {getCurrentTime} from "@/tools/getCurrentTime";
+import withTheme from "@/theme";
 
-const Wallet = () => {
+const Wallet = function () {
     const [token] = useLocalStorage('token', null);
     const {
         data: walletData,
@@ -20,6 +22,15 @@ const Wallet = () => {
 
     const [open, setOpen] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
+
+    const [payOpen, setPayOpen] = useState(false);
+    const payRef = useRef<HTMLDivElement | null>(null);
+    const recharge  = api.wallet.recharge.useMutation({
+        onSuccess: (r) => {
+            console.log(r)
+            onBridgeReady(r.prepayId)
+        }
+    });
     const withdraw = api.wallet.withdraw.useMutation({
         onSuccess: (r) => {
             setOpen(false);
@@ -57,6 +68,23 @@ const Wallet = () => {
         setOpen(false);
     };
 
+    const handlePayOk = () => {
+        const amount = payRef.current?.value;
+        if(!amount){
+            setPayOpen(false);
+            return;
+        }
+        recharge.mutate({
+            userId: token,
+            notifyUrl: window?.location?.origin + '/dashboard/user/wallet',
+            amount: parseInt(amount)
+        })
+        setPayOpen(false);
+    }
+
+    const handlePayCancel = () => {
+        setPayOpen(false);
+    }
     const [currentType, setCurrentType] = useState(0);
 
     const changeType = (type: number) => {
@@ -65,6 +93,33 @@ const Wallet = () => {
             setCurrentType(type);
         }
     };
+    function onBridgeReady(prepayId) {
+        WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                "appId": process.env.NEXT_PUBLIC_APP_ID,   //公众号ID，由商户传入
+                "timeStamp": getCurrentTime(),   //时间戳，自1970年以来的秒数
+                "nonceStr": "e61463f8efa94090b1f366cccfbbb444",      //随机串
+                "package": `prepay_id=${prepayId}`,
+                "signType": "RSA",     //微信签名方式：
+                "paySign": "oR9d8PuhnIc+YZ8cBHFCwfgpaK9gd7vaRvkYD7rthRAZ\/X+QBhcCYL21N7cHCTUxbQ+EAt6Uy+lwSN22f5YZvI45MLko8Pfso0jm46v5hqcVwrk6uddkGuT+Cdvu4WBqDzaDjnNa5UK3GfE1Wfl2gHxIIY5lLdUgWFts17D4WuolLLkiFZV+JSHMvH7eaLdT9N5GBovBwu5yYKUR7skR8Fu+LozcSqQixnlEZUfyE55feLOQTUYzLmR9pNtPbPsu6WVhbNHMS3Ss2+AehHvz+n64GDmXxbX++IOBvm2olHu3PsOUGRwhudhVf7UcGcunXt8cqNjKNqZLhLw4jq\/xDg==" //微信签名
+            },
+            function(res) {
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                    // 使用以上方式判断前端返回,微信团队郑重提示：
+                    //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                }
+            });
+    }
+    // if (typeof WeixinJSBridge == "undefined") {
+    //     if (document.addEventListener) {
+    //         document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+    //     } else if (document.attachEvent) {
+    //         document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+    //         document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+    //     }
+    // } else {
+    //     onBridgeReady();
+    // }
+
     if (isWalletLoading || isRunningWaterLoading) return <Loading/>
     const List = (runningWater) => {
         return <div>
@@ -130,6 +185,10 @@ const Wallet = () => {
                     onClick={() => changeType(1)}>
                     收入
                 </button>
+                <button className={'w-15 h-6 shrink-0 border-rd-1  ml-30 bg-#daf9f1 text-#1db48d'}
+                        onClick={() => setPayOpen(true)}>
+                    充值
+                </button>
             </div>
             <div>
                 <div className="flex items-center justify-center mt-4 ml-6.5 w-80.5 h-14.25 shrink-0 ">
@@ -152,9 +211,18 @@ const Wallet = () => {
             >
                 <div>确认要提现￥{walletData.amountWithdraw}吗</div>
             </Modal>
+            <Modal title="充值" width={'20'} open={payOpen} onOk={handlePayOk} onCancel={handlePayCancel}>
+                <div className={'h-20 flex items-center justify-center'}>
+                    <input type="text" className={'w-full px-4 h-10'} ref={payRef} placeholder={'输入要充值的金额（单位：元）'}/>
+                </div>
+            </Modal>
             {contextHolder}
         </div>
     );
 }
 
-export default Wallet;
+const Page = () => {
+    return withTheme(<Wallet/>)
+}
+
+export default Page;

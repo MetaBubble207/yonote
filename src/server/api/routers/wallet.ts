@@ -61,7 +61,8 @@ export const walletRouter = createTRPCRouter({
 
                 })
                 console.log(result);
-
+                const sign = paymnet.paysign(result.prepay_id);
+                console.log(sign)
                 // 记录流水到数据库
                 await db.insert(runningWater).values({
                     userId: input.userId,
