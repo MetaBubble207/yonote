@@ -40,6 +40,7 @@ export const walletRouter = createTRPCRouter({
             try {
                 const {db} = ctx;
 
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 const Payment = require('wxpay-v3');
                 const paymnet = new Payment({
                     appid: process.env.NEXT_PUBLIC_APP_ID,

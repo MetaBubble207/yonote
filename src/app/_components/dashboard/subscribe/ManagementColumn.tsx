@@ -5,6 +5,7 @@ import React, {forwardRef, useEffect, useImperativeHandle, useState} from "react
 import useLocalStorage from "@/tools/useStore";
 import {api} from "@/trpc/react";
 
+// eslint-disable-next-line react/display-name
 const ManagementColumn = forwardRef(
     (props: any, ref) => {
         useImperativeHandle(

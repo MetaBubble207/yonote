@@ -29,7 +29,17 @@ const Wallet = function () {
     const recharge = api.wallet.recharge.useMutation({
         onSuccess: (r) => {
             console.log(r)
-            onBridgeReady(r.prepayId)
+            if (typeof window.WeixinJSBridge == "undefined") {
+                if (document.addEventListener) {
+                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                } else if (document.attachEvent) {
+                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                }
+            } else {
+                onBridgeReady(r);
+            }
+            // onBridgeReady(r)
         }
     });
     const withdraw = api.wallet.withdraw.useMutation({
@@ -96,7 +106,7 @@ const Wallet = function () {
     };
 
     function onBridgeReady(prepayId) {
-        WeixinJSBridge.invoke('getBrandWCPayRequest', {
+        window.WeixinJSBridge.invoke('getBrandWCPayRequest', {
                 "appId": process.env.NEXT_PUBLIC_APP_ID,   //公众号ID，由商户传入
                 "timeStamp": getCurrentTime(),   //时间戳，自1970年以来的秒数
                 "nonceStr": "e61463f8efa94090b1f366cccfbbb444",      //随机串
@@ -112,16 +122,7 @@ const Wallet = function () {
             });
     }
 
-    // if (typeof WeixinJSBridge == "undefined") {
-    //     if (document.addEventListener) {
-    //         document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-    //     } else if (document.attachEvent) {
-    //         document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
-    //         document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-    //     }
-    // } else {
-    //     onBridgeReady();
-    // }
+
 
     if (isWalletLoading || isRunningWaterLoading) return <Loading/>
 
