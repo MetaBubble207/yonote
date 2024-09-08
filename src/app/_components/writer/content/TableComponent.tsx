@@ -2,7 +2,7 @@ import {type Post} from "@/server/db/schema";
 import {Button, Table, type TableColumnsType, type TableProps} from "antd";
 import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
-import {timeToDateTimeString} from "@/tools/timeToString";
+import {time2DateTimeStringSeconds} from "@/tools/timeToString";
 import Link from "next/link";
 import {api} from "@/trpc/react";
 
@@ -147,7 +147,7 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
             dataIndex: 'updatedAt',
             sorter: (a, b) => a.updatedAt > b.updatedAt ? 1 : -1,
             filterSearch: true,
-            render: (value) => <span>{timeToDateTimeString(value)}</span>,
+            render: (value) => <span>{time2DateTimeStringSeconds(value)}</span>,
             width: '15.5%',
         },
         {
@@ -155,7 +155,7 @@ const TableComponent = ({dataSource}: { dataSource: Post[] }) => {
             dataIndex: 'createdAt',
             sorter: (a, b) => a.createdAt > b.createdAt ? 1 : -1,
             filterSearch: true,
-            render: (value) => <span>{timeToDateTimeString(value)}</span>,
+            render: (value) => <span>{time2DateTimeStringSeconds(value)}</span>,
             width: '15.5%',
         },
         {

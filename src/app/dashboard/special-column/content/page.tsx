@@ -3,7 +3,7 @@ import {api} from "@/trpc/react";
 import {useEffect, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
-import {timeToDateString} from "@/tools/timeToString";
+import {time2DateString} from "@/tools/timeToString";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import Image from "next/image";
 import Loading from "@/app/_components/common/Loading";
@@ -79,7 +79,7 @@ const Page = () => {
             if (postData.name) {
                 const pubTime = postData.createdAt;
                 setName(postData.name);
-                setDate(timeToDateString(pubTime));
+                setDate(time2DateString(pubTime));
             } else {
                 setDate("");
                 setName("");

@@ -2,9 +2,9 @@
 import React, {useState, useEffect} from 'react';
 import Image from "next/image";
 import {api} from "@/trpc/react";
-import {timeToDateFullTimeString} from "@/tools/timeToString";
+import {time2DateFullTimeString} from "@/tools/timeToString";
 import DatePickerComponent from "@/app/_components/writer/datarange/DatePickerComponent";
-import {Dayjs} from "dayjs";
+import {type Dayjs} from "dayjs";
 
 interface UserSubscriptionsProps {
     columnId: string;
@@ -136,8 +136,8 @@ const UserSubscriptions: React.FC<UserSubscriptionsProps> = ({columnId, currentP
                     <td>{item.userName}</td>
                     <td>{item.userId}</td>
                     <td>{item.status ? '订阅中' : '已结束'}</td>
-                    <td>{timeToDateFullTimeString(item.start)}</td>
-                    <td>{timeToDateFullTimeString(item.end) ? timeToDateFullTimeString(item.end) : '无数据'}</td>
+                    <td>{time2DateFullTimeString(item.start)}</td>
+                    <td>{time2DateFullTimeString(item.end) ? time2DateFullTimeString(item.end) : '无数据'}</td>
                     <td>
                         <button
                             onClick={() => handleChangeStatus(item.buyerId, item.status)}

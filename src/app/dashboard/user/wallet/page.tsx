@@ -4,10 +4,11 @@ import React, {useRef, useState} from "react"
 import {api} from "@/trpc/react";
 import Loading from "../../../_components/common/Loading";
 import useLocalStorage from "@/tools/useStore";
-import {timeToDateTimeString} from "@/tools/timeToString";
+import {time2DateTimeStringMinutes, time2DateTimeStringSeconds} from "@/tools/timeToString";
 import {message, Modal} from "antd";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 import withTheme from "@/theme";
+import NoData from "@/app/_components/common/NoData";
 
 const Wallet = function () {
     const [token] = useLocalStorage('token', null);
@@ -24,8 +25,8 @@ const Wallet = function () {
     const [messageApi, contextHolder] = message.useMessage();
 
     const [payOpen, setPayOpen] = useState(false);
-    const payRef = useRef<HTMLDivElement | null>(null);
-    const recharge  = api.wallet.recharge.useMutation({
+    const payRef = useRef<HTMLInputElement | null>(null);
+    const recharge = api.wallet.recharge.useMutation({
         onSuccess: (r) => {
             console.log(r)
             onBridgeReady(r.prepayId)
@@ -70,7 +71,7 @@ const Wallet = function () {
 
     const handlePayOk = () => {
         const amount = payRef.current?.value;
-        if(!amount){
+        if (!amount) {
             setPayOpen(false);
             return;
         }
@@ -93,6 +94,7 @@ const Wallet = function () {
             setCurrentType(type);
         }
     };
+
     function onBridgeReady(prepayId) {
         WeixinJSBridge.invoke('getBrandWCPayRequest', {
                 "appId": process.env.NEXT_PUBLIC_APP_ID,   //公众号ID，由商户传入
@@ -102,13 +104,14 @@ const Wallet = function () {
                 "signType": "RSA",     //微信签名方式：
                 "paySign": "oR9d8PuhnIc+YZ8cBHFCwfgpaK9gd7vaRvkYD7rthRAZ\/X+QBhcCYL21N7cHCTUxbQ+EAt6Uy+lwSN22f5YZvI45MLko8Pfso0jm46v5hqcVwrk6uddkGuT+Cdvu4WBqDzaDjnNa5UK3GfE1Wfl2gHxIIY5lLdUgWFts17D4WuolLLkiFZV+JSHMvH7eaLdT9N5GBovBwu5yYKUR7skR8Fu+LozcSqQixnlEZUfyE55feLOQTUYzLmR9pNtPbPsu6WVhbNHMS3Ss2+AehHvz+n64GDmXxbX++IOBvm2olHu3PsOUGRwhudhVf7UcGcunXt8cqNjKNqZLhLw4jq\/xDg==" //微信签名
             },
-            function(res) {
+            function (res) {
                 if (res.err_msg == "get_brand_wcpay_request:ok") {
                     // 使用以上方式判断前端返回,微信团队郑重提示：
                     //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
                 }
             });
     }
+
     // if (typeof WeixinJSBridge == "undefined") {
     //     if (document.addEventListener) {
     //         document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
@@ -121,22 +124,28 @@ const Wallet = function () {
     // }
 
     if (isWalletLoading || isRunningWaterLoading) return <Loading/>
-    const List = (runningWater) => {
-        return <div>
-            <div className="ml-0">
-                <div
-                    className="w-27 text-[#252525] text-3.25 font-not-italic font-400 lh-6">{runningWater.name}</div>
-                <div
-                    className="w-26.5 h-6.25 shrink-0 text-[#999] text-2.75 font-not-italic font-400 lh-6 mt--1">{timeToDateTimeString(runningWater.createdAt)}</div>
-            </div>
-            <div className="w-20.75 h-5.5 shrink-0 text-[#252525] text-3.75 font-700 lh-6 ml-62.75 mt--11">
-                {runningWater.expenditureOrIncome === 0 ? '-' : '+'}
-                ￥
-                {runningWater.price}
-            </div>
-            <div className="border-1 mt-5"></div>
-            <div className="mt-4"></div>
-        </div>
+    const List = ({runningWater}) => {
+        const data = runningWaterData.filter(item => item.expenditureOrIncome === currentType)
+        if (!data || data.length === 0) return <NoData title={`当前还没有${currentType === 0 ? '支出' : '收入'}噢😯`}/>
+        return data.map(item => (
+                <div key={item.id}>
+                    <div className="ml-0">
+                        <div
+                            className="w-27 text-[#252525] text-3.25 font-not-italic font-400 lh-6">{item.name}</div>
+                        <div
+                            className="w-26.5 h-6.25 shrink-0 text-[#999] text-2.75 font-not-italic font-400 lh-6 mt--1">{time2DateTimeStringMinutes(item.createdAt)}</div>
+                    </div>
+                    <div className="w-20.75 h-5.5 shrink-0 text-[#252525] text-right text-3.75 font-700 lh-6 ml-60 mt--11">
+                        {item.expenditureOrIncome === 0 ? '-' : '+'}
+                        ￥
+                        {item.price}
+                    </div>
+                    <div className="border-1 mt-5"></div>
+                    <div className="mt-4"></div>
+                </div>
+            ))
+
+
     }
     const Card = () => {
         return <div className="w-85.75 h-41 relative">
@@ -193,13 +202,7 @@ const Wallet = function () {
             <div>
                 <div className="flex items-center justify-center mt-4 ml-6.5 w-80.5 h-14.25 shrink-0 ">
                     <div className="w-80.5 h-14.25 shrink-0  ">
-                        {runningWaterData
-                            .filter(item => item.expenditureOrIncome === currentType)
-                            .map((runningWater, index) => (
-                                <div key={index}>
-                                    <List {...runningWater}></List>
-                                </div>
-                            ))}
+                        <List runningWater={runningWaterData}/>
                     </div>
                 </div>
             </div>
@@ -213,7 +216,8 @@ const Wallet = function () {
             </Modal>
             <Modal title="充值" width={'20'} open={payOpen} onOk={handlePayOk} onCancel={handlePayCancel}>
                 <div className={'h-20 flex items-center justify-center'}>
-                    <input type="text" className={'w-full px-4 h-10'} ref={payRef} placeholder={'输入要充值的金额（单位：元）'}/>
+                    <input type="text" className={'w-full px-4 h-10'} ref={payRef}
+                           placeholder={'输入要充值的金额（单位：元）'}/>
                 </div>
             </Modal>
             {contextHolder}

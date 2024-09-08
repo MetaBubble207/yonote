@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {timeToDateString} from "@/tools/timeToString";
+import {time2DateString} from "@/tools/timeToString";
 import Link from "next/link";
 import React from "react";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
@@ -64,7 +64,7 @@ const ColumnCard = ({columnData}: { columnData: DetailColumnCard }) => {
                                 {columnData.userName}
                             </div>
                             <div className="text-[#B5B5B5] text-2.75 lh-4">
-                                {timeToDateString(columnData.createdAt)}发布
+                                {time2DateString(columnData.createdAt)}发布
                             </div>
                         </div>
                     </div>

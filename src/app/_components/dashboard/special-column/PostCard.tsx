@@ -2,7 +2,7 @@
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import React, {useState} from "react";
-import {timeToDateString} from "@/tools/timeToString";
+import {time2DateString} from "@/tools/timeToString";
 import {useEffect} from "react";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import {type DetailPostCard} from "@/server/db/schema";
@@ -129,7 +129,7 @@ const PostCard = ({postDetail, status}: { postDetail: DetailPostCard, status: bo
                                 </div>
                             </div>
                             <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
-                                {timeToDateString(postDetail.updatedAt)}发布
+                                {time2DateString(postDetail.updatedAt)}发布
                             </div>
                         </div>
                     </div>

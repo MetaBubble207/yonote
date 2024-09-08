@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import {timeToDateString} from "@/tools/timeToString";
+import {time2DateString} from "@/tools/timeToString";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import React from "react";
 import {type DetailColumnCard} from "@/server/db/schema";
@@ -75,7 +75,7 @@ const SubscribeRenew = ({column}:{column:DetailColumnCard}) => {
                                     ></Image>
                                 </div>
                                 <div className="text-[#B5B5B5] text-2.75 lh-4">
-                                    {timeToDateString(column.createdAt)}发布
+                                    {time2DateString(column.createdAt)}发布
                                 </div>
                             </div>
                         </div>

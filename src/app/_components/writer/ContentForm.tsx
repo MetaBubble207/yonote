@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { api } from "@/trpc/react";
-import { timeToDateString } from "@/tools/timeToString";
+import { time2DateString } from "@/tools/timeToString";
 import { useSearchParams } from "next/navigation";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import Link from "next/link";
@@ -179,8 +179,8 @@ const ContentForm = ({ title, tag }) => {
                         <td className="px-4 pl-63px pr-2 text-left text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{option?.name}</td>
                         <td className={`px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5 ${option.isTop ? 'text-[#1DB48D]' : ''} ${option.isFree ? 'text-[#1DB48D]' : ''}`}>{option.isTop ? '置顶' : ''} {option.isFree ? '免费' : ''}</td>
                         <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{option.tag}</td>
-                        <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{timeToDateString(option.createdAt)}</td>
-                        <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{timeToDateString(option.updatedAt)}</td>
+                        <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{time2DateString(option.createdAt)}</td>
+                        <td className="px-4 py-2 text-[rgba(0,0,0,0.65)] text-3.5 font-not-italic font-400 lh-5.5">{time2DateString(option.updatedAt)}</td>
                         <td className="px-4 py-2">
                             <Link href={`/edit/edit?columnId=${columnId}&postId=${option.id}`}  className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={handleEdit}>编辑</Link>
                             <button className="mr-2 text-[#1DB48D] text-3.5 font-not-italic font-400 lh-5.5" onClick={()=> handleToggleTop(index)}>{option.isTop ? '取消置顶' : '置顶'}</button>

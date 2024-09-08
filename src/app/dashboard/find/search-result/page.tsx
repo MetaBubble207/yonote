@@ -5,7 +5,7 @@ import {useRouter, useSearchParams} from "next/navigation";
 import SearchColumn from "@/app/_components/common/SearchColumn";
 import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
-import {timeToDateString} from "@/tools/timeToString";
+import {time2DateString} from "@/tools/timeToString";
 import Link from "next/link";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import {Button, Skeleton} from "antd";
@@ -149,7 +149,7 @@ const Page = () => {
                                 </div>
                             </div>
                             <div
-                                className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px"}>{timeToDateString(item.createdAt)}发布
+                                className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px"}>{time2DateString(item.createdAt)}发布
                             </div>
                         </div>
                     </div>

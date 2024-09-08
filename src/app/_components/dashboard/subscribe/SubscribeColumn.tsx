@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import {timeToDateString} from "@/tools/timeToString";
+import {time2DateString} from "@/tools/timeToString";
 import React from "react";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import {type BaseColumnCard} from "@/server/db/schema";
@@ -41,7 +41,7 @@ const SubscribeColumn = ({column}: { column: BaseColumnCard }) => {
                 </div>
                 <div className="flex-1">
                     <div className="text-2.75 lh-4 text-[#B5B5B5] ml-2.6">
-                        {timeToDateString(column.createdAt)}发布
+                        {time2DateString(column.createdAt)}发布
                     </div>
                     <div
                         className="border-rd-[2px_16px_16px_16px] bg-[#FFF] h-24 mt-1 ml-2 flex items-center shrink-0 w-73.25">

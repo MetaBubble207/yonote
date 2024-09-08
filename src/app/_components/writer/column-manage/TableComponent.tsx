@@ -1,7 +1,7 @@
 import {type OrderBuyer} from "@/server/db/schema";
 import {Button, Table, type TableColumnsType, type TableProps} from "antd";
 import React, {useEffect, useState} from "react";
-import {timeToDateTimeString} from "@/tools/timeToString";
+import {time2DateTimeStringSeconds} from "@/tools/timeToString";
 import {api} from "@/trpc/react";
 
 const TableComponent = ({dataSource}: { dataSource: OrderBuyer[] }) => {
@@ -60,7 +60,7 @@ const TableComponent = ({dataSource}: { dataSource: OrderBuyer[] }) => {
             title: '订阅开始时间',
             dataIndex: 'createdAt',
             sorter: (a, b) => a.createdAt > b.createdAt ? 1 : -1,
-            render: (value) => <span>{timeToDateTimeString(value)}</span>,
+            render: (value) => <span>{time2DateTimeStringSeconds(value)}</span>,
             width: '17%',
         },
         {
@@ -68,7 +68,7 @@ const TableComponent = ({dataSource}: { dataSource: OrderBuyer[] }) => {
             dataIndex: 'endDate',
             sorter: (a, b) => a.endDate > b.endDate ? 1 : -1,
             filterSearch: true,
-            render: (value) => <span>{timeToDateTimeString(value)}</span>,
+            render: (value) => <span>{time2DateTimeStringSeconds(value)}</span>,
             width: '17%',
         },
         {
