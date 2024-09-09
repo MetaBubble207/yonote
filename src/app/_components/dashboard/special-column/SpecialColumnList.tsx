@@ -1,9 +1,6 @@
 "use client"
-import {api} from "@/trpc/react";
-import {useSearchParams} from 'next/navigation';
 import React, {useEffect, useState} from 'react';
 import PostCard from "@/app/_components/dashboard/special-column/PostCard";
-import Loading from "@/app/_components/common/Loading";
 import NoData from "@/app/_components/common/NoData";
 import {type DetailPostCard} from "@/server/db/schema";
 

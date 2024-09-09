@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, {Suspense} from "react";
 import HomepageData from "@/app/_components/writer/homepage/HomepageData";
 import Chart from "@/app/_components/writer/homepage/Chart";
 
@@ -7,10 +7,13 @@ const Page = () => {
     return (
         <div className="w-full h-full">
             <div className="w-full">
-                <HomepageData/>
+                <Suspense>
+                    <HomepageData/>
+                </Suspense>
+
             </div>
             <div className="pt-4 w-full">
-                <Chart></Chart>
+                <Chart/>
             </div>
         </div>
     )

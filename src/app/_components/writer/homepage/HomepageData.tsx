@@ -12,10 +12,11 @@ const HomepageData = () => {
     const router = useRouter();
     const pathname = usePathname();
     const params = useSearchParams();
+    const columnId = params.get("columnId");
+
     const columns = api.column.getAllByUserId.useQuery({
         userId: token
     }).data;
-    const columnId = params.get("columnId");
 
     useEffect(() => {
         if ((!columnId || columnId === "null") && columns) {

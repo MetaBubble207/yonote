@@ -1,5 +1,5 @@
 'use client';
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {useSearchParams} from 'next/navigation';
 import TableComponent from "@/app/_components/writer/column-manage/TableComponent";
 import {api} from "@/trpc/react";
@@ -81,54 +81,56 @@ const Page = () => {
         }
 
         return (
-            <div className={'w-full h-full rounded-2.5 flex text-3.5 font-400'}>
-                <div className={'flex items-center'}>
-                    <label className='lh-5.5 whitespace-nowrap'>用户ID：</label>
-                    <Input
-                        className='ml-4 w-56 h-8 rounded-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF]'
-                        type="text"
-                        placeholder="搜索用户ID"
-                        value={searchParams.userId}
-                        onChange={onUserIdChange}
-                        allowClear
-                    />
-                </div>
+            <Suspense>
+                <div className={'w-full h-full rounded-2.5 flex text-3.5 font-400'}>
+                    <div className={'flex items-center'}>
+                        <label className='lh-5.5 whitespace-nowrap'>用户ID：</label>
+                        <Input
+                            className='ml-4 w-56 h-8 rounded-1 border-1 border-solid border-[#D9D9D9] bg-[#FFF]'
+                            type="text"
+                            placeholder="搜索用户ID"
+                            value={searchParams.userId}
+                            onChange={onUserIdChange}
+                            allowClear
+                        />
+                    </div>
 
-                <div className={'ml-32px flex items-center'}>
-                    <label className='lh-5.5 whitespace-nowrap'>订阅状态：</label>
-                    <Select
-                        className='ml-4 w-56 h-8'
-                        placeholder="不限"
-                        value={searchParams.status}
-                        options={[
-                            {value: null, label: '全部'},
-                            {value: true, label: '订阅中'},
-                            {value: false, label: '已结束'},
-                        ]}
-                        onChange={onStatusChange}
-                    />
+                    <div className={'ml-32px flex items-center'}>
+                        <label className='lh-5.5 whitespace-nowrap'>订阅状态：</label>
+                        <Select
+                            className='ml-4 w-56 h-8'
+                            placeholder="不限"
+                            value={searchParams.status}
+                            options={[
+                                {value: null, label: '全部'},
+                                {value: true, label: '订阅中'},
+                                {value: false, label: '已结束'},
+                            ]}
+                            onChange={onStatusChange}
+                        />
+                    </div>
+                    <div className={"flex items-center ml-32px"}>
+                        <label className='text-3.5 font-400 lh-5.5 mr-2.5 whitespace-nowrap'>订阅开始时间：</label>
+                        <DatePicker.RangePicker
+                            value={[
+                                searchParams.startDate ? dayjs(searchParams.startDate) : null,
+                                searchParams.endDate ? dayjs(searchParams.endDate) : null,
+                            ]}
+                            format={dateFormat}
+                            onChange={onDateChange}
+                        />
+                    </div>
+                    <div className={'w-16 h-8 rounded-1 mx-56px'}>
+                        <Button
+                            className={'p0 b-0 '}
+                            style={{width: '100%', height: '100%', backgroundColor: '#1DB48D', color: '#fff'}}
+                            onClick={handleSearch}
+                        >
+                            查询
+                        </Button>
+                    </div>
                 </div>
-                <div className={"flex items-center ml-32px"}>
-                    <label className='text-3.5 font-400 lh-5.5 mr-2.5 whitespace-nowrap'>订阅开始时间：</label>
-                    <DatePicker.RangePicker
-                        value={[
-                            searchParams.startDate ? dayjs(searchParams.startDate) : null,
-                            searchParams.endDate ? dayjs(searchParams.endDate) : null,
-                        ]}
-                        format={dateFormat}
-                        onChange={onDateChange}
-                    />
-                </div>
-                <div className={'w-16 h-8 rounded-1 mx-56px'}>
-                    <Button
-                        className={'p0 b-0 '}
-                        style={{width: '100%', height: '100%', backgroundColor: '#1DB48D', color: '#fff'}}
-                        onClick={handleSearch}
-                    >
-                        查询
-                    </Button>
-                </div>
-            </div>
+            </Suspense>
         )
     }
 

@@ -1,6 +1,6 @@
 "use client"
 import {DatePicker} from "antd";
-import React, {useState} from "react";
+import React, {Suspense, useState} from "react";
 import dayjs from "dayjs";
 import Echarts from "@/app/_components/writer/homepage/Echarts";
 
@@ -49,7 +49,9 @@ const Chart = () => {
                 </div>
             </div>
             <div className="w-full h-90">
-                <Echarts startDate={startDate} endDate={endDate}></Echarts>
+                <Suspense>
+                    <Echarts startDate={startDate} endDate={endDate}/>
+                </Suspense>
             </div>
         </div>
     )
