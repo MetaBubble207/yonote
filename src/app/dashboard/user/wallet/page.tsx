@@ -49,7 +49,7 @@ const Wallet = function () {
                 type: 'success',
                 content: `提现成功${r.amountWithdraw}`,
             }).then(() => {
-                window.location.reload();
+                window?.location.reload();
             });
         }
     })
