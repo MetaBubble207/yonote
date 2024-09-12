@@ -2,10 +2,9 @@ import "../styles/globals.css";
 import {Inter} from "next/font/google";
 import React from 'react'
 import {TRPCReactProvider} from "@/trpc/react";
-import {ConfigProvider} from "antd";
-import zhCN from "antd/es/locale/zh_CN";
 import 'dayjs/locale/zh-cn';
 import {AntdRegistry} from '@ant-design/nextjs-registry';
+import Link from "next/link";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -27,6 +26,10 @@ export default function RootLayout({children}: Readonly<{
         <AntdRegistry>
             <TRPCReactProvider>
                 {children}
+                <div className={'flex items-center justify-center text-gray text-3 bg-#F5F7FB pb-20 w-100vw'}>ICP备案号：<Link
+                    href={'http://beian.miit.gov.cn/ '}>
+                    京ICP备2024064381号-1
+                </Link></div>
             </TRPCReactProvider>
         </AntdRegistry>
 

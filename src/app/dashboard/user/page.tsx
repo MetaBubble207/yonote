@@ -7,10 +7,10 @@ import React, {useEffect, useState} from "react";
 import {api} from "@/trpc/react";
 import {Button, Skeleton} from "antd";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import withTheme from "@/theme";
 
-const User = function User() {
+const User = function User({code}: { code: string | undefined }) {
     const logout = () => {
         localStorage.removeItem("token");
     };
@@ -23,10 +23,6 @@ const User = function User() {
         api.column.getAllByUserId.useQuery({
             userId: userInfo?.id,
         }, {enabled: Boolean(token)});
-    const searchParams = useSearchParams();
-    //这个地址是提前给微信登录接口重定向，默认微信那边会传回code和state两个query参数，通过useSearchParams可以拿到
-    const code = searchParams.get("code");
-
     const {data: loginData, isSuccess} = api.users.login.useQuery({code}, {
         enabled: Boolean(code && !token),
     });
@@ -307,7 +303,13 @@ const User = function User() {
 
 };
 
-const Page = () => {
-    return withTheme(<User/>)
+const Page = ({
+                  params,
+                  searchParams,
+              }: {
+    params: { slug: string };
+    searchParams: { code: string | undefined };
+}) => {
+    return withTheme(<User code={searchParams?.code}/>)
 }
 export default Page;

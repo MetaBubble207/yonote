@@ -1,43 +1,50 @@
 "use client"
-import React from "react";
+import React, {useEffect} from "react";
 import Image from "next/image";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import {api} from "@/trpc/react";
 
 const Compass = () => {
     const router = useRouter();
     const pathname = usePathname();
+    let go = false;
     const handleLogout = () => {
         setToken(null)
         router.push("/edit/login");
     }
     const [token, setToken] = useLocalStorage("token", null)
 
-    if(!token && !pathname.includes('/login')){
-        router.push("/writer/login");
-    }
+    useEffect(() => {
+        if (!token && !pathname.includes('/login')) {
+            router.push("/writer/login");
+        }
+    }, [token, pathname])
+
 
     const user = api.users.getOne.useQuery({
         id: token ?? "",
     }).data
 
-    const param = useSearchParams();
-    const linkHomepage = () => {
-        const columnId = param.get('columnId');
-        if (columnId) {
-            router.push(`/writer/homepage?columnId=${columnId}`)
-        } else {
-            router.push(`/writer/homepage`)
-        }
-    }
+    useEffect(() => {
+        if (go) router.push(`/writer/homepage`)
+    }, [go]);
+    // const param = useSearchParams();
+    // const linkHomepage = () => {
+    //     const columnId = param.get('columnId');
+    //     if (columnId) {
+    //         router.push(`/writer/homepage?columnId=${columnId}`)
+    //     } else {
+    //         router.push(`/writer/homepage`)
+    //     }
+    // }
     return (
         <div>
             <div
                 className="fixed top-0 w-100% h-17.5 shrink-0 bg-[#FFF] flex items-center justify-between pr-23px z-101">
                 {/*左半边导航区*/}
                 <div className="flex items-center w-107.55675 h-11.75 shrink-0 ml-7.1975 mt-2.875">
-                    <div className="inline-flex w-20 h-9.48025 items-center" onClick={linkHomepage}>
+                    <div className="inline-flex w-20 h-9.48025 items-center" onClick={() => go = true}>
                         <Image src={"/images/logo.svg"} alt={"cover"} width={30.3} height={30.42}
                                className="w-7.57425 h-8.35625 shrink-0"></Image>
                         <div className="ml-2">

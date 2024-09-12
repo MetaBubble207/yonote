@@ -1,19 +1,23 @@
 "use client"
-import React, {Suspense} from "react";
+import React from "react";
 import HomepageData from "@/app/_components/writer/homepage/HomepageData";
 import Chart from "@/app/_components/writer/homepage/Chart";
 
-const Page = () => {
+const Page = ({
+                  params,
+                  searchParams,
+              }: {
+    params: { slug: string };
+    searchParams: { columnId: string | undefined };
+}) => {
     return (
         <div className="w-full h-full">
             <div className="w-full">
-                <Suspense>
-                    <HomepageData/>
-                </Suspense>
+                <HomepageData columnId={searchParams?.columnId}/>
 
             </div>
             <div className="pt-4 w-full">
-                <Chart/>
+                <Chart columnId={searchParams?.columnId}/>
             </div>
         </div>
     )

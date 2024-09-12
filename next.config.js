@@ -10,6 +10,7 @@ const config = {
     experimental: {
         missingSuspenseWithCSRBailout: false,
     },
+    output: 'standalone',
     images: {
         remotePatterns: [
             {

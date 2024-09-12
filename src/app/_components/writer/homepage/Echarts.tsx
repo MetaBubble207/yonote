@@ -2,17 +2,15 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
 import {api} from "@/trpc/react";
-import {useSearchParams} from "next/navigation";
 import getDateStringArray from "@/tools/getDateStringArray";
 import Loading from "@/app/_components/common/Loading";
 import NoData from "@/app/_components/common/NoData";
 import 'dayjs/locale/zh-cn';
 
-const Echarts = ({startDate, endDate}: { startDate: Date, endDate: Date }) => {
-    const columnId = useSearchParams().get("columnId");
+const Echarts = ({startDate, endDate, columnId}: { startDate: Date, endDate: Date, columnId: string | undefined }) => {
     const {data, isLoading} =
         api.read.getHomePageDataRange.useQuery(
-            {columnId: columnId, start: startDate, end: endDate});
+            {columnId: columnId, start: startDate, end: endDate}, {enabled: Boolean(columnId)});
     const dateArr = getDateStringArray(startDate, endDate);
     if (isLoading) return <div className={'h-60 flex items-center justify-center'}>
         <Loading/>

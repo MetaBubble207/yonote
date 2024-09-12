@@ -1,18 +1,16 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
-import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {api} from "@/trpc/react";
 import {useEffect} from "react";
 import useLocalStorage from "@/tools/useStore";
 import Loading from "@/app/_components/common/Loading";
 
-const HomepageData = () => {
+const HomepageData = ({columnId}: { columnId: string | undefined }) => {
     const [token] = useLocalStorage("token", null);
     const router = useRouter();
     const pathname = usePathname();
-    const params = useSearchParams();
-    const columnId = params.get("columnId");
 
     const columns = api.column.getAllByUserId.useQuery({
         userId: token

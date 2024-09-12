@@ -1,8 +1,12 @@
 "use client";
+import {useEffect} from "react";
+import {useRouter} from "next/navigation";
+
 export default async function Home() {
-    if (typeof window !== "undefined") {
-        window.location.href = "/writer/homepage";
-    }
+    const router = useRouter();
+    useEffect(()=>{
+        router.push('/writer/homepage')
+    })
     return (
         <div></div>
     );

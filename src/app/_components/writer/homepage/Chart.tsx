@@ -4,7 +4,7 @@ import React, {Suspense, useState} from "react";
 import dayjs from "dayjs";
 import Echarts from "@/app/_components/writer/homepage/Echarts";
 
-const Chart = () => {
+const Chart = ({columnId}: { columnId: string | undefined }) => {
     const dateFormat = 'YYYY/MM/DD';
     const [startDate, setStartDate] = useState<Date>(null);
     const [endDate, setEndDate] = useState<Date>(null);
@@ -49,9 +49,7 @@ const Chart = () => {
                 </div>
             </div>
             <div className="w-full h-90">
-                <Suspense>
-                    <Echarts startDate={startDate} endDate={endDate}/>
-                </Suspense>
+                <Echarts startDate={startDate} endDate={endDate} columnId={columnId}/>
             </div>
         </div>
     )
