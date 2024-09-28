@@ -23,7 +23,7 @@ const Find = () => {
                 <Activities/>
             </div>
 
-            <div className="bottom-4 justify-center w-full fixed">
+            <div className="bottom-4 justify-center w-full fixed z-2">
                 <Navbar/>
             </div>
         </div>

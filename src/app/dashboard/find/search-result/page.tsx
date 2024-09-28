@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {api} from "@/trpc/react";
 import {useRouter, useSearchParams} from "next/navigation";
 import SearchColumn from "@/app/_components/common/SearchColumn";
@@ -37,7 +37,7 @@ const Page = () => {
                 </div>
                 <List/>
             </div>
-            <div className="bottom-4 justify-center w-full fixed">
+            <div className="bottom-4 justify-center w-full fixed z-2">
                 <Navbar/>
             </div>
         </div>

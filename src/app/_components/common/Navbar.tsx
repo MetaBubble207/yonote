@@ -7,7 +7,7 @@ const Navbar = () => {
     const pathname = usePathname();
     return (
         <nav className='flex justify-center'>
-            <div className='flex flex-row justify-center w-61.25 h-13 text-center text-2.5 bg-[#FFF] border-rd-13 shadow-[0px_1px_4px_2px_rgba(0,0,0,0.05)] overflow-hidden'>
+            <div className='flex flex-row justify-center w-61.25 h-13 text-center text-2.5 bg-[#FFF]  bg-opacity-50 border-rd-13 shadow-[0px_1px_4px_2px_rgba(0,0,0,0.05)] overflow-hidden'>
                 <Link href="/dashboard/find" className='flex-1 text-[#b5b5b5] font-500 mt-1' >
                     <img
                     src={`${

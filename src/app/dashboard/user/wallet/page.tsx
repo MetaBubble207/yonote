@@ -4,7 +4,7 @@ import React, {useRef, useState} from "react"
 import {api} from "@/trpc/react";
 import Loading from "../../../_components/common/Loading";
 import useLocalStorage from "@/tools/useStore";
-import {time2DateTimeStringMinutes, time2DateTimeStringSeconds} from "@/tools/timeToString";
+import {time2DateTimeStringMinutes} from "@/tools/timeToString";
 import {message, Modal} from "antd";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 import withTheme from "@/theme";
@@ -15,7 +15,7 @@ const Wallet = function () {
     const {
         data: walletData,
         isLoading: isWalletLoading
-    } = api.wallet.getByUserId.useQuery({id: token}, {enabled: !!token});
+    } = api.wallet.getByUserId.useQuery({id: token}, {enabled: Boolean(token)});
     const {
         data: runningWaterData,
         isLoading: isRunningWaterLoading
@@ -28,7 +28,6 @@ const Wallet = function () {
     const payRef = useRef<HTMLInputElement | null>(null);
     const recharge = api.wallet.recharge.useMutation({
         onSuccess: (r) => {
-            console.log(r)
             if (typeof window.WeixinJSBridge == "undefined") {
                 if (document.addEventListener) {
                     document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
@@ -39,7 +38,6 @@ const Wallet = function () {
             } else {
                 onBridgeReady(r);
             }
-            // onBridgeReady(r)
         }
     });
     const withdraw = api.wallet.withdraw.useMutation({
@@ -47,7 +45,7 @@ const Wallet = function () {
             setOpen(false);
             messageApi.open({
                 type: 'success',
-                content: `提现成功${r.amountWithdraw}`,
+                content: `提现成功${r?.amountWithdraw}`,
             }).then(() => {
                 window?.location?.reload();
             });
@@ -56,7 +54,7 @@ const Wallet = function () {
     const [confirmLoading, setConfirmLoading] = useState(false);
 
     const showModal = () => {
-        if (walletData.amountWithdraw <= 0) {
+        if (walletData?.amountWithdraw <= 0) {
             messageApi.open({
                 type: 'error',
                 content: '可提现的余额不足',

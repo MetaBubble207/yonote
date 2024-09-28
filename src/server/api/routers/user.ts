@@ -1,6 +1,6 @@
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {z} from "zod";
-import {user} from "@/server/db/schema";
+import {user, wallet} from "@/server/db/schema";
 import {eq} from "drizzle-orm";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 import * as process from "process";
@@ -44,6 +44,10 @@ export const userRouter = createTRPCRouter({
                 const getUserDB = await ctx.db.select().from(user).where(eq(user.id, userInfoData.openid));
 
                 if (getUserDB === null || getUserDB.length === 0) {
+                    // 创建新用户
+                    await ctx.db.insert(wallet).values({
+                        userId: userInfoData.openid,
+                    })
                     return (await ctx.db.insert(user).values({
                         id: userInfoData.openid,
                         name: userInfoData.nickname,

@@ -7,21 +7,22 @@ import React, {useEffect, useState} from "react";
 import {api} from "@/trpc/react";
 import {Button, Skeleton} from "antd";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import withTheme from "@/theme";
 
-const User = function User({code}: { code: string | undefined }) {
+const User = function User() {
     const logout = () => {
         localStorage.removeItem("token");
     };
     const router = useRouter();
+    const code = useSearchParams().get('code');
     const [token, setToken] = useLocalStorage('token', null);
     const {data: userInfo, isLoading: isUserInfoLoading} =
         api.users.getOne.useQuery({id: token}, {enabled: Boolean(token)});
 
     const {data: columnInfo, isLoading: isColumnInfoLoading} =
         api.column.getAllByUserId.useQuery({
-            userId: userInfo?.id,
+            userId: token,
         }, {enabled: Boolean(token)});
     const {data: loginData, isSuccess} = api.users.login.useQuery({code}, {
         enabled: Boolean(code && !token),
@@ -45,7 +46,7 @@ const User = function User({code}: { code: string | undefined }) {
                 {/*  我的服务模块*/}
                 <Service/>
             </div>
-            <div className="bottom-4 justify-center w-full fixed">
+            <div className="bottom-4 justify-center w-full fixed z-2">
                 <Navbar/>
             </div>
         </div>
@@ -303,13 +304,7 @@ const User = function User({code}: { code: string | undefined }) {
 
 };
 
-const Page = ({
-                  params,
-                  searchParams,
-              }: {
-    params: { slug: string };
-    searchParams: { code: string | undefined };
-}) => {
-    return withTheme(<User code={searchParams?.code}/>)
+const Page = () => {
+    return withTheme(<User/>)
 }
 export default Page;

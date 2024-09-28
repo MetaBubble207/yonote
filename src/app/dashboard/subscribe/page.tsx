@@ -112,7 +112,7 @@ const Subscribe = function Subscribe() {
                 </div>
             </div>
             {/*工具栏*/}
-            <div className="bottom-4 w-full justify-center fixed">
+            <div className="bottom-4 w-full justify-center fixed z-2">
                 <Navbar/>
             </div>
         </div>

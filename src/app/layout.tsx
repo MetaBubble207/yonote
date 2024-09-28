@@ -22,11 +22,11 @@ export default function RootLayout({children}: Readonly<{
 }>) {
     return (
         <html>
-        <body className={inter.className} suppressHydrationWarning={true}>
+        <body className={`${inter.className} min-h-screen relative`} suppressHydrationWarning={true}>
         <AntdRegistry>
             <TRPCReactProvider>
-                {children}
-                <div className={'flex items-center justify-center text-gray text-3 bg-#F5F7FB pb-20 w-100vw'}>ICP备案号：<Link
+                <div className={'pb-20'}>{children}</div>
+                <div className={'z-1 absolute bottom-10 flex items-center justify-center text-gray bg-transparent text-3 w-100vw'}>ICP备案号：<Link
                     href={'http://beian.miit.gov.cn/ '}>
                     京ICP备2024064381号-1
                 </Link></div>
