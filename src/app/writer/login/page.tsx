@@ -1,15 +1,21 @@
 "use client";
 import { useEffect } from "react";
+import process from "process";
 
 const Login = () => {
   const refreshCode = () => {
+    const appid = process.env.NEXT_PUBLIC_APP_ID;
+
+    const originURL = window?.location?.origin;
+
+    const redirect_uri = encodeURIComponent(originURL + '/writer/homepage');
     // @ts-ignore
     const obj = new WxLogin({
       self_redirect: false,
       id: "login_container",
-      appid: "wx6e3b77c29681a56b",
+      appid: appid,
       scope: "snsapi_login",
-      redirect_uri: "https://app.yonote.net/login/callback",
+      redirect_uri: redirect_uri,
       state: "state",
       style: "black",
       href: "",
