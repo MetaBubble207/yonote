@@ -6,7 +6,6 @@ import Loading from "../../../_components/common/Loading";
 import useLocalStorage from "@/tools/useStore";
 import {time2DateTimeStringMinutes} from "@/tools/timeToString";
 import {message, Modal} from "antd";
-import {getCurrentTime} from "@/tools/getCurrentTime";
 import withTheme from "@/theme";
 import NoData from "@/app/_components/common/NoData";
 
@@ -14,7 +13,8 @@ const Wallet = function () {
     const [token] = useLocalStorage('token', null);
     const {
         data: walletData,
-        isLoading: isWalletLoading
+        isLoading: isWalletLoading,
+        refetch: walletDataRefetch,
     } = api.wallet.getByUserId.useQuery({id: token}, {enabled: Boolean(token)});
     const {
         data: runningWaterData,
@@ -36,8 +36,15 @@ const Wallet = function () {
                     document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
                 }
             } else {
-                onBridgeReady(r);
+                if (r.success) {
+                    onBridgeReady(r.data);
+                }
             }
+        }
+    });
+    const afterRecharge = api.wallet.afterRecharge.useMutation({
+        onSuccess: (r) => {
+            walletDataRefetch();
         }
     });
     const withdraw = api.wallet.withdraw.useMutation({
@@ -86,7 +93,7 @@ const Wallet = function () {
         recharge.mutate({
             userId: token,
             notifyUrl: window?.location?.origin + '/dashboard/user/wallet',
-            amount: parseInt(amount)
+            amount: parseFloat(amount)
         })
         setPayOpen(false);
     }
@@ -103,23 +110,33 @@ const Wallet = function () {
         }
     };
 
-    function onBridgeReady(prepayId) {
+    function onBridgeReady(data) {
         window.WeixinJSBridge.invoke('getBrandWCPayRequest', {
-                "appId": process.env.NEXT_PUBLIC_APP_ID,   //公众号ID，由商户传入
-                "timeStamp": getCurrentTime(),   //时间戳，自1970年以来的秒数
-                "nonceStr": "e61463f8efa94090b1f366cccfbbb444",      //随机串
-                "package": `prepay_id=${prepayId}`,
-                "signType": "RSA",     //微信签名方式：
-                "paySign": "oR9d8PuhnIc+YZ8cBHFCwfgpaK9gd7vaRvkYD7rthRAZ\/X+QBhcCYL21N7cHCTUxbQ+EAt6Uy+lwSN22f5YZvI45MLko8Pfso0jm46v5hqcVwrk6uddkGuT+Cdvu4WBqDzaDjnNa5UK3GfE1Wfl2gHxIIY5lLdUgWFts17D4WuolLLkiFZV+JSHMvH7eaLdT9N5GBovBwu5yYKUR7skR8Fu+LozcSqQixnlEZUfyE55feLOQTUYzLmR9pNtPbPsu6WVhbNHMS3Ss2+AehHvz+n64GDmXxbX++IOBvm2olHu3PsOUGRwhudhVf7UcGcunXt8cqNjKNqZLhLw4jq\/xDg==" //微信签名
+                "appId": data.appId,
+                "timeStamp": data.timeStamp,
+                "nonceStr": data.nonceStr,
+                "package": data.package,
+                "signType": data.signType,
+                "paySign": data.paySign
             },
             function (res) {
                 if (res.err_msg == "get_brand_wcpay_request:ok") {
                     // 使用以上方式判断前端返回,微信团队郑重提示：
                     //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                    const amount = payRef.current?.value;
+                    if (!amount) {
+                        setPayOpen(false);
+                        return;
+                    }
+                    afterRecharge.mutate({
+                        userId: token,
+                        amount: parseFloat(amount)
+                    })
+                    setPayOpen(false);
+
                 }
             });
     }
-
 
 
     if (isWalletLoading || isRunningWaterLoading) return <Loading/>
@@ -128,22 +145,22 @@ const Wallet = function () {
         const data = runningWaterData.filter(item => item.expenditureOrIncome === currentType)
         if (!data || data.length === 0) return <NoData title={`当前还没有${currentType === 0 ? '支出' : '收入'}噢😯`}/>
         return data.map(item => (
-                <div key={item.id}>
-                    <div className="ml-0">
-                        <div
-                            className="w-27 text-[#252525] text-3.25 font-not-italic font-400 lh-6">{item.name}</div>
-                        <div
-                            className="w-26.5 h-6.25 shrink-0 text-[#999] text-2.75 font-not-italic font-400 lh-6 mt--1">{time2DateTimeStringMinutes(item.createdAt)}</div>
-                    </div>
-                    <div className="w-20.75 h-5.5 shrink-0 text-[#252525] text-right text-3.75 font-700 lh-6 ml-60 mt--11">
-                        {item.expenditureOrIncome === 0 ? '-' : '+'}
-                        ￥
-                        {item.price}
-                    </div>
-                    <div className="border-1 mt-5"></div>
-                    <div className="mt-4"></div>
+            <div key={item.id}>
+                <div className="ml-0">
+                    <div
+                        className="w-27 text-[#252525] text-3.25 font-not-italic font-400 lh-6">{item.name}</div>
+                    <div
+                        className="w-26.5 h-6.25 shrink-0 text-[#999] text-2.75 font-not-italic font-400 lh-6 mt--1">{time2DateTimeStringMinutes(item.createdAt)}</div>
                 </div>
-            ))
+                <div className="w-20.75 h-5.5 shrink-0 text-[#252525] text-right text-3.75 font-700 lh-6 ml-60 mt--11">
+                    {item.expenditureOrIncome === 0 ? '-' : '+'}
+                    ￥
+                    {item.price}
+                </div>
+                <div className="border-1 mt-5"></div>
+                <div className="mt-4"></div>
+            </div>
+        ))
 
 
     }

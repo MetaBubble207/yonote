@@ -40,7 +40,9 @@ const Reserved = ({onClose, check}) => {
         setShowTopUpModal(false);
         setConfirmPayModal(true);
     }
-
+    const handleCancelPay = () => {
+        setConfirmPayModal(false);
+    }
 
     const [selectedItem, setSelectedItem] = useState(null); // 追踪选中的item
 
@@ -191,7 +193,10 @@ const Reserved = ({onClose, check}) => {
     const ConfirmPayModal = () => {
         return <W100H50Modal>
             <div>确定是否购买该专栏</div>
-            <button onClick={pay}>确认</button>
+            <div className={'flex space-x-10 mt-5'}>
+                <Button onClick={pay}>确认</Button>
+                <Button onClick={handleCancelPay}>取消</Button>
+            </div>
         </W100H50Modal>
     }
     if (isColumnLoading) return <Loading/>
@@ -239,9 +244,9 @@ const Reserved = ({onClose, check}) => {
                     24 小时内可申请退款
                 </div>
                 <div className="w-85.75 h-10 shrink-0 mt-8">
-                    <Button onClick={handleClickPay}>
+                    <Button onClick={handleClickPay} style={{backgroundColor: '#5CE5C1',width: '21.4375rem',height:'2.5rem',borderRadius: '9999px'}}>
                         {/* 支付跳转 */}
-                        <Image src="/images/dialog/pay.png" alt="pay" width={343} height={40} className="h-10 w-85.75"/>
+                        <span className={'fw-500'}>支付</span>
                     </Button>
                 </div>
             </div>

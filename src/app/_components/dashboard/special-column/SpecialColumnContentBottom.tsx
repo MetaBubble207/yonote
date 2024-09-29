@@ -39,7 +39,7 @@ const SpecialColumnContentBottom = () => {
                     <div className={"flex items-center "}>
                         <div className={"text-[#666] text-2.5 font-not-italic font-400 lh-14px"}>心智与阅读•目录</div>
                         <div className={"ml-5px"}>
-                            <Image src={"/images/special-column/Sort-one (排序1).png"} alt={"心智与阅读"} width={14} height={14}/>
+                            <Image src={"/images/special-column/Sort-one.png"} alt={"心智与阅读"} width={14} height={14}/>
                         </div>
                     </div>
                     </Link>
@@ -49,7 +49,7 @@ const SpecialColumnContentBottom = () => {
                         <div className="flex flex-col" onClick={() => router.push('/dashboard/special-column/answer')}>
                             <div className={"flex items-center"} >
                                 <div>
-                                    <Image src={"/images/special-column/Double-left (双左).png"} alt={"心智与阅读"} width={14} height={14}/>
+                                    <Image src={"/images/special-column/Double-Left.png"} alt={"心智与阅读"} width={14} height={14}/>
                                 </div>
                                 <div className={"text-[#333] text-3 font-not-italic font-400 lh-6 ml-5px"} >上一篇</div>
                             </div>
@@ -59,7 +59,7 @@ const SpecialColumnContentBottom = () => {
                             <div className={"flex items-center justify-end"}  >
                                 <div className={"text-[#333] text-3 font-not-italic font-400 lh-6 "}>下一篇</div>
                                 <div>
-                                    <Image src={"/images/special-column/Double-left (双右) .png"} alt={"心智与阅读"} width={14} height={14}/>
+                                    <Image src={"/images/special-column/Double-Right.png"} alt={"心智与阅读"} width={14} height={14}/>
                                 </div>
                             </div>
                             <div className={"w-27.6665 text-[#333]  text-3 font-not-italic font-400 lh-6 text-right"}>回忆·后来的我们毕业了</div>

@@ -147,7 +147,7 @@ const PostCard = ({postDetail, status}: { postDetail: DetailPostCard, status: bo
                 {/*右方浏览数量*/}
                 <div className="ml-24px flex items-center">
                     <div>
-                        <Image src={"/images/special-column/Preview-open (预览-打开).png"} alt={"爱心"} width={18}
+                        <Image src={"/images/special-column/Preview-open.png"} alt={"爱心"} width={18}
                                height={18} objectFit="none"/>
                     </div>
                     <div

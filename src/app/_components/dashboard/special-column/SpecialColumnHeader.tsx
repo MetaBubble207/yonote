@@ -48,7 +48,7 @@ const SpecialColumnHeader = () => {
                     {/* 点击分享，跳转海报 */}
                     <Button type={'link'} size={'small'} className={"ml-2.5 mr-16px"} onClick={toShare}>
                         <Image
-                            src={"/images/special-column/Share-two (分享2).png"}
+                            src={"/images/special-column/Share-two.png"}
                             alt={"分享"}
                             width={12}
                             height={12}

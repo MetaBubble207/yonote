@@ -263,7 +263,7 @@ const Page = () => {
                 </div>
                 <div
                     className={
-                        "w-85.75 mt-24px shrink-0 text-[#666] text-3.5 font-not-italic font-400 lh-[120%] h-auto"
+                        "w-85.75 mt-24px shrink-0 text-[#666] text-3.5 font-not-italic font-400 lh-[120%] h-auto overflow-auto"
                     }
                 >
                     <div
@@ -274,19 +274,21 @@ const Page = () => {
             </div>
             <div className={'fixed bottom-6 left-3.5'}>
                 <div className="w-full h-7 flex-wrap pt-2 relative ws-normal whitespace-pre-line break-all">
-                    {tags.map((item, index) => {
-                        return (
-                            <div
-                                className={
-                                    "text-[#1DB48D] text-3 font-not-italic font-400 lh-6 mr-2"
-                                }
-                                key={index}
-                            >
-                                #{item}
-                            </div>
-                        );
-                    })}
-                    <div className="flex items-center h-5 absolute right-0">
+                    <div className={'flex'}>
+                        {tags.map((item, index) => {
+                            return (
+                                <div
+                                    className={
+                                        "text-[#1DB48D] text-3 font-not-italic font-400 lh-6 mr-2"
+                                    }
+                                    key={index}
+                                >
+                                    #{item}
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div className="flex items-center h-5 absolute right-0 top-10">
                         <Image
                             src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 1.png"}
                             alt={"爱心"}
@@ -328,7 +330,7 @@ const Page = () => {
                                     </div>
                                     <div className={"ml-5px"}>
                                         <Image
-                                            src={"/images/special-column/Sort-one (排序1).png"}
+                                            src={"/images/special-column/Sort-one.png"}
                                             alt={"心智与阅读"}
                                             width={14}
                                             height={14}
@@ -344,7 +346,7 @@ const Page = () => {
                                         <div className={"flex flex-col"}>
                                             <div className={"flex items-center"}>
                                                 <Image
-                                                    src={"/images/special-column/Double-left (双左).png"}
+                                                    src={"/images/special-column/Double-Left.png"}
                                                     alt={"心智与阅读"}
                                                     width={14}
                                                     height={14}
@@ -373,7 +375,7 @@ const Page = () => {
                                             <div className={"flex items-center"}>
                                                 <div>
                                                     <Image
-                                                        src={"/images/special-column/Double-left (双左).png"}
+                                                        src={"/images/special-column/Double-Left.png"}
                                                         alt={"心智与阅读"}
                                                         width={14}
                                                         height={14}
@@ -408,7 +410,7 @@ const Page = () => {
                                                 </div>
                                                 <div>
                                                     <Image
-                                                        src={"/images/special-column/Double-left (双右) .png"}
+                                                        src={"/images/special-column/Double-Right.png"}
                                                         alt={"心智与阅读"}
                                                         width={14}
                                                         height={14}
@@ -439,7 +441,7 @@ const Page = () => {
                                             </div>
                                             <div>
                                                 <Image
-                                                    src={"/images/special-column/Double-left (双右) .png"}
+                                                    src={"/images/special-column/Double-Right.png"}
                                                     alt={"心智与阅读"}
                                                     width={14}
                                                     height={14}
