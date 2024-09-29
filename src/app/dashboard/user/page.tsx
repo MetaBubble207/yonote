@@ -239,7 +239,8 @@ const User = function User() {
         };
 
         const Column = () => {
-            return columnInfo?.slice(0, columnInfo?.length > 1 ? 2 : 1).map((item) => (
+            if (columnInfo?.length === 0) return <div className="text-center text-[#B5B5B5] mt-4 h-10">暂无数据哦~</div>
+            return columnInfo.slice(0, columnInfo?.length > 1 ? 2 : 1).map((item) => (
                 <Link href={`/dashboard/special-column?id=${item.id}`} className="flex mb-4" key={item.id}>
                     <div className="relative w-15.5 h-19">
                         <Image
