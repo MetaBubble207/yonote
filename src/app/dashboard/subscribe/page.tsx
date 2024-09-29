@@ -15,6 +15,11 @@ import withTheme from "@/theme";
 const Subscribe = function Subscribe() {
     const router = useRouter();
     const [token] = useLocalStorage("token", null);
+    useEffect(() => {
+        if(!token){
+            router.push("/login");
+        }
+    }, []);
     const {data: recentRead, isLoading} =
         api.read.getRecentRead.useQuery({userId: token});
 
