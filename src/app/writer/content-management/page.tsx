@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {useRouter, useSearchParams} from "next/navigation";
 import {Button, DatePicker, Input} from "antd";
 import {api} from "@/trpc/react";
@@ -8,10 +8,11 @@ import dayjs from "dayjs";
 import 'dayjs/locale/zh-cn';
 import Loading from "@/app/_components/common/Loading";
 
-const Page = () => {
+const ContentManagement = () => {
     const params = useSearchParams();
     const router = useRouter();
     const columnId = params.get("columnId");
+    let go = false;
 
     const [queryParams, setQueryParams] = useState({
         title: '',
@@ -28,9 +29,10 @@ const Page = () => {
         endDate: queryParams.endDate,
     }, {enabled: Boolean(columnId)});
 
-    const linkEdit = () => {
-        router.push(`/edit/edit?columnId=${columnId}`);
-    }
+    useEffect(() => {
+        if (go) router.push(`/edit/edit?columnId=${columnId}`);
+    }, [columnId, go, router]);
+
     if (isLoading) return <Loading/>
     return (
         <div className={'w-full h-full rounded-2.5 bg-[#FFF] pl-8 pr-9'}>
@@ -38,7 +40,7 @@ const Page = () => {
                 <div className="text-[#323232] text-4 font-not-italic font-700 lh-6">内容管理</div>
                 {/*发布*/}
                 <div
-                    onClick={linkEdit}
+                    onClick={() => go = true}
                     className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+
                     发布
                 </div>
@@ -149,4 +151,9 @@ const Page = () => {
     }
 };
 
+const Page = () => {
+    return <Suspense>
+        <ContentManagement/>
+    </Suspense>
+}
 export default Page;

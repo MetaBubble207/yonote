@@ -20,6 +20,9 @@ const HomepageData = ({columnId}: { columnId: string | undefined }) => {
         if ((!columnId || columnId === "null") && columns) {
             router.push(`/writer${pathname.split("/writer")[1]}?columnId=` + columns[0]?.id)
         }
+        if(!columns){
+            router.push(`/writer/no-column`);
+        }
     }, [columns]);
 
     return (
