@@ -8,17 +8,12 @@ import Column from "./Column";
 
 const LeftCompass = () => {
     const pathname = usePathname();
-    const [column, setColumn] = useState(pathname === "/writer/homepage");
     const params = useSearchParams();
     const columnId = params.get("columnId");
-    useEffect(() => {
-        setColumn(pathname === "/writer/homepage");
-    }, [pathname]);
     const filterPathname = ['/writer/login','/writer/no-column']
     return (
         <>
             {!filterPathname.includes(pathname) && (
-                <div>
                     <div className="fixed top-17.5 w-64.77925 h-screen shrink-0 bg-[#FFF] z-100">
                         <div className="w-65.25 h-72.4785 shrink-0 flex flex-col mt-10">
                             {/* {column && <Column />} */}
@@ -157,7 +152,6 @@ const LeftCompass = () => {
                             </div>
                         </div>
                     </div>
-                </div>
             )}
         </>
     );
