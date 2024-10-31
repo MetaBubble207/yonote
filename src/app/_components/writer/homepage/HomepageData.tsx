@@ -12,18 +12,19 @@ const HomepageData = ({columnId}: { columnId: string | undefined }) => {
     const router = useRouter();
     const pathname = usePathname();
 
-    const columns = api.column.getAllByUserId.useQuery({
+    const {data: columns, isFetching} = api.column.getAllByUserId.useQuery({
         userId: token
-    }).data;
+    });
 
     useEffect(() => {
+        if (isFetching) return;
         if ((!columnId || columnId === "null") && columns) {
             router.push(`/writer${pathname.split("/writer")[1]}?columnId=` + columns[0]?.id)
         }
-        if(token && !columns){
+        if (token && !columns) {
             router.push(`/writer/no-column`);
         }
-    }, [columnId, columns, pathname, router, token]);
+    }, [isFetching, columnId, columns, pathname, router, token]);
 
     return (
         <div className="w-full h-82 pl-8 pr-9 bg-[#FFF] border-rd-2.5">
