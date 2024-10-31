@@ -12,7 +12,7 @@ const ContentManagement = () => {
     const params = useSearchParams();
     const router = useRouter();
     const columnId = params.get("columnId");
-    let go = false;
+    const [isGo, setIsGo] = useState(false);
 
     const [queryParams, setQueryParams] = useState({
         title: '',
@@ -30,8 +30,8 @@ const ContentManagement = () => {
     }, {enabled: Boolean(columnId)});
 
     useEffect(() => {
-        if (go) router.push(`/edit/edit?columnId=${columnId}`);
-    }, [columnId, go, router]);
+        if (isGo) router.push(`/edit/edit?columnId=${columnId}`);
+    }, [columnId, isGo, router]);
 
     if (isLoading) return <Loading/>
     return (
@@ -40,7 +40,7 @@ const ContentManagement = () => {
                 <div className="text-[#323232] text-4 font-not-italic font-700 lh-6">内容管理</div>
                 {/*发布*/}
                 <div
-                    onClick={() => go = true}
+                    onClick={() => setIsGo(true)}
                     className={'inline-block h-32px border-rd-1 bg-[rgba(69,225,184,0.20)] text-[#1db48d] px-16px lh-32px ml-32px'}>+
                     发布
                 </div>
