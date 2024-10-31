@@ -11,7 +11,7 @@ export default function NoColumnPage() {
         }
     }, [isGo, router])
 
-    return <div className={'ml-60 mt-60 text-10'}>
+    return <div className={'w-full h-full flex items-center justify-center text-10'}>
         <span>您还未申请自己的专栏，请先申请后再进行</span>
         <span onClick={() => setIsGo(true)} className={'text-primary cursor-pointer'}>操作</span>
     </div>
