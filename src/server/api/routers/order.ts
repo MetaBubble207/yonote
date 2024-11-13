@@ -365,11 +365,11 @@ export const orderRouter = createTRPCRouter({
                 }
             })
             const detailPost = await Promise.all(detailPostPromise)
-            console.log(detailPost)
             return {
                 detailPostCard: detailPost.map(item => ({
                     ...item,
                     userName: userData.name,
+                    idType: userData.idType,
                     avatar: userData.avatar,
                     userId: userData.id,
                 })),

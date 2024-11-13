@@ -96,12 +96,15 @@ const SpecialColumnHeader = () => {
                                 className={"text-[#DFDFDF] text-2.75 lh-18px ml-5px"}>
                                 {data?.userName ? data.userName : "未知用户"}
                             </div>
-                            <Image
-                                src={"/images/special-column/Group 225.png"}
-                                alt={"icon"}
-                                width={12}
-                                height={12}
-                            />
+                            {
+                                data?.idType === 1 && <Image
+                                    src={"/images/special-column/Group 225.png"}
+                                    alt={"icon"}
+                                    width={18}
+                                    height={18}
+                                    className={"ml-1"}
+                                />
+                            }
                         </div>
                     </div>
                 </div>

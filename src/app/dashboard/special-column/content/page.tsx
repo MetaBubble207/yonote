@@ -176,7 +176,7 @@ const Page = () => {
         router.push(`/dashboard/poster/post?c=${chapter}&id=${columnId}`)
     }
 
-    if(isFetching) return <div className={"h-screen w-full flex items-center justify-center"}>
+    if (isFetching) return <div className={"h-screen w-full flex items-center justify-center"}>
         <Loading/>
     </div>
     return (
@@ -228,16 +228,15 @@ const Page = () => {
                             >
                                 {postData?.user.name}
                             </div>
-                            <div>
-                                <Image
+                            {
+                                postData?.user.idType === 1 && <Image
                                     src={"/images/special-column/Group 225.png"}
                                     alt={"心智与阅读"}
                                     width={12}
                                     height={12}
-                                    className={"lh-0"}
-                                    style={{marginLeft: "2.5px"}}
+                                    className={"ml-1"}
                                 />
-                            </div>
+                            }
                         </div>
                         <div
                             className={

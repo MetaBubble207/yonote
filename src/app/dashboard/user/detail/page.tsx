@@ -43,8 +43,11 @@ const Detail = function () {
                         {/* 用户名 */}
                         <div className={"flex mt-1.25 items-center"}>
                             <div className={" text-[#252525] text-4.5 font-500 lh-6"}>{userInfo?.name}</div>
-                            <Image className={"ml-1.25"} src={"/images/user/Rank.svg"} alt={"rank"} width={20}
-                                   height={20}/>
+                            {
+                                userInfo?.idType === 1 &&
+                                <Image className={"ml-1.25"} src={"/images/user/Rank.svg"} alt={"rank"} width={20}
+                                       height={20}/>
+                            }
                         </div>
                         {/* ID */}
                         <div className={"flex justify-center text-[#999] text-2.5 font-400 lh-6"}>

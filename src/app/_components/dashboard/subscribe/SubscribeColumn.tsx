@@ -25,18 +25,20 @@ const SubscribeColumn = ({column}: { column: BaseColumnCard }) => {
                             />
                         </div>
                     </Link>
-                    <div className="bottom-2 right-1 absolute">
-                        <Image
-                            src={"/images/subscribe/vip.svg"}
-                            alt="vip"
-                            width={12}
-                            height={12}
-                            className="w-3 h-3"
-                        ></Image>
-                    </div>
+                    {
+                        column.idType === 1 && <div className="bottom-2 right-1 absolute">
+                            <Image
+                                src={"/images/subscribe/vip.svg"}
+                                alt="vip"
+                                width={12}
+                                height={12}
+                                className="w-3 h-3"
+                            ></Image>
+                        </div>
+                    }
                     <div
                         className="text-center text-[#999]  font-500 lh-5.6 text-2.5 w-11 overflow-hidden whitespace-nowrap">
-                        {column.name?.length >= 8 ? column.name + "…" : column.name}
+                        {column.userName?.length >= 8 ? column.userName + "…" : column.userName}
                     </div>
                 </div>
                 <div className="flex-1">

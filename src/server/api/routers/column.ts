@@ -52,6 +52,7 @@ const getDetailColumnCard = async (
         postCount: 0,
         userId: "",
         userName: "",
+        idType: 0,
     };
 
     Object.assign(detailColumnCard, {
@@ -322,6 +323,7 @@ export const columnRouter = createTRPCRouter({
                 return {
                     ...columnData,
                     userId: userData.id,
+                    idType: userData.idType,
                     userName: userData.name,
                     avatar: userData.avatar,
                 }
@@ -357,6 +359,7 @@ export const columnRouter = createTRPCRouter({
             const userData = await ctx.db.query.user.findFirst({where: eq(user.id, columnData.userId)});
             const res: BaseColumnCard = {
                 ...columnData,
+                idType: userData.idType,
                 userId: userData.id,
                 userName: userData.name,
                 avatar: userData.avatar,

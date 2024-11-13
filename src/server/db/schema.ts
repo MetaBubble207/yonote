@@ -322,6 +322,7 @@ export type Post = typeof post.$inferSelect
 export type Order = typeof order.$inferSelect
 export type BaseUserInfo = {
     userId: string;
+    idType: number;
     userName: string;
     avatar: string;
 }
@@ -351,6 +352,7 @@ export type BaseColumnCard = {
     cover: string;
     userId: string;
     userName: string;
+    idType: number;
     avatar: string;
     createdAt: Date;
     updatedAt: Date;

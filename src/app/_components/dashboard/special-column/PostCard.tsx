@@ -123,10 +123,12 @@ const PostCard = ({postDetail, status}: { postDetail: DetailPostCard, status: bo
                                 <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
                                     {postDetail?.userName ? postDetail?.userName : "未知用户"}
                                 </div>
-                                <div>
+                                {
+                                    postDetail?.idType === 1 &&
                                     <Image src={"/images/special-column/Group 225.png"} alt={"心智与阅读"} width={12}
                                            height={12} className={"lh-0"} style={{marginLeft: "2.5px"}}/>
-                                </div>
+                                }
+
                             </div>
                             <div className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>
                                 {time2DateString(postDetail.updatedAt)}发布

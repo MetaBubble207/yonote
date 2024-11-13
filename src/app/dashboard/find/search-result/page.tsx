@@ -142,11 +142,12 @@ const Page = () => {
                                 </div>
                                 <div
                                     className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px ml-5px"}>{item.user?.name}</div>
-                                <div>
-                                    <Image src={"/images/special-column/Group 225.png"}
-                                           alt={"心智与阅读"} width={12} height={12}
-                                           className={"lh-0"} style={{marginLeft: "2.5px"}}/>
-                                </div>
+                                {
+                                    item.user?.idType === 1 &&
+                                    <Image src={"/images/special-column/Group 225.png"} alt={"心智与阅读"} width={12}
+                                           height={12} className={"ml-1"}/>
+                                }
+
                             </div>
                             <div
                                 className={"text-[#999] text-2.75 font-not-italic font-500 lh-18px"}>{time2DateString(item.createdAt)}发布

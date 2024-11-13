@@ -90,13 +90,15 @@ const User = function User() {
                         <h1 className=" text-[#252525] text-3 font-500 lh-6">
                             {token && userInfo ? userInfo.name : "请点击头像登录"}
                         </h1>
-                        <Image
-                            src="/images/user/Rank.svg"
-                            alt="group"
-                            width={20}
-                            height={20}
-                            className="ml-2"
-                        />
+                        {
+                            userInfo?.idType === 1 && <Image
+                                src="/images/user/Rank.svg"
+                                alt="group"
+                                width={20}
+                                height={20}
+                                className="ml-2"
+                            />
+                        }
                     </div>
                     <div className="flex items-center">
                         <div className="cover flex w-3.5 h-3.5 items-center">
