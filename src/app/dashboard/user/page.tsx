@@ -185,9 +185,12 @@ const User = function User() {
             <ul className={"flex flex-wrap mt-4"}>
                 {navItems.map((item, index) => (
                     <li key={index} className={cardStyles}>
-                        <Link href={item.href} className={linkStyles}>
-                            <Image src={item.iconSrc} alt={item.text} width={24} height={24}/>
-                            <div className="text-center text-gray-800 text-sm font-normal leading-relaxed">
+                        <Link href={item.href} className={"flex flex-col items-center"}>
+                            <div className={"relative w-6 h-6"}>
+                                <Image src={item.iconSrc} alt={item.text} fill className={"object-cover"}/>
+                            </div>
+                            <div
+                                className=" text-center text-gray-800 text-sm font-normal leading-relaxed">
                                 {item.text}
                             </div>
                         </Link>
