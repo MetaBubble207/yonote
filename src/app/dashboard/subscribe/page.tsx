@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import SearchColumn from "@/app/_components/common/SearchColumn";
 import {Button, Skeleton} from "antd";
@@ -114,6 +114,11 @@ const Subscribe = function Subscribe() {
                 {/*列表*/}
                 <div className={'mt-4'}>
                     <SubscribeMain/>
+                </div>
+                <div
+                    className={'z-1 h-20 flex items-center justify-center text-gray text-3 w-full'}>
+                    ICP备案号：
+                    <Link href={'http://beian.miit.gov.cn/ '}> 京ICP备2024064381号-1</Link>
                 </div>
             </div>
             {/*工具栏*/}

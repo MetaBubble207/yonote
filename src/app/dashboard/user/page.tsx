@@ -45,6 +45,11 @@ const User = function User() {
                 <Display/>
                 {/*  我的服务模块*/}
                 <Service/>
+                <div
+                    className={'z-1 h-20 flex items-center justify-center text-gray text-3 w-full'}>
+                    ICP备案号：
+                    <Link href={'http://beian.miit.gov.cn/ '}> 京ICP备2024064381号-1</Link>
+                </div>
             </div>
             <div className="bottom-4 justify-center w-full fixed z-2">
                 <Navbar/>
