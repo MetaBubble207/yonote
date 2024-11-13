@@ -169,11 +169,12 @@ const SpecialColumn = () => {
             {/* 底部用户信息 */}
             <div className="flex ml-4.375 mt-14">
                 <div className="w-40 mt-2">
-                    <Button type={'link'} size={'small'} onClick={handleScreenshotClick}
-                            className="flex items-center w-20 h-3">
-                        <Image src={"/images/poster/triangle.svg"} alt="triangle" width={2} height={2}
-                               className="w-2.58125 h-2.58125 "/>
-                        <div className="h-5.7 text-[#666] text-2.5 font-500 lh-6 ml-1.5">保存到相册</div>
+                    <Button type={'link'} size={'small'} onClick={handleScreenshotClick}>
+                        <div className={"flex items-center"}>
+                            <Image src={"/images/poster/triangle.svg"} alt="triangle" width={2} height={2}
+                                   className="w-2.58125 h-2.58125 "/>
+                            <div className="text-[#666] text-2.5 font-500 ml-1.5">保存到相册</div>
+                        </div>
                     </Button>
 
                     {/* 用户头像和名称 */}
