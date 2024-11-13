@@ -92,9 +92,9 @@ const SpecialColumnBody = () => {
                 <ShowButton/>
             </div>
 
-            <div className="fixed  top-200px   w-full">
+            {/*<div className="fixed top-200px w-full">*/}
                 {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}
-            </div>
+            {/*</div>*/}
         </div>
     )
 

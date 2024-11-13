@@ -201,11 +201,11 @@ const Reserved = ({onClose, check}) => {
     }
     if (isColumnLoading) return <Loading/>
     return (
-        <div className="flex items-center w-full h-full z-1 justify-center">
+        <div className="w-full fixed bottom-0">
             {contextHolder}
             {showTopUpModal && <TopUpModal/>}
             {showConfirmPayModal && <ConfirmPayModal/>}
-            <div className="flex flex-col w-full items-center justify-center b-white fixed bottom-0 bg-#fff pb-10">
+            <div className="flex flex-col w-full items-center justify-center b-white bg-#fff pb-10 rounded-t-30px border-t-2 border-t-primary pt-2">
                 <Image src={"/images/dialog/Close-small.png"} alt="close" width={20} height={20}
                        className="w-20px h-20px ml-335px" onClick={onClose}></Image>
                 <div
