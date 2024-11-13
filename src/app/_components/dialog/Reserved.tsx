@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Image from "next/image";
 import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
@@ -9,6 +9,7 @@ import process from "process";
 import {Button, message} from "antd";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import Loading from "@/app/_components/common/Loading";
+import {type PriceList} from "@/server/db/schema";
 
 const Reserved = ({onClose, check}) => {
     const [messageApi, contextHolder] = message.useMessage();
@@ -44,7 +45,13 @@ const Reserved = ({onClose, check}) => {
         setConfirmPayModal(false);
     }
 
-    const [selectedItem, setSelectedItem] = useState(null); // 追踪选中的item
+    const [selectedItem, setSelectedItem] = useState<PriceList>(); // 追踪选中的item
+
+    useEffect(() => {
+        if ( priceListData?.length === 0) return;
+        // @ts-ignore
+        setSelectedItem({...priceListData?.[0]});
+    }, [priceListData])
 
     const handleButtonClick = (item) => {
         if (selectedItem === item) {
@@ -66,7 +73,7 @@ const Reserved = ({onClose, check}) => {
             setConfirmPayModal(false);
             return false;
         }
-        if (!walletData || walletData.freezeIncome + walletData.amountWithdraw < selectedItem) {
+        if (!walletData || walletData.freezeIncome + walletData.amountWithdraw < selectedItem.price) {
             messageApi.error("钱包余额不足，请先充值噢~😁");
             setShowTopUpModal(true);
             setConfirmPayModal(false);
@@ -199,13 +206,16 @@ const Reserved = ({onClose, check}) => {
             </div>
         </W100H50Modal>
     }
-    if (isColumnLoading) return <Loading/>
+    if (isColumnLoading) return <div className={"absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"}>
+        <Loading/>
+    </div>
     return (
         <div className="w-full fixed bottom-0">
             {contextHolder}
             {showTopUpModal && <TopUpModal/>}
             {showConfirmPayModal && <ConfirmPayModal/>}
-            <div className="flex flex-col w-full items-center justify-center b-white bg-#fff pb-10 rounded-t-30px border-t-2 border-t-primary pt-2">
+            <div
+                className="flex flex-col w-full items-center justify-center b-white bg-#fff pb-10 rounded-t-30px border-t-2 border-t-primary pt-2">
                 <Image src={"/images/dialog/Close-small.png"} alt="close" width={20} height={20}
                        className="w-20px h-20px ml-335px" onClick={onClose}></Image>
                 <div
@@ -215,7 +225,7 @@ const Reserved = ({onClose, check}) => {
                     {priceListData?.map((strategy, index) => (
                         <button
                             key={index}
-                            className={`w-84.25 h-10 shrink-0 border-rd-1.25 border-1 border-solid bg-[#F5F7FB] justify-center ${selectedItem === strategy ? 'border-[#45E1B8]' : ''} ${index > 0 ? 'mt-2' : ''}`}
+                            className={`w-84.25 h-10 shrink-0 border-rd-1.25 border-1 border-solid bg-[#F5F7FB] justify-center ${selectedItem?.id === strategy?.id ? 'border-[#45E1B8]' : ''} ${index > 0 ? 'mt-2' : ''}`}
                             onClick={() => handleButtonClick(strategy)}
                         >
                             <div className="flex ml-2.5 items-center relative">
@@ -225,7 +235,7 @@ const Reserved = ({onClose, check}) => {
                                         ? '一次购买，永久有效'
                                         : `限时购买，有效期${strategy.timeLimit}天`}
                                 </div>
-                                {selectedItem === strategy && (
+                                {selectedItem?.id === strategy?.id && (
                                     <Image
                                         src="/images/dialog/check.png"
                                         alt="check"
@@ -244,7 +254,12 @@ const Reserved = ({onClose, check}) => {
                     24 小时内可申请退款
                 </div>
                 <div className="w-85.75 h-10 shrink-0 mt-8">
-                    <Button onClick={handleClickPay} style={{backgroundColor: '#5CE5C1',width: '21.4375rem',height:'2.5rem',borderRadius: '9999px'}}>
+                    <Button onClick={handleClickPay} style={{
+                        backgroundColor: '#5CE5C1',
+                        width: '21.4375rem',
+                        height: '2.5rem',
+                        borderRadius: '9999px'
+                    }}>
                         {/* 支付跳转 */}
                         <span className={'fw-500'}>支付</span>
                     </Button>

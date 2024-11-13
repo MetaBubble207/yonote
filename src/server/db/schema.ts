@@ -386,3 +386,12 @@ export type PostDetail =  {
     detailPostCard: DetailPostCard[];
     subscriptCount: number;
 }
+
+export type PriceList = {
+    id: number;
+    columnId: string;
+    price: number;
+    timeLimit: number;
+    createdAt: Date;
+    updatedAt: Date;
+}
