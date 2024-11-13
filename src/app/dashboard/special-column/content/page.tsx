@@ -176,7 +176,7 @@ const Page = () => {
         router.push(`/dashboard/poster/post?c=${chapter}&id=${columnId}`)
     }
 
-    if(isFetching) return <div>
+    if(isFetching) return <div className={"h-screen w-full flex items-center justify-center"}>
         <Loading/>
     </div>
     return (
