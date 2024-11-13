@@ -70,7 +70,7 @@ export const user = createTable(
         idNumber: varchar("id_number"),
         password: integer("password"),
         avatar: text("avatar"),
-        idType: varchar("id_type"),
+        idType: integer("id_type").default(0),
         weChat: varchar("we_chat"),
         endDate: timestamp("end_date"),
         sex: integer("sex"),
@@ -382,7 +382,7 @@ export type DetailPostCard = BaseUserInfo & {
     likeCount?: number;
 }
 
-export type PostDetail =  {
+export type PostDetail = {
     detailPostCard: DetailPostCard[];
     subscriptCount: number;
 }
