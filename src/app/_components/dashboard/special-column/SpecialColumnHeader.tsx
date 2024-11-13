@@ -78,10 +78,10 @@ const SpecialColumnHeader = () => {
                         </div>
                         <div
                             className={" text-[#F2F2F2] text-3.5 pt-5px w-50"}>
-                            {data?.description ? (
-                                    data.description.length >= 20
-                                        ? data.description.substring(0, 20) + "..."
-                                        : data.description) :
+                            {data?.introduce ? (
+                                    data.introduce.length >= 20
+                                        ? data.introduce.substring(0, 20) + "..."
+                                        : data.introduce) :
                                 "暂时没有数据"}
                         </div>
                         <div className={"flex mt-2 "}>
