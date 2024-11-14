@@ -24,14 +24,14 @@ const Reserved = ({onClose, check}) => {
     const walletData = api.wallet.getByUserId.useQuery({id: token}, {enabled: !!token}).data;
     const subscribeOrder = api.order.createOrder.useMutation({
         onSuccess: (r) => {
-            onClose();
-            console.log(r);
-            console.log("订阅成功");
-            window?.location?.reload();
+            message.success('订阅成功', 1).then(() => {
+                onClose();
+                window?.location?.reload();
+            });
         },
         onError: (e) => {
-            console.log(e);
-            console.log("订阅失败");
+            console.error(e);
+            message.error('订阅失败')
         }
     })
     const [showTopUpModal, setShowTopUpModal] = useState(false);
@@ -99,8 +99,56 @@ const Reserved = ({onClose, check}) => {
         }
     }
 
-    const topUp = () => {
+    function onBridgeReady(data) {
+        window.WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                "appId": data.appId,
+                "timeStamp": data.timeStamp,
+                "nonceStr": data.nonceStr,
+                "package": data.package,
+                "signType": data.signType,
+                "paySign": data.paySign
+            },
+            function (res) {
+                if (res.err_msg == "get_brand_wcpay_request:ok") {
+                    // 使用以上方式判断前端返回,微信团队郑重提示：
+                    //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                    setShowOrderModel(false);
+                    pay()
 
+                }
+            });
+    }
+
+    const recharge = api.wallet.recharge.useMutation({
+        onSuccess: (r) => {
+            if (typeof window.WeixinJSBridge == "undefined") {
+                if (document.addEventListener) {
+                    document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+                } else if (document.attachEvent) {
+                    document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+                    document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+                }
+            } else {
+                if (r.success) {
+                    onBridgeReady(r.data);
+                } else {
+                    messageApi.error("充值失败");
+                    setShowOrderModel(false);
+                }
+            }
+        },
+        onError: (e) => {
+            messageApi.error("充值失败");
+            setShowOrderModel(false);
+        }
+    });
+
+    const topUp = (money: number) => {
+        recharge.mutate({
+            userId: token,
+            amount: money,
+            notifyUrl: window?.location?.origin + `/dashboard/special-column?id=${columnId}`
+        })
     }
 
     const TopUpModal = () => {
@@ -127,7 +175,8 @@ const Reserved = ({onClose, check}) => {
         const {amountWithdraw, freezeIncome} = walletData;
         const balance = amountWithdraw + freezeIncome;
         const needTopUp = balance < selectedItem.price;
-        return <Modal title="确认订单" centered open={showOrderModel} onCancel={() => setShowOrderModel(false)} footer={null}>
+        return <Modal title="确认订单" centered open={showOrderModel} onCancel={() => setShowOrderModel(false)}
+                      footer={null}>
             <div className={"w-full flex items-center justify-between mt-6"}>
                 <div className={"w-40 h-10 overflow-scroll"}>{column.name}</div>
                 <div>{selectedItem.timeLimit >= 99999
@@ -143,7 +192,7 @@ const Reserved = ({onClose, check}) => {
                 needTopUp
                     ?
                     <Button style={{width: "20rem"}} type="primary"
-                            onClick={topUp}>充值并支付（¥{selectedItem.price - balance}）</Button>
+                            onClick={() => topUp(selectedItem.price - balance)}>充值并支付（¥{selectedItem.price - balance}）</Button>
                     :
                     <Button style={{width: "20rem"}} type="primary" onClick={pay}>支付</Button>
             }
