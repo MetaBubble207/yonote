@@ -1,13 +1,14 @@
 "use client"
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
-import {usePathname, useRouter} from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import useLocalStorage from "@/tools/useStore";
 import {api} from "@/trpc/react";
 
 const Compass = () => {
     const router = useRouter();
     const pathname = usePathname();
+    const code = useSearchParams().get('code');
     const [isGo, setIsGo] = useState(false);
     const handleLogout = () => {
         setToken(null)
@@ -15,7 +16,7 @@ const Compass = () => {
     const [token, setToken] = useLocalStorage("token", null)
 
     useEffect(() => {
-        if (!token && !pathname.includes('/login') && !pathname.includes('/no-column')) {
+        if (!token && !pathname.includes('/login') && !pathname.includes('/no-column') && !code) {
             router.push("/writer/login");
         }
     }, [token, pathname, router])
