@@ -4,7 +4,7 @@ import process from "process";
 
 const Login = () => {
   const refreshCode = () => {
-    const appid = process.env.NEXT_PUBLIC_APP_ID;
+    const appid = process.env.NEXT_PUBLIC_QRCODE_APP_ID;
 
     const originURL = window?.location?.origin;
 

@@ -1,30 +1,38 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
-import {usePathname, useRouter} from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {api} from "@/trpc/react";
 import {useEffect} from "react";
 import useLocalStorage from "@/tools/useStore";
 import Loading from "@/app/_components/common/Loading";
 
 const HomepageData = ({columnId}: { columnId: string | undefined }) => {
-    const [token] = useLocalStorage("token", null);
+    const code = useSearchParams().get('code');
+    const [token, setToken] = useLocalStorage('token', null);
     const router = useRouter();
     const pathname = usePathname();
-
-    const {data: columns, isFetching} = api.column.getAllByUserId.useQuery({
-        userId: token
+    const {data: loginData, isFetching: isLoginFetch, isSuccess} = api.users.qrcodeLogin.useQuery({code}, {
+        enabled: Boolean(code && !token),
     });
+    const {data: columns, isFetching: isColumnFetch} = api.column.getAllByUserId.useQuery({
+        userId: token
+    }, {enabled: Boolean(token)});
+    useEffect(() => {
+        if (isSuccess) {
+            setToken(loginData.id);
+        }
+    }, [loginData]);
 
     useEffect(() => {
-        if (isFetching) return;
+        if (isLoginFetch || isColumnFetch) return;
         if ((!columnId || columnId === "null") && columns) {
             router.push(`/writer${pathname.split("/writer")[1]}?columnId=` + columns[0]?.id)
         }
         if (token && !columns) {
             router.push(`/writer/no-column`);
         }
-    }, [isFetching, columnId, columns, pathname, router, token]);
+    }, [isColumnFetch, isLoginFetch, columnId, columns, pathname, router, token]);
 
     return (
         <div className="w-full h-82 pl-8 pr-9 bg-[#FFF] border-rd-2.5">
