@@ -5,8 +5,7 @@ import Image from "next/image";
 import {api} from "@/trpc/react";
 import useLocalStorage from "@/tools/useStore";
 import {useSearchParams} from "next/navigation";
-import process from "process";
-import {Button, message} from "antd";
+import {Button, message, Modal} from "antd";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import Loading from "@/app/_components/common/Loading";
 import {type PriceList} from "@/server/db/schema";
@@ -37,6 +36,7 @@ const Reserved = ({onClose, check}) => {
     })
     const [showTopUpModal, setShowTopUpModal] = useState(false);
     const [showConfirmPayModal, setConfirmPayModal] = useState(false);
+    const [showOrderModel, setShowOrderModel] = useState(false);
     const handleClickPay = () => {
         setShowTopUpModal(false);
         setConfirmPayModal(true);
@@ -48,7 +48,7 @@ const Reserved = ({onClose, check}) => {
     const [selectedItem, setSelectedItem] = useState<PriceList>(); // 追踪选中的item
 
     useEffect(() => {
-        if ( priceListData?.length === 0) return;
+        if (priceListData?.length === 0) return;
         // @ts-ignore
         setSelectedItem({...priceListData?.[0]});
     }, [priceListData])
@@ -63,10 +63,15 @@ const Reserved = ({onClose, check}) => {
         }
     };
 
-    const popUp = () => {
+    const popUpConfirmPayModal = () => {
         setShowTopUpModal(false);
         setConfirmPayModal(true);
     }
+    const popUpOrderModal = () => {
+        setConfirmPayModal(false);
+        setShowOrderModel(true);
+    }
+
     const pay = async () => {
         if (!selectedItem) {
             messageApi.error("请先选择支付策略噢~😁");
@@ -93,100 +98,10 @@ const Reserved = ({onClose, check}) => {
             });
         }
     }
-    const createOrder = async () => {
-        try {
-            const url = 'https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi';
 
-            const reqdata = {
-                amount: {
-                    total: 100,
-                    currency: 'CNY'
-                },
-                mchid: '1900006891',
-                description: 'Image形象店-深圳腾大-QQ公仔',
-                notify_url: 'https://www.weixin.qq.com/wxpay/pay.php',
-                payer: {
-                    openid: token
-                },
-                out_trade_no: '1217752501201407033233388881',
-                goods_tag: 'WXG',
-                appid: process.env.NEXT_PUBLIC_APP_ID
-            };
+    const topUp = () => {
 
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(reqdata)
-            });
-
-            if (response.status === 200) {
-                const responseData = await response.json();
-                console.log('success, return body = ', responseData);
-                return responseData;
-            } else if (response.status === 204) {
-                console.log('success');
-            } else {
-                const errorData = await response.text();
-                console.log('failed, resp code = ', response.status, ', return body = ', errorData);
-                throw new Error('request failed');
-            }
-        } catch (error) {
-            console.error('Error:', error.message);
-        }
     }
-
-    const placeAnOrderOnWechatPay = async () => {
-        await fetch('https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi', {
-            method: 'post',
-            body: JSON.stringify({
-                mchid: process.env.NEXT_PUBLIC_MCHID,
-                out_trade_no: "asd1123",
-                appid: process.env.NEXT_PUBLIC_APP_ID,
-                description: "测试文章购买",
-                notify_url: "https://www.weixin.qq.com/wxpay/pay.php",
-                amount: {
-                    total: 1,
-                    currency: "CNY"
-                },
-                payer: {
-                    openid: token
-                }
-            })
-        })
-    }
-//     function onBridgeReady() {
-//         WeixinJSBridge.invoke('getBrandWCPayRequest', {
-//                 "appId": "wx2421b1c4370ecxxx",   // 公众号ID，由商户传入
-//                 "timeStamp": "1395712654",       // 时间戳，自1970年以来的秒数
-//                 "nonceStr": "e61463f8efa94090b1f366cccfbbb444", // 随机串
-//                 "package": "prepay_id=wx21201855730335ac86f8c43d1889123400",
-//                 "signType": "RSA",               // 微信签名方式
-//                 "paySign": "oR9d8PuhnIc+YZ8cBHFCwfgpaK9gd7vaRvkYD7rthRAZ\/X+QBhcCYL21N7cHCTUxbQ+EAt6Uy+lwSN22f5YZvI45MLko8Pfso0jm46v5hqcVwrk6uddkGuT+Cdvu4WBqDzaDjnNa5UK3GfE1Wfl2gHxIIY5lLdUgWFts17D4WuolLLkiFZV+JSHMvH7eaLdT9N5GBovBwu5yYKUR7skR8Fu+LozcSqQixnlEZUfyE55feLOQTUYzLmR9pNtPbPsu6WVhbNHMS3Ss2+AehHvz+n64GDmXxbX++IOBvm2olHu3PsOUGRwhudhVf7UcGcunXt8cqNjKNqZLhLw4jq\/xDg==" // 微信签名
-//             },
-//             function(res) {
-//                 if (res.err_msg == "get_brand_wcpay_request:ok") {
-//                     // 使用以上方式判断前端返回,微信团队郑重提示：
-//                     // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-//                 }
-//             });
-//     }
-//
-// // 检查 WeixinJSBridge 是否已定义
-//     if (typeof WeixinJSBridge == "undefined") {
-//         // 如果 WeixinJSBridge 未定义，添加事件监听器
-//         if (document.addEventListener) {
-//             document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-//         } else if (document.attachEvent) {
-//             document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
-//             document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-//         }
-//     } else {
-//         // 如果 WeixinJSBridge 已定义，直接调用 onBridgeReady
-//         onBridgeReady();
-//     }
 
     const TopUpModal = () => {
         return <W100H50Modal>
@@ -194,17 +109,45 @@ const Reserved = ({onClose, check}) => {
                 <label htmlFor="">输入充值金额</label>
                 <input type="text"/>
             </div>
-            <button onClick={() => popUp()}>充值</button>
+            <button onClick={() => popUpConfirmPayModal()}>充值</button>
         </W100H50Modal>
     }
+
     const ConfirmPayModal = () => {
         return <W100H50Modal>
             <div>确定是否购买该专栏</div>
             <div className={'flex space-x-10 mt-5'}>
-                <Button onClick={pay}>确认</Button>
+                <Button onClick={popUpOrderModal}>确认</Button>
                 <Button onClick={handleCancelPay}>取消</Button>
             </div>
         </W100H50Modal>
+    }
+
+    const OrderModel = () => {
+        const {amountWithdraw, freezeIncome} = walletData;
+        const balance = amountWithdraw + freezeIncome;
+        const needTopUp = balance < selectedItem.price;
+        return <Modal title="确认订单" centered open={showOrderModel} onCancel={() => setShowOrderModel(false)} footer={null}>
+            <div className={"w-full flex items-center justify-between mt-6"}>
+                <div className={"w-40 h-10 overflow-scroll"}>{column.name}</div>
+                <div>{selectedItem.timeLimit >= 99999
+                    ? `${selectedItem.price}/永久`
+                    : `${selectedItem.price}/${selectedItem.timeLimit}天`}</div>
+            </div>
+            <div className={"my-6"}>
+                <span>余额: ¥{balance}</span>
+                {needTopUp && <span
+                    className={'text-red'}>（还需充值¥{selectedItem.price - balance}~😁）</span>}
+            </div>
+            {
+                needTopUp
+                    ?
+                    <Button style={{width: "20rem"}} type="primary"
+                            onClick={topUp}>充值并支付（¥{selectedItem.price - balance}）</Button>
+                    :
+                    <Button style={{width: "20rem"}} type="primary" onClick={pay}>支付</Button>
+            }
+        </Modal>
     }
     if (isColumnLoading) return <div className={"absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"}>
         <Loading/>
@@ -214,6 +157,7 @@ const Reserved = ({onClose, check}) => {
             {contextHolder}
             {showTopUpModal && <TopUpModal/>}
             {showConfirmPayModal && <ConfirmPayModal/>}
+            {showOrderModel && <OrderModel/>}
             <div
                 className="flex flex-col w-full items-center justify-center b-white bg-#fff pb-10 rounded-t-30px border-t-2 border-t-primary pt-2">
                 <Image src={"/images/dialog/Close-small.png"} alt="close" width={20} height={20}
