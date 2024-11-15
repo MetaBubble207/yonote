@@ -2,90 +2,80 @@
 import Image from "next/image";
 import React, {useState} from "react";
 import Date from '@/app/_components/writer/datarange/Date'
-import {Slider} from 'antd';
-import type {SliderSingleProps} from 'antd';
+import {Collapse, type CollapseProps, message, Slider, type SliderSingleProps} from 'antd';
+import {throttle} from "lodash";
 
-import type {CollapseProps} from 'antd';
-import {Collapse} from 'antd';
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
-
+const distributionConfig: SliderSingleProps['marks'] = {
+    0: '0%',
+    10: '10%',
+    20: '20%',
+    30: '30%',
+    40: '40%',
+    50: '50%',
+    60: '60%',
+    70: '70%',
+};
+const extendConfig: SliderSingleProps['marks'] = {
+    0: '0%',
+    10: '10%',
+    20: '20%',
+    30: '30%',
+    40: '40%',
+    50: '50%',
+    60: '60%',
+    70: '70%',
+}
 const Page = () => {
-    const distribution: SliderSingleProps['marks'] = {
-        0: '0%',
-        10: '10%',
-        20: '20%',
-        30: '30%',
-        40: '40%',
-        50: '50%',
-        60: '60%',
-        70: '70%',
-    };
-    const acceleration: SliderSingleProps['marks'] = {
-        0: '0%',
-        10: '10%',
-        20: '20%',
-        30: '30%',
-    }
-    const onChange = (key: string | string[]) => {
-        console.log(key);
+    const [distributionValue, setDistributionValue] = useState<number>(50);
+    const [extendValue, setExtendValue] = useState<number>(20);
+    const [messageApi, contextHolder] = message.useMessage();
+    const throttledWarning = throttle(() => {
+        messageApi.warning("分销激励和推广激励之和不能超过70%");
+    }, 2000);
+    const handleDistributionChange = (value: number) => {
+        if (value + extendValue <= 70) {
+            setDistributionValue(value);
+        } else {
+            throttledWarning();
+        }
     };
 
+    const handleExtendChange = (value: number) => {
+        if (distributionValue + value <= 70) {
+            setExtendValue(value);
+        } else {
+            throttledWarning();
+        }
+    };
 
     const item: CollapseProps['items'] = [
         {
             key: '1',
             label: '分销激励',
-            children: <Slider marks={distribution} step={null} defaultValue={37} max={70}/>,
+            children: (
+                <Slider
+                    marks={distributionConfig}
+                    step={1}
+                    value={distributionValue}
+                    max={70}
+                    onChange={handleDistributionChange}
+                />
+            ),
         },
         {
             key: '2',
-            label: '加速激励',
-            children: <Slider marks={acceleration} step={null} defaultValue={37} max={30}/>,
+            label: '推广激励',
+            children: (
+                <Slider
+                    marks={extendConfig}
+                    step={1}
+                    value={extendValue}
+                    max={70}
+                    onChange={handleExtendChange}
+                />
+            ),
         },
     ];
-
-    interface Item {
-        ranking: number;
-        avatar: string;
-        username: string;
-        userId: string;
-        acceleration: number;
-        totalAmount: number;
-    }
-
-
-    const items: Item[] = [
-        {
-            ranking: 1,
-            avatar: '/images/writer/avatar1.svg',
-            username: '胖头鱼吃瓜',
-            userId: '1239f4',
-            acceleration: 50,
-            totalAmount: 234
-        }, {
-            ranking: 1,
-            avatar: '/images/writer/avatar2.svg',
-            username: '名字太长限制...',
-            userId: '1239f4',
-            acceleration: 50,
-            totalAmount: 234
-        }, {
-            ranking: 1,
-            avatar: '/images/writer/avatar3.svg',
-            username: '闲着没事找事...',
-            userId: '1239f4',
-            acceleration: 50,
-            totalAmount: 234
-        }, {
-            ranking: 1,
-            avatar: '/images/writer/avatar4.svg',
-            username: '随便打一下',
-            userId: '1239f4',
-            acceleration: 50,
-            totalAmount: 234
-        },
-    ]
-
     const [userId, setUserId] = useState<string>('')
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,49 +85,44 @@ const Page = () => {
     const ItemList: React.FC = () => {
         return (
             <tbody className='text-center'>
-            {items.map((item, index) => (
-                <tr key={index} className='border-t solid'>
-                    <td>{item.ranking}</td>
-                    <td className='relative'>
-                        <div
-                            className={"absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shrink-0 border-rd-8"}>
-                            <div className="relative w-8 h-8">
-                                <Image
-                                    placeholder="blur"
-                                    blurDataURL={DefaultLoadingPicture()}
-                                    src={item.avatar ?? DefaultLoadingPicture()}
-                                    alt='cover'
-                                    quality={100}
-                                    fill
-                                    loading='lazy'
-                                    className='rounded object-cover '
-                                />
-                            </div>
-                        </div>
-                    </td>
-                    <td>{item.username}</td>
-                    <td>{item.userId}</td>
-                    <td>{item.acceleration}</td>
-                    <td>￥<span>{item.totalAmount}</span></td>
-                </tr>
-            ))}
+            {/*{items.map((item, index) => (*/}
+            {/*    <tr key={index} className='border-t solid'>*/}
+            {/*        <td>{item.ranking}</td>*/}
+            {/*        <td className='relative'>*/}
+            {/*            <div*/}
+            {/*                className={"absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 shrink-0 border-rd-8"}>*/}
+            {/*                <div className="relative w-8 h-8">*/}
+            {/*                    <Image*/}
+            {/*                        placeholder="blur"*/}
+            {/*                        blurDataURL={DefaultLoadingPicture()}*/}
+            {/*                        src={item.avatar ?? DefaultLoadingPicture()}*/}
+            {/*                        alt='cover'*/}
+            {/*                        quality={100}*/}
+            {/*                        fill*/}
+            {/*                        loading='lazy'*/}
+            {/*                        className='rounded object-cover '*/}
+            {/*                    />*/}
+            {/*                </div>*/}
+            {/*            </div>*/}
+            {/*        </td>*/}
+            {/*        <td>{item.username}</td>*/}
+            {/*        <td>{item.userId}</td>*/}
+            {/*        <td>{item.extendConfig}</td>*/}
+            {/*        <td>￥<span>{item.totalAmount}</span></td>*/}
+            {/*    </tr>*/}
+            {/*))}*/}
             </tbody>
         )
     }
 
     return (
         <div className='w-full h-full pl-8 pt-8 rounded-2.5 bg-[#FFF]'>
+            {contextHolder}
             <div className=' w-271.75 h-126.605 shrink-0 '>
                 <h3 className='text-[#323232] text-4 font-700 lh-6'>加速计划</h3>
                 {/*加速激励*/}
-
                 <div className='pl-2 mt-6.0525'>
-                    {/* <h4 className='w-17.66225 h-5.5 shrink-0 text-[rgba(0,0,0,0.85)] text-4 font-400 lh-6'>加速激励</h4> */}
-                    {/*输出条*/}
-                    {/* <div className='ml-11.25'> */}
-                    {/* <Slider marks={marks} step={null} defaultValue={37} /> */}
-                    {/* </div> */}
-                    <Collapse items={item} defaultActiveKey={['1']} onChange={onChange}/>
+                    <Collapse items={item}/>
                     {/*激励榜单*/}
                     <div className='mt-8'>
                         <h3 className='w-17.75 h-5.5 shrink-0 text-[rgba(0,0,0,0.85)] text-4 font-400 lh-6'>激励榜单</h3>
