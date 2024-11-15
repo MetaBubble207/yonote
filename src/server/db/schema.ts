@@ -106,10 +106,8 @@ export const distributorshipDetail = createTable(
         id: serial("id").primaryKey(),
         columnId: serial("column_id"),
         platDistributorship: integer("plat_distributorship"),
-        speedUp: integer("speed_up"),
-        writerMoney: real("writer_money"),
-        price: real("column_price"),
         distributorship: integer("distributorship"),
+        extend: integer("extend"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
