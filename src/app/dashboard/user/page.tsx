@@ -17,6 +17,10 @@ const User = function User() {
     const router = useRouter();
     const code = useSearchParams().get('code');
     const [token, setToken] = useLocalStorage('token', null);
+    const {data: loginData, isSuccess} = api.users.login.useQuery({code}, {
+        enabled: Boolean(code && !token),
+    });
+
     const {data: userInfo, isLoading: isUserInfoLoading} =
         api.users.getOne.useQuery({id: token}, {enabled: Boolean(token)});
 
@@ -24,9 +28,6 @@ const User = function User() {
         api.column.getAllByUserId.useQuery({
             userId: token,
         }, {enabled: Boolean(token)});
-    const {data: loginData, isSuccess} = api.users.login.useQuery({code}, {
-        enabled: Boolean(code && !token),
-    });
 
     useEffect(() => {
         if (isSuccess) {

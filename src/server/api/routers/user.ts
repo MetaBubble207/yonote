@@ -9,9 +9,15 @@ import {getSoleId} from "@/tools/getSoleId";
 export const userRouter = createTRPCRouter({
     getOne: publicProcedure
         .input(z.object({id: z.string()}))
-        .query(({ctx, input}) => {
+        .query(async ({ctx, input}) => {
             if (input.id === "") return null
-            return ctx.db.query.user.findFirst({where: eq(user.id, input.id)})
+            const data = await ctx.db.query.user.findFirst({where: eq(user.id, input.id)})
+            console.log("data ", data)
+            if (data) {
+                return data;
+            } else {
+                return null;
+            }
         }),
 
     login: publicProcedure
