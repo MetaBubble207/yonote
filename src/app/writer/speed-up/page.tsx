@@ -1,6 +1,6 @@
 'use client'
 import Image from "next/image";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import Date from '@/app/_components/writer/datarange/Date'
 import {Button, Collapse, type CollapseProps, message, Modal, Slider, type SliderSingleProps, Switch} from 'antd';
 import {throttle} from "lodash";
@@ -44,7 +44,7 @@ const Page = () => {
         refetch: refetchDistributorshipDetail
     } = api.distributorshipDetail.getOne.useQuery({columnId: columnId}, {enabled: Boolean(columnId)});
 
-    const updateDistributorshipDetail = api.distributorshipDetail.add.useMutation({
+    const addDistributorshipDetail = api.distributorshipDetail.add.useMutation({
         onSuccess: (r) => {
             setShowPrimaryDistribution(false);
             refetchDistributorshipDetail();
@@ -52,7 +52,7 @@ const Page = () => {
     })
 
     const openPrimaryDistribution = () => {
-        updateDistributorshipDetail.mutate({
+        addDistributorshipDetail.mutate({
             columnId: columnId,
             distributorship: 0.5,
             extend: 0,
@@ -60,6 +60,26 @@ const Page = () => {
         })
     }
 
+    const updateDistributorshipDetail = api.distributorshipDetail.update.useMutation({
+        onSuccess: (r) => {
+
+        }
+    })
+    // 防抖函数，用于更新数据库
+    const debouncedUpdate = useCallback(
+        throttle((distribution, extend) => {
+            updateDistributorshipDetail.mutate({
+                columnId: columnId,
+                distributorship: distribution,
+                extend: extend,
+            });
+        }, 3000),
+        []
+    );
+
+    useEffect(() => {
+        debouncedUpdate(distributionValue, extendValue);
+    }, [distributionValue, extendValue]);
 
     useEffect(() => {
         if (!distributorshipData) return;
