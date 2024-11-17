@@ -105,9 +105,9 @@ export const distributorshipDetail = createTable(
     {
         id: serial("id").primaryKey(),
         columnId: varchar("column_id"),
-        platDistributorship: integer("plat_distributorship"),
-        distributorship: integer("distributorship"),
-        extend: integer("extend"),
+        platDistributorship: real("plat_distributorship"),
+        distributorship: real("distributorship"),
+        extend: real("extend"),
         createdAt: timestamp("created_at")
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
