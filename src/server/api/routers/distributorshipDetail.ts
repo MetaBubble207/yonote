@@ -5,14 +5,14 @@ import {eq} from "drizzle-orm";
 
 export const distributorshipDetailRouter = createTRPCRouter({
     getOne: publicProcedure
-        .input(z.object({columnId: z.number()}))
+        .input(z.object({columnId: z.string()}))
         .query(({input, ctx}) => {
             return ctx.db.query.distributorshipDetail.findFirst({
                 where: eq(distributorshipDetail.columnId, input.columnId),
             })
         }),
     update: publicProcedure
-        .input(z.object({columnId: z.number(), distributorship: z.number(), extend: z.number(), isVip: z.boolean()}))
+        .input(z.object({columnId: z.string(), distributorship: z.number(), extend: z.number(), isVip: z.boolean()}))
         .mutation(async ({input, ctx}) => {
             const {columnId, distributorship, extend, isVip} = input;
             const platDistributorship = isVip ? 0.09 : 0.15;

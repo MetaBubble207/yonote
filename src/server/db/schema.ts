@@ -104,7 +104,7 @@ export const distributorshipDetail = createTable(
     "distributorship_detail",
     {
         id: serial("id").primaryKey(),
-        columnId: serial("column_id"),
+        columnId: varchar("column_id"),
         platDistributorship: integer("plat_distributorship"),
         distributorship: integer("distributorship"),
         extend: integer("extend"),
