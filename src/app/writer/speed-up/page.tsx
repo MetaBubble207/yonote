@@ -1,9 +1,13 @@
 'use client'
 import Image from "next/image";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Date from '@/app/_components/writer/datarange/Date'
-import {Collapse, type CollapseProps, message, Slider, type SliderSingleProps} from 'antd';
+import {Button, Collapse, type CollapseProps, message, Modal, Slider, type SliderSingleProps, Switch} from 'antd';
 import {throttle} from "lodash";
+import {api} from "@/trpc/react";
+import {useSearchParams} from "next/navigation";
+import Loading from "@/app/_components/common/Loading";
+import useLocalStorage from "@/tools/useStore";
 
 const distributionConfig: SliderSingleProps['marks'] = {
     0: '0%',
@@ -25,14 +29,51 @@ const extendConfig: SliderSingleProps['marks'] = {
     60: '60%',
     70: '70%',
 }
+
 const Page = () => {
+
     const [distributionValue, setDistributionValue] = useState<number>(50);
-    const [extendValue, setExtendValue] = useState<number>(20);
+    const [extendValue, setExtendValue] = useState<number>(0);
+
+    const columnId = useSearchParams().get("columnId");
+    const [token] = useLocalStorage('token', null);
+    const {data: userData} = api.users.getOne.useQuery({id: token});
+    const {
+        data: distributorshipData,
+        isFetching: isDistributorshipDataFetching,
+        refetch: refetchDistributorshipDetail
+    } = api.distributorshipDetail.getOne.useQuery({columnId: columnId}, {enabled: Boolean(columnId)});
+
+    const updateDistributorshipDetail = api.distributorshipDetail.add.useMutation({
+        onSuccess: (r) => {
+            setShowPrimaryDistribution(false);
+            refetchDistributorshipDetail();
+        }
+    })
+
+    const openPrimaryDistribution = () => {
+        updateDistributorshipDetail.mutate({
+            columnId: columnId,
+            distributorship: 0.5,
+            extend: 0,
+            isVip: userData.idType === 1
+        })
+    }
+
+
+    useEffect(() => {
+        if (!distributorshipData) return;
+        setDistributionValue(distributorshipData.distributorship * 100)
+        setExtendValue(distributorshipData.extend * 100);
+    }, [distributorshipData]);
+
     const [messageApi, contextHolder] = message.useMessage();
     const throttledWarning = throttle(() => {
         messageApi.warning("分销激励和推广激励之和不能超过70%");
     }, 2000);
+
     const handleDistributionChange = (value: number) => {
+        setDistributionValue(value);
         if (value + extendValue <= 70) {
             setDistributionValue(value);
         } else {
@@ -48,7 +89,8 @@ const Page = () => {
         }
     };
 
-    const item: CollapseProps['items'] = [
+
+    const incentiveList01 = [
         {
             key: '1',
             label: '分销激励',
@@ -74,14 +116,22 @@ const Page = () => {
                     onChange={handleExtendChange}
                 />
             ),
-        },
-    ];
-    const [userId, setUserId] = useState<string>('')
+        },]
+    const incentiveList02 = [
+        {
+            key: '1',
+            label: '分销激励',
+            children: (
+                <Slider
+                    marks={distributionConfig}
+                    step={1}
+                    value={distributionValue}
+                    max={70}
+                    onChange={handleDistributionChange}
+                />
+            ),
+        },]
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(`查询: ${e.target.value}`)
-        setUserId(e.target.value)
-    }
     const ItemList: React.FC = () => {
         return (
             <tbody className='text-center'>
@@ -115,6 +165,27 @@ const Page = () => {
         )
     }
 
+    const [isShowPrimaryDistribution, setShowPrimaryDistribution] = useState(false);
+
+    const showConfirmPrimaryDistribution = () => {
+        setShowPrimaryDistribution(true);
+    }
+    if (isDistributorshipDataFetching) return <div className={"mt-70"}>
+        <Loading/>
+    </div>
+
+    if (!distributorshipData) return <div className={"w-full h-full flex flex-col items-center "}>
+        <div className={"w-200 p20px mt-60 bg-white rounded-20px"}>
+            <div className={"text-xl"}>
+                <span>您还未开启分销功能，是否开启分销功能</span>
+                <Button type={'primary'} onClick={showConfirmPrimaryDistribution} className={"ml-5 mb-5"}>开启</Button>
+            </div>
+            <span>注意：开启分销功能之后，可以指定分销激励占比，可以让读者分销您的专栏后，其他用户购买时奖励读者一定金额，
+            鼓励读者推广您的专栏，开启会员后可以自动支持二级分销功能</span>
+            <Modal title={"是否确认开启分销"} centered open={isShowPrimaryDistribution} onOk={openPrimaryDistribution}
+                   onCancel={() => setShowPrimaryDistribution(false)}/>
+        </div>
+    </div>
     return (
         <div className='w-full h-full pl-8 pt-8 rounded-2.5 bg-[#FFF]'>
             {contextHolder}
@@ -122,7 +193,7 @@ const Page = () => {
                 <h3 className='text-[#323232] text-4 font-700 lh-6'>加速计划</h3>
                 {/*加速激励*/}
                 <div className='pl-2 mt-6.0525'>
-                    <Collapse items={item}/>
+                    <Collapse items={userData?.idType === 1 ? incentiveList01 : incentiveList02}/>
                     {/*激励榜单*/}
                     <div className='mt-8'>
                         <h3 className='w-17.75 h-5.5 shrink-0 text-[rgba(0,0,0,0.85)] text-4 font-400 lh-6'>激励榜单</h3>
@@ -131,7 +202,6 @@ const Page = () => {
                                 <label
                                     className='ml-10.5575 text-[rgba(0,0,0,0.85)] text-3.5 font-400 lh-5.5'>用户ID: </label>
                                 <input
-                                    onChange={(e) => handleChange(e)}
                                     className='pl-3.0425  ml-4  w-56 h-8  shrink-0 border-rd-1 outline-none border-1 border-solid border-[#D9D9D9] bg-[#FFF]'
                                     type="text" placeholder="用户ID"/>
                                 <div className='ml-20.5'>
