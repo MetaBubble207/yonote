@@ -68,7 +68,7 @@ const Article = () => {
 
         // 生成分享二维码
         const originURL = window?.location?.origin;
-        const qrcodeURL = `${originURL}/dashboard/special-column/content?c=${chapter}&id=${columnId}&code=${token}`;
+        const qrcodeURL = `${originURL}/dashboard/special-column/content?c=${chapter}&id=${columnId}&invitationCode=${token}`;
 
         const png = useRef(null);
         const [pngUrl, setPngUrl] = useState<string>("");

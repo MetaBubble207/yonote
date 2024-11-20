@@ -63,7 +63,7 @@ const SpecialColumn = () => {
 
     //生成分享二维码
     const originURL = window?.location?.origin;
-    const qrcodeURL = originURL + `/dashboard/special-column?id=${columnId}&code=${token} `
+    const qrcodeURL = originURL + `/dashboard/special-column?id=${columnId}&invitationCode=${token} `
 
     const png = useRef(null);
     const [pngUrl, setPngUrl] = useState<string>("");
