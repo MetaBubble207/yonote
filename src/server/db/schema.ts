@@ -395,3 +395,12 @@ export type PriceList = {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export type SpeedUp = {
+    id: number;
+    avatar: string;
+    username: string;
+    userId: string;
+    acceleratedTotal: number;
+    totalPrice: number;
+}

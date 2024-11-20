@@ -586,6 +586,7 @@ export const orderRouter = createTRPCRouter({
     getTotalPriceByReferralId: publicProcedure
         .input(z.string())
         .query(async ({ctx, input}) => {
-
+            const list = await ctx.db.query.order.findMany({where: eq(order.recommendationId, input)});
+            return list.map(item => item.price);
         }),
 });
