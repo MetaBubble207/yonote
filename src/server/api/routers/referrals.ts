@@ -35,11 +35,18 @@ export const referralsRouter = createTRPCRouter({
 
     add: publicProcedure
         .input(z.object({columnId: z.string(), userId: z.string(), referredUserId: z.string()}))
-        .mutation(({ctx, input}) => {
-            return ctx.db.insert(referrals).values({
-                columnId: input.columnId,
-                userId: input.userId,
-                referredUserId: input.referredUserId
-            })
+        .mutation(async ({ctx, input}) => {
+            const data = await ctx.db.query.referrals.findFirst({where: and(eq(referrals.userId, input.userId), eq(referrals.columnId, input.columnId))});
+            if (data) {
+                return ctx.db.update(referrals).set({
+                    referredUserId: input.referredUserId
+                }).where(and(eq(referrals.userId, input.userId), eq(referrals.columnId, input.columnId)))
+            } else {
+                return ctx.db.insert(referrals).values({
+                    columnId: input.columnId,
+                    userId: input.userId,
+                    referredUserId: input.referredUserId
+                })
+            }
         }),
 });

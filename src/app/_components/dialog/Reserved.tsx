@@ -34,6 +34,19 @@ const Reserved = ({onClose, check}) => {
             message.error('订阅失败')
         }
     })
+
+    const createReferral = api.referrals.add.useMutation();
+
+    // 如果是邀请码进来的，进来后直接新增到推荐表
+    useEffect(() => {
+        if (!invitationCode || !token || columnId) return;
+        createReferral.mutate({
+            userId: token,
+            referredUserId: invitationCode,
+            columnId: columnId,
+        })
+    }, [invitationCode, token, columnId]);
+
     const [showTopUpModal, setShowTopUpModal] = useState(false);
     const [showConfirmPayModal, setConfirmPayModal] = useState(false);
     const [showOrderModel, setShowOrderModel] = useState(false);
