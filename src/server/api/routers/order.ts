@@ -581,5 +581,11 @@ export const orderRouter = createTRPCRouter({
         .input(z.object({id: z.number()}))
         .mutation(({ctx, input}) => {
             return expireSubscription(ctx.db, input.id)
-        })
+        }),
+
+    getTotalPriceByReferralId: publicProcedure
+        .input(z.string())
+        .query(async ({ctx, input}) => {
+
+        }),
 });
