@@ -5,10 +5,10 @@ import {eq} from "drizzle-orm";
 
 export const distributorshipDetailRouter = createTRPCRouter({
         getOne: publicProcedure
-            .input(z.object({columnId: z.string()}))
+            .input(z.string())
             .query(async ({input, ctx}) => {
                 const res = await ctx.db.query.distributorshipDetail.findFirst({
-                    where: eq(distributorshipDetail.columnId, input.columnId)
+                    where: eq(distributorshipDetail.columnId, input)
                 })
                 if (!res) {
                     return null

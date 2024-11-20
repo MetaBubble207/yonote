@@ -43,7 +43,7 @@ const Page = () => {
         data: distributorshipData,
         isFetching: isDistributorshipDataFetching,
         refetch: refetchDistributorshipDetail
-    } = api.distributorshipDetail.getOne.useQuery({columnId: columnId}, {enabled: Boolean(columnId)});
+    } = api.distributorshipDetail.getOne.useQuery(columnId, {enabled: Boolean(columnId)});
 
     const addDistributorshipDetail = api.distributorshipDetail.add.useMutation({
         onSuccess: (r) => {

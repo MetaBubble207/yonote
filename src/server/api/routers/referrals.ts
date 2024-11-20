@@ -30,9 +30,9 @@ export const referralsRouter = createTRPCRouter({
                 })
             })
             await Promise.all(promise);
-            console.log("res ==>", res)
             return res;
         }),
+
     add: publicProcedure
         .input(z.object({columnId: z.string(), userId: z.string(), referredUserId: z.string()}))
         .mutation(({ctx, input}) => {
