@@ -8,6 +8,7 @@ import {api} from "@/trpc/react";
 import {useSearchParams} from "next/navigation";
 import Loading from "@/app/_components/common/Loading";
 import useLocalStorage from "@/tools/useStore";
+import TableComponent from "@/app/_components/writer/speed-up/TableComponent";
 
 const distributionConfig: SliderSingleProps['marks'] = {
     0: '0%',
@@ -51,6 +52,7 @@ const Page = () => {
         }
     })
 
+    const {data: speedUpData} = api.referrals.getByColumnId.useQuery(columnId);
     const openPrimaryDistribution = () => {
         addDistributorshipDetail.mutate({
             columnId: columnId,
@@ -207,9 +209,9 @@ const Page = () => {
         </div>
     </div>
     return (
-        <div className='w-full h-full pl-8 pt-8 rounded-2.5 bg-[#FFF]'>
+        <div className='w-full h-full p8 pt-8 rounded-2.5 bg-[#FFF]'>
             {contextHolder}
-            <div className=' w-271.75 h-126.605 shrink-0 '>
+            <div className=''>
                 <h3 className='text-[#323232] text-4 font-700 lh-6'>加速计划</h3>
                 {/*加速激励*/}
                 <div className='pl-2 mt-6.0525'>
@@ -235,57 +237,9 @@ const Page = () => {
                         </div>
                     </div>
                     {/*排行榜*/}
-                    <div className='mt-4.18 '>
-
-                        <table
-                            className='table-auto w-269.75 h-13.5 shrink-0 border-rd-[4px_4px_0px_0px] bg-[#FAFAFA] lh-13.5 text-[rgba(0,0,0,0.85)] text-3.5 font-400 '>
-                            {/*表头*/}
-                            <thead>
-                            <tr>
-                                <th>排名</th>
-                                <th>用户头像</th>
-                                <th>用户名</th>
-                                <th>用户ID</th>
-                                <th className={'flex justify-center items-center'}>
-                                    <span>加速量</span>
-                                    <div className='ml-1.25'>
-                                        <button className='flex '>
-                                            <Image src={'/images/writer/up.svg'} alt={'up'} width={6.65}
-                                                   height={4.27}/>
-                                        </button>
-                                        <button className='flex '>
-                                            <Image src={'/images/writer/down.svg'} alt={'down'} width={6.65}
-                                                   height={4.27}/>
-                                        </button>
-                                    </div>
-                                </th>
-                                <th>
-                                    <div className='flex justify-center items-center'>
-                                        <span>总金额</span>
-                                        <div className='ml-1.25 flex-col justify-center'>
-                                            <button className='flex'>
-                                                <Image src={'/images/writer/up.svg'} alt={'up'}
-                                                       width={6.65}
-                                                       height={4.27}/>
-                                            </button>
-                                            <button className='flex'>
-                                                <Image src={'/images/writer/down.svg'} alt={'down'}
-                                                       width={6.65}
-                                                       height={4.27}/>
-                                            </button>
-
-
-                                        </div>
-                                    </div>
-                                </th>
-                            </tr>
-                            </thead>
-                            {/*表体*/}
-                            <ItemList/>
-                        </table>
-                    </div>
-                    <div className="mt-4 flex flex-col justify-end items-center">
-                        {/*<MyPagination />*/}
+                    <div className={"mt-4"}>
+                        {/*@ts-ignore*/}
+                        <TableComponent dataSource={speedUpData}/>
                     </div>
                 </div>
             </div>
