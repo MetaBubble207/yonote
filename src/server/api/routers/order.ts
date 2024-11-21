@@ -143,7 +143,6 @@ export const orderRouter = createTRPCRouter({
             payment: z.string(),
             status: z.boolean(),
             buyerId: z.string(),
-            referrerId: z.union([z.string(), z.null(), z.undefined()])
         }))
         .mutation(async ({ctx, input}) => {
             try {
@@ -190,21 +189,20 @@ export const orderRouter = createTRPCRouter({
                         expenditureOrIncome: 0
                     }
                 )
-
+                // 查找有没有推荐人
+                const referrerData = await caller.referrals.getOneByUserIdAndColumnId({
+                    columnId: input.columnId,
+                    userId: input.buyerId
+                });
                 // 推荐表新增推荐人
-                if (input.referrerId && input.referrerId !== "") {
-                    await ctx.db.insert(referrals).values({
-                        userId: input.buyerId,
-                        columnId: input.columnId,
-                        referredUserId: input.referrerId
-                    })
+                if (referrerData.referredUserId) {
                     // 推荐人钱包增加
                     // 查找一级分销的人的钱包
                     const firstClassReferrerWalletData = await ctx.db.query.wallet
-                        .findFirst({where: eq(wallet.userId, input.referrerId)});
+                        .findFirst({where: eq(wallet.userId, referrerData.referredUserId)});
                     // 查看有无二级分销
                     const referralsData = await ctx.db.query.referrals
-                        .findFirst({where: and(eq(referrals.userId, input.referrerId), eq(referrals.columnId, input.columnId))});
+                        .findFirst({where: and(eq(referrals.userId, referrerData.referredUserId), eq(referrals.columnId, input.columnId))});
                     // 获取分销表数据
                     const distributorshipDetail = await caller.distributorshipDetail.getOne(columnData.id);
                     if (referralsData) {
@@ -266,7 +264,7 @@ export const orderRouter = createTRPCRouter({
                             payment: input.payment,
                             status: input.status,
                             buyerId: input.buyerId,
-                            recommendationId: input.referrerId,
+                            recommendationId: referrerData.referredUserId,
                             referralLevel: 2,
                         });
                     } else {
@@ -310,7 +308,7 @@ export const orderRouter = createTRPCRouter({
                             payment: input.payment,
                             status: input.status,
                             buyerId: input.buyerId,
-                            recommendationId: input.referrerId,
+                            recommendationId: referrerData.referredUserId,
                             referralLevel: 1,
                         });
                     }

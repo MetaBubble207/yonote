@@ -2,10 +2,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
-import {api} from "@/trpc/react";
 import {useEffect} from "react";
 import useLocalStorage from "@/tools/useStore";
 import Loading from "@/app/_components/common/Loading";
+import {api} from "@/trpc/react";
 
 const HomepageData = ({columnId}: { columnId: string | undefined }) => {
     const code = useSearchParams().get('code');
@@ -26,11 +26,12 @@ const HomepageData = ({columnId}: { columnId: string | undefined }) => {
 
     useEffect(() => {
         if (isLoginFetch || isColumnFetch) return;
-        if ((!columnId || columnId === "null") && columns) {
-            router.push(`/writer${pathname.split("/writer")[1]}?columnId=` + columns[0]?.id)
-        }
-        if (token && !columns) {
+        if (token && (!columns || columns?.length === 0)) {
             router.push(`/writer/no-column`);
+        }
+        console.log("columns", columns)
+        if ((!columnId || columnId === "null") && columns && columns.length !== 0) {
+            router.push(`/writer${pathname.split("/writer")[1]}?columnId=` + columns[0]?.id)
         }
     }, [isColumnFetch, isLoginFetch, columnId, columns, pathname, router, token]);
 

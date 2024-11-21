@@ -22,13 +22,13 @@ const ColumnPopup: React.FC<CarouselProps> = ({columns, onImageClick}) => {
 
     useEffect(() => {
         const columnId = params.get("columnId");
-        if ((!columnId || columnId === "null") && columns.length) {
+        if ((!columnId || columnId === "null") && columns?.length) {
             router.push("/writer/homepage?columnId=" + columns[0].id);
         }
     }, [columns, params, router]);
 
     useEffect(() => {
-        if (columns.length) {
+        if (columns?.length) {
             setCurrentIndices(columns.slice(0, 4).map((_, index) => index));
         }
     }, [columns]);

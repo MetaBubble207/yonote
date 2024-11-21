@@ -14,7 +14,6 @@ const Reserved = ({onClose, check}) => {
     const [messageApi, contextHolder] = message.useMessage();
     const params = useSearchParams();
     const columnId = params.get("id");
-    const invitationCode = params.get("invitationCode");
     const [token] = useLocalStorage("token", null);
     const columnUserId = api.column.getUserId.useQuery({id: columnId});
     const {data: column, isLoading: isColumnLoading} = api.column.getColumnDetail.useQuery({columnId: columnId});
@@ -34,18 +33,6 @@ const Reserved = ({onClose, check}) => {
             message.error('订阅失败')
         }
     })
-
-    const createReferral = api.referrals.add.useMutation();
-
-    // 如果是邀请码进来的，进来后直接新增到推荐表
-    useEffect(() => {
-        if (!invitationCode || !token || columnId) return;
-        createReferral.mutate({
-            userId: token,
-            referredUserId: invitationCode,
-            columnId: columnId,
-        })
-    }, [invitationCode, token, columnId]);
 
     const [showTopUpModal, setShowTopUpModal] = useState(false);
     const [showConfirmPayModal, setConfirmPayModal] = useState(false);
@@ -106,13 +93,13 @@ const Reserved = ({onClose, check}) => {
                 priceListId: selectedItem.id,
                 payment: "wallet",
                 status: check,
-                buyerId: token,
-                referrerId: invitationCode
+                buyerId: token
             });
         }
     }
 
     function onBridgeReady(data) {
+        console.log("data ==>", data)
         window.WeixinJSBridge.invoke('getBrandWCPayRequest', {
                 "appId": data.appId,
                 "timeStamp": data.timeStamp,

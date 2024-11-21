@@ -1,7 +1,7 @@
 import {z} from "zod";
 import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {and, eq} from "drizzle-orm";
-import {referrals, SpeedUp} from "@/server/db/schema";
+import {referrals, type SpeedUp} from "@/server/db/schema";
 import {createCaller} from "@/server/api/root";
 
 export const referralsRouter = createTRPCRouter({
@@ -48,5 +48,11 @@ export const referralsRouter = createTRPCRouter({
                     referredUserId: input.referredUserId
                 })
             }
+        }),
+
+    getOneByUserIdAndColumnId: publicProcedure
+        .input(z.object({columnId: z.string(), userId: z.string()}))
+        .query(({ctx, input}) => {
+            return ctx.db.query.referrals.findFirst({where: and(eq(referrals.userId, input.userId), eq(referrals.columnId, input.columnId))});
         }),
 });

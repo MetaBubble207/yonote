@@ -17,6 +17,7 @@ const SpecialColumnBody = () => {
     const columnId = params.get("id");
     const code = params.get("code");
     const [token, setToken] = useLocalStorage("token", null);
+    const invitationCode = params.get("invitationCode");
     const status = api.order.getUserStatus.useQuery({
         userId: token,
         columnId: columnId,
@@ -46,6 +47,18 @@ const SpecialColumnBody = () => {
             setToken(userInfo.id);
         }
     }, [userInfo, setToken]);
+
+    const createReferral = api.referrals.add.useMutation();
+
+    // 如果是邀请码进来的，进来后直接新增到推荐表
+    useEffect(() => {
+        if (!invitationCode || !token || columnId) return;
+        createReferral.mutate({
+            userId: token,
+            referredUserId: invitationCode,
+            columnId: columnId,
+        })
+    }, [invitationCode, token, columnId]);
 
     const router = useRouter();
 
@@ -93,7 +106,7 @@ const SpecialColumnBody = () => {
             </div>
 
             {/*<div className="fixed top-200px w-full">*/}
-                {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}
+            {isSubscribe && <Reserved onClose={() => setIsSubscribe(false)} check={check}></Reserved>}
             {/*</div>*/}
         </div>
     )
