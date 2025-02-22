@@ -1,5 +1,5 @@
-import {z} from "zod";
-import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
+import { z } from "zod";
+import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
     column,
     order, type OrderBuyer, post, type PostDetail, postLike, postRead,
@@ -10,8 +10,8 @@ import {
     wallet
 } from "@/server/db/schema";
 import type * as schema from "../../db/schema";
-import {and, between, eq, gt, inArray, like, lt, sql} from "drizzle-orm";
-import {addDays} from "date-fns";
+import { and, between, eq, gt, inArray, like, lt, sql } from "drizzle-orm";
+import { addDays } from "date-fns";
 import {
     getCurrentTime,
     getLastMonthDates,
@@ -19,11 +19,11 @@ import {
     getTodayMidnight,
     getYesterdayMidnight
 } from "@/tools/getCurrentTime";
-import {type PostgresJsDatabase} from "drizzle-orm/postgres-js";
-import {createCaller} from "@/server/api/root";
-import {getOneUser} from "@/server/api/routers/user";
-import {getOneByUserIdAndColumnId} from "@/server/api/routers/referrals";
-import {getOneDistributorshipDetail} from "@/server/api/routers/distributorshipDetail";
+import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { createCaller } from "@/server/api/root";
+import { getOneUser } from "@/server/api/routers/user";
+import { getOneByUserIdAndColumnId } from "@/server/api/routers/referrals";
+import { getOneDistributorshipDetail } from "@/server/api/routers/distributorshipDetail";
 // 检查该订阅状态是否需要更新，即过期日期已经截止了，但是状态还是true
 const checkSubscriptionStatus = async (db: PostgresJsDatabase<typeof schema>, id: number): Promise<boolean> => {
     const o = await db.query.order.findFirst({
@@ -58,7 +58,7 @@ export const orderRouter = createTRPCRouter({
         pageSize: z.number().default(10),
         currentPage: z.number().default(1),
     }))
-        .query(async ({ctx, input}) => {
+        .query(async ({ ctx, input }) => {
             const conditions = [
                 eq(order.columnId, input.columnId)
             ];
@@ -68,12 +68,12 @@ export const orderRouter = createTRPCRouter({
             }
 
             if (input.buyerId) {
-                const selectedUserIdNum = await ctx.db.select({id: user.id}).from(user).where(like(user.idNumber, `${input.buyerId}%`));
+                const selectedUserIdNum = await ctx.db.select({ id: user.id }).from(user).where(like(user.idNumber, `${input.buyerId}%`));
                 if (selectedUserIdNum.length > 0) {
                     conditions.push(inArray(order.buyerId, selectedUserIdNum.map(u => u.id)));
                 } else {
                     // 如果没有匹配的用户，返回空结果
-                    return {data: [], total: 0};
+                    return { data: [], total: 0 };
                 }
             }
 
@@ -104,7 +104,7 @@ export const orderRouter = createTRPCRouter({
 
             const buyerIds = orders.map(order => order.buyerId);
             if (buyerIds.length === 0) {
-                return {data: [], total: totalOrdersCount};
+                return { data: [], total: totalOrdersCount };
             }
 
             const users = await ctx.db.select({
@@ -134,7 +134,7 @@ export const orderRouter = createTRPCRouter({
                 user: userMap[subscription.buyerId]
             }));
 
-            return {data: combinedResults, total: totalOrdersCount};
+            return { data: combinedResults, total: totalOrdersCount };
         }),
 
     // 创建订单
@@ -147,31 +147,31 @@ export const orderRouter = createTRPCRouter({
             status: z.boolean(),
             buyerId: z.string(),
         }))
-        .mutation(async ({ctx, input}) => {
+        .mutation(async ({ ctx, input }) => {
             try {
                 // 查询专栏信息
                 const columnData = await ctx.db.query.column
-                    .findFirst({where: eq(column.id, input.columnId)});
-                if (!columnData) return {status: "fail", meg: "没有找到该专栏"}
+                    .findFirst({ where: eq(column.id, input.columnId) });
+                if (!columnData) return { status: "fail", meg: "没有找到该专栏" }
                 // 获取作者钱包
                 const authorWalletData = await ctx.db.query.wallet
-                    .findFirst({where: eq(wallet.userId, columnData.userId!)});
-                if (!authorWalletData) return {status: "fail", meg: "没有找到该作者钱包"}
+                    .findFirst({ where: eq(wallet.userId, columnData.userId!) });
+                if (!authorWalletData) return { status: "fail", meg: "没有找到该作者钱包" }
                 // 获取作者身份，是否是vip
                 const author = await getOneUser(ctx.db, authorWalletData.userId);
-                if (!author) return {status: "fail", meg: "没有找到该作者"}
+                if (!author) return { status: "fail", meg: "没有找到该作者" }
                 const isVip = author.idType === 1;
                 // 查询专栏价目表
                 const priceListData = await ctx.db.query.priceList
-                    .findFirst({where: eq(priceList.id, input.priceListId)});
-                if (!priceListData) return {status: "fail", meg: "没有找到该专栏价目表"}
+                    .findFirst({ where: eq(priceList.id, input.priceListId) });
+                if (!priceListData) return { status: "fail", meg: "没有找到该专栏价目表" }
                 const endDate = addDays(new Date(), priceListData.timeLimit!);
 
                 // 钱包减少，优先扣除冻结金额，如果不够，就从可提现金额里面去扣除剩余的
                 // 先查询购买者冻结金额和可提现金额
                 const buyerWalletData = await ctx.db.query.wallet
-                    .findFirst({where: eq(wallet.userId, input.buyerId)});
-                if (!buyerWalletData) return {status: "fail", meg: "没有找到该购买者钱包"}
+                    .findFirst({ where: eq(wallet.userId, input.buyerId) });
+                if (!buyerWalletData) return { status: "fail", meg: "没有找到该购买者钱包" }
                 // 如果冻结金额大于专栏价格，直接就扣除冻结金额的
                 if (buyerWalletData.freezeIncome! > priceListData.price!) {
                     await ctx.db.update(wallet).set({
@@ -184,7 +184,7 @@ export const orderRouter = createTRPCRouter({
                         amountWithdraw: buyerWalletData.amountWithdraw! + buyerWalletData.freezeIncome! - priceListData.price!,
                     }).where(eq(wallet.userId, input.buyerId))
                 } else {
-                    return {status: "fail", meg: "余额不足"}
+                    return { status: "fail", meg: "余额不足" }
                 }
 
                 // 支出购买专栏
@@ -204,19 +204,19 @@ export const orderRouter = createTRPCRouter({
                     // 推荐人钱包增加
                     // 查找一级分销的人的钱包
                     const firstClassReferrerWalletData = await ctx.db.query.wallet
-                        .findFirst({where: eq(wallet.userId, referrerData.referredUserId)});
-                    if (!firstClassReferrerWalletData) return {status: "fail", meg: "没有找到该推荐人钱包"}
+                        .findFirst({ where: eq(wallet.userId, referrerData.referredUserId) });
+                    if (!firstClassReferrerWalletData) return { status: "fail", meg: "没有找到该推荐人钱包" }
                     // 查看有无二级分销
                     const referralsData = await ctx.db.query.referrals
-                        .findFirst({where: and(eq(referrals.userId, referrerData.referredUserId), eq(referrals.columnId, input.columnId))});
+                        .findFirst({ where: and(eq(referrals.userId, referrerData.referredUserId), eq(referrals.columnId, input.columnId)) });
                     // 获取分销表数据
-                    const distributorshipDetail = getOneDistributorshipDetail(ctx.db, columnData.id);
+                    const distributorshipDetail = await getOneDistributorshipDetail(ctx.db, columnData.id);
                     if (referralsData && distributorshipDetail) {
                         // 有二级分销
                         // 查找二级推荐人的钱包
                         const secondClassReferrerWalletData = await ctx.db.query.wallet
-                            .findFirst({where: eq(wallet.userId, referralsData.userId!)});
-                        if (!secondClassReferrerWalletData) return {status: "fail", meg: "没有找到该二级推荐人钱包"}
+                            .findFirst({ where: eq(wallet.userId, referralsData.userId!) });
+                        if (!secondClassReferrerWalletData) return { status: "fail", meg: "没有找到该二级推荐人钱包" }
                         // 作者拿30%的钱 一级分销拿50% 二级分销拿20%
                         const authorRate = 1 - distributorshipDetail.platDistributorship! - distributorshipDetail.extend!
                             - (isVip ? 0.06 : 0.15);
@@ -356,11 +356,11 @@ export const orderRouter = createTRPCRouter({
         .input(z.object({
             columnId: z.string(),
         }))
-        .query(async ({ctx, input}): Promise<PostDetail> => {
-            const {db} = ctx;
-            const {columnId} = input;
+        .query(async ({ ctx, input }): Promise<PostDetail> => {
+            const { db } = ctx;
+            const { columnId } = input;
             // 获取专栏信息
-            const columnData = await db.query.column.findFirst({where: eq(column.id, columnId)})
+            const columnData = await db.query.column.findFirst({ where: eq(column.id, columnId) })
             // 获取订阅数量
             const subscription = await db.select().from(order)
                 .where(eq(order.columnId, columnId));
@@ -397,7 +397,7 @@ export const orderRouter = createTRPCRouter({
         .input(z.object({
             userId: z.string(),
         }))
-        .query(({ctx, input}) => {
+        .query(({ ctx, input }) => {
             return ctx.db.select().from(order).where(and(eq(order.buyerId, input.userId), eq(order.status, true)));
         }),
 
@@ -408,9 +408,9 @@ export const orderRouter = createTRPCRouter({
             status: z.boolean(),
             columnId: z.string()
         }))
-        .mutation(async ({ctx, input}) => {
+        .mutation(async ({ ctx, input }) => {
             const result = await ctx.db.update(order)
-                .set({status: !input.status})
+                .set({ status: !input.status })
                 .where(and(eq(order.buyerId, input.userId), eq(order.columnId, input.columnId)))
                 .returning({
                     buyerId: order.buyerId,
@@ -427,7 +427,7 @@ export const orderRouter = createTRPCRouter({
             userId: z.string(),
             columnId: z.string(),
         }))
-        .query(async ({ctx, input}) => {
+        .query(async ({ ctx, input }) => {
             // 假设是自己专栏的，就直接返回
             const myColumn = await ctx.db.query.column.findFirst({
                 where: and(eq(column.id, input.columnId), eq(column.userId, input.userId))
@@ -442,8 +442,8 @@ export const orderRouter = createTRPCRouter({
         }),
 
     changeStatus: publicProcedure
-        .input(z.object({columnId: z.string(), isVisible: z.boolean(), userId: z.string()}))
-        .mutation(async ({ctx, input}) => {
+        .input(z.object({ columnId: z.string(), isVisible: z.boolean(), userId: z.string() }))
+        .mutation(async ({ ctx, input }) => {
             const orders = await ctx.db.select().from(order).where(and(eq(order.columnId, input.columnId), eq(order.buyerId, input.userId)));
             if (orders.length === 0) {
                 throw new Error("该columnId在order表中不存在");
@@ -455,9 +455,9 @@ export const orderRouter = createTRPCRouter({
         }),
 
     changeStatusBatch: publicProcedure
-        .input(z.object({orders: z.array(z.object({orderId: z.number(), isVisible: z.boolean()}))}))
-        .mutation(async ({ctx, input}) => {
-            const {db} = ctx;
+        .input(z.object({ orders: z.array(z.object({ orderId: z.number(), isVisible: z.boolean() })) }))
+        .mutation(async ({ ctx, input }) => {
+            const { db } = ctx;
             input.orders.map(async item => {
                 await db.update(order).set({
                     isVisible: item.isVisible,
@@ -466,12 +466,12 @@ export const orderRouter = createTRPCRouter({
         }),
 
     getSubscriptionVolume: publicProcedure
-        .input(z.object({columnId: z.string()}))
-        .query(async ({ctx, input}): Promise<number[]> => {
+        .input(z.object({ columnId: z.string() }))
+        .query(async ({ ctx, input }): Promise<number[]> => {
             const yesterday = getYesterdayMidnight();
             const today = getTodayMidnight();
-            const {lastMonday, lastSunday} = getLastWeekDates();
-            const {firstDayOfLastMonth, lastDayOfLastMonth} = getLastMonthDates();
+            const { lastMonday, lastSunday } = getLastWeekDates();
+            const { firstDayOfLastMonth, lastDayOfLastMonth } = getLastMonthDates();
             const yesterdayData =
                 await ctx.db.select().from(order).where(
                     and(
@@ -497,8 +497,8 @@ export const orderRouter = createTRPCRouter({
         }),
 
     getSubscriptionRateOfIncrease: publicProcedure
-        .input(z.object({columnId: z.string()}))
-        .query(async ({ctx, input}): Promise<number> => {
+        .input(z.object({ columnId: z.string() }))
+        .query(async ({ ctx, input }): Promise<number> => {
             const yesterdayMidnight = getYesterdayMidnight();
             const todayMidnight = getTodayMidnight();
             const now = getCurrentTime();
@@ -527,8 +527,8 @@ export const orderRouter = createTRPCRouter({
         }),
 
     getSubscriptionRange: publicProcedure
-        .input(z.object({columnId: z.string(), start: z.date(), end: z.date()}))
-        .query(async ({ctx, input}): Promise<number[]> => {
+        .input(z.object({ columnId: z.string(), start: z.date(), end: z.date() }))
+        .query(async ({ ctx, input }): Promise<number[]> => {
             // 用于存储每天数据的数组
             let dailyData: number[] = [];
 
@@ -567,8 +567,8 @@ export const orderRouter = createTRPCRouter({
             startDate: z.date().nullable(),
             endDate: z.date().nullable()
         }))
-        .query(async ({ctx, input}): Promise<OrderBuyer[]> => {
-            const {db} = ctx;
+        .query(async ({ ctx, input }): Promise<OrderBuyer[]> => {
+            const { db } = ctx;
 
             // 构建查询条件
             const whereConditions = [
@@ -586,22 +586,22 @@ export const orderRouter = createTRPCRouter({
                     await expireSubscription(db, item.id);
                     item.status = false;
                 }
-                const u = await db.query.user.findFirst({where: eq(user.id, item.buyerId)});
-                return {...item, userName: u.name};
+                const u = await db.query.user.findFirst({ where: eq(user.id, item.buyerId) });
+                return { ...item, userName: u.name };
             })
             return Promise.all(promises);
         }),
 
     endSubscription: publicProcedure
-        .input(z.object({id: z.number()}))
-        .mutation(({ctx, input}) => {
+        .input(z.object({ id: z.number() }))
+        .mutation(({ ctx, input }) => {
             return expireSubscription(ctx.db, input.id)
         }),
 
     getTotalPriceByReferralId: publicProcedure
         .input(z.string())
-        .query(async ({ctx, input}) => {
-            const list = await ctx.db.query.order.findMany({where: eq(order.recommendationId, input)});
+        .query(async ({ ctx, input }) => {
+            const list = await ctx.db.query.order.findMany({ where: eq(order.recommendationId, input) });
             return list.map(item => item.price);
         }),
 });
