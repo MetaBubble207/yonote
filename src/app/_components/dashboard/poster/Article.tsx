@@ -10,10 +10,7 @@ import { Button } from "antd";
 import Loading from "@/app/_components/common/Loading";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 
-const Article = () => {
-  const params = useSearchParams();
-  const chapter = params ? parseInt(params.get("c")) : null;
-  const columnId = params ? params.get("id") : null;
+const Article = ({ chapter, columnId }: { chapter: number, columnId: string }) => {
 
   const { data: postData, isLoading: isPostDataLoading } =
     api.post.getById.useQuery({
