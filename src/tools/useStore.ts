@@ -1,5 +1,5 @@
-"use client"
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 
 function useLocalStorage(key, initialValue) {
   // Create a piece of state to store the current value of the local storage item
@@ -15,7 +15,7 @@ function useLocalStorage(key, initialValue) {
   });
 
   // Return a function that allows the caller to update the value in local storage
-  const setValue = value => {
+  const setValue = (value) => {
     try {
       // Save the value to local storage
       window.localStorage.setItem(key, JSON.stringify(value));
@@ -30,4 +30,4 @@ function useLocalStorage(key, initialValue) {
   return [storedValue, setValue];
 }
 
-export default useLocalStorage
+export default useLocalStorage;
