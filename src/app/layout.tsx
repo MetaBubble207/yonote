@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import { Inter } from "next/font/google";
-import React from "react";
+import React, { Suspense } from "react";
 import { TRPCReactProvider } from "@/trpc/react";
 import "dayjs/locale/zh-cn";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
@@ -29,7 +29,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <AntdRegistry>
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <TRPCReactProvider><Suspense>{children}</Suspense></TRPCReactProvider>
         </AntdRegistry>
       </body>
     </html>

@@ -8,12 +8,13 @@ import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import Image from "next/image";
 import Loading from "@/app/_components/common/Loading";
 
-const Page = () => {
+export default async function Page({ searchParams }: { searchParams: Promise<{ c: string, id: string }> }) {
+  const { c, id } = await searchParams;
   const router = useRouter();
 
   const params = useSearchParams();
-  const chapter = parseInt(params.get("c"));
-  const columnId = params.get("id");
+  const chapter = parseInt(c);
+  const columnId = id;
 
   const [token] = useLocalStorage("token", null);
 
@@ -47,7 +48,7 @@ const Page = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [content, setContent] = useState("");
   const [likeCount, setLikeCount] = useState(0);
-  const [pretitle, setPretitle] = useState(null);
+  const [pretitle, setPretitle] = useState<string>('');
   const [nexttitle, setNexttitle] = useState(null);
   const [isHeartFilled, setIsHeartFilled] = useState(false);
 
@@ -387,8 +388,8 @@ const Page = () => {
                     className="flex flex-col"
                     onClick={
                       prepost?.isFree ||
-                      status ||
-                      columnDetail?.userId === token
+                        status ||
+                        columnDetail?.userId === token
                         ? preLink
                         : alertMessage
                     }
@@ -453,8 +454,8 @@ const Page = () => {
                     className="ml-auto flex flex-col"
                     onClick={
                       nextpost?.isFree ||
-                      status ||
-                      columnDetail?.userId === token
+                        status ||
+                        columnDetail?.userId === token
                         ? nextLink
                         : alertMessage
                     }
@@ -493,4 +494,3 @@ const Page = () => {
     </div>
   );
 };
-export default Page;

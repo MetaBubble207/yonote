@@ -1,6 +1,6 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
-
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { sql } from "drizzle-orm";
 import {
   index,
