@@ -10,7 +10,7 @@ const Find = () => {
         <div className="min-h-screen relative bg-#F5F7FB">
             <div className="w-85.75 m-auto pt-8">
                 {/*搜索框*/}
-                <Link href='/dashboard/find/search-result'><SearchColumn defaultValue={''}></SearchColumn></Link>
+                <Link href='/dashboard/find/search-result'><SearchColumn></SearchColumn></Link>
                 {/*活动中心*/}
                 <div className="text-[#252525]  text-4.5 font-500 lh-6 mt-6 ml-1.5">活动中心</div>
                 <Image src={"/images/subscribe/underline.svg"} alt="underline" width={11} height={4}

@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { message } from 'antd';
 import debounce from 'lodash/debounce';
 
-const SearchColumn = ({ defaultValue }: { defaultValue: string }) => {
+const SearchColumn = ({ defaultValue = "" }: { defaultValue?: string }) => {
     const [messageApi, contextHolder] = message.useMessage();
     const pathname = usePathname();
     const inputRef = useRef<HTMLInputElement>(null);
@@ -39,7 +39,7 @@ const SearchColumn = ({ defaultValue }: { defaultValue: string }) => {
 
     // 使用 debounce 优化输入性能
     const debouncedSetSearchValue = useCallback(
-        debounce((value: string) => setSearchValue(value), 300),
+        debounce((value: string) => setSearchValue(value), 100),
         []
     );
 
