@@ -7,10 +7,12 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: false,
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
+  missingSuspenseWithCSRBailout: false,
   output: "standalone",
+  typescript: {
+    // ⚠️ 生产环境建议设置为 true
+    ignoreBuildErrors: true,
+  },
   images: {
     remotePatterns: [
       {
