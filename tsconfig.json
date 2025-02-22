@@ -1,4 +1,12 @@
 {
+  "types": [
+    "@types/estree",
+    "@types/json-schema",
+    "@types/prop-types",
+    "estree",
+    "json-schema",
+    "prop-types"
+  ],
   "compilerOptions": {
     /* Base Options: */
     "esModuleInterop": true,
