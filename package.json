@@ -21,6 +21,7 @@
     "@trpc/react-query": "^11.0.0-rc.446",
     "@trpc/server": "^11.0.0-rc.446",
     "@types/ali-oss": "^6.16.11",
+    "@types/lodash": "^4.17.15",
     "@unocss/reset": "^0.58.7",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-react": "^1.0.6",
