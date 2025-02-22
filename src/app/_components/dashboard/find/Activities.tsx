@@ -1,27 +1,17 @@
 "use client";
 import Image from "next/image";
-import React, { useState, useEffect, useMemo } from "react";
+import React from "react";
 import { api } from "@/trpc/react";
-import { getCurrentTime } from "@/tools/getCurrentTime";
 import Link from "next/link";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import { Skeleton, Empty } from "antd";
 import withTheme from "@/theme";
+import { inferProcedureOutput } from "@trpc/server";
+import { AppRouter } from "@/server/api/root";
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
+type Activity = inferProcedureOutput<AppRouter["activity"]["getAll"]>[number];
 
-interface Activity {
-  id: string;
-  name: string;
-  introduction: string;
-  cover: string;
-  endDate: string;
-  createdAt: string;
-}
-
-interface ActivityCardProps {
-  item: Activity;
-}
-
-const ActivityCard = ({ item }: ActivityCardProps) => (
+const ActivityCard = ({ item }: { item: Activity }) => (
   <Link href="/dashboard/find/recommend" key={item.id}>
     <div className="h-36.25 border-rd-4 relative mt-4 inline flex w-full bg-white transition-shadow hover:shadow-md">
       <div className="h-31.25 w-80.75 item-center ml-2.5 mt-2.5 inline flex">
@@ -39,7 +29,7 @@ const ActivityCard = ({ item }: ActivityCardProps) => (
               placeholder="blur"
               blurDataURL={DefaultLoadingPicture()}
               src={item.cover ?? DefaultLoadingPicture()}
-              alt={item.name}
+              alt={item.name ?? ""}
               quality={100}
               fill
               loading="lazy"
@@ -83,33 +73,14 @@ const LoadingSkeleton = ({ count = 3 }: SkeletonProps) => (
 
 const Activities = () => {
   const { data: queryData, isLoading, error } = api.activity.getAll.useQuery();
-  const [activities, setActivities] = useState<Activity[]>([]);
-
-  const processedActivities = useMemo(() => {
-    if (!queryData) return [];
-
-    const currentTime = getCurrentTime();
-    return queryData
-      .filter((item) => new Date(item.endDate) > currentTime)
-      .sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      );
-  }, [queryData]);
-
-  useEffect(() => {
-    if (processedActivities.length > 0) {
-      setActivities(processedActivities);
-    }
-  }, [processedActivities]);
 
   if (isLoading) return <LoadingSkeleton />;
   if (error) return <div className="text-red-500">加载失败，请稍后重试</div>;
-  if (!activities.length) return <Empty description="暂无活动" />;
+  if (!queryData?.length) return <Empty description="暂无活动" />;
 
   return (
     <div className="space-y-4">
-      {activities.map((item) => (
+      {queryData.map((item) => (
         <ActivityCard key={item.id} item={item} />
       ))}
     </div>

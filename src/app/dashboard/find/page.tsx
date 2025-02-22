@@ -23,7 +23,7 @@ const Find = () => {
           width={11}
           height={4}
           className="w-2.75 mt-0.75 ml-9 h-1"
-        ></Image>
+        />
         {/*活动列表*/}
         <Activities />
       </div>
@@ -31,11 +31,7 @@ const Find = () => {
       <div className="z-2 fixed bottom-4 w-full justify-center">
         <Navbar />
       </div>
-      <div
-        className={
-          "z-1 text-gray text-3 flex h-40 w-full items-center justify-center"
-        }
-      >
+      <div className={" text-gray text-3 flex min-h-30 pt-5 pb-10 w-full justify-center"}>
         ICP备案号：
         <Link href={"http://beian.miit.gov.cn/ "}> 京ICP备2024064381号-1</Link>
       </div>
