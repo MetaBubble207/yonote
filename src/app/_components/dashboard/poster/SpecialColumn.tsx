@@ -14,15 +14,15 @@ const SpecialColumn = () => {
   const params = useSearchParams();
   const columnId = params.get("id");
   const userId = api.column.getUserId.useQuery({
-    id: columnId,
+    id: columnId!,
   });
 
   const { data: user, isLoading: isUserLoading } = api.users?.getOne.useQuery({
-    id: userId.data,
+    id: userId.data!,
   });
 
   const column = api.column.getColumnDetail.useQuery({
-    columnId: columnId,
+    columnId: columnId!,
   }).data;
 
   //分享的用户数据
@@ -46,7 +46,7 @@ const SpecialColumn = () => {
 
   const { data: orderData, isLoading: isOrderLoading } =
     api.order.getColumnOrder.useQuery({
-      columnId: columnId,
+      columnId: columnId!,
     });
 
   const [columnIntro, setColumnIntro] = useState("");
@@ -75,7 +75,7 @@ const SpecialColumn = () => {
   const handleScreenshotClick = async () => {
     try {
       setScreenshot(true);
-      const dataUrl = await domToPng(png.current, {
+      const dataUrl = await domToPng(png.current!, {
         scale: 2,
         quality: 1,
       });
@@ -153,7 +153,7 @@ const SpecialColumn = () => {
                     订阅
                   </div>
                   <div className="font-D-DIN text-3.5 font-700 lh-6 ml-1 text-[#252525]">
-                    {orderData.detailPostCard.length}
+                    {orderData!.detailPostCard.length}
                   </div>
                   <div className="text-3 font-400 lh-6 ml-1.25 mt-0.5 w-10 text-[#999]">
                     内容
