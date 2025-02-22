@@ -23,7 +23,7 @@ const Article = ({ chapter, columnId }: { chapter: number, columnId: string }) =
   });
 
   const { data: user, isLoading: isUserLoading } = api.users?.getOne.useQuery({
-    id: userId.data,
+    id: userId.data!,
   });
 
   //分享的用户数据
@@ -77,7 +77,7 @@ const Article = ({ chapter, columnId }: { chapter: number, columnId: string }) =
   const handleScreenshotClick = async () => {
     try {
       setScreenshot(true);
-      const dataUrl = await domToPng(png.current, {
+      const dataUrl = await domToPng(png.current!, {
         scale: 2,
         quality: 1,
       });
