@@ -2,14 +2,19 @@ import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {z} from "zod";
 import {distributorshipDetail} from "@/server/db/schema";
 import {eq} from "drizzle-orm";
+import {PostgresJsDatabase} from "drizzle-orm/postgres-js";
+import type * as schema from "@/server/db/schema";
 
+export const getOneDistributorshipDetail = (db: PostgresJsDatabase<typeof schema>, id: string) => {
+    return db.query.distributorshipDetail.findFirst({
+        where: eq(distributorshipDetail.columnId, id)
+    })
+}
 export const distributorshipDetailRouter = createTRPCRouter({
         getOne: publicProcedure
             .input(z.string())
             .query(async ({input, ctx}) => {
-                const res = await ctx.db.query.distributorshipDetail.findFirst({
-                    where: eq(distributorshipDetail.columnId, input)
-                })
+                const res = await getOneDistributorshipDetail(ctx.db, input)
                 if (!res) {
                     return null
                 }

@@ -3,6 +3,17 @@ import {createTRPCRouter, publicProcedure} from "@/server/api/trpc";
 import {and, eq} from "drizzle-orm";
 import {referrals, type SpeedUp} from "@/server/db/schema";
 import {createCaller} from "@/server/api/root";
+import {PostgresJsDatabase} from "drizzle-orm/postgres-js";
+import type * as schema from "@/server/db/schema";
+
+export const getOneByUserIdAndColumnId = (db: PostgresJsDatabase<typeof schema>, id: string, columnId: string) => {
+    return db.query.referrals.findFirst({
+        where: and(
+            eq(referrals.userId, id),
+            eq(referrals.columnId, columnId)
+        )
+    });
+}
 
 export const referralsRouter = createTRPCRouter({
     getByColumnId: publicProcedure
@@ -53,6 +64,6 @@ export const referralsRouter = createTRPCRouter({
     getOneByUserIdAndColumnId: publicProcedure
         .input(z.object({columnId: z.string(), userId: z.string()}))
         .query(({ctx, input}) => {
-            return ctx.db.query.referrals.findFirst({where: and(eq(referrals.userId, input.userId), eq(referrals.columnId, input.columnId))});
+            return getOneByUserIdAndColumnId(ctx.db, input.userId, input.columnId);
         }),
 });

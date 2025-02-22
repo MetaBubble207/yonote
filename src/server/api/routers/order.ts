@@ -21,6 +21,9 @@ import {
 } from "@/tools/getCurrentTime";
 import {type PostgresJsDatabase} from "drizzle-orm/postgres-js";
 import {createCaller} from "@/server/api/root";
+import {getOneUser} from "@/server/api/routers/user";
+import {getOneByUserIdAndColumnId} from "@/server/api/routers/referrals";
+import {getOneDistributorshipDetail} from "@/server/api/routers/distributorshipDetail";
 // 检查该订阅状态是否需要更新，即过期日期已经截止了，但是状态还是true
 const checkSubscriptionStatus = async (db: PostgresJsDatabase<typeof schema>, id: number): Promise<boolean> => {
     const o = await db.query.order.findFirst({
@@ -146,35 +149,39 @@ export const orderRouter = createTRPCRouter({
         }))
         .mutation(async ({ctx, input}) => {
             try {
-                const caller = createCaller(ctx);
                 // 查询专栏信息
                 const columnData = await ctx.db.query.column
                     .findFirst({where: eq(column.id, input.columnId)});
+                if (!columnData) return {status: "fail", meg: "没有找到该专栏"}
                 // 获取作者钱包
                 const authorWalletData = await ctx.db.query.wallet
-                    .findFirst({where: eq(wallet.userId, columnData.userId)});
+                    .findFirst({where: eq(wallet.userId, columnData.userId!)});
+                if (!authorWalletData) return {status: "fail", meg: "没有找到该作者钱包"}
                 // 获取作者身份，是否是vip
-                const author = await caller.users.getOne({id: authorWalletData.userId});
+                const author = await getOneUser(ctx.db, authorWalletData.userId);
+                if (!author) return {status: "fail", meg: "没有找到该作者"}
                 const isVip = author.idType === 1;
                 // 查询专栏价目表
                 const priceListData = await ctx.db.query.priceList
                     .findFirst({where: eq(priceList.id, input.priceListId)});
-                const endDate = addDays(new Date(), priceListData.timeLimit);
+                if (!priceListData) return {status: "fail", meg: "没有找到该专栏价目表"}
+                const endDate = addDays(new Date(), priceListData.timeLimit!);
 
                 // 钱包减少，优先扣除冻结金额，如果不够，就从可提现金额里面去扣除剩余的
                 // 先查询购买者冻结金额和可提现金额
                 const buyerWalletData = await ctx.db.query.wallet
                     .findFirst({where: eq(wallet.userId, input.buyerId)});
+                if (!buyerWalletData) return {status: "fail", meg: "没有找到该购买者钱包"}
                 // 如果冻结金额大于专栏价格，直接就扣除冻结金额的
-                if (buyerWalletData.freezeIncome > priceListData.price) {
+                if (buyerWalletData.freezeIncome! > priceListData.price!) {
                     await ctx.db.update(wallet).set({
-                        freezeIncome: buyerWalletData.freezeIncome - priceListData.price,
+                        freezeIncome: buyerWalletData.freezeIncome! - priceListData.price!,
                     }).where(eq(wallet.userId, input.buyerId));
 
-                } else if (buyerWalletData.freezeIncome + buyerWalletData.amountWithdraw > priceListData.price) {
+                } else if (buyerWalletData.freezeIncome! + buyerWalletData.amountWithdraw! > priceListData.price!) {
                     await ctx.db.update(wallet).set({
                         freezeIncome: 0,
-                        amountWithdraw: buyerWalletData.amountWithdraw + buyerWalletData.freezeIncome - priceListData.price,
+                        amountWithdraw: buyerWalletData.amountWithdraw! + buyerWalletData.freezeIncome! - priceListData.price!,
                     }).where(eq(wallet.userId, input.buyerId))
                 } else {
                     return {status: "fail", meg: "余额不足"}
@@ -190,42 +197,42 @@ export const orderRouter = createTRPCRouter({
                     }
                 )
                 // 查找有没有推荐人
-                const referrerData = await caller.referrals.getOneByUserIdAndColumnId({
-                    columnId: input.columnId,
-                    userId: input.buyerId
-                });
+                const referrerData = await getOneByUserIdAndColumnId(ctx.db, input.columnId, input.buyerId);
+
                 // 推荐表新增推荐人
-                if (referrerData.referredUserId) {
+                if (referrerData?.referredUserId) {
                     // 推荐人钱包增加
                     // 查找一级分销的人的钱包
                     const firstClassReferrerWalletData = await ctx.db.query.wallet
                         .findFirst({where: eq(wallet.userId, referrerData.referredUserId)});
+                    if (!firstClassReferrerWalletData) return {status: "fail", meg: "没有找到该推荐人钱包"}
                     // 查看有无二级分销
                     const referralsData = await ctx.db.query.referrals
                         .findFirst({where: and(eq(referrals.userId, referrerData.referredUserId), eq(referrals.columnId, input.columnId))});
                     // 获取分销表数据
-                    const distributorshipDetail = await caller.distributorshipDetail.getOne(columnData.id);
-                    if (referralsData) {
+                    const distributorshipDetail = getOneDistributorshipDetail(ctx.db, columnData.id);
+                    if (referralsData && distributorshipDetail) {
                         // 有二级分销
                         // 查找二级推荐人的钱包
                         const secondClassReferrerWalletData = await ctx.db.query.wallet
-                            .findFirst({where: eq(wallet.userId, referralsData.userId)});
+                            .findFirst({where: eq(wallet.userId, referralsData.userId!)});
+                        if (!secondClassReferrerWalletData) return {status: "fail", meg: "没有找到该二级推荐人钱包"}
                         // 作者拿30%的钱 一级分销拿50% 二级分销拿20%
-                        const authorRate = 1 - distributorshipDetail.platDistributorship - distributorshipDetail.extend
+                        const authorRate = 1 - distributorshipDetail.platDistributorship! - distributorshipDetail.extend!
                             - (isVip ? 0.06 : 0.15);
                         const income = {
-                            author: priceListData.price * authorRate,
-                            firstClassReferrer: priceListData.price * distributorshipDetail.platDistributorship,
-                            secondClassReferrer: priceListData.price * distributorshipDetail.extend
+                            author: priceListData.price! * authorRate,
+                            firstClassReferrer: priceListData.price! * distributorshipDetail.platDistributorship!,
+                            secondClassReferrer: priceListData.price! * distributorshipDetail.extend!
                         };
                         await ctx.db.update(wallet).set({
-                            freezeIncome: authorWalletData.freezeIncome + income.author
-                        }).where(eq(wallet.userId, columnData.userId))
+                            freezeIncome: authorWalletData.freezeIncome! + income.author
+                        }).where(eq(wallet.userId, columnData.userId!))
                         await ctx.db.update(wallet).set({
-                            freezeIncome: firstClassReferrerWalletData.freezeIncome + income.firstClassReferrer,
+                            freezeIncome: firstClassReferrerWalletData.freezeIncome! + income.firstClassReferrer,
                         }).where(eq(wallet.userId, firstClassReferrerWalletData.userId))
                         await ctx.db.update(wallet).set({
-                            freezeIncome: secondClassReferrerWalletData.freezeIncome + income.secondClassReferrer,
+                            freezeIncome: secondClassReferrerWalletData.freezeIncome! + income.secondClassReferrer,
                         }).where(eq(wallet.userId, secondClassReferrerWalletData.userId))
 
                         // 作者收入
@@ -272,14 +279,14 @@ export const orderRouter = createTRPCRouter({
                         // 作者和一级分销拿钱
                         const authorRate = 1 - distributorshipDetail.platDistributorship - (isVip ? 0.06 : 0.15);
                         const income = {
-                            author: priceListData.price * authorRate,
-                            firstClassReferrer: priceListData.price * distributorshipDetail.platDistributorship,
+                            author: priceListData.price! * authorRate,
+                            firstClassReferrer: priceListData.price! * distributorshipDetail.platDistributorship,
                         };
                         await ctx.db.update(wallet).set({
-                            freezeIncome: authorWalletData.freezeIncome + income.author
-                        }).where(eq(wallet.userId, columnData.userId));
+                            freezeIncome: authorWalletData.freezeIncome! + income.author
+                        }).where(eq(wallet.userId, columnData.userId!));
                         await ctx.db.update(wallet).set({
-                            freezeIncome: firstClassReferrerWalletData.freezeIncome + income.firstClassReferrer
+                            freezeIncome: firstClassReferrerWalletData.freezeIncome! + income.firstClassReferrer
                         }).where(eq(wallet.userId, firstClassReferrerWalletData.userId));
 
                         // 作者收入
@@ -316,8 +323,8 @@ export const orderRouter = createTRPCRouter({
                     // 没有人推荐，单独购买
                     // 只有作者拿钱
                     await ctx.db.update(wallet).set({
-                        freezeIncome: authorWalletData.freezeIncome + priceListData.price * (1 - (isVip ? 0.06 : 0.15))
-                    }).where(eq(wallet.userId, columnData.userId));
+                        freezeIncome: authorWalletData.freezeIncome! + priceListData.price! * (1 - (isVip ? 0.06 : 0.15))
+                    }).where(eq(wallet.userId, columnData.userId!));
                     // 作者收入
                     await ctx.db.insert(runningWater).values(
                         {

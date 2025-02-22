@@ -5,19 +5,23 @@ import {eq} from "drizzle-orm";
 import {getCurrentTime} from "@/tools/getCurrentTime";
 import * as process from "process";
 import {getSoleId} from "@/tools/getSoleId";
+import type {PostgresJsDatabase} from "drizzle-orm/postgres-js";
+import type * as schema from "@/server/db/schema";
 
+export const getOneUser = async (db: PostgresJsDatabase<typeof schema>, id: string) => {
+    if (id === "") return null
+    const data = await db.query.user.findFirst({where: eq(user.id, id)})
+    if (data) {
+        return data;
+    } else {
+        return null;
+    }
+}
 export const userRouter = createTRPCRouter({
     getOne: publicProcedure
         .input(z.object({id: z.string()}))
         .query(async ({ctx, input}) => {
-            if (input.id === "") return null
-            const data = await ctx.db.query.user.findFirst({where: eq(user.id, input.id)})
-            console.log("data ", data)
-            if (data) {
-                return data;
-            } else {
-                return null;
-            }
+            return getOneUser(ctx.db, input.id)
         }),
 
     login: publicProcedure
