@@ -91,7 +91,7 @@ const SubscribeManage = () => {
         />
         <button
           onClick={handleDrawerOpen}
-          className="text-2.5 lh-6 ml-0.5 text-[#B5B5B5]"
+          className="text-2.5 lh-6 ml-0.5 text-[#B5B5B5] bg-transparent"
         >
           订阅管理
         </button>

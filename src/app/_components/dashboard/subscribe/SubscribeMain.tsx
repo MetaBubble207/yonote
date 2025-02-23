@@ -1,10 +1,12 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import SubscribeManage from "./SubscribeManage";
 import UserUpdate from "./UserUpdate";
 import UserColumn from "./UserColumn";
 import UserCourse from "./UserCourse";
+import { useRouter } from "next/navigation";
+import useCheckOnClient from "@/app/_hooks/useCheckOnClient";
 
 interface TabItem {
   id: 1 | 2 | 3;
@@ -15,11 +17,20 @@ const TABS: TabItem[] = [
   { id: 1, label: "更新" },
   { id: 2, label: "专栏" },
   { id: 3, label: "小课" },
-];
+] as const;
 
 const SubscribeMain = () => {
+  const router = useRouter();
+  const mounted = useCheckOnClient();
   const [token] = useLocalStorage("token", null);
+
   const [currentPage, setCurrentPage] = useState<TabItem["id"]>(1);
+
+  useEffect(() => {
+    if (!token) {
+      router.push('/login');
+    }
+  }, [token, router]);
 
   const TabButton = useMemo(() => {
     return ({ button }: { button: TabItem }) => {
@@ -42,6 +53,8 @@ const SubscribeMain = () => {
   }, [currentPage]);
 
   const renderContent = () => {
+    if (!mounted) return null;
+
     switch (currentPage) {
       case 1:
         return <UserUpdate token={token} />;
@@ -54,6 +67,8 @@ const SubscribeMain = () => {
     }
   };
 
+  if (!mounted) return null;
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -62,7 +77,6 @@ const SubscribeMain = () => {
             <TabButton key={button.id} button={button} />
           ))}
         </div>
-        {/* 订阅管理 */}
         <SubscribeManage />
       </div>
       <div className="mt-3.5">{renderContent()}</div>
