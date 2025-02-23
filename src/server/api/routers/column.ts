@@ -333,71 +333,56 @@ export const columnRouter = createTRPCRouter({
 
   // 获取用户更新了帖子还未读的专栏列表
   getUpdateColumn: publicProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.string())
     .query(async ({ ctx, input }): Promise<DetailColumnCard[]> => {
       const { db } = ctx;
-      // 获取该用户所有订阅记录
+
+      // 获取用户有效订阅的专栏
       const orders = await db
         .select()
         .from(order)
-        .where(
-          and(
-            eq(order.buyerId, input.userId),
-            eq(order.isVisible, true),
-            eq(order.status, true),
-          ),
-        );
-      const res: DetailColumnCard[] = [];
-      // 查看所有的订阅专栏的帖子
-      const ordersPromises = orders.map(async (order) => {
-        const postsData = await db
-          .select()
-          .from(post)
-          .where(eq(post.columnId, order.columnId));
+        .where(and(
+          eq(order.buyerId, input),
+          eq(order.isVisible, true),
+          eq(order.status, true),
+        ));
 
-        return Promise.all(
-          postsData.map(async (post) => {
-            // 查看阅读表数据
-            const readData = await db.query.postRead.findFirst({
-              where: and(
-                eq(postRead.postId, post.id),
-                eq(postRead.userId, input.userId),
-              ),
-            });
+      if (!orders.length) return [];
 
-            // 情况1，读者从来没看过文章
-            if (!readData) {
-              const detailColumnCard = await getDetailColumnCard(
-                ctx,
-                order.columnId,
-              );
-              const isExist = res.find(
-                (item) => item.id === detailColumnCard.id,
-              );
-              if (!isExist) {
-                res.push(detailColumnCard);
-              }
-            }
-            // 阅读记录的更新时间小于文章的更新时间则说明文章更新了，读者还没读
-            if (readData?.updatedAt < post.updatedAt) {
-              const detailColumnCard = await getDetailColumnCard(
-                ctx,
-                order.columnId,
-              );
-              const isExist = res.find(
-                (item) => item.id === detailColumnCard.id,
-              );
-              if (!isExist) {
-                res.push(detailColumnCard);
-              }
-            }
-          }),
-        );
-      });
+      const columnIds = new Set(orders.map(order => order.columnId));
+      const result = new Map<string, DetailColumnCard>();
 
-      await Promise.all(ordersPromises);
+      // 批量获取所有相关文章
+      const posts = await db
+        .select()
+        .from(post)
+        .where(sql`${post.columnId} IN ${Array.from(columnIds)}`);
 
-      return res;
+      if (!posts.length) return [];
+
+      // 批量获取阅读记录
+      const readRecords = await db
+        .select()
+        .from(postRead)
+        .where(and(
+          eq(postRead.userId, input),
+          sql`${postRead.postId} IN ${posts.map(p => p.id)}`
+        ));
+
+      const readMap = new Map(readRecords.map(r => [r.postId, r]));
+
+      // 检查每篇文章的更新状态
+      for (const post of posts) {
+        const readRecord = readMap.get(post.id);
+        const needsUpdate = !readRecord || readRecord.updatedAt! < post.updatedAt!;
+
+        if (needsUpdate && !result.has(post.columnId!)) {
+          const detailColumnCard = await getDetailColumnCard(ctx, post.columnId!);
+          result.set(post.columnId!, detailColumnCard);
+        }
+      }
+
+      return Array.from(result.values());
     }),
 
   // 获取用户所有可见订阅专栏列表

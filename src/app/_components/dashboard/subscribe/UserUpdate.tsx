@@ -6,7 +6,7 @@ import SubscribeRenew from "./SubscribeRenew";
 
 export default function UserUpdate({ token }: { token: string }) {
     const { data: updateColumnData, isLoading } = api.column.getUpdateColumn.useQuery(
-        { userId: token },
+        token,
         { enabled: Boolean(token) }  // 只有在有 token 时才发起请求
     );
 
