@@ -1,12 +1,12 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import SubscribeManage from "./SubscribeManage";
 import UserUpdate from "./UserUpdate";
 import UserColumn from "./UserColumn";
 import UserCourse from "./UserCourse";
-import { useRouter } from "next/navigation";
 import useCheckOnClient from "@/app/_hooks/useCheckOnClient";
+import useCheckLoginState from "@/app/_hooks/useCheckLoginState";
 
 interface TabItem {
   id: 1 | 2 | 3;
@@ -20,17 +20,11 @@ const TABS: TabItem[] = [
 ] as const;
 
 const SubscribeMain = () => {
-  const router = useRouter();
   const mounted = useCheckOnClient();
+  useCheckLoginState('login');
   const [token] = useLocalStorage("token", null);
 
   const [currentPage, setCurrentPage] = useState<TabItem["id"]>(1);
-
-  useEffect(() => {
-    if (!token) {
-      router.push('/login');
-    }
-  }, [token, router]);
 
   const TabButton = useMemo(() => {
     return ({ button }: { button: TabItem }) => {
