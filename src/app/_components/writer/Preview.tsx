@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css
 import { api } from "@/trpc/react";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 
 interface PreviewProps {
   title: string;

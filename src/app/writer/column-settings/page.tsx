@@ -42,7 +42,7 @@ function Table() {
   const params = useSearchParams();
   const columnId = params.get("columnId");
   const columnData = api.column.getColumnDetail.useQuery(
-    { columnId: columnId },
+    columnId,
     { enabled: !!columnId },
   ).data;
   const priceListData = api.priceList.getByColumnId
@@ -428,7 +428,7 @@ function Cover() {
   const params = useSearchParams();
   const columnId = params.get("columnId");
   const columnData = api.column.getColumnDetail.useQuery(
-    { columnId: columnId },
+    columnId,
     { enabled: !!columnId },
   ).data;
   const [cover, setCover] = useState(columnData?.cover);

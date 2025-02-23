@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { api } from "@/trpc/react";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { useSearchParams } from "next/navigation";
 import { Button, message, Modal } from "antd";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
@@ -17,7 +17,7 @@ const Reserved = ({ onClose, check }) => {
   const [token] = useLocalStorage("token", null);
   const columnUserId = api.column.getUserId.useQuery({ id: columnId });
   const { data: column, isLoading: isColumnLoading } =
-    api.column.getColumnDetail.useQuery({ columnId: columnId });
+    api.column.getColumnDetail.useQuery(columnId);
   const priceListData = api.priceList.getByColumnId
     .useQuery({ columnId: columnId }, { enabled: !!columnId })
     .data?.sort((a, b) => a.id - b.id);

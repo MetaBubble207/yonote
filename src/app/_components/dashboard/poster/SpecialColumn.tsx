@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { api } from "@/trpc/react";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import React, { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode.react";
 import { domToPng } from "modern-screenshot";
@@ -21,9 +21,7 @@ const SpecialColumn = () => {
     id: userId.data!,
   });
 
-  const column = api.column.getColumnDetail.useQuery({
-    columnId: columnId!,
-  }).data;
+  const column = api.column.getColumnDetail.useQuery(columnId!).data;
 
   //分享的用户数据
   let userInfo;

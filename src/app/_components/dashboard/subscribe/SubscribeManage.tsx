@@ -1,100 +1,111 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import ManagementColumn from "./ManagementColumn";
 import ManagementClass from "./ManagementClass";
 import Image from "next/image";
 import { Button, Drawer } from "antd";
 
+interface TabConfig {
+  id: 1 | 2;
+  label: string;
+}
+
+const TABS: TabConfig[] = [
+  { id: 1, label: "专栏" },
+  { id: 2, label: "小课" },
+] as const;
+
+const DRAWER_HEIGHT = 494;
+const ACTIVE_BG_COLOR = "rgba(69,225,184,0.20)";
+const ACTIVE_TEXT_COLOR = "#1DB48D";
+const INACTIVE_BG_COLOR = "#F5F7FB";
+const INACTIVE_TEXT_COLOR = "#999999";
+
 const SubscribeManage = () => {
   const [open, setOpen] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<TabConfig["id"]>(1);
+  const [isManaging, setIsManaging] = useState(false);
+  const columnRef = useRef<{ handleSave: () => void } | null>(null);
 
-  const showDrawer = () => {
-    setOpen(true);
-  };
+  const handleDrawerOpen = useCallback(() => setOpen(true), []);
+  const handleDrawerClose = useCallback(() => setOpen(false), []);
 
-  const onClose = () => {
-    setOpen(false);
-  };
+  const handleManage = useCallback(() => {
+    if (columnRef.current && isManaging) {
+      columnRef.current.handleSave();
+      setOpen(false);
+    }
+    setIsManaging(!isManaging);
+  }, [isManaging]);
 
-  const Panel = () => {
-    const saveColumn = useRef(null);
-    const [manage, setManage] = useState(false);
+  const handleTabChange = useCallback((tabId: TabConfig["id"]) => {
+    setSelectedTab(tabId);
+  }, []);
 
-    const handleManage = () => {
-      if (saveColumn.current && manage == true) {
-        saveColumn.current.handleSave();
-        setOpen(false);
-      }
-      setManage(!manage);
-    };
-
-    const [selectedButton, setSelectedButton] = useState(1); // 追踪选中的按钮
-    const handleButtonClick = (button: number) => {
-      if (selectedButton !== button) {
-        setSelectedButton(button);
-      }
-    };
+  const TabButton = ({ tab }: { tab: TabConfig }) => {
+    const isActive = selectedTab === tab.id;
     return (
-      <Drawer
-        placement={"bottom"}
-        closable={true}
-        onClose={onClose}
-        open={open}
-        key={"bottom"}
-        height={494}
-        style={{ borderRadius: "20px" }}
+      <button
+        className={`w-17 rounded-4px h-6 ${isActive
+          ? `bg-[${ACTIVE_BG_COLOR}] text-[${ACTIVE_TEXT_COLOR}]`
+          : `bg-[${INACTIVE_BG_COLOR}] text-[${INACTIVE_TEXT_COLOR}]`
+          } ${tab.id === 2 ? 'ml-6' : ''}`}
+        onClick={() => handleTabChange(tab.id)}
       >
-        <h2 className="text-3.5 font-500 lh-6 text-[#252525]">订阅管理</h2>
-        <div className="mb-4.5 mr-4 mt-9 flex justify-between">
-          <div className="font-400 lh-6 flex justify-center">
-            <button
-              className={`w-17 rounded-4px h-6 ${selectedButton === 1 ? "bg-[rgba(69,225,184,0.20)] text-[#1DB48D]" : "color-#999999 bg-#F5F7FB"}`}
-              onClick={() => handleButtonClick(1)}
-            >
-              专栏
-            </button>
-            <button
-              className={`w-17 rounded-4px ml-6 h-6 ${selectedButton === 2 ? "bg-[rgba(69,225,184,0.20)] text-[#1DB48D]" : "color-#999999 bg-#F5F7FB"}`}
-              onClick={() => handleButtonClick(2)}
-            >
-              小课
-            </button>
-          </div>
-          <Button
-            type={"link"}
-            size={"small"}
-            onClick={handleManage}
-            style={{ color: "#1DB48D" }}
-          >
-            {manage ? "保存" : "管理"}
-          </Button>
-        </div>
-        {selectedButton === 1 && (
-          <ManagementColumn manage={manage} ref={saveColumn} />
-        )}
-        {selectedButton === 2 && <ManagementClass manage={manage} />}
-      </Drawer>
+        {tab.label}
+      </button>
     );
   };
+
+  const DrawerContent = () => (
+    <>
+      <h2 className="text-3.5 font-500 lh-6 text-[#252525]">订阅管理</h2>
+      <div className="mb-4.5 mr-4 mt-9 flex justify-between">
+        <div className="font-400 lh-6 flex justify-center">
+          {TABS.map(tab => (
+            <TabButton key={tab.id} tab={tab} />
+          ))}
+        </div>
+        <button
+          onClick={handleManage}
+          className={`text-${ACTIVE_TEXT_COLOR} text-3 font-500 bg-transparent border-none`}
+        >
+          {isManaging ? "保存" : "管理"}
+        </button>
+      </div>
+      {selectedTab === 1 && (
+        <ManagementColumn manage={isManaging} ref={columnRef} />
+      )}
+      {selectedTab === 2 && <ManagementClass manage={isManaging} />}
+    </>
+  );
+
   return (
     <div>
-      <div className={"flex items-center"}>
+      <div className="flex items-center">
         <Image
-          src={"/images/subscribe/manage.svg"}
+          src="/images/subscribe/manage.svg"
           width={12}
           height={12}
           alt="manage"
-          className={"pt-0.5"}
+          className="pt-0.5"
         />
-        <Button
-          type={"link"}
-          size={"small"}
-          onClick={showDrawer}
+        <button
+          onClick={handleDrawerOpen}
           className="text-2.5 lh-6 ml-0.5 text-[#B5B5B5]"
         >
           订阅管理
-        </Button>
+        </button>
       </div>
-      <Panel />
+      <Drawer
+        placement="bottom"
+        closable
+        onClose={handleDrawerClose}
+        open={open}
+        height={DRAWER_HEIGHT}
+        style={{ borderRadius: "20px" }}
+      >
+        <DrawerContent />
+      </Drawer>
     </div>
   );
 };

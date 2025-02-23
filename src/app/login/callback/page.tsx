@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { api } from "@/trpc/react";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import Loading from "@/app/_components/common/Loading";
 
 const LoginCallback = () => {

@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
 import Link from "next/link";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import React, { useEffect, useState } from "react";
 import { api } from "@/trpc/react";
 import { Button, Skeleton } from "antd";
@@ -268,9 +268,9 @@ const User = function User() {
               currentPage === button.id
                 ? { color: "#252525", padding: 0 }
                 : {
-                    color: "#B5B5B5",
-                    padding: 0,
-                  }
+                  color: "#B5B5B5",
+                  padding: 0,
+                }
             }
             onClick={() => setCurrentPage(button.id)}
           >

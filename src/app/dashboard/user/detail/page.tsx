@@ -3,7 +3,7 @@ import { api } from "@/trpc/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense } from "react";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import DisplayDetailed from "@/app/_components/dashboard/user/DisplayDetailed";
 import Loading from "@/app/_components/common/Loading";
 import Error from "@/app/_components/common/Error";

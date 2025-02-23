@@ -115,7 +115,7 @@ export const columnRouter = createTRPCRouter({
           (sortedOldPriceList?.[index]?.price !==
             input.priceList[index].price ||
             sortedOldPriceList?.[index]?.timeLimit !==
-              input.priceList[index].timeLimit)
+            input.priceList[index].timeLimit)
         ) {
           await ctx.db
             .update(priceList)
@@ -298,12 +298,12 @@ export const columnRouter = createTRPCRouter({
     }),
 
   getColumnDetail: publicProcedure
-    .input(z.object({ columnId: z.string() }))
+    .input(z.string())
     .query(async ({ ctx, input }) => {
       const columnDetail = await ctx.db
         .select()
         .from(column)
-        .where(and(eq(column.id, input.columnId)));
+        .where(and(eq(column.id, input)));
       return columnDetail[0];
     }),
 

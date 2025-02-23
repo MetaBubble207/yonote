@@ -8,9 +8,7 @@ import NoData from "@/app/_components/common/NoData";
 const SpecialColumnIntroduce = () => {
   const params = useSearchParams();
   const columnId = params.get("id");
-  const { data: column, isLoading } = api.column.getColumnDetail.useQuery({
-    columnId: columnId,
-  });
+  const { data: column, isLoading } = api.column.getColumnDetail.useQuery(columnId);
 
   if (isLoading)
     return (

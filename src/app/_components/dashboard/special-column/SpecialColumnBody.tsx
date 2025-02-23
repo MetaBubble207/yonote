@@ -5,7 +5,7 @@ import SpecialColumnIntroduce from "@/app/_components/dashboard/special-column/S
 import { api } from "@/trpc/react";
 import Reserved from "@/app/_components/dialog/Reserved";
 import { useRouter, useSearchParams } from "next/navigation";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { Button, message } from "antd";
 import SpecialColumnList from "@/app/_components/dashboard/special-column/SpecialColumnList";
 import Loading from "@/app/_components/common/Loading";
@@ -69,7 +69,7 @@ const SpecialColumnBody = () => {
 
   const router = useRouter();
 
-  const search = () => {};
+  const search = () => { };
   if (isLoading)
     return (
       <div className={"mt-50"}>

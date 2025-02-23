@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { api } from "@/trpc/react";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import QRCode from "qrcode.react";
 import { domToPng } from "modern-screenshot";
 import { Button } from "antd";

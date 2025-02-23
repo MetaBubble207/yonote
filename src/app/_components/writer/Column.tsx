@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import ColumnPopup from "./ColumnPopup";
 import { api } from "@/trpc/react";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { useSearchParams } from "next/navigation";
 import Loading from "@/app/_components/common/Loading";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
@@ -18,9 +18,7 @@ interface ColumnData {
 const Column = () => {
   const params = useSearchParams();
   const columnId = params.get("columnId");
-  let currentColumn = api.column.getColumnDetail.useQuery({
-    columnId: columnId,
-  }).data;
+  let currentColumn = api.column.getColumnDetail.useQuery(columnId).data;
   const [currentImage, setCurrentImage] = useState<string>(
     currentColumn?.cover,
   );

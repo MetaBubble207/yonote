@@ -2,7 +2,7 @@
 import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { time2DateString } from "@/tools/timeToString";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import Image from "next/image";
@@ -66,9 +66,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
     postId: postId,
   }).data;
 
-  const columnDetail = api.column.getColumnDetail.useQuery({
-    columnId: columnId,
-  }).data;
+  const columnDetail = api.column.getColumnDetail.useQuery(columnId).data;
 
   const status = api.order.getUserStatus.useQuery({
     userId: token,

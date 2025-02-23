@@ -16,7 +16,7 @@ import { throttle } from "lodash";
 import { api } from "@/trpc/react";
 import { useSearchParams } from "next/navigation";
 import Loading from "@/app/_components/common/Loading";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import TableComponent from "@/app/_components/writer/speed-up/TableComponent";
 
 const distributionConfig: SliderSingleProps["marks"] = {
@@ -74,7 +74,7 @@ const Page = () => {
 
   const updateDistributorshipDetail =
     api.distributorshipDetail.update.useMutation({
-      onSuccess: (r) => {},
+      onSuccess: (r) => { },
     });
   // 防抖函数，用于更新数据库
   const debouncedUpdate = useCallback(

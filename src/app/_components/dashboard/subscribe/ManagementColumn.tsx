@@ -7,7 +7,7 @@ import React, {
   useImperativeHandle,
   useState,
 } from "react";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { api } from "@/trpc/react";
 
 // eslint-disable-next-line react/display-name

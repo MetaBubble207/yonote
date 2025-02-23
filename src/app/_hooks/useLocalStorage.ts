@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-function useLocalStorage(key, initialValue) {
+function useLocalStorage(key: string, initialValue: unknown) {
   // Create a piece of state to store the current value of the local storage item
   const [storedValue, setStoredValue] = useState(() => {
     try {
@@ -15,7 +15,7 @@ function useLocalStorage(key, initialValue) {
   });
 
   // Return a function that allows the caller to update the value in local storage
-  const setValue = (value) => {
+  const setValue = (value: unknown) => {
     try {
       // Save the value to local storage
       window.localStorage.setItem(key, JSON.stringify(value));

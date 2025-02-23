@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { api } from "@/trpc/react";
 import Loading from "../../../_components/common/Loading";
-import useLocalStorage from "@/tools/useStore";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { time2DateTimeStringMinutes } from "@/tools/timeToString";
 import { message, Modal } from "antd";
 import withTheme from "@/theme";
