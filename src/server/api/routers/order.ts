@@ -793,4 +793,30 @@ export const orderRouter = createTRPCRouter({
       });
       return list.map((item) => item.price);
     }),
+
+  // 批量更新订单可视状态(前端订阅管理部分使用)
+  updateOrderVisible: publicProcedure
+    .input(z.array(z.object({
+      userId: z.string(),
+      columnId: z.string(),
+      isVisible: z.boolean()
+    })))
+    .mutation(async ({ ctx, input }) => {
+      const { db } = ctx;
+
+      // 批量处理所有更新操作
+      const updatePromises = input.map(async (item) => {
+        return db
+          .update(order)
+          .set({ isVisible: item.isVisible })
+          .where(and(
+            eq(order.buyerId, item.userId),
+            eq(order.columnId, item.columnId),
+          ));
+      });
+
+      // 并行执行所有更新操作
+      await Promise.all(updatePromises);
+      return { success: true };
+    }),
 });

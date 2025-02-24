@@ -27,7 +27,7 @@ const SubscribeMain = () => {
   const [currentPage, setCurrentPage] = useState<TabItem["id"]>(1);
 
   const TabButton = useMemo(() => {
-    return ({ button }: { button: TabItem }) => {
+    const TabButtonComponent = ({ button }: { button: TabItem }) => {
       const isActive = currentPage === button.id;
       return (
         <button
@@ -44,6 +44,8 @@ const SubscribeMain = () => {
         </button>
       );
     };
+    TabButtonComponent.displayName = 'TabButton';
+    return TabButtonComponent;
   }, [currentPage]);
 
   const renderContent = () => {

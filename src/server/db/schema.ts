@@ -302,8 +302,24 @@ export type BaseColumnCard = {
   userName: string;
   idType: number;
   avatar: string;
+  isVisible: boolean;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type BaseColumnCardDateString = {
+  id: string;
+  name: string;
+  introduce?: string;
+  description?: string;
+  cover: string;
+  userId: string;
+  userName: string;
+  idType: number;
+  avatar: string;
+  isVisible: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type DetailColumnCard = BaseColumnCard & {

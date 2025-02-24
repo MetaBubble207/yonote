@@ -1,8 +1,8 @@
-import { BaseColumnCard } from "@/server/db/schema";
+import { BaseColumnCardDateString } from "@/server/db/schema";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "./store";
 interface UserSubscribeState {
-    subscribeColumnList: BaseColumnCard[]
+    subscribeColumnList: BaseColumnCardDateString[]
 }
 
 export const userSubscribeSlice = createSlice({
@@ -11,13 +11,21 @@ export const userSubscribeSlice = createSlice({
         subscribeColumnList: []
     } as UserSubscribeState,
     reducers: {
-        setSubscribeColumnList: (state, action: PayloadAction<BaseColumnCard[]>) => {
+        setSubscribeColumnList: (state, action: PayloadAction<BaseColumnCardDateString[]>) => {
             state.subscribeColumnList = action.payload
         },
+        updateSubscribeColumnList: (state, action: PayloadAction<BaseColumnCardDateString>) => {
+            state.subscribeColumnList = state.subscribeColumnList.map((item) => {
+                if (item.id === action.payload.id) {
+                    return action.payload
+                }
+                return item
+            })
+        }
     }
 })
 
-export const { setSubscribeColumnList } = userSubscribeSlice.actions;
+export const { setSubscribeColumnList, updateSubscribeColumnList } = userSubscribeSlice.actions;
 
 export const userSubscribeSelector = (state: RootState) => state.userSubscribe;
 export default userSubscribeSlice.reducer;

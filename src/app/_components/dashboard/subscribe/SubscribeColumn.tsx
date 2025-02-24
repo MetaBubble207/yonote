@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { time2DateString } from "@/tools/timeToString";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
-import { type BaseColumnCard } from "@/server/db/schema";
+import { BaseColumnCardDateString } from "@/server/db/schema";
 
-const SubscribeColumn = ({ column }: { column: BaseColumnCard }) => {
+const SubscribeColumn = ({ column }: { column: BaseColumnCardDateString }) => {
   return (
     <div className="h-29.25 mt-4 flex">
       <div className="h-18 relative">

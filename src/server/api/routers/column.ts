@@ -392,19 +392,22 @@ export const columnRouter = createTRPCRouter({
       const { db } = ctx;
       const caller = createCaller(ctx);
 
-      // 获取所有有效订阅记录
+      // 获取所有有效订阅记录，增加 isVisible 字段
       const orders = await db
         .select({
-          columnId: order.columnId
+          columnId: order.columnId,
+          isVisible: order.isVisible
         })
         .from(order)
         .where(and(
           eq(order.buyerId, input),
-          eq(order.isVisible, true),
           eq(order.status, true),
         ));
 
       if (!orders.length) return [];
+
+      // 创建订阅记录映射，用于后续获取 isVisible
+      const orderMap = new Map(orders.map(o => [o.columnId, o.isVisible]));
 
       // 批量获取专栏数据
       const columns = await db.query.column.findMany({
@@ -416,21 +419,24 @@ export const columnRouter = createTRPCRouter({
       // 批量获取用户数据
       const userIds = [...new Set(columns.map(col => col.userId))];
       const users = await Promise.all(
-        userIds.map(id => caller.users.getOne({ id }))
+        userIds.map(id => caller.users.getOne({ id: id! }))
       );
 
       // 创建用户信息查找映射
-      const userMap = new Map(users.map(user => [user.id, user]));
+      const userMap = new Map(users.map(user => [user!.id, user]));
 
-      // 组合数据
+      // 组合数据，添加 isVisible 字段
       return columns.map(col => {
-        const user = userMap.get(col.userId);
+        const user = userMap.get(col.userId!);
+        const isVisible = orderMap.get(col.id);
+        if (!user) throw new Error(`User not found for column ${col.id}`);
         return {
           ...col,
           userId: user.id,
           idType: user.idType,
           userName: user.name,
           avatar: user.avatar,
+          isVisible: isVisible ?? true, // 默认为 true
         };
       });
     }),
