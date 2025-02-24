@@ -5,7 +5,7 @@ import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 
 export default function UserColumn({ token }: { token: string }) {
   const { data: visibleColumnData, isLoading } = api.column.getSubscriptColumn.useQuery(
-    { userId: token },
+    token,
     { enabled: Boolean(token) }
   );
   if (isLoading) return <LoadingSkeleton rows={3} count={4} />;

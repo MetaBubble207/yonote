@@ -387,39 +387,52 @@ export const columnRouter = createTRPCRouter({
 
   // 获取用户所有可见订阅专栏列表
   getSubscriptColumn: publicProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const caller = createCaller(ctx);
+    .input(z.string())
+    .query(async ({ ctx, input }): Promise<BaseColumnCard[]> => {
       const { db } = ctx;
-      // 获取所有订阅记录
-      const orders = await ctx.db
-        .select()
+      const caller = createCaller(ctx);
+
+      // 获取所有有效订阅记录
+      const orders = await db
+        .select({
+          columnId: order.columnId
+        })
         .from(order)
-        .where(
-          and(
-            eq(order.buyerId, input.userId),
-            eq(order.isVisible, true),
-            eq(order.status, true),
-          ),
-        );
-      const ordersPromises = orders.map(async (order) => {
-        // 获取所有订阅的专栏
-        const columnData = await db.query.column.findFirst({
-          where: eq(column.id, order.columnId),
-        });
-        // 获取作者基本信息
-        const userData = await caller.users.getOne({ id: columnData.userId });
+        .where(and(
+          eq(order.buyerId, input),
+          eq(order.isVisible, true),
+          eq(order.status, true),
+        ));
+
+      if (!orders.length) return [];
+
+      // 批量获取专栏数据
+      const columns = await db.query.column.findMany({
+        where: sql`${column.id} IN ${orders.map(o => o.columnId)}`
+      });
+
+      if (!columns.length) return [];
+
+      // 批量获取用户数据
+      const userIds = [...new Set(columns.map(col => col.userId))];
+      const users = await Promise.all(
+        userIds.map(id => caller.users.getOne({ id }))
+      );
+
+      // 创建用户信息查找映射
+      const userMap = new Map(users.map(user => [user.id, user]));
+
+      // 组合数据
+      return columns.map(col => {
+        const user = userMap.get(col.userId);
         return {
-          ...columnData,
-          userId: userData.id,
-          idType: userData.idType,
-          userName: userData.name,
-          avatar: userData.avatar,
+          ...col,
+          userId: user.id,
+          idType: user.idType,
+          userName: user.name,
+          avatar: user.avatar,
         };
       });
-      const res: BaseColumnCard[] = [];
-      Object.assign(res, await Promise.all(ordersPromises));
-      return res;
     }),
 
   getAlreadySubscribedColumns: publicProcedure
