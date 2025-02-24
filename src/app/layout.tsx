@@ -1,10 +1,8 @@
 import "../styles/globals.css";
 import { Inter } from "next/font/google";
 import React, { Suspense } from "react";
-import { TRPCReactProvider } from "@/trpc/react";
 import "dayjs/locale/zh-cn";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
-import Link from "next/link";
+import Providers from "./_providers/Providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,9 +26,7 @@ export default function RootLayout({
         className={`${inter.className} relative min-h-screen`}
         suppressHydrationWarning={true}
       >
-        <AntdRegistry>
-          <TRPCReactProvider><Suspense>{children}</Suspense></TRPCReactProvider>
-        </AntdRegistry>
+        <Providers><Suspense>{children}</Suspense></Providers>
       </body>
     </html>
   );
