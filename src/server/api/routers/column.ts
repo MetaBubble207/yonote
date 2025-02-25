@@ -21,23 +21,21 @@ import type * as schema from "@/server/db/schema";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 import { getOneUser } from "./user";
 import { getColumnsReadFC } from "./read";
+import { getColumnsLikeFC } from "./postLike";
 
 const getDetailColumnCard = async (
   ctx: { headers: Headers; db: PostgresJsDatabase<typeof schema> },
   columnId: string,
 ): Promise<DetailColumnCard> => {
   const { db } = ctx;
-  const caller = createCaller(ctx);
   const columnData = await db.query.column.findFirst({
     where: eq(column.id, columnId),
   });
-  
+
   // 获取专栏下的所有帖子的阅读量
   const readCount = await getColumnsReadFC(db, columnData.id);
   // 获取专栏下的所有帖子的点赞量
-  const likeCount = await caller.like.getColumnLike({
-    columnId: columnData.id,
-  });
+  const likeCount = await getColumnsLikeFC(db, columnData.id);
   // 获取专栏订阅量
   const subscriptionCount = (
     await db.select().from(order).where(eq(order.columnId, columnId))
@@ -499,63 +497,43 @@ export const columnRouter = createTRPCRouter({
     }> => {
       const { conditions, limit, cursor, sortOrder } = input;
 
-      let allColumn;
-      if (sortOrder) {
-        allColumn = await ctx.db
-          .select()
-          .from(column)
-          .limit(limit + 1)
-          .offset(cursor)
-          .orderBy(asc(column.id))
-      } else {
-        allColumn = await ctx.db
-          .select()
-          .from(column)
-          .limit(limit + 1)
-          .offset(cursor)
-          .orderBy(desc(column.id))
-      }
+      const allColumn = await ctx.db
+      .select()
+      .from(column)
+      .limit(limit + 1)
+      .offset(cursor)
+      .orderBy(sortOrder ? asc(column.id) : desc(column.id));
 
       const hasNextPage = allColumn.length > limit;
       const columns = hasNextPage ? allColumn.slice(0, -1) : allColumn;
 
-      const detailColumnsPromise = columns.map(async (col) => {
-        return await getDetailColumnCard(ctx, col.id);
-      });
+      const detailColumnsPromise = columns.map(col => getDetailColumnCard(ctx, col.id));
 
       let items = await Promise.all(detailColumnsPromise);
 
       // 根据条件排序
-      switch (conditions) {
-        case 1:
-          items = items.sort((a, b) =>
-            sortOrder
+      items = items.sort((a, b) => {
+        switch (conditions) {
+          case 1:
+            return sortOrder
               ? b.subscriptionCount - a.subscriptionCount
-              : a.subscriptionCount - b.subscriptionCount
-          );
-          break;
-        case 2:
-          items = items.sort((a, b) =>
-            sortOrder
+              : a.subscriptionCount - b.subscriptionCount;
+          case 2:
+            return sortOrder
               ? b.postCount - a.postCount
-              : a.postCount - b.postCount
-          );
-          break;
-        case 3:
-          items = items.sort((a, b) =>
-            sortOrder
+              : a.postCount - b.postCount;
+          case 3:
+            return sortOrder
               ? (b.createdAt > a.createdAt ? 1 : -1)
-              : (a.createdAt > b.createdAt ? 1 : -1)
-          );
-          break;
-        case 4:
-          items = items.sort((a, b) =>
-            sortOrder
+              : (a.createdAt > b.createdAt ? 1 : -1);
+          case 4:
+            return sortOrder
               ? (b.updatedAt > a.updatedAt ? 1 : -1)
-              : (a.updatedAt > b.updatedAt ? 1 : -1)
-          );
-          break;
-      }
+              : (a.updatedAt > b.updatedAt ? 1 : -1);
+          default:
+            return 0;
+        }
+      });
 
       return {
         items,
