@@ -543,27 +543,55 @@ export const orderRouter = createTRPCRouter({
   getUserStatus: publicProcedure
     .input(
       z.object({
-        userId: z.string(),
-        columnId: z.string(),
+        userId: z.string().min(1, "用户ID不能为空"),
+        columnId: z.string().min(1, "专栏ID不能为空"),
       }),
     )
     .query(async ({ ctx, input }) => {
-      // 假设是自己专栏的，就直接返回
-      const myColumn = await ctx.db.query.column.findFirst({
-        where: and(
-          eq(column.id, input.columnId),
-          eq(column.userId, input.userId),
-        ),
-      });
-      if (myColumn) return true;
-      const orderData = await ctx.db.query.order.findFirst({
-        where: and(
-          eq(order.columnId, input.columnId),
-          eq(order.buyerId, input.userId),
-        ),
-      });
+      const { db } = ctx;
+      const { userId, columnId } = input;
 
-      return orderData.status;
+      try {
+        // 1. 检查是否是作者本人的专栏
+        const isAuthor = await db.query.column.findFirst({
+          where: and(
+            eq(column.id, columnId),
+            eq(column.userId, userId),
+          ),
+          columns: { id: true }, // 只查询需要的字段
+        });
+
+        if (isAuthor) return true;
+
+        // 2. 检查订阅状态
+        const subscription = await db.query.order.findFirst({
+          where: and(
+            eq(order.columnId, columnId),
+            eq(order.buyerId, userId),
+            eq(order.status, true), // 只查询有效订阅
+          ),
+          columns: {
+            status: true,
+            endDate: true
+          },
+        });
+
+        // 3. 检查订阅是否过期
+        if (subscription?.endDate && subscription.endDate < new Date()) {
+          await db.update(order)
+            .set({ status: false })
+            .where(and(
+              eq(order.columnId, columnId),
+              eq(order.buyerId, userId),
+            ));
+          return false;
+        }
+
+        return Boolean(subscription?.status);
+      } catch (error) {
+        console.error('Error checking user subscription status:', error);
+        return false;
+      }
     }),
 
   changeStatus: publicProcedure
