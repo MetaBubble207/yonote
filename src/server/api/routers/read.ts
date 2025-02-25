@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { column, order, post, postRead } from "@/server/db/schema";
-import { and, desc, eq, gt, lt } from "drizzle-orm";
+import { and, desc, eq, gt, lt, sql } from "drizzle-orm";
 import {
   getCurrentTime,
   getLastMonthDates,
@@ -103,39 +103,31 @@ export const readRouter = createTRPCRouter({
   getColumnRead: publicProcedure
     .input(z.object({ columnId: z.string() }))
     .query(async ({ ctx, input }): Promise<number> => {
-      const readList = await ctx.db
-        .select()
+      const result = await ctx.db
+        .select({
+          totalReads: sql<number>`sum(${postRead.readCount})`,
+        })
         .from(post)
-        .where(eq(post.columnId, input.columnId));
-      if (readList?.length === 0) {
-        return 0;
-      } else {
-        let res = 0;
-        for (const item of readList) {
-          const postId = item.id;
-          const data = await ctx.db
-            .select()
-            .from(postRead)
-            .where(eq(postRead.postId, postId));
-          // const data = await ctx.db.query.postRead.findFirst({ where: eq(postRead.postId, postId) })
-          data.map((item) => {
-            res += item.readCount;
-          });
-        }
+        .leftJoin(postRead, eq(post.id, postRead.postId))
+        .where(eq(post.columnId, input.columnId))
+        .groupBy(post.columnId);
 
-        return res;
-      }
+      return result[0]?.totalReads ?? 0;
     }),
 
   // 获取文章阅读量
   getPostRead: publicProcedure
     .input(z.object({ postId: z.number() }))
     .query(async ({ ctx, input }) => {
-      const data = await ctx.db
-        .select()
+      const result = await ctx.db
+        .select({
+          readCount: sql<number>`sum(${postRead.readCount})`,
+        })
         .from(postRead)
-        .where(eq(postRead.postId, input.postId));
-      return data?.length;
+        .where(eq(postRead.postId, input.postId))
+        .groupBy(postRead.postId);
+
+      return result[0]?.readCount ?? 0;
     }),
 
   // 获取最近阅读
