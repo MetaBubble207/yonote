@@ -219,43 +219,75 @@ export const columnRouter = createTRPCRouter({
   getColumnName: publicProcedure
     .input(z.object({ searchValue: z.string() }))
     .query(async ({ ctx, input }) => {
-      let res = [];
-
-      const userData = await ctx.db.query.user.findMany({
-        where: like(user.name, `%${input.searchValue}%`),
-      }); // 假设 user 表中包含了 name 字段
-      if (userData) {
-        const promises = userData.map(async (item) => {
-          const columnInfo = await ctx.db
-            .select()
-            .from(column)
-            .where(eq(column.userId, item.id));
-          return { ...columnInfo[0], user: { ...item } };
-        });
-        res.push(await Promise.all(promises));
-      } else {
-        throw new Error("Column not found");
-      }
-
-      const columnData = await ctx.db
-        .select()
+      const { db } = ctx;
+      
+      // 并行执行两个主查询
+      const [userResults, columnResults] = await Promise.all([
+        // 查询用户名匹配的记录
+        db.select({
+          id: user.id,
+          name: user.name,
+          avatar: user.avatar,
+          idType: user.idType,
+        })
+        .from(user)
+        .where(like(user.name, `%${input.searchValue}%`)),
+        
+        // 查询专栏名匹配的记录
+        db.select({
+          id: column.id,
+          name: column.name,
+          cover: column.cover,
+          createdAt: column.createdAt,
+          updatedAt: column.updatedAt,
+          userId: column.userId,
+          // isFree: column.isFree,
+          // isTop: column.isTop,
+          introduce: column.introduce,
+          description: column.description,
+        })
         .from(column)
-        .where(like(column.name, `%${input.searchValue}%`));
-      if (columnData) {
-        const promises = columnData.map(async (item) => {
-          const userInfo = await ctx.db
-            .select()
-            .from(user)
-            .where(eq(user.id, item.userId));
-          return { ...item, user: userInfo[0] };
-        });
-        res.push(await Promise.all(promises));
-      } else {
-        throw new Error("Column not found");
-      }
-      res = res[0].concat(res[1]);
-      res = uniqueArray(res, "id");
-      return res;
+        .where(like(column.name, `%${input.searchValue}%`))
+      ]);
+
+      // 收集所有需要查询的用户ID和专栏ID
+      const userIds = new Set([
+        ...userResults.map(u => u.id),
+        ...columnResults.map(c => c.userId)
+      ]);
+
+      // 批量查询相关的专栏和用户信息
+      const [relatedColumns, relatedUsers] = await Promise.all([
+        // 查询用户关联的专栏
+        db.select().from(column)
+          .where(sql`${column.userId} IN ${Array.from(userIds)}`),
+        // 查询专栏关联的用户
+        db.select().from(user)
+          .where(sql`${user.id} IN ${Array.from(userIds)}`)
+      ]);
+
+      // 创建用户信息映射
+      const userMap = new Map(relatedUsers.map(u => [u.id, u]));
+      
+      // 合并结果
+      const results = [
+        // 处理用户名匹配的结果
+        ...userResults.flatMap(u => {
+          const userColumns = relatedColumns.filter(c => c.userId === u.id);
+          return userColumns.map(c => ({
+            ...c,
+            user: userMap.get(u.id)
+          }));
+        }),
+        // 处理专栏名匹配的结果
+        ...columnResults.map(c => ({
+          ...c,
+          user: userMap.get(c.userId)
+        }))
+      ];
+
+      // 去重并返回
+      return uniqueArray(results, "id");
     }),
 
   getCreateAt: publicProcedure.query(async ({ ctx }) => {
