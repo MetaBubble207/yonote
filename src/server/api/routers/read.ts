@@ -9,6 +9,55 @@ import {
   getTodayMidnight,
   getYesterdayMidnight,
 } from "@/tools/getCurrentTime";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type * as schema from "@/server/db/schema";
+
+export const getColumnsReadFC = async (db: PostgresJsDatabase<typeof schema>, columnId: string) => {
+  const result = await db
+    .select({
+      totalReads: sql<number>`sum(${postRead.readCount})`,
+    })
+    .from(post)
+    .leftJoin(postRead, eq(post.id, postRead.postId))
+    .where(eq(post.columnId, columnId))
+    .groupBy(post.columnId);
+
+  return result[0]?.totalReads ?? 0;
+}
+
+// 在文件开头的工具函数部分添加
+interface TimeRange {
+  start: Date;
+  end: Date;
+}
+
+// 统一的阅读量查询函数
+async function getColumnReadsInRange(
+  db: PostgresJsDatabase<typeof schema>,
+  columnId: string,
+  timeRange?: TimeRange
+): Promise<number> {
+  const baseQuery = db
+    .select({
+      readCount: sql<number>`count(*)`,
+    })
+    .from(post)
+    .leftJoin(postRead, eq(post.id, postRead.postId))
+    .where(eq(post.columnId, columnId));
+
+  if (timeRange) {
+    return (await baseQuery
+      .where(
+        and(
+          gt(postRead.createdAt, timeRange.start),
+          lt(postRead.createdAt, timeRange.end)
+        )
+      )
+      .execute())[0]?.readCount ?? 0;
+  }
+
+  return (await baseQuery.execute())[0]?.readCount ?? 0;
+}
 
 export const readRouter = createTRPCRouter({
   create: publicProcedure
@@ -99,37 +148,20 @@ export const readRouter = createTRPCRouter({
       }
     }),
 
-  // 获取专栏阅读量
-  getColumnRead: publicProcedure
-    .input(z.object({ columnId: z.string() }))
-    .query(async ({ ctx, input }): Promise<number> => {
-      const result = await ctx.db
-        .select({
-          totalReads: sql<number>`sum(${postRead.readCount})`,
-        })
-        .from(post)
-        .leftJoin(postRead, eq(post.id, postRead.postId))
-        .where(eq(post.columnId, input.columnId))
-        .groupBy(post.columnId);
-
-      return result[0]?.totalReads ?? 0;
-    }),
-
   // 获取文章阅读量
   getPostRead: publicProcedure
     .input(z.object({ postId: z.number() }))
     .query(async ({ ctx, input }) => {
       const result = await ctx.db
         .select({
-          readCount: sql<number>`sum(${postRead.readCount})`,
+          readCount: sql<number>`count(*)`,
         })
         .from(postRead)
         .where(eq(postRead.postId, input.postId))
-        .groupBy(postRead.postId);
+        .execute();
 
       return result[0]?.readCount ?? 0;
     }),
-
   // 获取最近阅读
   getRecentRead: publicProcedure
     .input(z.object({ userId: z.string() }))
@@ -146,158 +178,58 @@ export const readRouter = createTRPCRouter({
       });
     }),
 
-  //获取专栏昨天阅读量
+  // 获取专栏昨天阅读量
   getYesterdayReading: publicProcedure
     .input(z.object({ columnId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const yesterday = getYesterdayMidnight();
-      const today = getTodayMidnight();
-      // 查询所有专栏下所有的帖子
-      const posts = await ctx.db
-        .select()
-        .from(post)
-        .where(eq(post.columnId, input.columnId));
-
-      let readCount = 0;
-      const readPromises = posts.map(async (item) => {
-        const reads = await ctx.db
-          .select()
-          .from(postRead)
-          .where(
-            and(
-              eq(postRead.postId, item.id),
-              and(
-                gt(postRead.createdAt, yesterday),
-                lt(postRead.createdAt, today),
-              ),
-            ),
-          );
-        readCount += reads.length;
+      return getColumnReadsInRange(ctx.db, input.columnId, {
+        start: getYesterdayMidnight(),
+        end: getTodayMidnight(),
       });
-      await Promise.all(readPromises);
-      return readCount;
     }),
 
-  //获取专栏上周阅读量
+  // 获取专栏上周阅读量
   getLastWeekReading: publicProcedure
     .input(z.object({ columnId: z.string() }))
     .query(async ({ ctx, input }) => {
       const { lastMonday, lastSunday } = getLastWeekDates();
-      // 查询所有专栏下所有的帖子
-      const posts = await ctx.db
-        .select()
-        .from(post)
-        .where(eq(post.columnId, input.columnId));
-
-      let readCount = 0;
-      const readPromises = posts.map(async (item) => {
-        const reads = await ctx.db
-          .select()
-          .from(postRead)
-          .where(
-            and(
-              eq(postRead.postId, item.id),
-              and(
-                gt(postRead.createdAt, lastMonday),
-                lt(postRead.createdAt, lastSunday),
-              ),
-            ),
-          );
-        readCount += reads.length;
+      return getColumnReadsInRange(ctx.db, input.columnId, {
+        start: lastMonday,
+        end: lastSunday,
       });
-      await Promise.all(readPromises);
-      return readCount;
     }),
 
-  //获取专栏上周阅读量
+  // 获取专栏上月阅读量
   getLastMonthReading: publicProcedure
     .input(z.object({ columnId: z.string() }))
     .query(async ({ ctx, input }) => {
       const { firstDayOfLastMonth, lastDayOfLastMonth } = getLastMonthDates();
-      // 查询所有专栏下所有的帖子
-      const posts = await ctx.db
-        .select()
-        .from(post)
-        .where(eq(post.columnId, input.columnId));
-
-      let readCount = 0;
-      const readPromises = posts.map(async (item) => {
-        const reads = await ctx.db
-          .select()
-          .from(postRead)
-          .where(
-            and(
-              eq(postRead.postId, item.id),
-              and(
-                gt(postRead.createdAt, firstDayOfLastMonth),
-                lt(postRead.createdAt, lastDayOfLastMonth),
-              ),
-            ),
-          );
-        readCount += reads.length;
+      return getColumnReadsInRange(ctx.db, input.columnId, {
+        start: firstDayOfLastMonth,
+        end: lastDayOfLastMonth,
       });
-      await Promise.all(readPromises);
-      return readCount;
     }),
 
   // 获取昨天、上周、上个月的阅读量
   getReading: publicProcedure
     .input(z.object({ columnId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const yesterday = getYesterdayMidnight();
-      const today = getTodayMidnight();
-      const { lastMonday, lastSunday } = getLastWeekDates();
-      const { firstDayOfLastMonth, lastDayOfLastMonth } = getLastMonthDates();
-      // 查询所有专栏下所有的帖子
-      const posts = await ctx.db
-        .select()
-        .from(post)
-        .where(eq(post.columnId, input.columnId));
+      const [yesterday, lastWeek, lastMonth] = await Promise.all([
+        getColumnReadsInRange(ctx.db, input.columnId, {
+          start: getYesterdayMidnight(),
+          end: getTodayMidnight(),
+        }),
+        getColumnReadsInRange(ctx.db, input.columnId, {
+          start: getLastWeekDates().lastMonday,
+          end: getLastWeekDates().lastSunday,
+        }),
+        getColumnReadsInRange(ctx.db, input.columnId, {
+          start: getLastMonthDates().firstDayOfLastMonth,
+          end: getLastMonthDates().lastDayOfLastMonth,
+        }),
+      ]);
 
-      let readCount: number[] = [0, 0, 0];
-      const readPromises = posts.map(async (item) => {
-        const readsYesterday = await ctx.db
-          .select()
-          .from(postRead)
-          .where(
-            and(
-              eq(postRead.postId, item.id),
-              and(
-                gt(postRead.createdAt, yesterday),
-                lt(postRead.createdAt, today),
-              ),
-            ),
-          );
-        readCount[0] += readsYesterday.length;
-        const readsLastWeek = await ctx.db
-          .select()
-          .from(postRead)
-          .where(
-            and(
-              eq(postRead.postId, item.id),
-              and(
-                gt(postRead.createdAt, lastMonday),
-                lt(postRead.createdAt, lastSunday),
-              ),
-            ),
-          );
-        readCount[1] += readsLastWeek.length;
-        const readsLastMonth = await ctx.db
-          .select()
-          .from(postRead)
-          .where(
-            and(
-              eq(postRead.postId, item.id),
-              and(
-                gt(postRead.createdAt, firstDayOfLastMonth),
-                lt(postRead.createdAt, lastDayOfLastMonth),
-              ),
-            ),
-          );
-        readCount[2] += readsLastMonth.length;
-      });
-      await Promise.all(readPromises);
-      return readCount;
+      return [yesterday, lastWeek, lastMonth];
     }),
 
   getReadingRateOfIncrease: publicProcedure

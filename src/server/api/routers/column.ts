@@ -20,6 +20,8 @@ import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 import { getOneUser } from "./user";
+import { getColumnsReadFC } from "./read";
+
 const getDetailColumnCard = async (
   ctx: { headers: Headers; db: PostgresJsDatabase<typeof schema> },
   columnId: string,
@@ -29,10 +31,9 @@ const getDetailColumnCard = async (
   const columnData = await db.query.column.findFirst({
     where: eq(column.id, columnId),
   });
+  
   // 获取专栏下的所有帖子的阅读量
-  const readCount = await caller.read.getColumnRead({
-    columnId: columnData.id,
-  });
+  const readCount = await getColumnsReadFC(db, columnData.id);
   // 获取专栏下的所有帖子的点赞量
   const likeCount = await caller.like.getColumnLike({
     columnId: columnData.id,
