@@ -93,35 +93,37 @@ export default function SpecialColumnBody({
   }
 
   return (
-    <div className="w-full">
+    <div className="">
       {contextHolder}
 
-      <StatisticsInfo
-        subscriptCount={detailPost?.subscriptCount}
-        contentCount={detailPost?.detailPostCard.length}
-      />
+      <div className="z-2 min-h-140 w-full rounded-t-30px top-39 absolute bg-white">
+        <StatisticsInfo
+          subscriptCount={detailPost?.subscriptCount}
+          contentCount={detailPost?.detailPostCard.length}
+        />
 
-      <TabBar
-        currentContent={currentContent}
-        onTabChange={handleTabChange}
-      />
+        <TabBar
+          currentContent={currentContent}
+          onTabChange={handleTabChange}
+        />
 
-      <div className="mb-15">
-        {currentContent === 1 ? (
-          <SpecialColumnList
-            status={status}
-            postData={detailPost?.detailPostCard}
-          />
-        ) : (
-          <SpecialColumnIntroduce />
-        )}
+        <div className="mb-15">
+          {currentContent === 1 ? (
+            <SpecialColumnList
+              status={status}
+              postData={detailPost?.detailPostCard}
+            />
+          ) : (
+            <SpecialColumnIntroduce />
+          )}
+        </div>
+
+        <SubscribeButton
+          show={!status}
+          onClick={handleSubscribe}
+        />
+
       </div>
-
-      <SubscribeButton
-        show={!status}
-        onClick={handleSubscribe}
-      />
-
       {isSubscribe && (
         <Reserved
           onClose={() => setIsSubscribe(false)}
