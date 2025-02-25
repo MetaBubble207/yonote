@@ -1,203 +1,28 @@
-"use client";
 import React from "react";
-import { api } from "@/trpc/react";
-import { useRouter, useSearchParams } from "next/navigation";
 import SearchColumn from "@/app/_components/common/SearchColumn";
-import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
-import { time2DateString } from "@/tools/timeToString";
 import Link from "next/link";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
-import { Button, Skeleton } from "antd";
-import NoData from "@/app/_components/common/NoData";
-
-const Page = () => {
-  const params = useSearchParams();
-  const searchValue = params.get("query");
-
-  const router = useRouter();
-
-  const { data, isLoading } = api.column.getColumnName.useQuery(
-    { searchValue: searchValue },
-    { enabled: Boolean(searchValue) }, // Enable query if searchValue is present
-  );
-
-  const handleButtonClick = () => {
-    router.push(`/dashboard/find`);
-  };
+import SearchResultList from "@/app/_components/dashboard/find/SearchResultList";
+export default async function Page({ searchParams }: { searchParams: Promise<{ query: string }> }) {
+  const searchValue = (await searchParams).query;
 
   return (
     <div className="bg-#F5F7FB relative min-h-screen">
-      <div className="w-85.75 m-auto pt-8">
-        {/* 搜索框和取消按钮 */}
-        <div className={"flex items-center justify-between"}>
-          <SearchColumn defaultValue={searchValue}></SearchColumn>
-          <Button
-            style={{ color: "#252525", padding: 0 }}
-            type={"link"}
-            className={"ml-5"}
-            onClick={handleButtonClick}
+      <div className="w-85.75 m-auto pt-8 pb-20">
+        <div className="flex items-center justify-between">
+          <SearchColumn defaultValue={searchValue} />
+          <Link
+            className="ml-4 text-[#252525] text-15px p-0 whitespace-nowrap"
+            href={"/dashboard/find"}
           >
             取消
-          </Button>
+          </Link>
         </div>
-        <List />
+        <SearchResultList searchValue={searchValue} />
       </div>
       <div className="z-2 fixed bottom-4 w-full justify-center">
         <Navbar />
       </div>
     </div>
   );
-
-  function List() {
-    if (isLoading)
-      return (
-        <>
-          <Skeleton
-            active
-            paragraph={{ rows: 3 }}
-            title={false}
-            className="w-100% h-27 mt-10px border-rd-5 border-1 p2.5 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF]"
-          />
-          <Skeleton
-            active
-            paragraph={{ rows: 3 }}
-            title={false}
-            className="w-100% h-27 mt-10px border-rd-5 border-1 p2.5 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF]"
-          />
-          <Skeleton
-            active
-            paragraph={{ rows: 3 }}
-            title={false}
-            className="w-100% h-27 mt-10px border-rd-5 border-1 p2.5 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF]"
-          />
-          <Skeleton
-            active
-            paragraph={{ rows: 3 }}
-            title={false}
-            className="w-100% h-27 mt-10px border-rd-5 border-1 p2.5 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF]"
-          />
-          <Skeleton
-            active
-            paragraph={{ rows: 3 }}
-            title={false}
-            className="w-100% h-27 mt-10px border-rd-5 border-1 p2.5 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF]"
-          />
-          <Skeleton
-            active
-            paragraph={{ rows: 3 }}
-            title={false}
-            className="w-100% h-27 mt-10px border-rd-5 border-1 p2.5 border-solid border-[rgba(181,181,181,0.20)] bg-[#FFF]"
-          />
-        </>
-      );
-    if (!searchValue)
-      return (
-        <div className={"mt-10"}>
-          <NoData title={"请您搜索想要搜索的内容噢😁~"}></NoData>
-        </div>
-      );
-
-    if (searchValue && data.length === 0)
-      return (
-        <div className={"mt-10"}>
-          <NoData title={"没有找到相关的结果噢😯~"}></NoData>
-        </div>
-      );
-
-    return (
-      <>
-        {data.map((item) => (
-          <div key={item.id}>
-            <Card item={item} />
-          </div>
-        ))}
-      </>
-    );
-  }
-
-  function Card({ item }) {
-    return (
-      <Link href={`/dashboard/special-column?id=${item.id}`}>
-        <div
-          className={
-            "h-27 mt-10px border-rd-5 flex w-full items-start items-center " +
-            "border-1 border-[rgba(181,181,181,0.20)] bg-[#FFF] p-2.5"
-          }
-        >
-          {/* 左边图片 */}
-          <div className="w-17.25 h-23 relative">
-            <Image
-              placeholder="blur"
-              blurDataURL={DefaultLoadingPicture()}
-              src={item.cover ?? DefaultLoadingPicture()}
-              alt="cover"
-              quality={100}
-              fill
-              loading="lazy"
-              className="rounded-2 object-cover"
-            />
-          </div>
-          {/* 右边文字 */}
-          <div className={"ml-8px w-67%"}>
-            <div
-              className={
-                "text-3.75 font-500 lh-6 text-3.75 h-12 text-[#252525]"
-              }
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {item.name}
-            </div>
-            {/* 右边图标 */}
-            <div className="flex items-center">
-              <div>
-                <div className={"flex items-center"}>
-                  {/* 左边头像 */}
-                  <div className={""}>
-                    <div>
-                      <Image
-                        src={"/images/special-column/Ellipse 2.png"}
-                        alt={"心智与阅读"}
-                        width={14}
-                        height={14}
-                      />
-                    </div>
-                  </div>
-                  <div
-                    className={
-                      "text-2.75 font-not-italic font-500 lh-18px ml-5px text-[#999]"
-                    }
-                  >
-                    {item.user?.name}
-                  </div>
-                  {item.user?.idType === 1 && (
-                    <Image
-                      src={"/images/special-column/Group 225.png"}
-                      alt={"心智与阅读"}
-                      width={12}
-                      height={12}
-                      className={"ml-1"}
-                    />
-                  )}
-                </div>
-                <div
-                  className={
-                    "text-2.75 font-not-italic font-500 lh-18px text-[#999]"
-                  }
-                >
-                  {time2DateString(item.createdAt)}发布
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Link>
-    );
-  }
-};
-
-export default Page;
+}
