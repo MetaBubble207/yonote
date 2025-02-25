@@ -218,76 +218,82 @@ export const columnRouter = createTRPCRouter({
 
   getColumnName: publicProcedure
     .input(z.object({ searchValue: z.string() }))
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }): Promise<BaseColumnCard[]> => {
       const { db } = ctx;
       
       // 并行执行两个主查询
       const [userResults, columnResults] = await Promise.all([
         // 查询用户名匹配的记录
-        db.select({
-          id: user.id,
-          name: user.name,
-          avatar: user.avatar,
-          idType: user.idType,
-        })
-        .from(user)
-        .where(like(user.name, `%${input.searchValue}%`)),
+        db.select()
+          .from(user)
+          .where(like(user.name, `%${input.searchValue}%`)),
         
         // 查询专栏名匹配的记录
-        db.select({
-          id: column.id,
-          name: column.name,
-          cover: column.cover,
-          createdAt: column.createdAt,
-          updatedAt: column.updatedAt,
-          userId: column.userId,
-          // isFree: column.isFree,
-          // isTop: column.isTop,
-          introduce: column.introduce,
-          description: column.description,
-        })
-        .from(column)
-        .where(like(column.name, `%${input.searchValue}%`))
+        db.select()
+          .from(column)
+          .where(like(column.name, `%${input.searchValue}%`))
       ]);
 
-      // 收集所有需要查询的用户ID和专栏ID
-      const userIds = new Set([
-        ...userResults.map(u => u.id),
-        ...columnResults.map(c => c.userId)
-      ]);
+      // 收集所有需要查询的专栏和用户
+      const columnsByUser = await Promise.all(
+        userResults.map(async (user) => {
+          const userColumns = await db
+            .select()
+            .from(column)
+            .where(eq(column.userId, user.id));
 
-      // 批量查询相关的专栏和用户信息
-      const [relatedColumns, relatedUsers] = await Promise.all([
-        // 查询用户关联的专栏
-        db.select().from(column)
-          .where(sql`${column.userId} IN ${Array.from(userIds)}`),
-        // 查询专栏关联的用户
-        db.select().from(user)
-          .where(sql`${user.id} IN ${Array.from(userIds)}`)
-      ]);
-
-      // 创建用户信息映射
-      const userMap = new Map(relatedUsers.map(u => [u.id, u]));
-      
-      // 合并结果
-      const results = [
-        // 处理用户名匹配的结果
-        ...userResults.flatMap(u => {
-          const userColumns = relatedColumns.filter(c => c.userId === u.id);
-          return userColumns.map(c => ({
-            ...c,
-            user: userMap.get(u.id)
+          return userColumns.map(col => ({
+            id: col.id,
+            name: col.name,
+            introduce: col.introduce ?? undefined,
+            description: col.description ?? undefined,
+            cover: col.cover ?? "",
+            userId: user.id,
+            userName: user.name,
+            idType: user.idType ?? 0,
+            avatar: user.avatar ?? "",
+            isVisible: true, // 默认为 true
+            createdAt: col.createdAt!,
+            updatedAt: col.updatedAt!,
           }));
-        }),
-        // 处理专栏名匹配的结果
-        ...columnResults.map(c => ({
-          ...c,
-          user: userMap.get(c.userId)
-        }))
+        })
+      );
+
+      // 处理专栏名匹配的结果
+      const columnsByName = await Promise.all(
+        columnResults.map(async (col) => {
+          const userData = await db.query.user.findFirst({
+            where: eq(user.id, col.userId!)
+          });
+
+          if (!userData) {
+            throw new Error(`User not found for column ${col.id}`);
+          }
+
+          return {
+            id: col.id,
+            name: col.name,
+            introduce: col.introduce ?? undefined,
+            description: col.description ?? undefined,
+            cover: col.cover ?? "",
+            userId: userData.id,
+            userName: userData.name,
+            idType: userData.idType ?? 0,
+            avatar: userData.avatar ?? "",
+            isVisible: true, // 默认为 true
+            createdAt: col.createdAt!,
+            updatedAt: col.updatedAt!,
+          };
+        })
+      );
+
+      // 合并结果并去重
+      const allResults = [
+        ...columnsByUser.flat(),
+        ...columnsByName
       ];
 
-      // 去重并返回
-      return uniqueArray(results, "id");
+      return uniqueArray(allResults, "id");
     }),
 
   getCreateAt: publicProcedure.query(async ({ ctx }) => {
