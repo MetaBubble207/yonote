@@ -28,7 +28,7 @@ export const userRouter = createTRPCRouter({
     }),
 
   login: publicProcedure
-    .input(z.object({ code: z.string() }))
+    .input(z.string())
     .query(async ({ ctx, input }) => {
       // 测试使用的appid
       //https://mp.weixin.qq.com/debug/cgi-bin/sandboxinfo?action=showinfo&t=sandbox/index
@@ -36,7 +36,7 @@ export const userRouter = createTRPCRouter({
       // 测试使用的appsecret
       const appsecret = process.env.NEXT_PUBLIC_APP_SECRET;
       // 获取access_token
-      const get_access_token_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${appsecret}&code=${input.code}&grant_type=authorization_code`;
+      const get_access_token_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${appsecret}&code=${input}&grant_type=authorization_code`;
       try {
         const accessTokenResponse = await fetch(get_access_token_url);
         if (!accessTokenResponse.ok) {

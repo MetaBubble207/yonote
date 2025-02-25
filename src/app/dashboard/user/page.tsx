@@ -3,25 +3,39 @@ import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
 import Link from "next/link";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { api } from "@/trpc/react";
 import { Button, Skeleton } from "antd";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import { useRouter, useSearchParams } from "next/navigation";
 import withTheme from "@/theme";
 
+// 类型定义
+interface NavItem {
+  href: string;
+  iconSrc: string;
+  text: string;
+}
+
+interface ButtonInfo {
+  id: number;
+  label: string;
+}
+
 const User = function User() {
-  const logout = () => {
-    localStorage.removeItem("token");
-  };
   const router = useRouter();
   const code = useSearchParams().get("code");
   const [token, setToken] = useLocalStorage("token", null);
+  
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  }, [router]);
+
+  // API 查询
   const { data: loginData, isSuccess } = api.users.login.useQuery(
-    { code },
-    {
-      enabled: Boolean(code && !token),
-    },
+    code!,
+    { enabled: Boolean(code && !token) },
   );
 
   const { data: userInfo, isLoading: isUserInfoLoading } =
@@ -29,17 +43,15 @@ const User = function User() {
 
   const { data: columnInfo, isLoading: isColumnInfoLoading } =
     api.column.getAllByUserId.useQuery(
-      {
-        userId: token,
-      },
+      { userId: token },
       { enabled: Boolean(token) },
     );
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && loginData?.id) {
       setToken(loginData.id);
     }
-  }, [loginData]);
+  }, [loginData?.id, isSuccess, setToken]);
 
   return (
     <div>
@@ -170,9 +182,8 @@ const User = function User() {
   }
 
   function Service() {
-    const linkStyles = "flex flex-col items-center";
     const cardStyles = "flex flex-col items-center w-1/4 mt-2 mb-2";
-    const navItems = [
+    const navItems: NavItem[] = [
       {
         href: `/dashboard/user/detail?id=${token}`,
         iconSrc: "/images/user/HomePage.svg",
@@ -204,45 +215,47 @@ const User = function User() {
         text: "联系客服",
       },
     ];
+    
+    const renderNavItem = useCallback((item: NavItem, index: number) => (
+      <li key={index} className={cardStyles}>
+        <Link href={item.href} className={"flex flex-col items-center"}>
+          <div className={"relative h-6 w-6"}>
+            <Image
+              src={item.iconSrc}
+              alt={item.text}
+              fill
+              className={"object-cover"}
+            />
+          </div>
+          <div className="text-center text-sm font-normal leading-relaxed text-gray-800">
+            {item.text}
+          </div>
+        </Link>
+      </li>
+    ), [cardStyles]);
+
     return (
       <div className={"h-51.5 rounded-2.5 bg-#FFF py-4.5 mt-1.5 w-full"}>
-        {/*标题*/}
         <div className={"text-3.5 font-500 lh-6 pl-5.5 text-[#252525]"}>
           我的服务
         </div>
         <ul className={"mt-4 flex flex-wrap"}>
-          {navItems.map((item, index) => (
-            <li key={index} className={cardStyles}>
-              <Link href={item.href} className={"flex flex-col items-center"}>
-                <div className={"relative h-6 w-6"}>
-                  <Image
-                    src={item.iconSrc}
-                    alt={item.text}
-                    fill
-                    className={"object-cover"}
-                  />
-                </div>
-                <div className="text-center text-sm font-normal leading-relaxed text-gray-800">
-                  {item.text}
-                </div>
-              </Link>
-            </li>
-          ))}
+          {navItems.map(renderNavItem)}
           <li className={cardStyles}>
-            <Link href="/login" className={linkStyles}>
+            <div 
+              className={"flex flex-col items-center cursor-pointer"} 
+              onClick={logout}
+            >
               <Image
                 src={"/images/user/SignOut.svg"}
                 alt={"退出登录"}
                 width={24}
                 height={24}
               />
-              <div
-                className={"w-11.5 text-2.75 font-400 lh-6 text-[#252525]"}
-                onClick={() => logout()}
-              >
+              <div className={"w-11.5 text-2.75 font-400 lh-6 text-[#252525]"}>
                 退出登录
               </div>
-            </Link>
+            </div>
           </li>
         </ul>
       </div>
@@ -252,45 +265,44 @@ const User = function User() {
   function Display() {
     const [currentPage, setCurrentPage] = useState<number>(1);
 
-    const buttonInfos = [
+    const buttonInfos: ButtonInfo[] = [
       { id: 1, label: "专栏" },
       { id: 2, label: "小课" },
     ];
 
-    const renderButtons = () => {
+    const renderButtons = useCallback(() => {
       return buttonInfos.map((button, index) => (
         <div key={index}>
           <Button
             type={"link"}
             size={"small"}
             className={"mr-8"}
-            style={
-              currentPage === button.id
-                ? { color: "#252525", padding: 0 }
-                : {
-                  color: "#B5B5B5",
-                  padding: 0,
-                }
-            }
+            style={{
+              color: currentPage === button.id ? "#252525" : "#B5B5B5",
+              padding: 0,
+            }}
             onClick={() => setCurrentPage(button.id)}
           >
             {button.label}
           </Button>
           <div
-            className={`ml-2.25 w-2.75 rounded-2 mt-1 h-1 ${currentPage === button.id ? "bg-#45E1B8" : "bg-#FFF"}`}
-          ></div>
+            className={`ml-2.25 w-2.75 rounded-2 mt-1 h-1 ${
+              currentPage === button.id ? "bg-#45E1B8" : "bg-#FFF"
+            }`}
+          />
         </div>
       ));
-    };
+    }, [currentPage]);
 
     const Column = () => {
-      if (columnInfo?.length === 0)
+      if (!columnInfo || columnInfo.length === 0)
         return (
           <div className="mt-4 h-10 text-center text-[#B5B5B5]">
             暂无数据哦~
           </div>
         );
-      return columnInfo.slice(0, columnInfo?.length > 1 ? 2 : 1).map((item) => (
+        
+      return columnInfo.slice(0, columnInfo.length > 1 ? 2 : 1).map((item) => (
         <Link
           href={`/dashboard/special-column?id=${item.id}`}
           className="mb-4 flex"
