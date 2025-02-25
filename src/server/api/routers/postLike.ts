@@ -1,10 +1,35 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { postLike, user, post, column } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 import { and } from "drizzle-orm";
-import { uptime } from "process";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type * as schema from "@/server/db/schema";
+
+// 获取专栏点赞量
+export const getColumnsLikeFC = async (
+  db: PostgresJsDatabase<typeof schema>,
+  columnId: string,
+) => {
+  const result = await db
+    .select({
+      likeCount: sql<number>`count(${postLike.id})`,
+    })
+    .from(post)
+    .leftJoin(
+      postLike,
+      and(
+        eq(post.id, postLike.postId),
+        eq(postLike.isLike, true)
+      )
+    )
+    .where(eq(post.columnId, columnId))
+    .groupBy(post.columnId);
+
+  return result[0]?.likeCount ?? 0;
+};
+
 export const postLikeRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
@@ -114,29 +139,5 @@ export const postLikeRouter = createTRPCRouter({
             eq(postLike.postId, input.postId),
           ),
         );
-    }),
-
-  // 获取专栏点赞量
-  getColumnLike: publicProcedure
-    .input(z.object({ columnId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const postList = await ctx.db
-        .select()
-        .from(post)
-        .where(eq(post.columnId, input.columnId));
-      if (postList?.length === 0) {
-        return 0;
-      } else {
-        let res = 0;
-        for (const item of postList) {
-          const postId = item.id;
-          const data = await ctx.db
-            .select()
-            .from(postLike)
-            .where(and(eq(postLike.postId, postId), eq(postLike.isLike, true)));
-          res += data.length;
-        }
-        return res;
-      }
     }),
 });
