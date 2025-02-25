@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
-import { Button } from "antd";
 import Image from "next/image";
 import ColumnCard from "@/app/_components/dashboard/find/ColumnCard";
 import { api } from "@/trpc/react";
@@ -23,7 +22,7 @@ const categories: Category[] = [
   { key: "创作时间", label: "创作时间", value: 4 },
 ];
 
-const ITEM_HEIGHT = 160;
+const ITEM_HEIGHT = 140;
 const WINDOW_HEIGHT = 800;
 const PAGE_SIZE = 10;
 
@@ -75,10 +74,8 @@ const SpecialColumn = () => {
   }, [activeCategory, handleCategoryClick]);
 
   const SortButton = () => (
-    <Button
-      type="link"
-      size="small"
-      className="pl-14px flex items-center"
+    <button
+      className="bg-transparent pl-14px flex items-center"
       onClick={() => setSortOrder(!sortOrder)}
     >
       <span className="text-2.5 font-400 lh-6 text-[#B5B5B5]">
@@ -91,11 +88,10 @@ const SpecialColumn = () => {
         height={12}
         className="ml-1.25 h-3 w-3"
       />
-    </Button>
+    </button>
   );
 
   // 虚拟列表项渲染器
-  // 3. 添加 ItemRenderer 参数类型
   const ItemRenderer = useCallback(({ index, style }: { index: number; style: React.CSSProperties }) => {
     if (index >= flattenedData.length) {
       if (hasNextPage) {
@@ -112,12 +108,11 @@ const SpecialColumn = () => {
       return null;
     }
 
-    // 4. 修复 columnData 类型问题
     const item = flattenedData[index];
     if (!item) return null;
     
     return (
-      <div style={style} className="flex justify-center px-4">
+      <div style={style} className="flex justify-center px-4 py-1">
         <ColumnCard columnData={item} />
       </div>
     );
@@ -150,7 +145,7 @@ const SpecialColumn = () => {
       <SortButton />
 
       {isLoading ? (
-        <LoadingSkeleton rows={4} count={5}/>
+        <LoadingSkeleton className="px-4" rows={3} count={5}/>
       ) : (
         <div className="px-4">
           <InfiniteLoader
@@ -167,7 +162,7 @@ const SpecialColumn = () => {
                 itemCount={hasNextPage ? flattenedData.length + 1 : flattenedData.length}
                 itemSize={ITEM_HEIGHT}
                 width="100%"
-                className="scrollbar-hide"
+                className="[scrollbar-width:none] [ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
               >
                 {ItemRenderer}
               </List>

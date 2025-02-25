@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import SpecialColumn from "@/app/_components/dashboard/recommend/SpecialColumn";
 import YonoteCourse from "@/app/_components/dashboard/recommend/YonoteCourse";
 import CoCreate from "@/app/_components/dashboard/recommend/CoCreate";
-import withTheme from "@/theme";
 
 interface TabItem {
   id: number;
@@ -11,7 +10,7 @@ interface TabItem {
   component: React.ReactNode;
 }
 
-const Recommend = function () {
+export default function Page() {
   const [currentContent, setCurrentContent] = useState<number>(1);
 
   const tabs: TabItem[] = [
@@ -47,7 +46,3 @@ const Recommend = function () {
     </div>
   );
 };
-
-export default function Page() {
-  return withTheme(<Recommend />);
-}
