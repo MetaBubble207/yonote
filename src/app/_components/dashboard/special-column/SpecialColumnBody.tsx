@@ -54,7 +54,7 @@ export default function SpecialColumnBody({
   useEffect(() => {
     if (!token && !userInfo && !isBack) {
       const origin = encodeURIComponent(
-        `/dashboard/special-column?id=${columnId}&invitationCode=${token}&isBack=true`
+        `/dashboard/special-column?id=${columnId}&isBack=true${invitationCode ? `&invitationCode=${invitationCode}` : ""}`
       );
       router.push(`/login?origin=${origin}`);
     }
