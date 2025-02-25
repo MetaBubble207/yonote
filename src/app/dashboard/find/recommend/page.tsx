@@ -3,73 +3,51 @@ import React, { useState } from "react";
 import SpecialColumn from "@/app/_components/dashboard/recommend/SpecialColumn";
 import YonoteCourse from "@/app/_components/dashboard/recommend/YonoteCourse";
 import CoCreate from "@/app/_components/dashboard/recommend/CoCreate";
-import { Button } from "antd";
 import withTheme from "@/theme";
+
+interface TabItem {
+  id: number;
+  label: string;
+  component: React.ReactNode;
+}
 
 const Recommend = function () {
   const [currentContent, setCurrentContent] = useState<number>(1);
 
-  const renderContent = () => {
-    switch (currentContent) {
-      case 1:
-        return <SpecialColumn />;
-      case 2:
-        return <YonoteCourse />;
-      case 3:
-        return <CoCreate />;
-    }
-  };
+  const tabs: TabItem[] = [
+    { id: 1, label: "专栏推荐", component: <SpecialColumn /> },
+    { id: 2, label: "有记小课", component: <YonoteCourse /> },
+    { id: 3, label: "共创计划", component: <CoCreate /> },
+  ];
+
   return (
     <div className="bg-#F5F7FB min-h-screen w-full pt-8">
-      <div className={"flex h-6 w-full items-center pl-4"}>
-        <div>
-          <Button
-            type={"link"}
-            size={"small"}
-            onClick={() => setCurrentContent(1)}
-            className={`text-3.5 lh-6 flex h-6 w-14`}
-          >
-            专栏推荐
-          </Button>
-          {currentContent === 1 && (
-            <div className="w-2.75 border-rd-2 ml-6 h-1 shrink-0 bg-[#45E1B8]"></div>
-          )}
-        </div>
-
-        <div>
-          <Button
-            type={"link"}
-            size={"small"}
-            onClick={() => setCurrentContent(2)}
-            className={`text-3.5 lh-6 ml-10 flex h-6 w-14`}
-          >
-            有记小课
-          </Button>
-          {currentContent === 2 && (
-            <div className="w-2.75 border-rd-2 ml-16 h-1 shrink-0 bg-[#45E1B8]"></div>
-          )}
-        </div>
-
-        <div>
-          <Button
-            type={"link"}
-            size={"small"}
-            onClick={() => setCurrentContent(3)}
-            className={`text-3.5 lh-6 ml-10 flex h-6 w-14`}
-          >
-            共创计划
-          </Button>
-          {currentContent === 3 && (
-            <div className="w-2.75 border-rd-2 ml-16 h-1 shrink-0 bg-[#45E1B8]"></div>
-          )}
-        </div>
+      <div className="flex h-6 w-full items-center pl-4">
+        {tabs.map((tab) => (
+          <div key={tab.id}>
+            <button
+              onClick={() => setCurrentContent(tab.id)}
+              className={`text-3.5 lh-6 flex h-6 w-14 bg-transparent ${
+                tab.id !== 1 ? "ml-10" : ""
+              } ${currentContent === tab.id ? "text-#252525" : "text-#B5B5B5"}`}
+            >
+              {tab.label}
+            </button>
+            {currentContent === tab.id && (
+              <div 
+                className={`w-2.75 border-rd-2 h-1 shrink-0 bg-[#45E1B8] ${
+                  tab.id === 1 ? "ml-6" : "ml-16"
+                }`}
+              />
+            )}
+          </div>
+        ))}
       </div>
-      {renderContent()}
+      {tabs.find(tab => tab.id === currentContent)?.component}
     </div>
   );
 };
 
-const Page = () => {
+export default function Page() {
   return withTheme(<Recommend />);
-};
-export default Page;
+}
