@@ -5,10 +5,9 @@ import Link from "next/link";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import React, { useEffect, useState, useCallback } from "react";
 import { api } from "@/trpc/react";
-import { Button, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import { useRouter, useSearchParams } from "next/navigation";
-import withTheme from "@/theme";
 
 // 类型定义
 interface NavItem {
@@ -22,11 +21,11 @@ interface ButtonInfo {
   label: string;
 }
 
-const User = function User() {
+export default function UserPage() {
   const router = useRouter();
   const code = useSearchParams().get("code");
   const [token, setToken] = useLocalStorage("token", null);
-  
+
   const logout = useCallback(() => {
     localStorage.removeItem("token");
     router.push("/login");
@@ -63,11 +62,7 @@ const User = function User() {
         <Display />
         {/*  我的服务模块*/}
         <Service />
-        <div
-          className={
-            "z-1 text-gray text-3 flex h-20 w-full items-center justify-center"
-          }
-        >
+        <div className={"z-1 text-gray text-3 flex h-20 w-full items-center justify-center"}>
           ICP备案号：
           <Link href={"http://beian.miit.gov.cn/ "}>
             {" "}
@@ -148,19 +143,9 @@ const User = function User() {
         </div>
         <div className="pl-2.5">
           {/* 编辑资料 */}
-          <Button
-            type={"primary"}
-            style={{
-              width: "20",
-              height: "6",
-              fontSize: "10px",
-              border: 0,
-              display: "flex",
-              alignItems: "center",
-              backgroundColor: "#ffffff",
-              borderRadius: "9999px",
-            }}
-            disabled={!token || !userInfo}
+          <button
+            className={`w-20 h-6 text-10px border-0 flex items-center justify-center 
+               bg-#fff rounded-full ${(!token || !userInfo) ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <Image
               src="/images/user/icon_edit.png"
@@ -168,14 +153,18 @@ const User = function User() {
               width={16}
               height={16}
             />
-            <Link
-              href="/dashboard/user/message"
-              prefetch={false}
-              className={"ml-2"}
-            >
-              编辑资料
-            </Link>
-          </Button>
+            {(!token || !userInfo) ? (
+              <span className="ml-2">编辑资料</span>
+            ) : (
+              <Link
+                href="/dashboard/user/message"
+                prefetch={false}
+                className="ml-2"
+              >
+                编辑资料
+              </Link>
+            )}
+          </button>
         </div>
       </div>
     );
@@ -215,7 +204,7 @@ const User = function User() {
         text: "联系客服",
       },
     ];
-    
+
     const renderNavItem = useCallback((item: NavItem, index: number) => (
       <li key={index} className={cardStyles}>
         <Link href={item.href} className={"flex flex-col items-center"}>
@@ -242,8 +231,8 @@ const User = function User() {
         <ul className={"mt-4 flex flex-wrap"}>
           {navItems.map(renderNavItem)}
           <li className={cardStyles}>
-            <div 
-              className={"flex flex-col items-center cursor-pointer"} 
+            <div
+              className={"flex flex-col items-center cursor-pointer"}
               onClick={logout}
             >
               <Image
@@ -273,22 +262,15 @@ const User = function User() {
     const renderButtons = useCallback(() => {
       return buttonInfos.map((button, index) => (
         <div key={index}>
-          <Button
-            type={"link"}
-            size={"small"}
-            className={"mr-8"}
-            style={{
-              color: currentPage === button.id ? "#252525" : "#B5B5B5",
-              padding: 0,
-            }}
+          <button
+            className={`mr-8 bg-transparent ${currentPage === button.id ? "text-#252525" : "text-#B5B5B5"}`}
             onClick={() => setCurrentPage(button.id)}
           >
             {button.label}
-          </Button>
+          </button>
           <div
-            className={`ml-2.25 w-2.75 rounded-2 mt-1 h-1 ${
-              currentPage === button.id ? "bg-#45E1B8" : "bg-#FFF"
-            }`}
+            className={`ml-2.25 w-2.75 rounded-2 mt-1 h-1 ${currentPage === button.id ? "bg-#45E1B8" : "bg-#FFF"
+              }`}
           />
         </div>
       ));
@@ -301,7 +283,7 @@ const User = function User() {
             暂无数据哦~
           </div>
         );
-        
+
       return columnInfo.slice(0, columnInfo.length > 1 ? 2 : 1).map((item) => (
         <Link
           href={`/dashboard/special-column?id=${item.id}`}
@@ -369,8 +351,3 @@ const User = function User() {
     );
   }
 };
-
-const Page = () => {
-  return withTheme(<User />);
-};
-export default Page;
