@@ -39,7 +39,7 @@ const User = function User() {
   );
 
   const { data: userInfo, isLoading: isUserInfoLoading } =
-    api.users.getOne.useQuery({ id: token }, { enabled: Boolean(token) });
+    api.users.getOne.useQuery(token, { enabled: Boolean(token) });
 
   const { data: columnInfo, isLoading: isColumnInfoLoading } =
     api.column.getAllByUserId.useQuery(

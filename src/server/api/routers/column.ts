@@ -19,6 +19,7 @@ import { createCaller } from "@/server/api/root";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
 import { getCurrentTime } from "@/tools/getCurrentTime";
+import { getOneUser } from "./user";
 
 const getDetailColumnCard = async (
   ctx: { headers: Headers; db: PostgresJsDatabase<typeof schema> },
@@ -46,7 +47,7 @@ const getDetailColumnCard = async (
     await db.select().from(post).where(eq(post.columnId, columnId))
   ).length;
   // 获取作者基本信息
-  const userData = await caller.users.getOne({ id: columnData.userId });
+  const userData = await getOneUser(ctx.db, columnData!.userId!);
   let detailColumnCard: DetailColumnCard = {
     avatar: "",
     cover: "",
@@ -419,7 +420,7 @@ export const columnRouter = createTRPCRouter({
       // 批量获取用户数据
       const userIds = [...new Set(columns.map(col => col.userId))];
       const users = await Promise.all(
-        userIds.map(id => caller.users.getOne({ id: id! }))
+        userIds.map(id => getOneUser(ctx.db, id!))
       );
 
       // 创建用户信息查找映射

@@ -20,11 +20,12 @@ export const getOneUser = async (
     return null;
   }
 };
+
 export const userRouter = createTRPCRouter({
   getOne: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.string())
     .query(async ({ ctx, input }) => {
-      return getOneUser(ctx.db, input.id);
+      return getOneUser(ctx.db, input);
     }),
 
   login: publicProcedure
@@ -90,13 +91,13 @@ export const userRouter = createTRPCRouter({
     }),
 
   qrcodeLogin: publicProcedure
-    .input(z.object({ code: z.string() }))
+    .input(z.string())
     .query(async ({ ctx, input }) => {
       const appid = process.env.NEXT_PUBLIC_QRCODE_APP_ID;
 
       const appsecret = process.env.NEXT_PUBLIC_QRCODE_APP_SECRET;
       // 获取access_token
-      const get_access_token_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${appsecret}&code=${input.code}&grant_type=authorization_code`;
+      const get_access_token_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${appsecret}&code=${input}&grant_type=authorization_code`;
       try {
         const accessTokenResponse = await fetch(get_access_token_url);
         if (!accessTokenResponse.ok) {

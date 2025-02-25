@@ -33,15 +33,13 @@ const Article = ({ chapter, columnId }: { chapter: number, columnId: string }) =
     const searchParams = useSearchParams();
     const code = searchParams.get("code");
     if (code && token === null) {
-      userInfo = api.users.login.useQuery({
-        code: code,
-      }).data;
+      userInfo = api.users.login.useQuery(code).data;
       if (userInfo) {
         setToken(userInfo.id);
       }
     }
     if (token) {
-      userInfo = api.users.getOne.useQuery({ id: token }).data;
+      userInfo = api.users.getOne.useQuery(token).data;
     }
   }
   // 点赞数

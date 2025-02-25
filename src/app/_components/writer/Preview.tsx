@@ -12,9 +12,7 @@ interface PreviewProps {
 
 const Preview = ({ title, html, tags }: PreviewProps) => {
   const token = useLocalStorage("token", null);
-  const user = api.users.getOne.useQuery({
-    id: token[0],
-  }).data;
+  const user = api.users.getOne.useQuery(token[0]).data;
   console.log(user);
   const currentDate = new Date();
   const year = currentDate.getFullYear();

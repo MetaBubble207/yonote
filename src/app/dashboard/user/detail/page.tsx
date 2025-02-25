@@ -18,7 +18,7 @@ const Detail = function () {
     data: userInfo,
     isLoading,
     isError,
-  } = api.users.getOne.useQuery({ id: params.get("id") });
+  } = api.users.getOne.useQuery(params.get("id") ?? '');
   if (isLoading)
     return (
       <div className={"mt-80"}>

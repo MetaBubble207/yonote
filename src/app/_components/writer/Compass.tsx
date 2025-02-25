@@ -26,9 +26,7 @@ const Compass = () => {
     }
   }, [token, pathname, router]);
 
-  const user = api.users.getOne.useQuery({
-    id: token ?? "",
-  }).data;
+  const user = api.users.getOne.useQuery(token ?? "").data;
 
   useEffect(() => {
     if (isGo) router.push(`/writer/homepage`);

@@ -5,6 +5,7 @@ import { referrals, type SpeedUp } from "@/server/db/schema";
 import { createCaller } from "@/server/api/root";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
+import { getOneUser } from "./user";
 
 export const getOneByUserIdAndColumnId = (
   db: PostgresJsDatabase<typeof schema>,
@@ -35,7 +36,7 @@ export const referralsRouter = createTRPCRouter({
         const price = await caller.order.getTotalPriceByReferralId(
           referral.referredUserId,
         );
-        const user = await caller.users.getOne({ id: referral.referredUserId });
+        const user = await getOneUser(ctx.db, referral.referredUserId!);
         res.push({
           id: index + 1,
           avatar: user.avatar,

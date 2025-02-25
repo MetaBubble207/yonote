@@ -19,9 +19,7 @@ const UserMessage = function () {
   const [token] = useLocalStorage("token", null);
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
-  const { data: userInfo, isLoading } = api.users.getOne.useQuery({
-    id: token,
-  });
+  const { data: userInfo, isLoading } = api.users.getOne.useQuery(token);
   const [phone, setPhone] = useState(userInfo?.phone);
   const [name, setName] = useState(userInfo?.name);
   const fileInputRef = useRef(null);

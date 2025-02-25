@@ -44,7 +44,7 @@ const SpecialColumnBody = () => {
 
   //这个地址是提前给微信登录接口重定向，默认微信那边会传回code和state两个query参数，通过useSearchParams可以拿到
   const { data: userInfo } = api.users.login.useQuery(
-    { code: code },
+    code!,
     { enabled: !!code && token === null },
   );
   const [messageApi, contextHolder] = message.useMessage();

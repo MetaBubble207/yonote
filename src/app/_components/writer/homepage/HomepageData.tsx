@@ -17,7 +17,7 @@ const HomepageData = ({ columnId }: { columnId: string | undefined }) => {
     isFetching: isLoginFetch,
     isSuccess,
   } = api.users.qrcodeLogin.useQuery(
-    { code },
+    code!,
     {
       enabled: Boolean(code && !token),
     },

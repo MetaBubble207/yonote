@@ -46,7 +46,7 @@ const Page = () => {
 
   const columnId = useSearchParams().get("columnId");
   const [token] = useLocalStorage("token", null);
-  const { data: userData } = api.users.getOne.useQuery({ id: token });
+  const { data: userData } = api.users.getOne.useQuery(token);
   const {
     data: distributorshipData,
     isFetching: isDistributorshipDataFetching,
