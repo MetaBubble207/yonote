@@ -13,14 +13,13 @@ import {
   priceList,
   user,
 } from "@/server/db/schema";
-import { and, desc, eq, like, sql } from "drizzle-orm";
+import { and, asc, desc, eq, like, sql } from "drizzle-orm";
 import { uniqueArray } from "@/tools/uniqueArray";
 import { createCaller } from "@/server/api/root";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 import { getOneUser } from "./user";
-
 const getDetailColumnCard = async (
   ctx: { headers: Headers; db: PostgresJsDatabase<typeof schema> },
   columnId: string,
@@ -487,48 +486,80 @@ export const columnRouter = createTRPCRouter({
     }),
 
   getColumnFilter: publicProcedure
-    .input(z.object({ conditions: z.number() }))
-    .query(async ({ ctx, input }): Promise<DetailColumnCard[]> => {
-      const { db } = ctx;
-      // 获取所有专栏
-      const allColumn = await db.select().from(column);
-      const detailColumnsPromise = allColumn.map(async (column) => {
-        return await getDetailColumnCard(ctx, column.id);
+    .input(z.object({
+      conditions: z.number(),
+      limit: z.number().default(10),
+      cursor: z.number().default(0),
+      sortOrder: z.boolean().default(true),
+    }))
+    .query(async ({ ctx, input }): Promise<{
+      items: DetailColumnCard[];
+      nextCursor: number | undefined;
+    }> => {
+      const { conditions, limit, cursor, sortOrder } = input;
+
+      let allColumn;
+      if (sortOrder) {
+        allColumn = await ctx.db
+          .select()
+          .from(column)
+          .limit(limit + 1)
+          .offset(cursor)
+          .orderBy(asc(column.id))
+      } else {
+        allColumn = await ctx.db
+          .select()
+          .from(column)
+          .limit(limit + 1)
+          .offset(cursor)
+          .orderBy(desc(column.id))
+      }
+
+      const hasNextPage = allColumn.length > limit;
+      const columns = hasNextPage ? allColumn.slice(0, -1) : allColumn;
+
+      const detailColumnsPromise = columns.map(async (col) => {
+        return await getDetailColumnCard(ctx, col.id);
       });
 
-      const detailColumns = await Promise.all(detailColumnsPromise);
-      let res: DetailColumnCard[] = [];
-      const { conditions } = input;
+      let items = await Promise.all(detailColumnsPromise);
 
+      // 根据条件排序
       switch (conditions) {
-        // 0 全部
-        case 0:
-          res = detailColumns;
-          break;
-        // 1 订阅量
         case 1:
-          res = detailColumns.sort(
-            (a, b) => b.subscriptionCount - a.subscriptionCount,
+          items = items.sort((a, b) =>
+            sortOrder
+              ? b.subscriptionCount - a.subscriptionCount
+              : a.subscriptionCount - b.subscriptionCount
           );
           break;
-        // 2 内容量
         case 2:
-          res = detailColumns.sort((a, b) => b.postCount - a.postCount);
-          break;
-        // 3 发布时间
-        case 3:
-          res = detailColumns.sort((a, b) =>
-            b.createdAt > a.createdAt ? 1 : -1,
+          items = items.sort((a, b) =>
+            sortOrder
+              ? b.postCount - a.postCount
+              : a.postCount - b.postCount
           );
           break;
-        // 4 创作时间
+        case 3:
+          items = items.sort((a, b) =>
+            sortOrder
+              ? (b.createdAt > a.createdAt ? 1 : -1)
+              : (a.createdAt > b.createdAt ? 1 : -1)
+          );
+          break;
         case 4:
-          res = detailColumns.sort((a, b) =>
-            b.updatedAt > a.updatedAt ? 1 : -1,
+          items = items.sort((a, b) =>
+            sortOrder
+              ? (b.updatedAt > a.updatedAt ? 1 : -1)
+              : (a.updatedAt > b.updatedAt ? 1 : -1)
           );
           break;
       }
-      return res;
+
+      return {
+        items,
+        nextCursor: hasNextPage ? cursor + limit : undefined,
+      };
     }),
 
   // 更新创作时间

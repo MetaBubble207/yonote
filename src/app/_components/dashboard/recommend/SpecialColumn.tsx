@@ -1,190 +1,182 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Button, Skeleton } from "antd";
+import React, { useState, useCallback, useMemo } from "react";
+import { Button } from "antd";
 import Image from "next/image";
 import ColumnCard from "@/app/_components/dashboard/find/ColumnCard";
 import { api } from "@/trpc/react";
-import type { DetailColumnCard } from "@/server/db/schema";
+import { LoadingSkeleton } from "../../common/LoadingSkeleton";
+import { FixedSizeList as List } from 'react-window';
+import InfiniteLoader from "react-window-infinite-loader";
+import { Spin } from "antd";
+
+interface Category {
+  key: string;
+  label: string;
+  value: number;
+}
+
+const categories: Category[] = [
+  { key: "默认", label: "默认", value: 0 },
+  { key: "订阅量", label: "订阅量", value: 1 },
+  { key: "内容量", label: "内容量", value: 2 },
+  { key: "发布时间", label: "发布时间", value: 3 },
+  { key: "创作时间", label: "创作时间", value: 4 },
+];
+
+const ITEM_HEIGHT = 160;
+const WINDOW_HEIGHT = 800;
+const PAGE_SIZE = 10;
 
 const SpecialColumn = () => {
   const [activeCategory, setActiveCategory] = useState<string>("默认");
   const [currentContent, setCurrentContent] = useState<number>(0);
-  const [data, setData] = useState([]);
   const [sortOrder, setSortOrder] = useState<boolean>(true);
 
-  // 使用 useQuery 钩子获取数据
-  const { data: columns, isLoading } = api.column.getColumnFilter.useQuery({
-    conditions: currentContent,
-  });
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = api.column.getColumnFilter.useInfiniteQuery(
+    {
+      conditions: currentContent,
+      limit: PAGE_SIZE,
+      sortOrder,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      // 当排序条件改变时重新获取数据
+      refetchOnMount: true,
+    }
+  );
 
-  useEffect(() => {
-    setData(columns);
+  const flattenedData = useMemo(() => {
+    if (!data?.pages) return [];
+    return data.pages.flatMap(page => page.items);
+  }, [data?.pages]); // 移除 sortOrder 依赖，因为排序已经在服务端处理
+
+  const handleCategoryClick = useCallback((category: Category) => {
+    setActiveCategory(category.key);
+    setCurrentContent(category.value);
   }, []);
 
-  // 在数据加载完成时更新状态
-  useEffect(() => {
-    if (columns) {
-      // 根据 sortOrder 设置 data 的值
-      const sortedData = sortOrder ? columns : [...columns].reverse();
-      setData(sortedData);
-    }
-  }, [columns, sortOrder]);
+  const CategoryButton = useCallback(({ category }: { category: Category }) => {
+    const isActive = category.key === activeCategory;
+    return (
+      <button
+        className={`ml-5px text-3.25 font-not-italic font-400 lh-6 border-rd-1 px-9px h-6 shrink-0 text-center
+          ${isActive ? 'bg-[rgba(69,225,184,0.20)] text-[#1DB48D]' : 'bg-[#FFFFFF] text-[#999]'}`}
+        onClick={() => handleCategoryClick(category)}
+      >
+        {category.label}
+      </button>
+    );
+  }, [activeCategory, handleCategoryClick]);
 
-  const toggleSortOrder = () => {
-    setSortOrder(!sortOrder);
-  };
+  const SortButton = () => (
+    <Button
+      type="link"
+      size="small"
+      className="pl-14px flex items-center"
+      onClick={() => setSortOrder(!sortOrder)}
+    >
+      <span className="text-2.5 font-400 lh-6 text-[#B5B5B5]">
+        {sortOrder ? "默认倒序排序" : "顺序排序"}
+      </span>
+      <Image
+        src="/images/recommend/sort.svg"
+        alt="sort"
+        width={12}
+        height={12}
+        className="ml-1.25 h-3 w-3"
+      />
+    </Button>
+  );
+
+  // 虚拟列表项渲染器
+  // 3. 添加 ItemRenderer 参数类型
+  const ItemRenderer = useCallback(({ index, style }: { index: number; style: React.CSSProperties }) => {
+    if (index >= flattenedData.length) {
+      if (hasNextPage) {
+        return (
+          <div 
+            style={style} 
+            className="flex flex-col items-center justify-center py-4 gap-2"
+          >
+            <Spin size="small" className="text-[#1DB48D]" />
+            <span className="text-sm text-[#B5B5B5]">加载中...</span>
+          </div>
+        );
+      }
+      return null;
+    }
+
+    // 4. 修复 columnData 类型问题
+    const item = flattenedData[index];
+    if (!item) return null;
+    
+    return (
+      <div style={style} className="flex justify-center px-4">
+        <ColumnCard columnData={item} />
+      </div>
+    );
+  }, [flattenedData, hasNextPage]);
+
+  // 5. 简化 loadMoreItems 函数，移除未使用的参数
+  const loadMoreItems = useCallback(
+    async () => {
+      if (isFetchingNextPage || !hasNextPage) return;
+      await fetchNextPage();
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+
+  const isItemLoaded = useCallback(
+    (index: number) => {
+      return !hasNextPage || index < flattenedData.length;
+    },
+    [hasNextPage, flattenedData.length]
+  );
 
   return (
     <div>
-      <Tabs />
-      <div>
-        <Button
-          type={"link"}
-          size={"small"}
-          style={{ display: "flex", paddingLeft: "14px" }}
-          onClick={toggleSortOrder}
-        >
-          <div className="text-2.5 font-400 lh-6 mt-2 text-[#B5B5B5]">
-            {sortOrder ? "默认倒序排序" : "顺序排序"}
-          </div>
-          <Image
-            src={"/images/recommend/sort.svg"}
-            alt={"sort"}
-            width={12}
-            height={12}
-            className="ml-1.25 mt-3.5 h-3 w-3"
-          />
-        </Button>
-      </div>
-      <List></List>
-    </div>
-  );
-
-  function Tabs() {
-    const handleCategoryClick = (category: string) => {
-      setActiveCategory(category);
-      let newConditions = 0;
-      switch (category) {
-        case "默认":
-          newConditions = 0;
-          break;
-        case "订阅量":
-          newConditions = 1;
-          break;
-        case "内容量":
-          newConditions = 2;
-          break;
-        case "发布时间":
-          newConditions = 3;
-          break;
-        case "创作时间":
-          newConditions = 4;
-          break;
-      }
-      setCurrentContent(newConditions);
-    };
-
-    const getCategoryStyle = (category: string) => {
-      if (category === activeCategory) {
-        return {
-          backgroundColor: "rgba(69,225,184,0.20)",
-          color: "#1DB48D",
-        };
-      } else {
-        return {
-          backgroundColor: "#FFFFFF",
-          color: "#999",
-        };
-      }
-    };
-    return (
       <div className="mt-6 flex h-6 w-full pl-4">
-        <div
-          className={`text-3.25 font-not-italic font-400 lh-6 border-rd-1 px-9px h-6 shrink-0 text-center text-[#1DB48D]`}
-          onClick={() => handleCategoryClick("默认")}
-          style={getCategoryStyle("默认")}
-        >
-          默认
-        </div>
-        <div
-          className={`ml-5px text-3.25 font-not-italic font-400 lh-6 border-rd-1 px-9px h-6 shrink-0 text-center text-[#999]`}
-          onClick={() => handleCategoryClick("订阅量")}
-          style={getCategoryStyle("订阅量")}
-        >
-          订阅量
-        </div>
-        <div
-          className="ml-5px text-3.25 font-not-italic font-400 lh-6 border-rd-1 px-9px h-6 shrink-0 text-center text-[#999]"
-          onClick={() => handleCategoryClick("内容量")}
-          style={getCategoryStyle("内容量")}
-        >
-          内容量
-        </div>
-        <div
-          className="ml-5px text-3.25 font-not-italic font-400 lh-6 border-rd-1 px-9px h-6 shrink-0 text-center text-[#999]"
-          onClick={() => handleCategoryClick("发布时间")}
-          style={getCategoryStyle("发布时间")}
-        >
-          发布时间
-        </div>
-        <div
-          className="ml-5px text-3.25 font-not-italic font-400 lh-6 border-rd-1 px-9px h-6 shrink-0 text-center text-[#999]"
-          onClick={() => handleCategoryClick("创作时间")}
-          style={getCategoryStyle("创作时间")}
-        >
-          创作时间
-        </div>
-      </div>
-    );
-  }
-
-  function List() {
-    if (isLoading)
-      return (
-        <div className={"px-4"}>
-          <Skeleton
-            active
-            paragraph={{ rows: 4 }}
-            title={false}
-            className="w-85.75 border-rd-5 p4 mt-4 h-32 bg-[#FFF]"
-          />
-          <Skeleton
-            active
-            paragraph={{ rows: 4 }}
-            title={false}
-            className="w-85.75 border-rd-5 p4 mt-4 h-32 bg-[#FFF]"
-          />
-          <Skeleton
-            active
-            paragraph={{ rows: 4 }}
-            title={false}
-            className="w-85.75 border-rd-5 p4 mt-4 h-32 bg-[#FFF]"
-          />
-          <Skeleton
-            active
-            paragraph={{ rows: 4 }}
-            title={false}
-            className="w-85.75 border-rd-5 p4 mt-4 h-32 bg-[#FFF]"
-          />
-          <Skeleton
-            active
-            paragraph={{ rows: 4 }}
-            title={false}
-            className="w-85.75 border-rd-5 p4 mt-4 h-32 bg-[#FFF]"
-          />
-        </div>
-      );
-    return (
-      <div>
-        {data?.map((item) => (
-          <div className="mt-4 flex justify-center" key={item.id}>
-            {/*// @ts-ignore*/}
-            <ColumnCard columnData={item} />
-          </div>
+        {categories.map((category) => (
+          <CategoryButton key={category.key} category={category} />
         ))}
       </div>
-    );
-  }
+      
+      <SortButton />
+
+      {isLoading ? (
+        <LoadingSkeleton rows={4} count={5}/>
+      ) : (
+        <div className="px-4">
+          <InfiniteLoader
+            isItemLoaded={isItemLoaded}
+            itemCount={hasNextPage ? flattenedData.length + 1 : flattenedData.length}
+            loadMoreItems={loadMoreItems}
+            threshold={2}
+          >
+            {({ onItemsRendered, ref }) => (
+              <List
+                ref={ref}
+                onItemsRendered={onItemsRendered}
+                height={WINDOW_HEIGHT}
+                itemCount={hasNextPage ? flattenedData.length + 1 : flattenedData.length}
+                itemSize={ITEM_HEIGHT}
+                width="100%"
+                className="scrollbar-hide"
+              >
+                {ItemRenderer}
+              </List>
+            )}
+          </InfiniteLoader>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default SpecialColumn;
