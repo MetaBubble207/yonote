@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import SpecialColumn from "@/app/_components/dashboard/recommend/SpecialColumn";
+import SpecialColumnList from "@/app/_components/dashboard/recommend/SpecialColumnList";
 import YonoteCourse from "@/app/_components/dashboard/recommend/YonoteCourse";
 import CoCreate from "@/app/_components/dashboard/recommend/CoCreate";
 
@@ -14,7 +14,7 @@ export default function Page() {
   const [currentContent, setCurrentContent] = useState<number>(1);
 
   const tabs: TabItem[] = [
-    { id: 1, label: "专栏推荐", component: <SpecialColumn /> },
+    { id: 1, label: "专栏推荐", component: <SpecialColumnList /> },
     { id: 2, label: "有记小课", component: <YonoteCourse /> },
     { id: 3, label: "共创计划", component: <CoCreate /> },
   ];

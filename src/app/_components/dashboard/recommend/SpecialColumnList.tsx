@@ -26,7 +26,7 @@ const ITEM_HEIGHT = 150;
 const WINDOW_HEIGHT = 800;
 const PAGE_SIZE = 10;
 
-const SpecialColumn = () => {
+const SpecialColumnList = () => {
   const [activeCategory, setActiveCategory] = useState<string>("默认");
   const [currentContent, setCurrentContent] = useState<number>(0);
   const [sortOrder, setSortOrder] = useState<boolean>(true);
@@ -136,7 +136,7 @@ const SpecialColumn = () => {
 
   return (
     <div>
-      <div className="mt-6 flex h-6 w-full pl-4">
+      <div className="mt-6 flex h-6 w-full pl-4 pb-10">
         {categories.map((category) => (
           <CategoryButton key={category.key} category={category} />
         ))}
@@ -162,7 +162,7 @@ const SpecialColumn = () => {
                 itemCount={hasNextPage ? flattenedData.length + 1 : flattenedData.length}
                 itemSize={ITEM_HEIGHT}
                 width="100%"
-                className="[scrollbar-width:none] [ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                className="[scrollbar-width:none] [ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-10"
               >
                 {ItemRenderer}
               </List>
@@ -174,4 +174,4 @@ const SpecialColumn = () => {
   );
 };
 
-export default SpecialColumn;
+export default SpecialColumnList;
