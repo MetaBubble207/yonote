@@ -7,7 +7,7 @@ import { time2DateString } from "@/tools/timeToString";
 import ActionButtons from "@/app/_components/dashboard/special-column/ActionButton";
 
 export default async function Page({ searchParams }: { searchParams: { c: string; id: string } }) {
-  const { c, id } = searchParams;
+  const { c, id } = await searchParams;
   const chapter = parseInt(c);
   const columnId = id;
 
