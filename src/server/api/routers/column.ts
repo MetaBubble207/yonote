@@ -323,17 +323,7 @@ export const columnRouter = createTRPCRouter({
     });
     return await Promise.all(promises);
   }),
-
-  getUserId: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const userId = await ctx.db
-        .select()
-        .from(column)
-        .where(eq(column.id, input.id));
-      return userId[0].userId;
-    }),
-
+  
   getColumnDetail: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {

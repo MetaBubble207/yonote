@@ -13,14 +13,7 @@ import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 const SpecialColumn = () => {
   const params = useSearchParams();
   const columnId = params.get("id");
-  const userId = api.column.getUserId.useQuery({
-    id: columnId!,
-  });
-
-  const { data: user, isLoading: isUserLoading } = api.users?.getOne.useQuery({
-    id: userId.data!,
-  });
-
+  const { data: user, isLoading: isUserLoading } = api.users.getOneByColumnId.useQuery(columnId!);
   const column = api.column.getColumnDetail.useQuery(columnId!).data;
 
   //分享的用户数据

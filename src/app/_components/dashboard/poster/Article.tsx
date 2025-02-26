@@ -18,14 +18,8 @@ const Article = ({ chapter, columnId }: { chapter: number, columnId: string }) =
       chapter: chapter,
     });
 
-  const userId = api.column.getUserId.useQuery({
-    id: columnId,
-  });
-
-  const { data: user, isLoading: isUserLoading } = api.users?.getOne.useQuery({
-    id: userId.data!,
-  });
-
+  const { data: user, isLoading: isUserLoading } = api.users.getOneByColumnId.useQuery(columnId);
+  
   //分享的用户数据
   let userInfo;
   const [token, setToken] = useLocalStorage("token", null);

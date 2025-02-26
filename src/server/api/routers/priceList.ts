@@ -1,23 +1,20 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { type PriceList, priceList } from "@/server/db/schema";
+import { column, priceList, wallet } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
 export const priceListRouter = createTRPCRouter({
-  getByColumnId: publicProcedure
-    .input(z.object({ columnId: z.string() }))
-    .query(async ({ ctx, input }): Promise<PriceList[]> => {
-      let res: PriceList[] = [];
-      const data = await ctx.db
-        .select()
-        .from(priceList)
-        .where(eq(priceList.columnId, input.columnId));
-      if (data.length !== 0) {
-        res.push(...data);
-        return res;
-      } else {
-        return res;
-      }
+  getReservedData: publicProcedure
+    .input(z.object({ columnId: z.string(), buyerId: z.string()}))
+    .query(async ({ ctx, input }) => {
+      const priceListData =  await ctx.db
+      .select()
+      .from(priceList)
+      .where(eq(priceList.columnId, input.columnId))
+      .orderBy(priceList.price)
+      const columnData = await ctx.db.query.column.findFirst({ where: eq(column.id, input.columnId) });
+      const walletData = await ctx.db.query.wallet.findFirst({ where: eq(wallet.userId, input.buyerId) });
+      return {priceListData, columnData, walletData};
     }),
   delById: publicProcedure
     .input(z.object({ id: z.number() }))
