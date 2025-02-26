@@ -15,7 +15,7 @@ import {
   wallet,
 } from "@/server/db/schema";
 import type * as schema from "../../db/schema";
-import { and, between, eq, gt, inArray, like, lt, sql } from "drizzle-orm";
+import { and, between, desc, eq, gt, inArray, like, lt, sql } from "drizzle-orm";
 import { addDays } from "date-fns";
 import {
   getCurrentTime,
@@ -467,13 +467,16 @@ export const orderRouter = createTRPCRouter({
             id: post.id,
             name: post.name,
             content: post.content,
+            isTop: post.isTop,
+            isFree: post.isFree,
             createdAt: post.createdAt,
             updatedAt: post.updatedAt,
             columnId: post.columnId,
             chapter: post.chapter,
           })
           .from(post)
-          .where(eq(post.columnId, columnId)),
+          .where(and(eq(post.columnId, columnId),eq(post.status, true)))
+          .orderBy(desc(post.isTop), post.chapter),
         ]);
 
         if (!columnData) {
