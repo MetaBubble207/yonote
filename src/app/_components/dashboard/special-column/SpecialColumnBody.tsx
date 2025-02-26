@@ -1,17 +1,20 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { message } from "antd";
+import Image from "next/image";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
-import SpecialColumnIntroduce from "@/app/_components/dashboard/special-column/SpecialColumnIntroduce";
-import SpecialColumnList from "@/app/_components/dashboard/special-column/SpecialColumnList";
+import { useColumnSearch } from "@/app/_hooks/useColumnSearch";
+import SpecialColumnIntroduce from "./SpecialColumnIntroduce";
+import SpecialColumnList from "./SpecialColumnList";
 import Reserved from "@/app/_components/dialog/Reserved";
 import Loading from "@/app/_components/common/Loading";
 import { StatisticsInfo } from "./StatisticsInfo";
 import { TabBar } from "./TabBar";
 import { SubscribeButton } from "./SubscribeButton";
-import Image from "next/image";
+import { SearchModal } from "./modals/Modals";
+
 interface SpecialColumnBodyProps {
   columnId: string;
   code?: string;
@@ -28,18 +31,30 @@ export default function SpecialColumnBody({
   const router = useRouter();
   const [token, setToken] = useLocalStorage("token", null);
   const [messageApi, contextHolder] = message.useMessage();
-  const [currentContent, setCurrentContent] = useState<number>(1);
-  const [isSubscribe, setIsSubscribe] = useState(false);
-  const [check, setCheck] = useState(false);
-  const [isDesc, setIsDesc] = useState(true);
-  // 查看用户数据
+  const [currentContent, setCurrentContent] = React.useState<number>(1);
+  const [isSubscribe, setIsSubscribe] = React.useState(false);
+  const [check, setCheck] = React.useState(false);
+
+  const {
+    isDesc,
+    searchValue,
+    condition,
+    isSearching,
+    handleSearch,
+    toggleSearch,
+    toggleSort,
+    handleSearchCancel,
+    handleSearchChange,
+  } = useColumnSearch();
+
+  // API 查询
   const { data: status, isLoading: statusLoading } = api.order.getUserStatus.useQuery(
     { userId: token, columnId },
     { enabled: Boolean(token) }
   );
 
   const { data: detailPost, isLoading: detailPostLoading } = api.order.getColumnOrder.useQuery(
-    { columnId, isDesc },
+    { columnId, isDesc, search: condition },
     { enabled: Boolean(columnId) }
   );
 
@@ -58,7 +73,7 @@ export default function SpecialColumnBody({
       );
       router.push(`/login?origin=${origin}`);
     }
-  }, [token, userInfo, isBack, columnId, router]);
+  }, [token, userInfo, isBack, columnId, router, invitationCode]);
 
   // 处理登录成功
   useEffect(() => {
@@ -76,9 +91,8 @@ export default function SpecialColumnBody({
       referredUserId: invitationCode,
       columnId,
     });
-  }, [invitationCode, token, columnId]);
+  }, [invitationCode, token, columnId, createReferral]);
 
-  // 事件处理
   const handleSubscribe = useCallback(() => {
     setIsSubscribe(prev => !prev);
     setCheck(prev => !prev);
@@ -95,8 +109,7 @@ export default function SpecialColumnBody({
   return (
     <div>
       {contextHolder}
-
-      <div className=" top-39 absolute z-2 min-h-140 w-full rounded-t-30px bg-white">
+      <div className="top-39 absolute z-2 min-h-140 w-full rounded-t-30px bg-white">
         <StatisticsInfo
           subscriptCount={detailPost?.subscriptCount}
           contentCount={detailPost?.detailPostCard.length}
@@ -109,6 +122,7 @@ export default function SpecialColumnBody({
           />
           <div className="ml-auto flex items-center">
             <Image
+              onClick={toggleSearch}
               src="/images/special-column/Magnifying glass.png"
               alt="搜索"
               width={18}
@@ -116,7 +130,7 @@ export default function SpecialColumnBody({
               className="mr-[24px] cursor-pointer"
             />
             <Image
-              onClick={() => setIsDesc(prev => !prev)}
+              onClick={toggleSort}
               src={isDesc ? "/images/special-column/DescSort.png" : "/images/special-column/AscSort.png"}
               alt="排序"
               width={18}
@@ -141,8 +155,8 @@ export default function SpecialColumnBody({
           show={!status}
           onClick={handleSubscribe}
         />
-
       </div>
+
       {isSubscribe && (
         <Reserved
           onClose={() => setIsSubscribe(false)}
@@ -150,6 +164,14 @@ export default function SpecialColumnBody({
           columnId={columnId}
         />
       )}
+
+      <SearchModal
+        isOpen={isSearching}
+        value={searchValue}
+        onOk={handleSearch}
+        onCancel={handleSearchCancel}
+        onChange={handleSearchChange}
+      />
     </div>
   );
-};
+}

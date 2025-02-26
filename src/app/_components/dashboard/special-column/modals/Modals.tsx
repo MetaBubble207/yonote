@@ -1,8 +1,9 @@
 "use client"
-import { Modal } from "antd";
+import { Modal, Input } from "antd";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import { ModalProps, OrderModalProps } from "@/app/dashboard/special-column/types";
-
+import withTheme from "@/theme";
+const { Search } = Input;
 export const TopUpModal: React.FC<ModalProps> = ({ onClose, onConfirm }) => (
     <W100H50Modal>
         <div>
@@ -69,5 +70,36 @@ export const OrderModal: React.FC<OrderModalProps> = ({
                 </button>
             )}
         </Modal>
+    );
+};
+interface SearchModalProps {
+    isOpen: boolean;
+    value: string;
+    onOk: () => void;
+    onCancel: () => void;
+    onChange: (value: string) => void;
+}
+
+export const SearchModal = ({
+    isOpen,
+    value,
+    onOk,
+    onCancel,
+    onChange,
+}: SearchModalProps) => {
+    return (
+        withTheme(<Modal
+            title="搜索您想要搜索的帖子"
+            open={isOpen}
+            onOk={onOk}
+            onCancel={onCancel}
+        >
+            <Search
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder="支持搜索标题和内容"
+                size="large"
+            />
+        </Modal>)
     );
 };
