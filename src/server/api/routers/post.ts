@@ -200,6 +200,7 @@ export const postRouter = createTRPCRouter({
       return {
         ...postData,
         user: userData,
+        column: columnData,
       };
     }),
 

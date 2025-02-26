@@ -10,7 +10,7 @@ interface NavigationProps {
   columnName?: string;
   prepost?: Post;
   nextpost?: Post;
-  numData?: number;
+  postCount?: number;
   status?: boolean;
   userId?: string;
   token?: string;
@@ -65,7 +65,7 @@ export function Navigation({
   columnName,
   prepost,
   nextpost,
-  numData = 0,
+  postCount = 0,
   status,
   userId,
   token,
@@ -114,9 +114,9 @@ export function Navigation({
 
             <NavigationButton
               direction="right"
-              title={numData <= chapter ? "已经是末篇了" : (nextpost?.name || '')}
+              title={postCount <= chapter ? "已经是末篇了" : (nextpost?.name || '')}
               onClick={canAccessPost(nextpost) ? navigation.toNext : alertMessage}
-              disabled={numData <= chapter}
+              disabled={postCount <= chapter}
             />
           </div>
         </div>
