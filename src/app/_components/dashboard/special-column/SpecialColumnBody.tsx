@@ -76,7 +76,7 @@ export default function SpecialColumnBody({
       referredUserId: invitationCode,
       columnId,
     });
-  }, [invitationCode, token, columnId, createReferral]);
+  }, [invitationCode, token, columnId]);
 
   // 事件处理
   const handleSubscribe = useCallback(() => {
