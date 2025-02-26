@@ -34,7 +34,7 @@ const SpecialColumn = () => {
   }
 
   const { data: orderData, isLoading: isOrderLoading } =
-    api.order.getColumnOrder.useQuery(columnId!);
+    api.order.getColumnOrder.useQuery({columnId: columnId!});
 
   const [columnIntro, setColumnIntro] = useState("");
   useEffect(() => {

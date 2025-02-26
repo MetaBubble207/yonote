@@ -12,7 +12,7 @@ export default async function Page({
   const [column, user, order] = await Promise.all([
     api.column.getColumnDetail(columnId),
     api.users.getOneByColumnId(columnId),
-    api.order.getColumnOrder(columnId)
+    api.order.getColumnOrder({columnId})
   ]);
 
   if (!user || !column || !order) {

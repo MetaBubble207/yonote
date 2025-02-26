@@ -28,6 +28,7 @@ import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { getOneUser } from "@/server/api/routers/user";
 import { getOneByUserIdAndColumnId } from "@/server/api/routers/referrals";
 import { getOneDistributorshipDetail } from "@/server/api/routers/distributorshipDetail";
+import { getColumnBasicInfo, getPostStats, getUserData } from "../tools/columnQueries";
 // 检查该订阅状态是否需要更新，即过期日期已经截止了，但是状态还是true
 const checkSubscriptionStatus = async (
   db: PostgresJsDatabase<typeof schema>,
@@ -442,78 +443,30 @@ export const orderRouter = createTRPCRouter({
       }
     }),
 
-  getColumnOrder: publicProcedure
-    .input(z.string())
+    getColumnOrder: publicProcedure
+    .input(z.object({
+      columnId: z.string(),
+      search: z.string().optional(),
+      isDesc: z.boolean().optional().default(false),
+    }))
     .query(async ({ ctx, input }): Promise<PostDetail> => {
       const { db } = ctx;
-      const columnId = input;
+      const { columnId, search, isDesc } = input;
       try {
-        // 并行获取所有需要的基础数据
-        const [columnData, subscription, posts] = await Promise.all([
-          // 获取专栏信息
-          db.query.column.findFirst({
-            where: eq(column.id, columnId),
-            columns: {
-              id: true,
-              userId: true,
-            },
-          }),
-          // 获取订阅数量
-          db.select({ id: order.id })
-            .from(order)
-            .where(eq(order.columnId, columnId)),
-          // 获取文章信息
-          db.select({
-            id: post.id,
-            name: post.name,
-            content: post.content,
-            isTop: post.isTop,
-            isFree: post.isFree,
-            createdAt: post.createdAt,
-            updatedAt: post.updatedAt,
-            columnId: post.columnId,
-            chapter: post.chapter,
-          })
-          .from(post)
-          .where(and(eq(post.columnId, columnId),eq(post.status, true)))
-          .orderBy(desc(post.isTop), post.chapter),
-        ]);
-
-        if (!columnData) {
-          throw new Error("专栏不存在");
-        }
-
+        // 获取基础数据
+        const { columnData, subscription, posts } = await getColumnBasicInfo(db, columnId, search, isDesc);
+        
         // 获取用户数据
-        const userData = await db.query.user.findFirst({
-          where: eq(user.id, columnData.userId),
-          columns: {
-            id: true,
-            name: true,
-            idType: true,
-            avatar: true,
-          },
-        });
+        const userData = await getUserData(db, columnData.userId);
 
-        if (!userData) {
-          throw new Error("用户不存在");
-        }
-
-        // 并行获取所有文章的点赞和阅读数
+        // 并行获取所有文章的统计数据
         const postsWithStats = await Promise.all(
           posts.map(async (post) => {
-            const [likes, reads] = await Promise.all([
-              db.select({ id: postLike.id })
-                .from(postLike)
-                .where(eq(postLike.postId, post.id)),
-              db.select({ id: postRead.id })
-                .from(postRead)
-                .where(eq(postRead.postId, post.id)),
-            ]);
-
+            const stats = await getPostStats(db, post.id);
+            
             return {
               ...post,
-              likeCount: likes.length,
-              readCount: reads.length,
+              ...stats,
               userName: userData.name,
               idType: userData.idType,
               avatar: userData.avatar,
@@ -525,9 +478,9 @@ export const orderRouter = createTRPCRouter({
         return {
           detailPostCard: postsWithStats.map(post => ({
             ...post,
-            idType: post.idType ?? 0, // 将可能为 null 的 idType 设置默认值为 0
-            userName: post.userName ?? '', // 将可能为 null 的 userName 设置为空字符串
-            avatar: post.avatar ?? '', // 将可能为 null 的 avatar 设置为空字符串
+            idType: post.idType ?? 0,
+            userName: post.userName ?? '',
+            avatar: post.avatar ?? '',
           })),
           subscriptCount: subscription.length,
         };
