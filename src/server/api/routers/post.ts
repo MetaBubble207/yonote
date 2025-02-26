@@ -203,11 +203,11 @@ export const postRouter = createTRPCRouter({
       };
     }),
 
-  getNumById: publicProcedure
-    .input(z.object({ id: z.string() }))
+  getPostCount: publicProcedure
+    .input(z.string())
     .query(async ({ ctx, input }) => {
       const data = await ctx.db.query.post.findMany({
-        where: eq(post.columnId, input.id),
+        where: and(eq(post.columnId, input), eq(post.status, true)),
       });
       // 返回所有根据 id 查询的数据
       return data.length;

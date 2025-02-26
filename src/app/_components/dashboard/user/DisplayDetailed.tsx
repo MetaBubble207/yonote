@@ -71,9 +71,7 @@ const DisplayDetailed = ({ token, userInfo }: Props) => {
   const { data: columnInfos } = api.column.getAllByUserId.useQuery({
     userId: userInfo.id,
   });
-  const { data: postLength } = api.post.getNumById.useQuery({ 
-    id: userInfo.id 
-  });
+  const { data: postLength } = api.post.getPostCount.useQuery(userInfo.id);
 
   const { data: updateColumnInfos, isLoading: isUpdateLoading } = api.column.getUpdate.useQuery({
     writerId: userInfo.id,
