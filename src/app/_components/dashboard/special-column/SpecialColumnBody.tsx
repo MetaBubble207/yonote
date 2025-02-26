@@ -33,17 +33,17 @@ export default function SpecialColumnBody({
   const [check, setCheck] = useState(false);
 
   // 查看用户数据
-  const { data: status } = api.order.getUserStatus.useQuery(
+  const { data: status, isLoading: statusLoading } = api.order.getUserStatus.useQuery(
     { userId: token, columnId },
     { enabled: Boolean(token) }
   );
 
-  const { data: detailPost, isLoading } = api.order.getColumnOrder.useQuery(
+  const { data: detailPost, isLoading: detailPostLoading } = api.order.getColumnOrder.useQuery(
     { columnId },
     { enabled: Boolean(columnId) }
   );
 
-  const { data: userInfo } = api.users.login.useQuery(
+  const { data: userInfo, isLoading: userInfoLoading } = api.users.login.useQuery(
     code!,
     { enabled: Boolean(code && !token) }
   );
@@ -88,7 +88,7 @@ export default function SpecialColumnBody({
     setCurrentContent(tabId);
   }, []);
 
-  if (isLoading) {
+  if (statusLoading || detailPostLoading || userInfoLoading) {
     return <Loading className="mt-50" />;
   }
 
@@ -128,6 +128,7 @@ export default function SpecialColumnBody({
         <Reserved
           onClose={() => setIsSubscribe(false)}
           check={check}
+          columnId={columnId}
         />
       )}
     </div>

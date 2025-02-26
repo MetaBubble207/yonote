@@ -3,6 +3,7 @@ import { type PriceList } from "@/server/db/schema";
 export interface ReservedProps {
     onClose: () => void;
     check: boolean;
+    columnId: string
 }
 
 export interface PriceItemProps {

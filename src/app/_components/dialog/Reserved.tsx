@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import { message } from "antd";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
@@ -12,10 +11,8 @@ import { ConfirmPayModal, OrderModal, TopUpModal } from "../dashboard/special-co
 import { PriceItem } from "../dashboard/special-column/PriceItem";
 import { ReservedProps } from "@/app/dashboard/special-column/types";
 
-const Reserved: React.FC<ReservedProps> = ({ onClose, check }) => {
+const Reserved: React.FC<ReservedProps> = ({ onClose, check, columnId }) => {
   const [messageApi, contextHolder] = message.useMessage();
-  const params = useSearchParams();
-  const columnId = params.get("id");
   const [token] = useLocalStorage("token", null);
 
   // API 查询
@@ -64,7 +61,7 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, check }) => {
       return;
     }
 
-    const balance = walletData?.freezeIncome + walletData?.amountWithdraw;
+    const balance = walletData?.freezeIncome ?? 0 + (walletData?.amountWithdraw ?? 0);
     if (!walletData || balance < selectedItem.price) {
       messageApi.error("钱包余额不足，请先充值噢~😁");
       setShowTopUpModal(true);
@@ -134,17 +131,14 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, check }) => {
       setShowOrderModel(false);
     },
   });
+
   // 渲染加载状态
   if (isColumnLoading) {
-    return (
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <Loading />
-      </div>
-    );
+    return <Loading className="mt-50"/>;
   }
 
   // 计算余额
-  const balance = walletData ? walletData.freezeIncome + walletData.amountWithdraw : 0;
+  const balance = walletData ? walletData?.freezeIncome ?? 0 + (walletData?.amountWithdraw ?? 0) : 0;
 
 
   return (
