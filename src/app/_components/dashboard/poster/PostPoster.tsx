@@ -9,7 +9,7 @@ import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { ArticleContent } from "./ArticleContent";
 import { DetailPost, UserSelect } from "@/server/db/schema";
 
-interface PostPosterProp{
+interface PostPosterProp {
   user: UserSelect;
   postData: DetailPost;
   likeCount: number;
@@ -19,7 +19,7 @@ interface PostPosterProp{
 }
 
 export const PostPoster = ({ user, postData, likeCount, readCount, chapter, columnId }: PostPosterProp) => {
-  const [token] = useLocalStorage('token',null);
+  const [token] = useLocalStorage('token', null);
 
   const [postContent, setPostContent] = useState("");
   useEffect(() => {
@@ -48,7 +48,22 @@ export const PostPoster = ({ user, postData, likeCount, readCount, chapter, colu
         </div>
       ) : (
         <div ref={png} className="h-129.5005 mx-4 w-full bg-[#ffffff]">
-          <AuthorInfo user={user!} likeCount={likeCount} readCount={readCount} />
+          <AuthorInfo user={user!}>
+            <div className="ml-2.25 flex items-center">
+              <div className="font-D-DIN text-3.5 font-700 lh-6 text-[#252525]">
+                {likeCount}
+              </div>
+              <div className="text-3 font-400 lh-6 ml-1.25 mt-0.5 w-10 text-[#999]">
+                点赞
+              </div>
+              <div className="font-D-DIN text-3.5 font-700 lh-6 ml-1 text-[#252525]">
+                {readCount}
+              </div>
+              <div className="text-3 font-400 lh-6 ml-1.25 mt-0.5 w-10 text-[#999]">
+                浏览
+              </div>
+            </div>
+          </AuthorInfo>
           <ArticleContent title={postData?.name!} content={postContent} />
           <FooterInfo
             userInfo={user!}
