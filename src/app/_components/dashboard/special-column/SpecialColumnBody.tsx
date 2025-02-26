@@ -93,10 +93,10 @@ export default function SpecialColumnBody({
   }
 
   return (
-    <div className="">
+    <div>
       {contextHolder}
 
-      <div className="z-2 min-h-140 w-full rounded-t-30px top-39 absolute bg-white">
+      <div className=" top-39 absolute z-2 min-h-140 w-full rounded-t-30px bg-white">
         <StatisticsInfo
           subscriptCount={detailPost?.subscriptCount}
           contentCount={detailPost?.detailPostCard.length}
@@ -110,8 +110,8 @@ export default function SpecialColumnBody({
         <div className="mb-15">
           {currentContent === 1 ? (
             <SpecialColumnList
-              status={status}
-              postData={detailPost?.detailPostCard}
+              status={status ?? false}
+              postData={detailPost!.detailPostCard}
             />
           ) : (
             <SpecialColumnIntroduce />

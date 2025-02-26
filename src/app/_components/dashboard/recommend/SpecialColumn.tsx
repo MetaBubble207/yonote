@@ -22,7 +22,7 @@ const categories: Category[] = [
   { key: "创作时间", label: "创作时间", value: 4 },
 ];
 
-const ITEM_HEIGHT = 140;
+const ITEM_HEIGHT = 150;
 const WINDOW_HEIGHT = 800;
 const PAGE_SIZE = 10;
 
@@ -112,7 +112,7 @@ const SpecialColumn = () => {
     if (!item) return null;
     
     return (
-      <div style={style} className="flex justify-center px-4 py-1">
+      <div style={style} className="flex justify-center px-4 py-2">
         <ColumnCard columnData={item} />
       </div>
     );
