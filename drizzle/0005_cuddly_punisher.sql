@@ -1,0 +1,1 @@
+ALTER TABLE "yonote_wallet" DROP COLUMN "updated_at";

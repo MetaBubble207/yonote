@@ -144,7 +144,9 @@ export const wallet = createTable("wallet", {
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("created_at")
+  .defaultNow()
+  .notNull(),
 });
 
 export const activity = createTable("activity", {
