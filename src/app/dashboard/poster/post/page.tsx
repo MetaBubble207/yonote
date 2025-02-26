@@ -5,11 +5,10 @@ import { PostPoster } from "@/app/_components/dashboard/poster/PostPoster";
 export default async function Page({
   searchParams
 }: {
-  searchParams: { id: string; c: string; code?: string }
+  searchParams: { id: string; c: string; }
 }) {
-  const { id: columnId, c, code } = await searchParams;
+  const { id: columnId, c } = await searchParams;
   const chapter = parseInt(c);
-
   const postData = await api.post.getDetailPostById({ id: columnId, chapter });
   if (!postData) {
     redirect("/404");
@@ -26,11 +25,6 @@ export default async function Page({
   }
 
   return (
-    <PostPoster user={user} postData={postData} columnId={columnId} chapter={chapter} likeCount={likeCount} readCount={readCount} code={code} />
+    <PostPoster user={user} postData={postData} columnId={columnId} chapter={chapter} likeCount={likeCount} readCount={readCount} />
   );
 }
-
-// export default async function Page({ searchParams }: { searchParams: Promise<{ id: string, c: string }> }) {
-//   const { id, c } = await searchParams;
-//   return <Article chapter={parseInt(c)} columnId={id} />;
-// };
