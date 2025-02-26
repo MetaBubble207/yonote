@@ -27,27 +27,31 @@ export default async function Page({ searchParams }: { searchParams: { c: string
   }
 
   return (
-    <div className="bg-#F5F7FB relative min-h-screen pb-10 pt-4">
-      <ActionButtons url={`/dashboard/poster/post?c=${chapter}&id=${columnId}`} />
-      <ArticleContent
-        postData={postDetailData}
-        date={postDetailData.createdAt ? time2DateString(postDetailData.createdAt) : ""}
-        name={postDetailData.name || ""}
-        content={postDetailData.content || ""}
-      />
+    <div className="grid min-h-screen grid-rows-[1fr_auto] gap-10 bg-[#F5F7FB] pb-10 pt-4">
+      <div>
+        <ActionButtons url={`/dashboard/poster/post?c=${chapter}&id=${columnId}`} />
+        <ArticleContent
+          postData={postDetailData}
+          date={postDetailData.createdAt ? time2DateString(postDetailData.createdAt) : ""}
+          name={postDetailData.name || ""}
+          content={postDetailData.content || ""}
+        />
+      </div>
 
-      <LikeSection
-        postId={postDetailData.id}
-        userId={postDetailData.user.id}
-        tags={postDetailData.tag ? postDetailData.tag.split(",") : []}
-      />
+      <div className="px-4">
+        <LikeSection
+          postId={postDetailData.id}
+          userId={postDetailData.user.id}
+          tags={postDetailData.tag ? postDetailData.tag.split(",") : []}
+        />
 
-      <Navigation
-        chapter={chapter}
-        columnId={columnId}
-        columnName={postDetailData.column.name}
-        postCount={postCount}
-      />
+        <Navigation
+          chapter={chapter}
+          columnId={columnId}
+          columnName={postDetailData.column.name}
+          postCount={postCount}
+        />
+      </div>
     </div>
   );
 }

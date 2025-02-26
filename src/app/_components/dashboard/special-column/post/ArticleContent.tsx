@@ -13,7 +13,7 @@ interface ArticleContentProps {
 
 export function ArticleContent({ postData, date, name, content }: ArticleContentProps) {
   return (
-    <div className="ml-16px">
+    <div className="mx-4">
       <div>{name}</div>
       <div className="mt-10px mb-22px flex items-center space-y-0">
         <div>
