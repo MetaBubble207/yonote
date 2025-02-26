@@ -11,7 +11,7 @@ import Loading from "@/app/_components/common/Loading";
 import { StatisticsInfo } from "./StatisticsInfo";
 import { TabBar } from "./TabBar";
 import { SubscribeButton } from "./SubscribeButton";
-
+import Image from "next/image";
 interface SpecialColumnBodyProps {
   columnId: string;
   code?: string;
@@ -31,7 +31,7 @@ export default function SpecialColumnBody({
   const [currentContent, setCurrentContent] = useState<number>(1);
   const [isSubscribe, setIsSubscribe] = useState(false);
   const [check, setCheck] = useState(false);
-
+  const [isDesc, setIsDesc] = useState(true);
   // 查看用户数据
   const { data: status, isLoading: statusLoading } = api.order.getUserStatus.useQuery(
     { userId: token, columnId },
@@ -39,7 +39,7 @@ export default function SpecialColumnBody({
   );
 
   const { data: detailPost, isLoading: detailPostLoading } = api.order.getColumnOrder.useQuery(
-    columnId,
+    { columnId, isDesc },
     { enabled: Boolean(columnId) }
   );
 
@@ -102,10 +102,29 @@ export default function SpecialColumnBody({
           contentCount={detailPost?.detailPostCard.length}
         />
 
-        <TabBar
-          currentContent={currentContent}
-          onTabChange={handleTabChange}
-        />
+        <div className="mt-[11px] ml-[16px] flex items-center">
+          <TabBar
+            currentContent={currentContent}
+            onTabChange={handleTabChange}
+          />
+          <div className="ml-auto flex items-center">
+            <Image
+              src="/images/special-column/Magnifying glass.png"
+              alt="搜索"
+              width={18}
+              height={18}
+              className="mr-[24px] cursor-pointer"
+            />
+            <Image
+              onClick={() => setIsDesc(prev => !prev)}
+              src={isDesc ? "/images/special-column/DescSort.png" : "/images/special-column/AscSort.png"}
+              alt="排序"
+              width={18}
+              height={18}
+              className="mr-[16px] cursor-pointer"
+            />
+          </div>
+        </div>
 
         <div className="mb-15">
           {currentContent === 1 ? (

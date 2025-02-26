@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 
 const CONSTANTS = {
     TABS: [
@@ -10,7 +9,6 @@ const CONSTANTS = {
         ACTIVE: "text-[#252525] font-500 border-b-3 border-[#45E1B8]",
         INACTIVE: "text-3.5 font-not-italic font-400 lh-6 text-[#B5B5B5]",
     },
-    ICON_SIZE: 18,
 } as const;
 
 interface TabBarProps {
@@ -22,7 +20,7 @@ export const TabBar: React.FC<TabBarProps> = ({
     currentContent,
     onTabChange,
 }) => (
-    <div className="mt-[11px] ml-[16px] flex items-center">
+    <div>
         {CONSTANTS.TABS.map((tab) => (
             <button
                 key={tab.id}
@@ -33,22 +31,5 @@ export const TabBar: React.FC<TabBarProps> = ({
                 {tab.label}
             </button>
         ))}
-
-        <div className="ml-auto flex items-center">
-            <Image
-                src="/images/special-column/Magnifying glass.png"
-                alt="搜索"
-                width={CONSTANTS.ICON_SIZE}
-                height={CONSTANTS.ICON_SIZE}
-                className="mr-[24px] cursor-pointer"
-            />
-            <Image
-                src="/images/special-column/Sort.png"
-                alt="排序"
-                width={CONSTANTS.ICON_SIZE}
-                height={CONSTANTS.ICON_SIZE}
-                className="mr-[16px] cursor-pointer"
-            />
-        </div>
     </div>
 );
