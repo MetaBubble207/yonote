@@ -30,8 +30,8 @@ export const post = createTable(
     content: varchar("content").notNull(),
     tag: varchar("tag"),
     columnId: varchar("column_id").notNull(),
-    isTop: boolean("is_top").default(false),
-    isFree: boolean("is_free").default(true),
+    isTop: boolean("is_top").notNull().default(false),
+    isFree: boolean("is_free").notNull().default(true),
     status: boolean("status").default(true),// 是否是草稿
     cover: text("logo"),
     chapter: integer("chapter").notNull(),
