@@ -4,11 +4,12 @@ import { api } from "@/trpc/react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { message, Modal } from "antd";
 import Loading from "@/app/_components/common/Loading";
-import { handleWeixinPay } from "@/app/_utils/weixinPay";
+import { onBridgeReady } from "@/app/_utils/weixinPay";
 import { WalletCard } from "@/app/_components/dashboard/user/WalletCard";
 import { TransactionList } from "@/app/_components/dashboard/user/TransactionList";
 import withTheme from "@/theme";
-
+import { WeixinPayData } from "./types";
+import Error from "@/app/_components/common/Error";
 export default function Page() {
   const [token] = useLocalStorage("token", null);
   const { data: walletData, isLoading: isWalletLoading, refetch } = api.wallet.getByUserId.useQuery(
@@ -25,11 +26,11 @@ export default function Page() {
 
   const payRef = useRef<HTMLInputElement>(null);
 
-  // API mutations
   const recharge = api.wallet.recharge.useMutation({
     onSuccess: (r) => {
       if (r.success) {
-        handleWeixinPay(r.data, handleRechargeSuccess);
+        const data = r.data as WeixinPayData;
+        onBridgeReady(data, handleRechargeSuccess);
       }
     }
   });
@@ -90,7 +91,7 @@ export default function Page() {
   }, [token, afterRecharge]);
 
   if (isWalletLoading || isRunningWaterLoading) return <Loading />;
-
+  if (!walletData || !runningWaterData) return <Error text="哎呀，页面出错啦😣"/>
   return (
     <div>
       <div className="mt-8 flex items-center justify-center">

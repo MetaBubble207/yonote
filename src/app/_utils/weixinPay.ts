@@ -1,5 +1,9 @@
 import { WeixinPayData } from "../dashboard/user/wallet/types";
 
+type WeixinJSBridgeResponse = {
+    err_msg: "get_brand_wcpay_request:ok" | "get_brand_wcpay_request:cancel" | "get_brand_wcpay_request:fail";
+    err_desc?: string;
+};
 export const initWeixinBridge = (callback: (data: WeixinPayData) => void) => {
     if (typeof window.WeixinJSBridge === "undefined") {
         if (document.addEventListener) {
@@ -11,7 +15,7 @@ export const initWeixinBridge = (callback: (data: WeixinPayData) => void) => {
     }
 };
 
-export const handleWeixinPay = (data: WeixinPayData, onSuccess: () => void) => {
+export const onBridgeReady = (data: WeixinPayData, onSuccess: () => void) => {
     window.WeixinJSBridge.invoke(
         "getBrandWCPayRequest",
         {
@@ -22,7 +26,7 @@ export const handleWeixinPay = (data: WeixinPayData, onSuccess: () => void) => {
             signType: data.signType,
             paySign: data.paySign,
         },
-        (res) => {
+        (res: WeixinJSBridgeResponse) => {
             if (res.err_msg === "get_brand_wcpay_request:ok") {
                 onSuccess();
             }

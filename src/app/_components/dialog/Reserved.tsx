@@ -11,6 +11,11 @@ import { ConfirmPayModal, OrderModal, TopUpModal } from "../dashboard/special-co
 import { PriceItem } from "../dashboard/special-column/PriceItem";
 import { ReservedProps } from "@/app/dashboard/special-column/types";
 
+type WeixinJSBridgeResponse = {
+  err_msg: "get_brand_wcpay_request:ok" | "get_brand_wcpay_request:cancel" | "get_brand_wcpay_request:fail";
+  err_desc?: string;
+};
+
 const Reserved: React.FC<ReservedProps> = ({ onClose, check, columnId }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [token] = useLocalStorage("token", null);
@@ -26,7 +31,7 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, check, columnId }) => {
 
   // 初始化选中项
   useEffect(() => {
-    if (data?.priceListData?.length > 0) {
+    if (data && data?.priceListData?.length > 0) {
       setSelectedItem(data.priceListData[0]);
     }
   }, [data?.priceListData]);
@@ -93,7 +98,7 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, check, columnId }) => {
         signType: payData.signType,
         paySign: payData.paySign,
       },
-      function (res) {
+      function (res: WeixinJSBridgeResponse) {
         if (res.err_msg === "get_brand_wcpay_request:ok") {
           setShowOrderModel(false);
           handlePay();

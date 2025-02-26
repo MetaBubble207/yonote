@@ -1,26 +1,20 @@
+import { RunningWater } from "@/server/db/schema";
+
 export interface WalletData {
     amountWithdraw: number | null;
     freezeIncome: number | null;
 }
 
-export interface RunningWaterItem {
-    id: string;
-    name: string;
-    price: number;
-    createdAt: string;
-    expenditureOrIncome: number;
+export interface TransactionListProps {
+    data: RunningWater[];
+    currentType: number;
 }
 
-export interface WeixinPayData {
+export type WeixinPayData = {
     appId: string;
     timeStamp: string;
     nonceStr: string;
     package: string;
     signType: string;
     paySign: string;
-}
-
-export interface TransactionListProps {
-    data: RunningWaterItem[];
-    currentType: number;
 }

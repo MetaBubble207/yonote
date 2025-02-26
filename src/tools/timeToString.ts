@@ -33,6 +33,19 @@ export const time2DateTimeStringMinutes = (dateString: string) => {
   const timeRes = timeArr[0] + ":" + timeArr[1];
   return `${parts[3]}-${getMonthNumber(parts[1])}-${parts[2]} ${timeRes}`;
 };
+
+// 保留到分钟
+export const date2DateTimeStringMinutes = (date: Date) => {
+  if (!date) return "";
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
+};
+
 export const timeToTimeString = (dateString: string) => {
   if (!dateString) return "";
   dateString = String(dateString);

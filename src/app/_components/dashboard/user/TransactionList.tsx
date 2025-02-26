@@ -1,4 +1,4 @@
-import { time2DateTimeStringMinutes } from "@/tools/timeToString";
+import { date2DateTimeStringMinutes } from "@/tools/timeToString";
 import NoData from "@/app/_components/common/NoData";
 import { TransactionListProps } from "@/app/dashboard/user/wallet/types";
 
@@ -24,7 +24,7 @@ export const TransactionList = ({ data, currentType }: TransactionListProps) => 
               {item.name}
             </div>
             <div className="w-26.5 h-6.25 text-2.75 font-not-italic font-400 lh-6 mt--1 shrink-0 text-[#999]">
-              {time2DateTimeStringMinutes(item.createdAt)}
+              {date2DateTimeStringMinutes(item.createdAt)}
             </div>
           </div>
           <div className="w-20.75 h-5.5 text-3.75 font-700 lh-6 ml-60 mt--11 shrink-0 text-right text-[#252525]">
