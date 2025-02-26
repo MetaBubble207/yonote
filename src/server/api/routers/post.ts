@@ -160,41 +160,47 @@ export const postRouter = createTRPCRouter({
       }
     }),
 
-  getById: publicProcedure
+  getDetailPostById: publicProcedure
     .input(z.object({ id: z.string(), chapter: z.number() }))
     .query(async ({ ctx, input }) => {
-      const c = await ctx.db.query.column.findFirst({
-        where: eq(column.id, input.id),
+      const { id, chapter } = input;
+      const { db } = ctx;
+
+      // 1. 先获取指定章节的文章
+      const postData = await db.query.post.findFirst({
+        where: and(
+          eq(post.columnId, id),
+          eq(post.chapter, chapter)
+        ),
       });
-      if (!c) {
+
+      if (!postData) {
+        throw new Error("Post not found");
+      }
+
+      // 2. 获取专栏信息
+      const columnData = await db.query.column.findFirst({
+        where: eq(column.id, id),
+      });
+
+      if (!columnData) {
         throw new Error("Column not found");
       }
-      const u = await ctx.db.query.user.findFirst({
-        where: eq(user.id, c.userId),
+
+      // 3. 获取用户信息
+      const userData = await db.query.user.findFirst({
+        where: eq(user.id, columnData.userId),
       });
 
-      if (!u) {
+      if (!userData) {
         throw new Error("User not found");
       }
-      const data = await ctx.db
-        .select()
-        .from(post)
-        .where(eq(post.columnId, input.id));
-      if (!data?.length) {
-        throw new Error("No data found");
-      }
-      //改变排序方式
-      let res = [];
-      // data.map(item => {
-      //     res.unshift({ ...item, user: u })
-      // })
 
-      // return res[input.chapter - 1]
-      const newData = data.sort((a, b) => a.chapter - b.chapter);
-      newData.map((item) => {
-        res.push({ ...item, user: u });
-      });
-      return res[input.chapter - 1];
+      // 4. 组合数据返回
+      return {
+        ...postData,
+        user: userData,
+      };
     }),
 
   getNumById: publicProcedure

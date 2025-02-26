@@ -5,13 +5,13 @@ import React, { useState } from "react";
 import { api } from "@/trpc/react";
 import NoData from "@/app/_components/common/NoData";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
-import { type User } from "@/server/db/schema";
+import { type UserInsert } from "@/server/db/schema";
 import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 
 // 类型定义
 interface Props {
   token: string;
-  userInfo: User;
+  userInfo: UserInsert;
 }
 
 interface TabInfo {

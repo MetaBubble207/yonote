@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 import Loading from "@/app/_components/common/Loading";
 import { useMemo } from "react";
+import ActionButtons from "./ActionButton";
 
 const CONSTANTS = {
   MAX_NAME_LENGTH: 10,
@@ -66,28 +67,6 @@ const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
     </div>
   );
 
-  const renderActionButtons = () => (
-    <div className="flex items-center justify-end">
-      <button
-        className="rounded-full text-[10px] bg-#45E1B8"
-        style={{ width: 56, height: 24 }}
-      >
-        加速计划
-      </button>
-      <button
-        className="mr-16px ml-2.5 bg-transparent"
-        onClick={handleShare}
-      >
-        <Image
-          src="/images/special-column/Share-two.png"
-          alt="分享"
-          width={12}
-          height={12}
-        />
-      </button>
-    </div>
-  );
-
   const renderColumnInfo = () => (
     <div className="ml-10px flex flex-col">
       <div className="text-4.5 text-[#FFF]">
@@ -127,7 +106,7 @@ const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
     <>
       {renderHeaderImage()}
       <div className="z-3 absolute left-0 top-2.5 w-full">
-        {renderActionButtons()}
+        <ActionButtons url={`/dashboard/poster/column?id=${columnId}`} />
         <div className="mt-6px flex w-full items-start pl-5">
           <Image
             placeholder="blur"

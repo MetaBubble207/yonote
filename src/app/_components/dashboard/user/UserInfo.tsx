@@ -8,9 +8,9 @@ import DisplayDetailed from "@/app/_components/dashboard/user/DisplayDetailed";
 import Loading from "@/app/_components/common/Loading";
 import Error from "@/app/_components/common/Error";
 import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
-import type { User } from "@/server/db/schema";
+import type { UserInsert } from "@/server/db/schema";
 // 用户头像组件
-const UserAvatar = ({ userInfo }: { userInfo: User }) => (
+const UserAvatar = ({ userInfo }: { userInfo: UserInsert }) => (
   <div className="w-31 h-31 absolute top--10 mb-10 flex flex-col items-center justify-center">
     <Image
       src={userInfo.avatar ?? DefaultLoadingPicture()}

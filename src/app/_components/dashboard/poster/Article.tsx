@@ -13,7 +13,7 @@ import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
 const Article = ({ chapter, columnId }: { chapter: number, columnId: string }) => {
 
   const { data: postData, isLoading: isPostDataLoading } =
-    api.post.getById.useQuery({
+    api.post.getDetailPostById.useQuery({
       id: columnId,
       chapter: chapter,
     });

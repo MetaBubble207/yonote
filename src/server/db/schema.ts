@@ -274,7 +274,8 @@ export const runningWater = createTable("running_water", {
     .defaultNow()
     .notNull(),
 });
-export type User = typeof user.$inferInsert;
+export type UserInsert = typeof user.$inferInsert;
+export type UserSelect = typeof user.$inferSelect;
 export type RunningWater = typeof runningWater.$inferSelect;
 export type Column = typeof column.$inferSelect;
 export type ColumnUser = {
@@ -390,3 +391,7 @@ export type SpeedUp = {
   acceleratedTotal: number;
   totalPrice: number;
 };
+
+export type DetailPost = Post & {
+  user: UserSelect
+}
