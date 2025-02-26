@@ -40,7 +40,7 @@ export function LikeSection({ postId, userId, tags }: LikeSectionProps) {
     };
 
     return (
-        <div className="w-full pt-2 px-4 flex items-end justify-between">
+        <div className="w-full pt-2 px-1 flex items-end justify-between">
             <div className="w-70% flex flex-wrap">
                 {tags.map((item, index) => (
                     <div key={index} className="text-3 font-not-italic font-400 lh-6 mr-2 text-[#1DB48D]">
@@ -48,7 +48,7 @@ export function LikeSection({ postId, userId, tags }: LikeSectionProps) {
                     </div>
                 ))}
             </div>
-            <div className=" top-10 flex h-5 items-center">
+            <div className="top-10 flex h-5 items-center">
                 <Image
                     src={isHeartFilled ? "/images/special-column/heart red.png" : "/images/special-column/heart 1.png"}
                     alt="爱心"
