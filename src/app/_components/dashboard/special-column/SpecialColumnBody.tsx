@@ -39,7 +39,7 @@ export default function SpecialColumnBody({
   );
 
   const { data: detailPost, isLoading: detailPostLoading } = api.order.getColumnOrder.useQuery(
-    { columnId },
+    columnId,
     { enabled: Boolean(columnId) }
   );
 

@@ -443,58 +443,95 @@ export const orderRouter = createTRPCRouter({
     }),
 
   getColumnOrder: publicProcedure
-    .input(
-      z.object({
-        columnId: z.string(),
-      }),
-    )
+    .input(z.string())
     .query(async ({ ctx, input }): Promise<PostDetail> => {
       const { db } = ctx;
-      const { columnId } = input;
-      // 获取专栏信息
-      const columnData = await db.query.column.findFirst({
-        where: eq(column.id, columnId),
-      });
-      // 获取订阅数量
-      const subscription = await db
-        .select()
-        .from(order)
-        .where(eq(order.columnId, columnId));
-      // 获取用户数据
-      const userData = await db.query.user.findFirst({
-        where: eq(user.id, columnData.userId),
-      });
-      // 获取文章信息
-      const posts = await db
-        .select()
-        .from(post)
-        .where(eq(post.columnId, columnId));
-      const detailPostPromise = posts.map(async (post) => {
-        const likes = await db
-          .select()
-          .from(postLike)
-          .where(eq(postLike.postId, post.id));
-        const reads = await db
-          .select()
-          .from(postRead)
-          .where(eq(postRead.postId, post.id));
+      const columnId = input;
+      try {
+        // 并行获取所有需要的基础数据
+        const [columnData, subscription, posts] = await Promise.all([
+          // 获取专栏信息
+          db.query.column.findFirst({
+            where: eq(column.id, columnId),
+            columns: {
+              id: true,
+              userId: true,
+            },
+          }),
+          // 获取订阅数量
+          db.select({ id: order.id })
+            .from(order)
+            .where(eq(order.columnId, columnId)),
+          // 获取文章信息
+          db.select({
+            id: post.id,
+            name: post.name,
+            content: post.content,
+            createdAt: post.createdAt,
+            updatedAt: post.updatedAt,
+            columnId: post.columnId,
+            chapter: post.chapter,
+          })
+          .from(post)
+          .where(eq(post.columnId, columnId)),
+        ]);
+
+        if (!columnData) {
+          throw new Error("专栏不存在");
+        }
+
+        // 获取用户数据
+        const userData = await db.query.user.findFirst({
+          where: eq(user.id, columnData.userId),
+          columns: {
+            id: true,
+            name: true,
+            idType: true,
+            avatar: true,
+          },
+        });
+
+        if (!userData) {
+          throw new Error("用户不存在");
+        }
+
+        // 并行获取所有文章的点赞和阅读数
+        const postsWithStats = await Promise.all(
+          posts.map(async (post) => {
+            const [likes, reads] = await Promise.all([
+              db.select({ id: postLike.id })
+                .from(postLike)
+                .where(eq(postLike.postId, post.id)),
+              db.select({ id: postRead.id })
+                .from(postRead)
+                .where(eq(postRead.postId, post.id)),
+            ]);
+
+            return {
+              ...post,
+              likeCount: likes.length,
+              readCount: reads.length,
+              userName: userData.name,
+              idType: userData.idType,
+              avatar: userData.avatar,
+              userId: userData.id,
+            };
+          }),
+        );
+
         return {
-          ...post,
-          likeCount: likes.length,
-          readCount: reads.length,
+          detailPostCard: postsWithStats.map(post => ({
+            ...post,
+            idType: post.idType ?? 0, // 将可能为 null 的 idType 设置默认值为 0
+            userName: post.userName ?? '', // 将可能为 null 的 userName 设置为空字符串
+            avatar: post.avatar ?? '', // 将可能为 null 的 avatar 设置为空字符串
+          })),
+          subscriptCount: subscription.length,
         };
-      });
-      const detailPost = await Promise.all(detailPostPromise);
-      return {
-        detailPostCard: detailPost.map((item) => ({
-          ...item,
-          userName: userData.name,
-          idType: userData.idType,
-          avatar: userData.avatar,
-          userId: userData.id,
-        })),
-        subscriptCount: subscription.length,
-      };
+      } catch (error) {
+        console.error("Error in getColumnOrder:", error);
+        throw error;
+      }
     }),
 
   // 根据用户ID 查询订单
