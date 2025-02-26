@@ -22,36 +22,25 @@ import {
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = pgTableCreator((name) => `yonote_${name}`);
-export const subscription = createTable("subscription", {
-  id: serial("id").primaryKey(),
-  userId: varchar("user_id"),
-  columnId: varchar("column_id"),
-  status: boolean("status"),
-  createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: timestamp("updated_at"),
-});
 export const post = createTable(
   "post",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    userId: varchar("user_id"),
-    readNumber: integer("readNumber"),
-    likeCount: integer("likeCount"),
-    content: varchar("content"),
+    name: varchar("name", { length: 256 }).notNull(),
+    content: varchar("content").notNull(),
     tag: varchar("tag"),
-    columnId: varchar("column_id"),
+    columnId: varchar("column_id").notNull(),
     isTop: boolean("is_top").default(false),
-    isFree: boolean("is_free").default(false),
-    status: boolean("status"),
+    isFree: boolean("is_free").default(true),
+    status: boolean("status").default(true),// 是否是草稿
     cover: text("logo"),
-    chapter: integer("chapter"),
+    chapter: integer("chapter").notNull(),
     createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
+      .defaultNow()
       .notNull(),
-    updatedAt: timestamp("updated_at"),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .notNull(),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
@@ -62,77 +51,89 @@ export const user = createTable("user", {
   id: varchar("id", { length: 256 }).primaryKey(),
   name: varchar("name", { length: 256 }),
   phone: varchar("phone"),
-  idNumber: varchar("id_number"),
+  idNumber: varchar("id_number").notNull(),
   password: integer("password"),
   avatar: text("avatar"),
-  idType: integer("id_type").default(0),
-  weChat: varchar("we_chat"),
-  endDate: timestamp("end_date"),
+  idType: integer("id_type").default(0), //是否是会员
+  endDate: timestamp("end_date")
+    .defaultNow()
+    .notNull(),
   sex: integer("sex"),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 
 export const column = createTable("column", {
   id: varchar("id").primaryKey(),
-  name: varchar("name", { length: 256 }),
-  distributorship: boolean("distributorship").notNull().default(false),
+  name: varchar("name", { length: 256 }).notNull(),
+  distributorship: boolean("distributorship").notNull().default(false), // 是否是共创计划
   introduce: varchar("introduce"),
-  type: varchar("type"),
+  type: varchar("type").notNull(), // 专栏 小课
   cover: text("logo").default(
     "http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png",
   ),
   description: varchar("description"),
-  payment: varchar("payment"),
-  userId: varchar("user_id"),
+  userId: varchar("user_id").notNull(),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
+
 export const distributorshipDetail = createTable("distributorship_detail", {
   id: serial("id").primaryKey(),
-  columnId: varchar("column_id"),
+  columnId: varchar("column_id").notNull(),
   platDistributorship: real("plat_distributorship"),
   distributorship: real("distributorship"),
   extend: real("extend"),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 
 export const order = createTable("order", {
   id: serial("id").primaryKey(),
-  columnId: varchar("column_id"),
-  price: real("price"),
-  buyerId: varchar("buyer_id"),
-  ownerId: varchar("owner_id"),
-  payment: varchar("payment"),
-  endStatus: boolean("end_status"),
+  columnId: varchar("column_id").notNull(),
+  price: real("price").notNull().default(0),
+  buyerId: varchar("buyer_id").notNull(),
+  ownerId: varchar("owner_id").notNull(),
+  payment: varchar("payment").notNull().default('wallet'),
   recommendationId: varchar("recommendation_id"),
   referralLevel: integer("referral_level"),
-  status: boolean("status"),
-  endDate: timestamp("end_date"),
+  status: boolean("status").notNull(),
+  endDate: timestamp("end_date")
+    .notNull()
+    .default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
+  isVisible: boolean("is_visable").notNull().default(true),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
-  isVisible: boolean("is_visable"),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 
 export const speedUp = createTable("speed_up", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
-  ownerId: serial("owner_id"),
-  quantity: integer("quantity"),
-  ranking: smallint("ranking"),
+  ownerId: serial("owner_id").notNull(),
+  quantity: integer("quantity").notNull(),
+  ranking: smallint("ranking").notNull(),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 
 export const wallet = createTable("wallet", {
@@ -141,80 +142,92 @@ export const wallet = createTable("wallet", {
   amountWithdraw: real("amount_withdraw"),
   freezeIncome: real("freeze_income"),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
   updatedAt: timestamp("updated_at"),
 });
 
 export const activity = createTable("activity", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }),
-  introduction: varchar("introduction", { length: 256 }),
+  name: varchar("name", { length: 256 }).notNull(),
+  introduction: varchar("introduction", { length: 256 }).notNull(),
   cover: varchar("cover", { length: 256 }),
-  url: varchar("url", { length: 256 }),
-  endDate: timestamp("end_date"),
+  url: varchar("url", { length: 256 }).notNull(),
+  endDate: timestamp("end_date").notNull().default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 
 export const coColumn = createTable("co_column", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
-  deadline: timestamp("deadline"),
+  deadline: timestamp("deadline").notNull().default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
   subscribers: integer("subscribers"),
   number: integer("number"),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 
 export const courseRecommendation = createTable("course_recommendation", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
-  deadline: timestamp("deadline"),
+  deadline: timestamp("deadline").notNull().default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
   subscribers: integer("subscribers"),
   number: integer("number"),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("updated_at")
+  .defaultNow()
+  .notNull(),
 });
 
 export const columnRecommendation = createTable("column_recommendation", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
-  deadline: timestamp("deadline"),
+  deadline: timestamp("deadline").notNull().default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
   subscribers: integer("subscribers"),
   number: integer("number"),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+  updatedAt: timestamp("updated_at")
+  .defaultNow()
+  .notNull(),
 });
 
 export const postLike = createTable("post_like", {
   id: serial("id").primaryKey(),
-  postId: integer("post_id"),
-  userId: varchar("user_id"),
-  isLike: boolean("is_like"),
+  postId: integer("post_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  isLike: boolean("is_like").notNull().default(true),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+    updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 
 export const postRead = createTable("post_read", {
   id: serial("id").primaryKey(),
-  postId: integer("post_id"),
-  userId: varchar("user_id"),
-  readCount: integer("read_count"),
+  postId: integer("post_id").notNull(),
+  userId: varchar("user_id").notNull(),
+  readCount: integer("read_count").notNull().default(0),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+    updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 
 export const invitationCode = createTable("invitation_code", {
@@ -223,35 +236,41 @@ export const invitationCode = createTable("invitation_code", {
 });
 export const referrals = createTable("referrals", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id"),
-  columnId: varchar("column_id"),
-  referredUserId: varchar("referred_user_id"),
+  userId: varchar("user_id").notNull(),
+  columnId: varchar("column_id").notNull(),
+  referredUserId: varchar("referred_user_id").notNull(),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+    updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 export const priceList = createTable("price_list", {
   id: serial("id").primaryKey(),
-  columnId: varchar("column_id"),
-  price: real("price"),
-  timeLimit: integer("time_limit"),
+  columnId: varchar("column_id").notNull(),
+  price: real("price").notNull(),
+  timeLimit: integer("time_limit").notNull().default(9999999),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+    updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 
 export const runningWater = createTable("running_water", {
   id: serial("id").primaryKey(),
-  userId: varchar("user_id"),
-  name: varchar("name"),
-  price: real("price"),
-  expenditureOrIncome: integer("expenditure_or_income"),
+  userId: varchar("user_id").notNull(),
+  name: varchar("name").notNull(),
+  price: real("price").notNull(),
+  expenditureOrIncome: integer("expenditure_or_income").notNull(),
   createdAt: timestamp("created_at")
-    .default(sql`CURRENT_TIMESTAMP`)
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at"),
+    updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });
 export type User = typeof user.$inferInsert;
 export type RunningWater = typeof runningWater.$inferSelect;
@@ -281,7 +300,6 @@ export type OrderBuyer = {
   buyerId: string;
   ownerId: string;
   payment: string;
-  endStatus: boolean;
   recommendationId: string;
   referralLevel: number;
   status: boolean;

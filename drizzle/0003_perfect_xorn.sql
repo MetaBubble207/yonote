@@ -1,0 +1,1 @@
+ALTER TABLE "yonote_post" DROP COLUMN "user_id";
