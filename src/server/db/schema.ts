@@ -139,8 +139,8 @@ export const speedUp = createTable("speed_up", {
 export const wallet = createTable("wallet", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull(),
-  amountWithdraw: real("amount_withdraw"),
-  freezeIncome: real("freeze_income"),
+  amountWithdraw: real("amount_withdraw").notNull().default(0),
+  freezeIncome: real("freeze_income").notNull().default(0),
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
