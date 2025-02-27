@@ -448,13 +448,14 @@ export const orderRouter = createTRPCRouter({
       columnId: z.string(),
       search: z.string().optional(),
       isDesc: z.boolean().optional().default(false),
+      tag: z.string().optional().default('all')
     }))
     .query(async ({ ctx, input }): Promise<PostDetail> => {
       const { db } = ctx;
-      const { columnId, search, isDesc } = input;
+      const { columnId, search, isDesc, tag } = input;
       try {
         // 获取基础数据
-        const { columnData, subscription, posts } = await getColumnBasicInfo(db, columnId, search, isDesc);
+        const { columnData, subscription, posts } = await getColumnBasicInfo(db, columnId, search, isDesc, tag);
         
         // 获取用户数据
         const userData = await getUserData(db, columnData.userId);
