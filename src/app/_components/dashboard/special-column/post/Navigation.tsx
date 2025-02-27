@@ -69,13 +69,13 @@ export function Navigation({
   const router = useRouter();
   const alertMessage = () => alert("请先购买专栏");
   const [token] = useLocalStorage('token', null)
-  const canAccessPost = (post?: PostSelect) =>
-    post?.isFree || postData.user.id === token;
+  const canAccessPost = (post: PostSelect) =>
+    post.isFree || postData.user.id === token;
 
   const navigation = {
     toDirectory: () => router.push(`/dashboard/special-column?c=1&id=${columnId}`),
-    toPrevious: () => router.push(`/dashboard/special-column/content?c=${chapter - 1}&id=${columnId}`),
-    toNext: () => router.push(`/dashboard/special-column/content?c=${chapter + 1}&id=${columnId}`),
+    toPrevious: () => router.push(`/dashboard/special-column/content?c=${prevPost!.chapter}&id=${columnId}`),
+    toNext: () => router.push(`/dashboard/special-column/content?c=${nextPost!.chapter}&id=${columnId}`),
   };
 
   return (
@@ -103,14 +103,14 @@ export function Navigation({
           <div className="mt-8px flex justify-between">
             <NavigationButton
               direction="left"
-              title={chapter === 1 ? "已经是第一篇了" : (prevPost?.name || '')}
+              title={!prevPost ? "已经是第一篇了" : (prevPost.name || '')}
               onClick={canAccessPost(prevPost!) ? navigation.toPrevious : alertMessage}
               disabled={!prevPost}
             />
 
             <NavigationButton
               direction="right"
-              title={!nextPost ? "已经是末篇了" : (nextPost?.name || '')}
+              title={!nextPost ? "已经是末篇了" : (nextPost.name || '')}
               onClick={canAccessPost(nextPost!) ? navigation.toNext : alertMessage}
               disabled={!nextPost}
             />
