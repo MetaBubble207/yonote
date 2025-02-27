@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { time2DateString } from "@/tools/timeToString";
 import { useEffect } from "react";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { type DetailPostCard } from "@/server/db/schema";
 import Link from "next/link";
 
@@ -59,8 +59,8 @@ const PostCard = ({
         <div className="w-21.25 h-18.625 relative">
           <Image
             placeholder="blur"
-            blurDataURL={DefaultLoadingPicture()}
-            src={postDetail?.cover ?? DefaultLoadingPicture()}
+            blurDataURL={LoadingImage()}
+            src={postDetail?.cover ?? NotImage()}
             alt="小专栏图片"
             quality={100}
             fill
@@ -126,8 +126,8 @@ const PostCard = ({
             <div className="w-5.75 h-5.75 relative">
               <Image
                 placeholder="blur"
-                blurDataURL={DefaultLoadingPicture()}
-                src={postDetail.avatar ?? DefaultLoadingPicture()}
+                blurDataURL={LoadingImage()}
+                src={postDetail.avatar ?? NotImage()}
                 alt="cover"
                 quality={100}
                 fill

@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { api } from "@/trpc/react";
 import NoData from "@/app/_components/common/NoData";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { type UserInsert } from "@/server/db/schema";
 import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 
@@ -41,8 +41,8 @@ const ColumnCard = ({ id, cover, name, introduce }: ColumnCardProps) => (
     <div className="w-15.5 h-19 relative">
       <Image
         placeholder="blur"
-        blurDataURL={DefaultLoadingPicture()}
-        src={cover ?? DefaultLoadingPicture()}
+        blurDataURL={LoadingImage()}
+        src={cover ?? NotImage()}
         alt={`${name}的封面`}
         quality={100}
         fill

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { time2DateString } from "@/tools/timeToString";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { BaseColumnCardDateString } from "@/server/db/schema";
 
 const SubscribeColumn = ({ column }: { column: BaseColumnCardDateString }) => {
@@ -12,8 +12,8 @@ const SubscribeColumn = ({ column }: { column: BaseColumnCardDateString }) => {
           <div className="w-11.25 h-11.25 relative mt-4">
             <Image
               placeholder="blur"
-              blurDataURL={DefaultLoadingPicture()}
-              src={column.avatar ?? DefaultLoadingPicture()}
+              blurDataURL={LoadingImage()}
+              src={column.avatar ?? NotImage()}
               alt="avatar"
               quality={100}
               fill
@@ -64,8 +64,8 @@ const SubscribeColumn = ({ column }: { column: BaseColumnCardDateString }) => {
           <div className="w-15.5 h-19 relative ml-3">
             <Image
               placeholder="blur"
-              blurDataURL={DefaultLoadingPicture()}
-              src={column.cover ?? DefaultLoadingPicture()}
+              blurDataURL={LoadingImage()}
+              src={column.cover ?? NotImage()}
               alt="cover"
               fill
               loading="lazy"

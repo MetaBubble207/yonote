@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "antd";
 import QRCode from "qrcode.react";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { UserSelect } from "@/server/db/schema";
 
 interface BottomInfoProps {
@@ -34,8 +34,8 @@ export const FooterInfo = ({ userInfo, token, qrcodeURL, onScreenshot }: BottomI
           <div className="w-4.5 h-4.5 relative">
             <Image
               placeholder="blur"
-              blurDataURL={DefaultLoadingPicture()}
-              src={userInfo?.avatar ?? DefaultLoadingPicture()}
+              blurDataURL={LoadingImage()}
+              src={userInfo?.avatar ?? NotImage()}
               alt="cover"
               quality={100}
               fill

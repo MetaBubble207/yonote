@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { time2DateString } from "@/tools/timeToString";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import React from "react";
 import { type DetailColumnCard } from "@/server/db/schema";
 
@@ -15,8 +15,8 @@ const SubscribeRenew = ({ column }: { column: DetailColumnCard }) => {
             <div className="w-20.25 h-26.5 relative">
               <Image
                 placeholder="blur"
-                blurDataURL={DefaultLoadingPicture()}
-                src={column?.cover ?? DefaultLoadingPicture()}
+                blurDataURL={LoadingImage()}
+                src={column?.cover ?? NotImage()}
                 alt="cover"
                 quality={100}
                 fill
@@ -57,8 +57,8 @@ const SubscribeRenew = ({ column }: { column: DetailColumnCard }) => {
               <div className="w-5.75 h-5.75 relative">
                 <Image
                   placeholder="blur"
-                  blurDataURL={DefaultLoadingPicture()}
-                  src={column.avatar ?? DefaultLoadingPicture()}
+                  blurDataURL={LoadingImage()}
+                  src={column.avatar ?? NotImage()}
                   alt={"cover"}
                   fill
                   loading="lazy"

@@ -4,7 +4,7 @@ import { api } from "@/trpc/react";
 import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 import NoData from "../../common/NoData";
 import Link from "next/link";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import Image from "next/image";
 import { time2DateString } from "@/tools/timeToString";
 interface CardProps {
@@ -16,8 +16,8 @@ const Card = ({ item }: CardProps) => (
             <div className="w-17.25 h-23 relative">
                 <Image
                     placeholder="blur"
-                    blurDataURL={DefaultLoadingPicture()}
-                    src={item.cover ?? DefaultLoadingPicture()}
+                    blurDataURL={LoadingImage()}
+                    src={item.cover ?? NotImage()}
                     alt="cover"
                     quality={100}
                     fill

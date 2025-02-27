@@ -8,7 +8,7 @@ import { api } from "@/trpc/react";
 import { BaseColumnCard, BaseColumnCardDateString } from "@/server/db/schema";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { useAppDispatch, useAppSelector } from "@/app/_hooks/useRedux";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 
 // 常量配置
 const CONSTANTS = {
@@ -68,13 +68,13 @@ const ColumnItem: React.FC<{
   >
     <div className="flex">
       <Image
-        src={item.cover ?? DefaultLoadingPicture()}
+        src={item.cover ?? NotImage()}
         width={100}
         height={100}
         alt="cover"
         className="w-11.375 h-15.478 inline-block rounded"
         placeholder="blur"
-        blurDataURL={DefaultLoadingPicture()}
+        blurDataURL={LoadingImage()}
       />
       <div className="ml-3 mt-3 flex flex-col">
         <div className="text-3 font-500 lh-6 text-[#252525]">

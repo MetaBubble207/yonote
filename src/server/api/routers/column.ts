@@ -494,22 +494,34 @@ export const columnRouter = createTRPCRouter({
 
   // 获取专栏及其用户信息
   getColumnUser: publicProcedure
-    .input(z.object({ columnId: z.string() }))
+    .input(z.string())
     .query(async ({ ctx, input }) => {
-      const columnData = await ctx.db.query.column.findFirst({
-        where: eq(column.id, input.columnId),
-      });
-      const userData = await ctx.db.query.user.findFirst({
-        where: eq(user.id, columnData.userId),
-      });
-      const res: BaseColumnCard = {
-        ...columnData,
-        idType: userData.idType,
-        userId: userData.id,
-        userName: userData.name,
-        avatar: userData.avatar,
-      };
-      return res;
+      const result = await ctx.db
+        .select({
+          column: column,
+          user: {
+            id: user.id,
+            idType: user.idType,
+            name: user.name,
+            avatar: user.avatar,
+          },
+        })
+        .from(column)
+        .leftJoin(user, eq(column.userId, user.id))
+        .where(eq(column.id, input))
+        .limit(1);
+
+      if (!result[0] || !result[0].column || !result[0].user) { 
+        throw new Error(`Column not found: ${input}`);
+      }
+
+      return {
+        ...result[0].column,
+        idType: result[0].user.idType ?? 0,
+        userId: result[0].user.id,
+        userName: result[0].user.name!,
+        avatar: result[0].user.avatar!,
+      } satisfies BaseColumnCard;
     }),
 
   getColumnFilter: publicProcedure

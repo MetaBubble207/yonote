@@ -316,14 +316,14 @@ export type OrderBuyer = {
 export type BaseColumnCard = {
   id: string;
   name: string;
-  introduce?: string;
-  description?: string;
-  cover: string;
+  introduce: string | null;
+  description: string | null;
+  cover?: string | null;
   userId: string;
   userName: string;
   idType: number;
   avatar: string;
-  isVisible: boolean;
+  isVisible?: boolean;
   createdAt: Date;
   updatedAt: Date;
 };

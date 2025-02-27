@@ -1,5 +1,5 @@
 "use client"
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { Skeleton } from "antd";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -59,8 +59,8 @@ export default function RecentlyReadCard() {
             <div className="w-11.375 h-15.5 relative">
                 <Image
                     placeholder="blur"
-                    blurDataURL={DefaultLoadingPicture()}
-                    src={recentColumn?.cover ?? DefaultLoadingPicture()}
+                    blurDataURL={LoadingImage()}
+                    src={recentColumn?.cover ?? NotImage()}
                     alt="cover"
                     quality={100}
                     fill

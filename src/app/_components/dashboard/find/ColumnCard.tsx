@@ -2,7 +2,7 @@ import Image from "next/image";
 import { time2DateString } from "@/tools/timeToString";
 import Link from "next/link";
 import React from "react";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { type DetailColumnCard } from "@/server/db/schema";
 
 const ColumnCard = ({ columnData }: { columnData: DetailColumnCard }) => {
@@ -13,8 +13,8 @@ const ColumnCard = ({ columnData }: { columnData: DetailColumnCard }) => {
           <div className="w-15.5 h-19 relative">
             <Image
               placeholder="blur"
-              blurDataURL={DefaultLoadingPicture()}
-              src={columnData.cover ?? DefaultLoadingPicture()}
+              blurDataURL={LoadingImage()}
+              src={columnData.cover ?? NotImage()}
               alt="cover"
               quality={100}
               fill
@@ -54,8 +54,8 @@ const ColumnCard = ({ columnData }: { columnData: DetailColumnCard }) => {
             <div className="relative h-6 w-6">
               <Image
                 placeholder="blur"
-                blurDataURL={DefaultLoadingPicture()}
-                src={columnData?.avatar ?? DefaultLoadingPicture()}
+                blurDataURL={LoadingImage()}
+                src={columnData?.avatar ?? NotImage()}
                 alt="cover"
                 quality={100}
                 fill

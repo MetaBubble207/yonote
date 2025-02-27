@@ -3,7 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { api } from "@/trpc/react";
 import Link from "next/link";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { Skeleton, Empty } from "antd";
 import withTheme from "@/theme";
 import { inferProcedureOutput } from "@trpc/server";
@@ -27,8 +27,8 @@ const ActivityCard = ({ item }: { item: Activity }) => (
           <div className="w-41 h-31.25 relative">
             <Image
               placeholder="blur"
-              blurDataURL={DefaultLoadingPicture()}
-              src={item.cover ?? DefaultLoadingPicture()}
+              blurDataURL={LoadingImage()}
+              src={item.cover ?? NotImage()}
               alt={item.name ?? ""}
               quality={100}
               fill

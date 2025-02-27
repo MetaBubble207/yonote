@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { type DetailPost } from "@/server/db/schema";
 
 interface ArticleContentProps {
@@ -20,8 +20,8 @@ export function ArticleContent({ postData, date, name, content }: ArticleContent
           <div>
             <Image
               placeholder="blur"
-              blurDataURL={DefaultLoadingPicture()}
-              src={postData?.user.avatar ?? DefaultLoadingPicture()}
+              blurDataURL={LoadingImage()}
+              src={postData?.user.avatar ?? NotImage()}
               alt="avatar"
               width={33}
               height={33}

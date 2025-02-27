@@ -1,5 +1,5 @@
 import { Column } from "@/server/db/schema"
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture"
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture"
 import Image from "next/image"
 export const ColumnContent = ({ column }: { column: Column }) => {
     return <div className="w-73 h-44.5 ml-4.5 mt-4" >
@@ -14,8 +14,8 @@ export const ColumnContent = ({ column }: { column: Column }) => {
             <div className="w-25 relative h-32">
                 <Image
                     placeholder="blur"
-                    blurDataURL={DefaultLoadingPicture()}
-                    src={column?.cover ?? DefaultLoadingPicture()}
+                    blurDataURL={LoadingImage()}
+                    src={column?.cover ?? NotImage()}
                     alt="cover"
                     quality={100}
                     fill

@@ -6,7 +6,7 @@ import { api } from "@/trpc/react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { useSearchParams } from "next/navigation";
 import Loading from "@/app/_components/common/Loading";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 
 interface ColumnData {
   id: string;
@@ -72,8 +72,8 @@ const Column = () => {
         <div className="w-14.5 h-19 relative">
           <Image
             placeholder="blur"
-            blurDataURL={DefaultLoadingPicture()}
-            src={currentColumn?.cover ?? DefaultLoadingPicture()}
+            blurDataURL={LoadingImage()}
+            src={currentColumn?.cover ?? NotImage()}
             alt={"cover"}
             fill
             loading="lazy"

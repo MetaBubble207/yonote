@@ -7,13 +7,13 @@ import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import DisplayDetailed from "@/app/_components/dashboard/user/DisplayDetailed";
 import Loading from "@/app/_components/common/Loading";
 import Error from "@/app/_components/common/Error";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import type { UserInsert } from "@/server/db/schema";
 // 用户头像组件
 const UserAvatar = ({ userInfo }: { userInfo: UserInsert }) => (
   <div className="w-31 h-31 absolute top--10 mb-10 flex flex-col items-center justify-center">
     <Image
-      src={userInfo.avatar ?? DefaultLoadingPicture()}
+      src={userInfo.avatar ?? NotImage()}
       alt={`${userInfo.name}的头像`}
       width={83}
       height={83}
@@ -89,8 +89,8 @@ export default function UserInfo({ userId }: { userId: string }) {
       <div className="h-28.25 blur-24 relative w-full">
         <Image
           placeholder="blur"
-          blurDataURL={DefaultLoadingPicture()}
-          src={userInfo.avatar ?? DefaultLoadingPicture()}
+          blurDataURL={LoadingImage()}
+          src={userInfo.avatar ?? NotImage()}
           alt="用户封面"
           fill
           priority

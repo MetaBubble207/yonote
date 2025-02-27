@@ -2,10 +2,10 @@
 import Image from "next/image";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
-import Loading from "@/app/_components/common/Loading";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { useMemo } from "react";
 import ActionButtons from "./ActionButton";
+import { Skeleton } from "antd";
 
 const CONSTANTS = {
   MAX_NAME_LENGTH: 10,
@@ -25,14 +25,9 @@ const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
   const router = useRouter();
 
   const { data, isLoading } = api.column.getColumnUser.useQuery(
-    { columnId: columnId! },
+    columnId,
     { enabled: Boolean(columnId) }
   );
-
-  const handleShare = () => {
-    if (!data?.id) return;
-    router.push(`/dashboard/poster/column?id=${data.id}`);
-  };
 
   const handleUserDetail = () => {
     if (!data?.userId) return;
@@ -44,20 +39,12 @@ const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
     return text.length >= maxLength ? `${text.substring(0, maxLength)}...` : text;
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="mt-10 bg-white">
-        <Loading />
-      </div>
-    );
-  }
-
   const renderHeaderImage = () => (
     <div className="z-1 absolute top-0 w-full blur-sm filter">
       <Image
         placeholder="blur"
-        blurDataURL={DefaultLoadingPicture()}
-        src={data?.cover ?? DefaultLoadingPicture()}
+        blurDataURL={LoadingImage()}
+        src={data?.cover ?? NotImage()}
         alt="background"
         width={CONSTANTS.HEADER_IMAGE.WIDTH}
         height={CONSTANTS.HEADER_IMAGE.HEIGHT}
@@ -78,8 +65,8 @@ const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
       <div className="mt-2 flex items-center">
         <Image
           placeholder="blur"
-          blurDataURL={DefaultLoadingPicture()}
-          src={data?.avatar ?? DefaultLoadingPicture()}
+          blurDataURL={LoadingImage()}
+          src={data?.avatar ?? NotImage()}
           alt="avatar"
           width={CONSTANTS.AVATAR_SIZE}
           height={CONSTANTS.AVATAR_SIZE}
@@ -101,7 +88,31 @@ const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
       </div>
     </div>
   );
+  const renderSkeletonHeader = () => (
+    <>
+      <div className="z-1 absolute top-0 w-full">
+        <Skeleton.Image active className="!h-74.5 !w-full" />
+      </div>
+      <div className="z-3 absolute left-0 top-2.5 w-full">
+        <ActionButtons url={`/dashboard/poster/column?id=${columnId}`} />
+        <div className="mt-6px flex w-full items-start pl-5">
+          <Skeleton.Image active className="!h-39 !w-27.7 rounded-10px" />
+          <div className="ml-10px flex flex-col">
+            <Skeleton.Input active size="small" className="!w-40" />
+            <Skeleton.Input active size="small" className="!mt-2 !w-50" />
+            <div className="mt-2 flex items-center">
+              <Skeleton.Avatar active size="small" className="!h-[18px] !w-[18px]" />
+              <Skeleton.Input active size="small" className="!ml-2 !w-20" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
+  if (isLoading) {
+    return renderSkeletonHeader();
+  }
   return (
     <>
       {renderHeaderImage()}
@@ -110,8 +121,8 @@ const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
         <div className="mt-6px flex w-full items-start pl-5">
           <Image
             placeholder="blur"
-            blurDataURL={DefaultLoadingPicture()}
-            src={data?.cover ?? DefaultLoadingPicture()}
+            blurDataURL={LoadingImage()}
+            src={data?.cover ?? NotImage()}
             width={CONSTANTS.COVER_IMAGE.WIDTH}
             height={CONSTANTS.COVER_IMAGE.HEIGHT}
             alt="封面"

@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import OSS from "ali-oss";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 
 let client = new OSS({
   region: "oss-cn-shenzhen",
@@ -471,8 +471,8 @@ function Cover() {
           <div className="w-29 h-37.5 relative">
             <Image
               placeholder="blur"
-              blurDataURL={DefaultLoadingPicture()}
-              src={cover ?? DefaultLoadingPicture()}
+              blurDataURL={LoadingImage()}
+              src={cover ?? NotImage()}
               alt="cover"
               quality={100}
               fill

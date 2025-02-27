@@ -6,7 +6,7 @@ import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import React, { useEffect, useState, useCallback } from "react";
 import { api } from "@/trpc/react";
 import { Skeleton } from "antd";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { useRouter, useSearchParams } from "next/navigation";
 
 // 类型定义
@@ -83,8 +83,8 @@ export default function UserPage() {
           <div className="w-20.75 h-20.75 relative">
             <Image
               placeholder="blur"
-              blurDataURL={DefaultLoadingPicture()}
-              src={userInfo.avatar ?? DefaultLoadingPicture()}
+              blurDataURL={LoadingImage()}
+              src={userInfo.avatar ?? NotImage()}
               alt="cover"
               quality={100}
               fill
@@ -293,8 +293,8 @@ export default function UserPage() {
           <div className="w-15.5 h-19 relative">
             <Image
               placeholder="blur"
-              blurDataURL={DefaultLoadingPicture()}
-              src={item?.cover ?? DefaultLoadingPicture()}
+              blurDataURL={LoadingImage()}
+              src={item?.cover ?? NotImage()}
               alt="cover"
               quality={100}
               fill

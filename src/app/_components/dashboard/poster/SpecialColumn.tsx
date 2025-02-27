@@ -8,7 +8,7 @@ import QRCode from "qrcode.react";
 import { domToPng } from "modern-screenshot";
 import { Button } from "antd";
 import Loading from "@/app/_components/common/Loading";
-import DefaultLoadingPicture from "@/utils/DefaultLoadingPicture";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 
 const SpecialColumn = () => {
   const params = useSearchParams();
@@ -107,8 +107,8 @@ const SpecialColumn = () => {
               <div className="w-12.25 h-12.25 ml-5.25 mt-7.125 relative">
                 <Image
                   placeholder="blur"
-                  blurDataURL={DefaultLoadingPicture()}
-                  src={user?.avatar ?? DefaultLoadingPicture()}
+                  blurDataURL={LoadingImage()}
+                  src={user?.avatar ?? NotImage()}
                   alt="cover"
                   quality={100}
                   fill
@@ -175,8 +175,8 @@ const SpecialColumn = () => {
               <div className="w-25 relative h-32">
                 <Image
                   placeholder="blur"
-                  blurDataURL={DefaultLoadingPicture()}
-                  src={column?.cover ?? DefaultLoadingPicture()}
+                  blurDataURL={LoadingImage()}
+                  src={column?.cover ?? NotImage()}
                   alt="cover"
                   quality={100}
                   fill
@@ -226,8 +226,8 @@ const SpecialColumn = () => {
                 <div className="w-4.5 h-4.5 relative">
                   <Image
                     placeholder="blur"
-                    blurDataURL={DefaultLoadingPicture()}
-                    src={userInfo?.avatar ?? DefaultLoadingPicture()}
+                    blurDataURL={LoadingImage()}
+                    src={userInfo?.avatar ?? NotImage()}
                     alt="cover"
                     quality={100}
                     fill
