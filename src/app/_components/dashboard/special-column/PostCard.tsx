@@ -10,10 +10,10 @@ import Link from "next/link";
 
 const PostCard = ({
   postDetail,
-  status,
+  isSubscribe,
 }: {
   postDetail: DetailPostCard;
-  status: boolean;
+  isSubscribe: boolean;
 }) => {
   const [postContent, setPostContent] = useState("");
 
@@ -28,7 +28,7 @@ const PostCard = ({
   }, [postDetail, postDetail.content]);
 
   const handleClickPost = () => {
-    if (status || postDetail.isFree) {
+    if (isSubscribe || postDetail.isFree) {
       link();
     } else {
       alertMessage();

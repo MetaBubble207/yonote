@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { userSubscribeSlice } from "./user-subscribe-slice"
+import { userColumnSlice } from "./user-column-slice";
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
-            userSubscribe: userSubscribeSlice.reducer
+            userSubscribe: userSubscribeSlice.reducer,
+            userColumn: userColumnSlice.reducer
         }
     })
 }

@@ -14,6 +14,8 @@ import { StatisticsInfo } from "./StatisticsInfo";
 import { TabBar } from "./TabBar";
 import { SubscribeButton } from "./SubscribeButton";
 import { SearchModal } from "./modals/Modals";
+import { useAppSelector } from "@/app/_hooks/useRedux";
+import { userColumnSelector } from "@/app/_slice/user-column-slice";
 
 interface SpecialColumnBodyProps {
   columnId: string;
@@ -34,7 +36,7 @@ export default function SpecialColumnBody({
   const [currentContent, setCurrentContent] = React.useState<number>(1);
   const [isSubscribe, setIsSubscribe] = React.useState(false);
   const [check, setCheck] = React.useState(false);
-
+  const { searchTag } = useAppSelector(userColumnSelector)
   const {
     isDesc,
     searchValue,
@@ -54,7 +56,7 @@ export default function SpecialColumnBody({
   );
 
   const { data: detailPost, isLoading: detailPostLoading } = api.order.getColumnOrder.useQuery(
-    { columnId, isDesc, search: condition },
+    { columnId, isDesc, search: condition, tag: searchTag },
     { enabled: Boolean(columnId) }
   );
 
@@ -102,7 +104,7 @@ export default function SpecialColumnBody({
     setCurrentContent(tabId);
   }, []);
 
-  if (statusLoading || detailPostLoading || userInfoLoading) {
+  if (statusLoading || userInfoLoading || detailPostLoading) {
     return <Loading className="mt-50" />;
   }
 
@@ -142,8 +144,9 @@ export default function SpecialColumnBody({
 
         <div className="mb-15">
           {currentContent === 1 ? (
+
             <SpecialColumnList
-              status={status ?? false}
+              isSubscribe={status ?? false}
               postData={detailPost!.detailPostCard}
             />
           ) : (
