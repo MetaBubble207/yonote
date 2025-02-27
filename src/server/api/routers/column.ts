@@ -22,20 +22,40 @@ import { getCurrentTime } from "@/tools/getCurrentTime";
 import { getOneUser } from "./user";
 import { getColumnsReadFC } from "./read";
 import { getColumnsLikeFC } from "./postLike";
+import { getPostStats } from "../tools/columnQueries";
 
 const getDetailColumnCard = async (
   ctx: { headers: Headers; db: PostgresJsDatabase<typeof schema> },
   columnId: string,
-): Promise<DetailColumnCard> => {
+): Promise<DetailColumnCard | []> => {
   const { db } = ctx;
   const columnData = await db.query.column.findFirst({
     where: eq(column.id, columnId),
   });
 
-  // 获取专栏下的所有帖子的阅读量
-  const readCount = await getColumnsReadFC(db, columnData.id);
-  // 获取专栏下的所有帖子的点赞量
-  const likeCount = await getColumnsLikeFC(db, columnData.id);
+  if (!columnData) {
+    return [];
+  }
+  // 获取专栏下的所有帖子
+  const posts = await db
+    .select()
+    .from(post)
+    .where(and(eq(post.columnId, columnId), eq(post.status, true)))
+    .orderBy(asc(post.chapter));
+  // 并行获取所有文章的统计数据并累加
+  const postsWithStats = await Promise.all(
+    posts.map(async (post) => await getPostStats(db, post.id))
+  );
+
+  // 计算总阅读量和点赞量
+  const { readCount, likeCount } = postsWithStats.reduce(
+    (acc, curr) => ({
+      readCount: Number(acc.readCount) + Number(curr.readCount ?? 0),
+      likeCount: Number(acc.likeCount) + Number(curr.likeCount ?? 0),
+    }),
+    { readCount: 0, likeCount: 0 }
+  );
+
   // 获取专栏订阅量
   const subscriptionCount = (
     await db.select().from(order).where(eq(order.columnId, columnId))
@@ -49,21 +69,23 @@ const getDetailColumnCard = async (
   let detailColumnCard: DetailColumnCard = {
     avatar: "",
     cover: "",
-    createdAt: null,
-    updatedAt: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
     id: "",
     isFree: false,
     isTop: false,
     name: "",
     likeCount: 0,
     readCount: 0,
+    introduce: '',
+    description: '',
     subscriptionCount: 0,
     postCount: 0,
     userId: "",
     userName: "",
     idType: 0,
   };
-
+  if (!userData) return [];
   Object.assign(detailColumnCard, {
     ...columnData,
     readCount,
@@ -220,14 +242,14 @@ export const columnRouter = createTRPCRouter({
     .input(z.object({ searchValue: z.string() }))
     .query(async ({ ctx, input }): Promise<BaseColumnCard[]> => {
       const { db } = ctx;
-      
+
       // 并行执行两个主查询
       const [userResults, columnResults] = await Promise.all([
         // 查询用户名匹配的记录
         db.select()
           .from(user)
           .where(like(user.name, `%${input.searchValue}%`)),
-        
+
         // 查询专栏名匹配的记录
         db.select()
           .from(column)
@@ -323,7 +345,7 @@ export const columnRouter = createTRPCRouter({
     });
     return await Promise.all(promises);
   }),
-  
+
   getColumnDetail: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
@@ -511,7 +533,7 @@ export const columnRouter = createTRPCRouter({
         .where(eq(column.id, input))
         .limit(1);
 
-      if (!result[0] || !result[0].column || !result[0].user) { 
+      if (!result[0] || !result[0].column || !result[0].user) {
         throw new Error(`Column not found: ${input}`);
       }
 
@@ -538,11 +560,11 @@ export const columnRouter = createTRPCRouter({
       const { conditions, limit, cursor, sortOrder } = input;
 
       const allColumn = await ctx.db
-      .select()
-      .from(column)
-      .limit(limit + 1)
-      .offset(cursor)
-      .orderBy(sortOrder ? asc(column.id) : desc(column.id));
+        .select()
+        .from(column)
+        .limit(limit + 1)
+        .offset(cursor)
+        .orderBy(sortOrder ? asc(column.id) : desc(column.id));
 
       const hasNextPage = allColumn.length > limit;
       const columns = hasNextPage ? allColumn.slice(0, -1) : allColumn;
