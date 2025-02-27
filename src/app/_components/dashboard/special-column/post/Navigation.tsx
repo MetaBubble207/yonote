@@ -40,7 +40,8 @@ const NavigationButton = ({
           height={14}
         />
       )}
-      <div className="text-3 font-not-italic font-400 lh-6 ml-5px text-[#333]">
+      <div className={`text-3 font-not-italic font-400 lh-6 ml-5px 
+        ${disabled ? "text-gray" : "text-[#333] "}`}>
         {direction === 'left' ? '上一篇' : '下一篇'}
       </div>
       {direction === 'right' && (
@@ -52,7 +53,9 @@ const NavigationButton = ({
         />
       )}
     </div>
-    <div className={`w-27.6665 text-3 font-not-italic font-400 lh-6 ${direction === 'right' ? 'text-right' : ''} text-[#333]`}>
+    <div className={`w-27.6665 text-3 font-not-italic font-400 lh-6  
+      ${direction === 'right' ? 'text-right' : ''} 
+      ${disabled ? "text-gray" : "text-[#333] "}`}>
       {title}
     </div>
   </div>
@@ -62,15 +65,15 @@ export function Navigation({
   postData,
 }: NavigationProps) {
   const columnId = postData.column.id;
-  const chapter = postData.currentPost.chapter;
   const columnName = postData.column.name;
   const prevPost = postData.prevPost;
   const nextPost = postData.nextPost;
   const router = useRouter();
   const alertMessage = () => alert("请先购买专栏");
   const [token] = useLocalStorage('token', null)
-  const canAccessPost = (post: PostSelect) =>
-    post.isFree || postData.user.id === token;
+
+  const canAccessPost = (post: PostSelect | undefined | null) =>
+    post?.isFree || postData.user.id === token;
 
   const navigation = {
     toDirectory: () => router.push(`/dashboard/special-column?c=1&id=${columnId}`),
@@ -104,14 +107,14 @@ export function Navigation({
             <NavigationButton
               direction="left"
               title={!prevPost ? "已经是第一篇了" : (prevPost.name || '')}
-              onClick={canAccessPost(prevPost!) ? navigation.toPrevious : alertMessage}
+              onClick={canAccessPost(prevPost) ? navigation.toPrevious : alertMessage}
               disabled={!prevPost}
             />
 
             <NavigationButton
               direction="right"
               title={!nextPost ? "已经是末篇了" : (nextPost.name || '')}
-              onClick={canAccessPost(nextPost!) ? navigation.toNext : alertMessage}
+              onClick={canAccessPost(nextPost) ? navigation.toNext : alertMessage}
               disabled={!nextPost}
             />
           </div>
