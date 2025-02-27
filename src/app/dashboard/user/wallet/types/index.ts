@@ -1,4 +1,4 @@
-import { RunningWater } from "@/server/db/schema";
+import { RunningWaterSelect } from "@/server/db/schema";
 
 export interface WalletData {
     amountWithdraw: number | null;
@@ -6,7 +6,7 @@ export interface WalletData {
 }
 
 export interface TransactionListProps {
-    data: RunningWater[];
+    data: RunningWaterSelect[];
     currentType: number;
 }
 

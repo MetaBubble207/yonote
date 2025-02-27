@@ -276,8 +276,8 @@ export const runningWater = createTable("running_water", {
 });
 export type UserInsert = typeof user.$inferInsert;
 export type UserSelect = typeof user.$inferSelect;
-export type RunningWater = typeof runningWater.$inferSelect;
-export type Column = typeof column.$inferSelect;
+export type RunningWaterSelect = typeof runningWater.$inferSelect;
+export type ColumnSelect = typeof column.$inferSelect;
 export type ColumnUser = {
   column: typeof column.$inferSelect;
   user: typeof user.$inferSelect;
@@ -288,8 +288,6 @@ export type ColumnOrder = {
 };
 
 export type PostSelect = typeof post.$inferSelect;
-
-export type Order = typeof order.$inferSelect;
 export type BaseUserInfo = {
   userId: string;
   idType: number;

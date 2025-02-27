@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
   type BaseColumnCard,
-  type Column,
+  type ColumnSelect,
   column,
   type ColumnOrder,
   type DetailColumnCard,
@@ -186,7 +186,7 @@ export const columnRouter = createTRPCRouter({
         .select()
         .from(column)
         .where(eq(column.userId, input.writerId));
-      const res: Column[] = [];
+      const res: ColumnSelect[] = [];
       // 遍历作者下的每一个专栏的帖子
       const promises = columns.map(async (column) => {
         const posts = await db

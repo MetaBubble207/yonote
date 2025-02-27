@@ -6,14 +6,14 @@ import { useScreenshot } from "@/app/_hooks/useScreenshot";
 import { AuthorInfo } from "./AuthorInfo";
 import { FooterInfo } from "./FooterInfo";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
-import { Column, UserSelect } from "@/server/db/schema";
+import { ColumnSelect, UserSelect } from "@/server/db/schema";
 import { ColumnContent } from "./ColumnContent";
 
 interface ColumnPosterProp {
     user: UserSelect;
     ContentCount: number;
     subscribeCount: number;
-    column: Column;
+    column: ColumnSelect;
 }
 
 export const ColumnPoster = ({ user, column, ContentCount, subscribeCount }: ColumnPosterProp) => {
