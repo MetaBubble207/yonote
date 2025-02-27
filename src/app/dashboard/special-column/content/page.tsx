@@ -10,8 +10,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
   const { c, id } = await searchParams;
   const chapter = parseInt(c);
   const columnId = id;
-
-  // 服务端数据获取
+  
   const postDetailData = await api.post.getDetailPostById({
     id: columnId,
     chapter,
@@ -30,24 +29,26 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
       <div>
         <ActionButtons url={`/dashboard/poster/post?c=${chapter}&id=${columnId}`} />
         <ArticleContent
-          postData={postDetailData}
-          date={postDetailData.createdAt ? time2DateString(postDetailData.createdAt) : ""}
-          name={postDetailData.name || ""}
-          content={postDetailData.content || ""}
+          postData={{...postDetailData.currentPost, user: postDetailData.user!}}
+          date={postDetailData.currentPost.createdAt ? time2DateString(postDetailData.currentPost.createdAt) : ""}
+          name={postDetailData.currentPost.name || ""}
+          content={postDetailData.currentPost.content || ""}
         />
       </div>
 
       <div className="px-4">
         <LikeSection
-          postId={postDetailData.id}
-          tags={postDetailData.tag ? postDetailData.tag.split(",") : []}
+          postId={postDetailData.currentPost.id}
+          tags={postDetailData.currentPost.tag ? postDetailData.currentPost.tag.split(",") : []}
         />
 
         <Navigation
           chapter={chapter}
           columnId={columnId}
-          columnName={postDetailData.column.name}
+          columnName={postDetailData.column?.name}
           postCount={postCount}
+          prepost={postDetailData.prePost}
+          nextpost={postDetailData.nextPost}
         />
       </div>
     </div>

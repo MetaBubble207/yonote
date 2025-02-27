@@ -5,7 +5,7 @@ import { PostPoster } from "@/app/_components/dashboard/poster/PostPoster";
 export default async function Page({
   searchParams
 }: {
-  searchParams: { id: string; c: string; }
+  searchParams: Promise<{ id: string; c: string; }>;
 }) {
   const { id: columnId, c } = await searchParams;
   const chapter = parseInt(c);
@@ -16,8 +16,8 @@ export default async function Page({
 
   const [user, likeCount, readCount] = await Promise.all([
     api.users.getOneByColumnId(columnId),
-    api.like.getLikeCount({ postId: postData.id }),
-    api.read.getPostRead({ postId: postData.id })
+    api.like.getLikeCount({ postId: postData.currentPost.id }),
+    api.read.getPostRead({ postId: postData.currentPost.id })
   ]);
 
   if (!user) {
@@ -25,6 +25,6 @@ export default async function Page({
   }
 
   return (
-    <PostPoster user={user} postData={postData} columnId={columnId} chapter={chapter} likeCount={likeCount} readCount={readCount} />
+    <PostPoster user={user} postData={{ ...postData.currentPost, user: postData.user! }} columnId={columnId} chapter={chapter} likeCount={likeCount} readCount={readCount} />
   );
 }

@@ -4,6 +4,7 @@ import { column, post, user } from "@/server/db/schema";
 import { and, eq, gt, like, lt } from "drizzle-orm";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 import { createCaller } from "@/server/api/root";
+import { getDetailPost } from "../tools/postQueries";
 
 export const postRouter = createTRPCRouter({
   create: publicProcedure
@@ -165,43 +166,7 @@ export const postRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { id, chapter } = input;
       const { db } = ctx;
-
-      // 1. 先获取指定章节的文章
-      const postData = await db.query.post.findFirst({
-        where: and(
-          eq(post.columnId, id),
-          eq(post.chapter, chapter)
-        ),
-      });
-
-      if (!postData) {
-        throw new Error("Post not found");
-      }
-
-      // 2. 获取专栏信息
-      const columnData = await db.query.column.findFirst({
-        where: eq(column.id, id),
-      });
-
-      if (!columnData) {
-        throw new Error("Column not found");
-      }
-
-      // 3. 获取用户信息
-      const userData = await db.query.user.findFirst({
-        where: eq(user.id, columnData.userId),
-      });
-
-      if (!userData) {
-        throw new Error("User not found");
-      }
-
-      // 4. 组合数据返回
-      return {
-        ...postData,
-        user: userData,
-        column: columnData,
-      };
+      return getDetailPost(db, id, chapter);
     }),
 
   getPostCount: publicProcedure
@@ -308,10 +273,10 @@ export const postRouter = createTRPCRouter({
       const postData = await ctx.db.query.post.findMany({
         where: eq(post.columnId, input),
       });
-      const res:string[] = ['all','free','top'];
+      const res: string[] = ['all', 'free', 'top'];
       postData.map((item) => {
         const temp = item.tag?.split(",");
-        if(temp) res.push(...temp);
+        if (temp) res.push(...temp);
       });
       // 过滤掉重复和空值
       return [...new Set(res)].filter((item) => item !== "");
