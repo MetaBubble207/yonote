@@ -479,6 +479,7 @@ export const orderRouter = createTRPCRouter({
         return {
           detailPostCard: postsWithStats.map(post => ({
             ...post,
+            tag: post.tag || '',
             idType: post.idType ?? 0,
             userName: post.userName ?? '',
             avatar: post.avatar ?? '',
