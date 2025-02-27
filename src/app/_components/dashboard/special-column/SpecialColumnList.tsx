@@ -19,7 +19,7 @@ const SpecialColumnList = ({
   // 处理标签列表
   const tags = useMemo(() => {
     if (!postData.length) return ["all", "free", "top"];
-    
+
     const customTags = postData
       .flatMap(item => item.tag ? item.tag.split(",").map(tag => tag.trim()) : [])
       .filter((item, index, self) => self.indexOf(item) === index && item !== "");
@@ -29,16 +29,13 @@ const SpecialColumnList = ({
 
   // 处理过滤后的文章列表
   const filteredPosts = useMemo(() => {
-    console.log('searchTag', searchTag)
     if (!postData) return [];
-    
+
     switch (searchTag) {
       case 'all':
-        return postData;
       case 'free':
-        return postData.filter(item => item.isFree);
       case 'top':
-        return postData.filter(item => item.isTop);
+        return postData;
       default:
         return postData.filter(item => item.tag?.split(",").includes(searchTag));
     }
@@ -77,10 +74,10 @@ const SpecialColumnList = ({
         <NoData title="暂无数据噢😯~" />
       ) : (
         filteredPosts.map(item => (
-          <PostCard 
-            key={item.id} 
-            postDetail={item} 
-            isSubscribe={isSubscribe} 
+          <PostCard
+            key={item.id}
+            postDetail={item}
+            isSubscribe={isSubscribe}
           />
         ))
       )}
