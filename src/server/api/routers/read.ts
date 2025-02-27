@@ -25,7 +25,6 @@ export const getColumnsReadFC = async (db: PostgresJsDatabase<typeof schema>, co
   return result[0]?.totalReads ?? 0;
 }
 
-// 在文件开头的工具函数部分添加
 interface TimeRange {
   start: Date;
   end: Date;
@@ -106,15 +105,16 @@ export const readRouter = createTRPCRouter({
         throw new Error("No data found");
       }
       // const postId = data[input.chapter - 1].id
-      const postId = (
-        await ctx.db.query.post.findFirst({
+      const postData = await ctx.db.query.post.findFirst({
           where: and(
             eq(post.columnId, input.id),
             eq(post.chapter, input.chapter),
           ),
-        })
-      ).id;
-
+        });
+      if(!postData?.id){
+        throw new Error("No data found");
+      }
+      const postId = postData.id;
       const list = await ctx.db
         .select()
         .from(postRead)
@@ -162,7 +162,7 @@ export const readRouter = createTRPCRouter({
 
       return result[0]?.readCount ?? 0;
     }),
-    
+
   // 获取最近阅读
   getRecentRead: publicProcedure
     .input(z.string())
