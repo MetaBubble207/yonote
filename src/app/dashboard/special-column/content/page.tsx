@@ -6,7 +6,7 @@ import { Navigation } from "@/app/_components/dashboard/special-column/post/Navi
 import { time2DateString } from "@/tools/timeToString";
 import ActionButtons from "@/app/_components/dashboard/special-column/ActionButton";
 
-export default async function Page({ searchParams }: { searchParams: { c: string; id: string } }) {
+export default async function Page({ searchParams }: { searchParams: Promise<{ c: string; id: string }> }) {
   const { c, id } = await searchParams;
   const chapter = parseInt(c);
   const columnId = id;
