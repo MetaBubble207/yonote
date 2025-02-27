@@ -130,7 +130,7 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, check, columnId }) => {
   });
 
   if (isLoading) {
-    return <Loading className="mt-50" />;
+    return <Loading className="fixed z-200 top-0 left-0 w-full h-screen flex items-center justify-center bg-black bg-op-70" />;
   }
 
   if (!data || !data.columnData || !data.priceListData || !data.walletData) {
