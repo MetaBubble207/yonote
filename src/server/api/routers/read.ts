@@ -162,20 +162,27 @@ export const readRouter = createTRPCRouter({
 
       return result[0]?.readCount ?? 0;
     }),
+    
   // 获取最近阅读
   getRecentRead: publicProcedure
-    .input(z.object({ userId: z.string() }))
+    .input(z.string())
     .query(async ({ ctx, input }) => {
-      // const recent = await ctx.db.select().from(postRead).where(eq(postRead.userId, input.userId)).orderBy(postRead.updatedAt).limit(1);
       const recent = await ctx.db
-        .select()
+        .select({
+          postId: postRead.postId,
+          post: post
+        })
         .from(postRead)
-        .where(eq(postRead.userId, input.userId))
-        .orderBy(desc(postRead.updatedAt));
-      // return recent;
-      return await ctx.db.query.post.findFirst({
-        where: eq(post.id, recent[0].postId),
-      });
+        .leftJoin(post, eq(post.id, postRead.postId))
+        .where(eq(postRead.userId, input))
+        .orderBy(desc(postRead.updatedAt))
+        .limit(1);
+
+      if (!recent.length || !recent[0]?.post) {
+        return null;
+      }
+
+      return recent[0].post;
     }),
 
   // 获取专栏昨天阅读量
