@@ -52,30 +52,6 @@ export default function UserPage() {
     }
   }, [loginData?.id, isSuccess, setToken]);
 
-  return (
-    <div>
-      {/* 背景颜色*/}
-      <div className="pb-15 bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3 min-h-screen w-full px-4">
-        {/* 顶部 */}
-        <UserTop />
-        {/* 专栏、小课区域 */}
-        <Display />
-        {/*  我的服务模块*/}
-        <Service />
-        <div className={"z-1 text-gray text-3 flex h-20 w-full items-center justify-center"}>
-          ICP备案号：
-          <Link href={"http://beian.miit.gov.cn/ "}>
-            {" "}
-            京ICP备2024064381号-1
-          </Link>
-        </div>
-      </div>
-      <div className="z-2 fixed bottom-4 w-full justify-center">
-        <Navbar />
-      </div>
-    </div>
-  );
-
   function UserTop() {
     return (
       <div className="flex flex-row items-center pt-9">
@@ -350,4 +326,30 @@ export default function UserPage() {
       </>
     );
   }
+
+  return (
+    <div>
+      {/* 背景颜色*/}
+      <div className="flex flex-col pb-15 bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3 min-h-screen w-full px-4">
+        <div className="flex-1">
+          {/* 顶部 */}
+          <UserTop />
+          {/* 专栏、小课区域 */}
+          <Display />
+          {/*  我的服务模块*/}
+          <Service />
+        </div>
+        <div className={"z-1 text-gray text-3 flex h-20 w-full items-center justify-center"}>
+          ICP备案号：
+          <Link href={"http://beian.miit.gov.cn/ "}>
+            {" "}
+            京ICP备2024064381号-1
+          </Link>
+        </div>
+      </div>
+      <div className="z-2 fixed bottom-4 w-full justify-center">
+        <Navbar />
+      </div>
+    </div>
+  );
 };

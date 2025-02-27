@@ -9,18 +9,20 @@ export default async function Subscribe({ searchParams }: { searchParams: Promis
   const { code } = await searchParams;
   return (
     <div>
-      <div className="pb-15 bg-#F5F7FB min-h-screen w-full px-4 pt-8">
-        {/*搜索框*/}
-        <Link href="/dashboard/find/search-result">
-          <SearchColumn />
-        </Link>
-        {/*最近观看*/}
-        <div className={"mt-8"}>
-          <RecentlyReadCard code={code} />
-        </div>
-        {/*列表*/}
-        <div className={"mt-4"}>
-          <SubscribeMain code={code} />
+      <div className="pb-15 bg-#F5F7FB min-h-screen w-full px-4 pt-8 flex flex-col">
+        <div className="flex-1">
+          {/*搜索框*/}
+          <Link href="/dashboard/find/search-result">
+            <SearchColumn />
+          </Link>
+          {/*最近观看*/}
+          <div className={"mt-8"}>
+            <RecentlyReadCard code={code} />
+          </div>
+          {/*列表*/}
+          <div className={"mt-4"}>
+            <SubscribeMain code={code} />
+          </div>
         </div>
         <div className={"z-1 text-gray text-3 flex h-20 w-full items-center justify-center"}>
           ICP备案号：
