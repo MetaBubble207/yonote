@@ -23,7 +23,8 @@ export function LikeSection({ postId, tags }: LikeSectionProps) {
     const { data: likeState, refetch: refetchLikeState } = api.like.getLikeState.useQuery(
         { postId, userId: token },
         {
-            initialData: { isLike: false, likeCount: 0 } as LikeState
+            initialData: { isLike: false, likeCount: 0 } as LikeState,
+            staleTime: 0,  // 立即认为数据过期 （不设置这个的话，有了上面的 initialData 之后 useQuery 不会执行）
         }
     );
 
