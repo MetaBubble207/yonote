@@ -60,13 +60,9 @@ async function getColumnReadsInRange(
 
 export const readRouter = createTRPCRouter({
   create: publicProcedure
-    .input(
-      z.object({
-        postId: z.number(),
-        userId: z.string(),
-      }),
-    )
+    .input(z.object({ postId: z.number(), userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      // 查找之前的阅读记录
       const reads = await ctx.db.query.postRead.findFirst({
         where: and(
           eq(postRead.postId, input.postId),
@@ -74,16 +70,15 @@ export const readRouter = createTRPCRouter({
         ),
       });
       console.log(reads);
+      // 找到直接返回
       if (reads) return;
-
+      // 新增记录
       return ctx.db
         .insert(postRead)
         .values({
           postId: input.postId,
           userId: input.userId,
-          updatedAt: getCurrentTime(),
-        })
-        .returning({ postId: postRead.postId, userId: postRead.userId });
+        });
     }),
 
   getReadList: publicProcedure
@@ -106,12 +101,12 @@ export const readRouter = createTRPCRouter({
       }
       // const postId = data[input.chapter - 1].id
       const postData = await ctx.db.query.post.findFirst({
-          where: and(
-            eq(post.columnId, input.id),
-            eq(post.chapter, input.chapter),
-          ),
-        });
-      if(!postData?.id){
+        where: and(
+          eq(post.columnId, input.id),
+          eq(post.chapter, input.chapter),
+        ),
+      });
+      if (!postData?.id) {
         throw new Error("No data found");
       }
       const postId = postData.id;
