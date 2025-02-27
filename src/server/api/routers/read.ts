@@ -69,15 +69,41 @@ export const readRouter = createTRPCRouter({
           eq(postRead.userId, input.userId),
         ),
       });
-      console.log(reads);
-      // 找到直接返回
-      if (reads) return;
-      // 新增记录
+
+      const now = getCurrentTime();
+
+      if (reads) {
+        // 计算时间差（毫秒）
+        const timeDiff = now.getTime() - reads.updatedAt.getTime();
+        const hoursDiff = timeDiff / (1000 * 60 * 60);
+
+        // 如果超过24小时
+        if (hoursDiff >= 24) {
+          return ctx.db
+            .update(postRead)
+            .set({
+              readCount: (reads.readCount ?? 0) + 1,
+              updatedAt: now,
+            })
+            .where(
+              and(
+                eq(postRead.postId, input.postId),
+                eq(postRead.userId, input.userId),
+              ),
+            );
+        }
+        // 未超过24小时，不做操作
+        return reads;
+      }
+
+      // 没有阅读记录，创建新记录
       return ctx.db
         .insert(postRead)
         .values({
           postId: input.postId,
           userId: input.userId,
+          readCount: 1,
+          updatedAt: now,
         });
     }),
 
