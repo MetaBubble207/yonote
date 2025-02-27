@@ -38,26 +38,6 @@ export const postLikeRouter = createTRPCRouter({
         greeting: `Hello ${input.text}`,
       };
     }),
-  create: publicProcedure
-    .input(
-      z.object({
-        postId: z.number(),
-        userId: z.string(),
-        isLike: z.boolean(),
-      }),
-    )
-    .mutation(({ ctx, input }) => {
-      return ctx.db
-        .insert(postLike)
-        .values({
-          postId: input.postId,
-          userId: input.userId,
-          isLike: true,
-          updatedAt: getCurrentTime(),
-        })
-        .returning({ postId: postLike.postId, userId: postLike.userId });
-    }),
-
   // 获取当前的postid
   getPostId: publicProcedure
     .input(z.object({ id: z.string(), chapter: z.number() }))
@@ -78,11 +58,12 @@ export const postLikeRouter = createTRPCRouter({
       const postId = data[input.chapter - 1].id;
       return postId;
     }),
+
   // 获取用户点赞的数据
-  getLikeList: publicProcedure
+  getLikeState: publicProcedure
     .input(z.object({ postId: z.number(), userId: z.string() }))
     .query(async ({ ctx, input }) => {
-      const data = await ctx.db
+      const isLike = await ctx.db
         .select()
         .from(postLike)
         .where(
@@ -91,14 +72,19 @@ export const postLikeRouter = createTRPCRouter({
             eq(postLike.userId, input.userId),
           ),
         );
-      return data;
+      const likeCount = (await ctx.db
+        .select()
+        .from(postLike)
+        .where(
+          and(eq(postLike.postId, input.postId), eq(postLike.isLike, true)),
+        )).length ?? 0;
+      return { isLike: isLike[0]?.isLike ?? false, likeCount, };
     }),
 
   // 获取文章点赞数量
   getLikeCount: publicProcedure
     .input(z.object({ postId: z.number() }))
     .query(async ({ ctx, input }) => {
-      // const data = await ctx.db.query.postLike.findMany.where(and(eq(postLike.postId, input.postId)))
       const data = await ctx.db
         .select()
         .from(postLike)
@@ -108,36 +94,42 @@ export const postLikeRouter = createTRPCRouter({
       return data.length;
     }),
 
-  // 修改点赞状态
-  updateLike: publicProcedure
-    .input(
-      z.object({ postId: z.number(), userId: z.string(), isLike: z.boolean() }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      // const c = await ctx.db.query.postLike.findMany({ where: { and: [eq(postLike.userId,input.userId), eq(postLike.postId, input.postId)] } });
-      // const promises = c.map(async item => {
-      return ctx.db
-        .update(postLike)
-        .set({ isLike: input.isLike })
-        .where(
-          and(
-            eq(postLike.userId, input.userId),
-            eq(postLike.postId, input.postId),
-          ),
-        );
-    }),
-
-  uptime: publicProcedure
+  // 点赞
+  like: publicProcedure
     .input(z.object({ postId: z.number(), userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.db
-        .update(postLike)
-        .set({ updatedAt: getCurrentTime() })
+      // 查询是否已经点赞
+      const data = await ctx.db
+        .select()
+        .from(postLike)
         .where(
           and(
-            eq(postLike.userId, input.userId),
             eq(postLike.postId, input.postId),
+            eq(postLike.userId, input.userId),
           ),
         );
+      if (data.length) {
+        await ctx.db
+          .update(postLike)
+          .set({ isLike: !data[0]!.isLike, updatedAt: getCurrentTime() })
+          .where(
+            and(
+              eq(postLike.postId, input.postId),
+              eq(postLike.userId, input.userId),
+            ),
+          );
+      } else {
+        await ctx.db
+          .insert(postLike)
+          .values({
+            postId: input.postId,
+            userId: input.userId,
+            isLike: true,
+          });
+      }
+      return {
+        status: 200,
+        message: "success",
+      };
     }),
 });
