@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ColumnSelect, UserSelect, type PostSelect } from "@/server/db/schema";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
+import { message } from "antd";
 
 interface NavigationProps {
   postData: {
@@ -69,7 +70,8 @@ export function Navigation({
   const prevPost = postData.prevPost;
   const nextPost = postData.nextPost;
   const router = useRouter();
-  const alertMessage = () => alert("请先购买专栏");
+  const [messageApi, contextHolder] = message.useMessage();
+  const alertMessage = () => messageApi.error("请先购买专栏");
   const [token] = useLocalStorage('token', null)
 
   const canAccessPost = (post: PostSelect | undefined | null) =>
@@ -83,6 +85,7 @@ export function Navigation({
 
   return (
     <div className="bg-#F5F7FB flex">
+      {contextHolder}
       <div className="w-86.5 h-28.75 rounded-2 mx-auto mt-2 bg-[#FFF]">
         <div className="mx-16px">
           {/* 目录 */}

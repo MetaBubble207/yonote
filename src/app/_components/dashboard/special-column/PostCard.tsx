@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { type DetailPostCard } from "@/server/db/schema";
 import Link from "next/link";
+import { message } from "antd";
 
 const PostCard = ({
   postDetail,
@@ -43,9 +44,8 @@ const PostCard = ({
     );
   };
 
-  const alertMessage = () => {
-    alert("请先购买专栏");
-  };
+  const [messageApi, contextHolder] = message.useMessage();
+  const alertMessage = () => messageApi.error("请先购买专栏");
 
   return (
     <div
@@ -53,6 +53,7 @@ const PostCard = ({
         "w-91.5% mt-8px ml-16px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] px-2.5 pb-4 pt-4"
       }
     >
+      {contextHolder}
       {/*上边*/}
       <div className={"flex w-full items-center"} onClick={handleClickPost}>
         {/*左边图片*/}
