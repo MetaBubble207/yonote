@@ -1,208 +1,149 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import { time2DateString } from "@/tools/timeToString";
-import { useEffect } from "react";
 import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { type DetailPostCard } from "@/server/db/schema";
 import Link from "next/link";
 import { message } from "antd";
 
-const PostCard = ({
-  postDetail,
-  isSubscribe,
-}: {
+const MAX_CONTENT_LENGTH = 48;
+const MAX_TITLE_LENGTH = 15;
+
+interface PostCardProps {
   postDetail: DetailPostCard;
   isSubscribe: boolean;
-}) => {
-  const [postContent, setPostContent] = useState("");
+}
 
-  useEffect(() => {
-    if (postDetail.content && postDetail.content.length > 48) {
-      setPostContent(
-        (postDetail.content = postDetail.content.substring(0, 48) + "..."),
-      );
-    } else {
-      setPostContent(postDetail.content);
-    }
-  }, [postDetail, postDetail.content]);
+const PostCard: React.FC<PostCardProps> = ({ postDetail, isSubscribe }) => {
+  const router = useRouter();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  // 使用 useMemo 处理文本内容
+  const { truncatedContent, truncatedName } = useMemo(() => {
+    const content = postDetail.content || "";
+    const name = postDetail.name || "未知专栏";
+
+    return {
+      truncatedContent: content.length > MAX_CONTENT_LENGTH 
+        ? content.substring(0, MAX_CONTENT_LENGTH) + "..." 
+        : content,
+      truncatedName: name.length > MAX_TITLE_LENGTH 
+        ? name.substring(0, MAX_TITLE_LENGTH) + "..." 
+        : name
+    };
+  }, [postDetail.content, postDetail.name]);
 
   const handleClickPost = () => {
     if (isSubscribe || postDetail.isFree) {
-      link();
+      router.push(`/dashboard/special-column/content?c=${postDetail.chapter}&id=${postDetail.columnId}`);
     } else {
-      alertMessage();
+      messageApi.error("请先购买专栏");
     }
   };
 
-  const router = useRouter();
-
-  const link = () => {
-    router.push(
-      `/dashboard/special-column/content?c=${postDetail.chapter}&id=${postDetail.columnId}`,
-    );
-  };
-
-  const [messageApi, contextHolder] = message.useMessage();
-  const alertMessage = () => messageApi.error("请先购买专栏");
+  const TagBadge = ({ children }: { children: React.ReactNode }) => (
+    <span className="border-rd-0.5 text-2.5 font-not-italic font-500 lh-6 px-7px py-3px ml-10px shrink-0 bg-[#FDB069] text-[#000]">
+      {children}
+    </span>
+  );
 
   return (
-    <div
-      className={
-        "w-91.5% mt-8px ml-16px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] px-2.5 pb-4 pt-4"
-      }
-    >
+    <div className="w-91.5% mt-8px ml-16px border-rd-5 border-1 border-solid border-[rgba(181,181,181,0.20)] px-2.5 pb-4 pt-4">
       {contextHolder}
-      {/*上边*/}
-      <div className={"flex w-full items-center"} onClick={handleClickPost}>
-        {/*左边图片*/}
+      <div className="flex w-full items-center cursor-pointer" onClick={handleClickPost}>
+        {/* 封面图片 */}
         <div className="w-21.25 h-18.625 relative">
           <Image
             placeholder="blur"
             blurDataURL={LoadingImage()}
             src={postDetail?.cover ?? NotImage()}
-            alt="小专栏图片"
+            alt="专栏封面"
             quality={100}
             fill
             loading="lazy"
             className="rounded-2 object-cover"
           />
         </div>
-        {/*右边文字*/}
-        <div className={"ml-8px w-67%"}>
-          <div className={"text-3.75 font-500 lh-6 text-3.75 text-[#252525]"}>
-            <span
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                WebkitLineClamp: 2,
-              }}
-            >
-              {postDetail?.name
-                ? postDetail.name.length >= 15
-                  ? postDetail.name.substring(0, 15) + "..."
-                  : postDetail.name
-                : "未知专栏"}
+        {/* 文章信息 */}
+        <div className="ml-8px w-67%">
+          <div className="text-3.75 font-500 lh-6 text-[#252525] flex items-center flex-wrap">
+            <span className="truncate block">
+              {truncatedName}
             </span>
-            {postDetail?.isTop && (
-              <span
-                className={
-                  "border-rd-0.5 text-2.5 font-not-italic font-500 lh-6 px-7px py-3px ml-10px shrink-0 bg-[#FDB069] text-[#000]"
-                }
-              >
-                <span>置顶</span>
-              </span>
-            )}
-            {postDetail?.isFree && (
-              <span
-                className={
-                  "border-rd-0.5 text-2.5 font-not-italic font-500 lh-6 px-7px py-3px ml-10px shrink-0 bg-[#FDB069] text-[#000]"
-                }
-              >
-                <span>免费</span>
-              </span>
-            )}
+            {postDetail?.isTop && <TagBadge>置顶</TagBadge>}
+            {postDetail?.isFree && <TagBadge>免费</TagBadge>}
           </div>
-
-          <div
-            className={"text-3.25 font-00 pt-5px text-[#666]"}
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-            dangerouslySetInnerHTML={{ __html: postContent }}
-          ></div>
+          <div className="text-3.25 pt-5px text-[#666] line-clamp-2">
+            {truncatedContent}
+          </div>
         </div>
       </div>
 
-      {/*下方图标*/}
-      <div className="mt-18px flex items-end">
+      {/* 底部信息 */}
+      <div className="mt-18px flex items-end justify-between">
         <Link href={`/dashboard/user/detail?id=${postDetail.userId}`}>
-          <div className={"flex items-center"}>
-            {/*左边头像*/}
+          <div className="flex items-center">
+            {/* 用户头像 */}
             <div className="w-5.75 h-5.75 relative">
               <Image
                 placeholder="blur"
                 blurDataURL={LoadingImage()}
                 src={postDetail.avatar ?? NotImage()}
-                alt="cover"
+                alt="用户头像"
                 quality={100}
                 fill
                 loading="lazy"
                 className="rounded-full object-cover"
               />
             </div>
-            {/*昵称，日期，VIP*/}
-            <div>
-              <div className={"flex items-center"}>
-                <div
-                  className={
-                    "text-2.75 font-not-italic font-500 lh-18px ml-5px text-[#999]"
-                  }
-                >
-                  {postDetail?.userName ? postDetail?.userName : "未知用户"}
-                </div>
+            {/* 用户信息 */}
+            <div className="ml-5px">
+              <div className="flex items-center text-2.75 font-500 lh-18px text-[#999]">
+                {postDetail?.userName || "未知用户"}
                 {postDetail?.idType === 1 && (
                   <Image
-                    src={"/images/special-column/Group 225.png"}
-                    alt={"心智与阅读"}
+                    src="/images/special-column/Group 225.png"
+                    alt="VIP标识"
                     width={12}
                     height={12}
-                    className={"lh-0"}
-                    style={{ marginLeft: "2.5px" }}
+                    className="ml-2.5px"
                   />
                 )}
               </div>
-              <div
-                className={
-                  "text-2.75 font-not-italic font-500 lh-18px ml-5px text-[#999]"
-                }
-              >
+              <div className="text-2.75 font-500 lh-18px text-[#999]">
                 {time2DateString(postDetail.updatedAt)}发布
               </div>
             </div>
           </div>
         </Link>
-        {/*右方点赞数量*/}
-        <div className="ml-auto flex items-center">
-          <div>
+
+        {/* 统计信息 */}
+        <div className="flex items-center gap-6">
+          <div className="flex items-center">
             <Image
-              src={"/images/special-column/heart 2.png"}
-              alt={"爱心"}
+              src="/images/special-column/heart 2.png"
+              alt="点赞数"
               width={18}
               height={18}
-              objectFit="none"
+              className="object-contain"
             />
+            <span className="text-2.75 font-500 lh-6 ml-1 text-[#B5B5B5]">
+              {postDetail.likeCount}
+            </span>
           </div>
-          <div
-            className={
-              "text-2.75 font-not-italic font-500 lh-6 ml-4px text-[#B5B5B5]"
-            }
-          >
-            {postDetail.likeCount}
-          </div>
-        </div>
-        {/*右方浏览数量*/}
-        <div className="ml-24px flex items-center">
-          <div>
+          <div className="flex items-center">
             <Image
-              src={"/images/special-column/Preview-open.png"}
-              alt={"爱心"}
+              src="/images/special-column/Preview-open.png"
+              alt="阅读数"
               width={18}
               height={18}
-              objectFit="none"
+              className="object-contain"
             />
-          </div>
-          <div
-            className={
-              "text-2.75 font-not-italic font-500 lh-6 ml-4px text-[#B5B5B5]"
-            }
-          >
-            {postDetail.readCount}
+            <span className="text-2.75 font-500 lh-6 ml-1 text-[#B5B5B5]">
+              {postDetail.readCount}
+            </span>
           </div>
         </div>
       </div>
