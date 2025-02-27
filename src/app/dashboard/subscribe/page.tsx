@@ -5,7 +5,8 @@ import SearchColumn from "@/app/_components/common/SearchColumn";
 import SubscribeMain from "@/app/_components/dashboard/subscribe/SubscribeMain";
 import RecentlyReadCard from "@/app/_components/dashboard/subscribe/RecentlyReadCard";
 
-export default function Subscribe() {
+export default async function Subscribe({ searchParams }: { searchParams: Promise<{ code?: string }> }) {
+  const { code } = await searchParams;
   return (
     <div>
       <div className="pb-15 bg-#F5F7FB min-h-screen w-full px-4 pt-8">
@@ -15,11 +16,11 @@ export default function Subscribe() {
         </Link>
         {/*最近观看*/}
         <div className={"mt-8"}>
-          <RecentlyReadCard />
+          <RecentlyReadCard code={code} />
         </div>
         {/*列表*/}
         <div className={"mt-4"}>
-          <SubscribeMain />
+          <SubscribeMain code={code} />
         </div>
         <div className={"z-1 text-gray text-3 flex h-20 w-full items-center justify-center"}>
           ICP备案号：

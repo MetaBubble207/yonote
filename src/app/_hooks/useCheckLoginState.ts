@@ -1,12 +1,29 @@
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import useLogin from "./useLogin";
 
-export default function useCheckLoginState(target: string) {
+interface LoginState {
+    token: string | null;
+}
+
+export default function useCheckLoginState(
+    redirectPath: string,
+    code?: string,
+    mounted?: boolean
+): LoginState {
     const router = useRouter();
+    const [storedToken] = useLocalStorage("token", null);
+    const { token } = useLogin(code)
 
-    const [token] = useLocalStorage("token", null);
+    // 处理未登录重定向逻辑
     useEffect(() => {
-        if (!token) router.push(target);
-    }, []);
+        if (!mounted) return
+
+        if (!storedToken && !code) {
+            router.push(redirectPath);
+        }
+    }, [code, storedToken, redirectPath, router, mounted]);
+
+    return { token };
 }

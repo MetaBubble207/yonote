@@ -5,9 +5,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
-import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import useCheckLoginState from "@/app/_hooks/useCheckLoginState";
 import { isValid } from "@/tools/isValid";
+import useCheckOnClient from "@/app/_hooks/useCheckOnClient";
 
 const MAX_TEXT_LENGTH = 15;
 
@@ -20,10 +20,10 @@ const extractText = (html: string) => {
 const truncateText = (text: string) =>
     text.length > MAX_TEXT_LENGTH ? `${text.substring(0, MAX_TEXT_LENGTH)}...` : text;
 
-export default function RecentlyReadCard() {
+export default function RecentlyReadCard({ code }: { code?: string }) {
     const router = useRouter();
-    const [token] = useLocalStorage("token", null);
-    useCheckLoginState('/login');
+    const mounted = useCheckOnClient();
+    const { token } = useCheckLoginState('/login?origin=/dashboard/subscribe', code, mounted);
 
     const { data: recentRead, isLoading } = api.read.getRecentRead.useQuery({
         userId: token,

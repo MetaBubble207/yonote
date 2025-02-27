@@ -18,11 +18,9 @@ const TABS: TabItem[] = [
   { id: 2, label: "专栏" },
   { id: 3, label: "小课" },
 ] as const;
-
-const SubscribeMain = () => {
+const SubscribeMain = ({code}:{code?: string}) => {
   const mounted = useCheckOnClient();
-  useCheckLoginState('login');
-  const [token] = useLocalStorage("token", null);
+  const {token} = useCheckLoginState('/login?origin=/dashboard/subscribe', code, mounted);
 
   const [currentPage, setCurrentPage] = useState<TabItem["id"]>(1);
 
