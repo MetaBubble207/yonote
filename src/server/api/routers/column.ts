@@ -27,14 +27,14 @@ import { getPostStats } from "../tools/columnQueries";
 const getDetailColumnCard = async (
   ctx: { headers: Headers; db: PostgresJsDatabase<typeof schema> },
   columnId: string,
-): Promise<DetailColumnCard | []> => {
+): Promise<DetailColumnCard | null> => {
   const { db } = ctx;
   const columnData = await db.query.column.findFirst({
     where: eq(column.id, columnId),
   });
 
   if (!columnData) {
-    return [];
+    return null;
   }
   // 获取专栏下的所有帖子
   const posts = await db
@@ -85,7 +85,7 @@ const getDetailColumnCard = async (
     userName: "",
     idType: 0,
   };
-  if (!userData) return [];
+  if (!userData) return null;
   Object.assign(detailColumnCard, {
     ...columnData,
     readCount,
@@ -571,8 +571,7 @@ export const columnRouter = createTRPCRouter({
 
       const detailColumnsPromise = columns.map(col => getDetailColumnCard(ctx, col.id));
 
-      let items = await Promise.all(detailColumnsPromise);
-
+      let items = (await Promise.all(detailColumnsPromise)).filter(item => item !== null);
       // 根据条件排序
       items = items.sort((a, b) => {
         switch (conditions) {
