@@ -1,4 +1,4 @@
-import { type Post } from "@/server/db/schema";
+import { type PostSelect } from "@/server/db/schema";
 import { Button, Table, type TableColumnsType, type TableProps } from "antd";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -6,8 +6,8 @@ import { time2DateTimeStringSeconds } from "@/tools/timeToString";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 
-const TableComponent = ({ dataSource }: { dataSource: Post[] }) => {
-  const [data, setData] = useState<Post[]>([]);
+const TableComponent = ({ dataSource }: { dataSource: PostSelect[] }) => {
+  const [data, setData] = useState<PostSelect[]>([]);
   useEffect(() => {
     setData(dataSource || []);
   }, [dataSource]);
@@ -48,7 +48,7 @@ const TableComponent = ({ dataSource }: { dataSource: Post[] }) => {
   };
 
   const handleClickDelete = (id: number) => {};
-  const columns: TableColumnsType<Post> = [
+  const columns: TableColumnsType<PostSelect> = [
     {
       title: <span className={"pl-10"}>内容标题</span>,
       dataIndex: "name",
@@ -200,7 +200,7 @@ const TableComponent = ({ dataSource }: { dataSource: Post[] }) => {
       width: "24%",
     },
   ];
-  const onChange: TableProps<Post>["onChange"] = (
+  const onChange: TableProps<PostSelect>["onChange"] = (
     pagination,
     filters,
     sorter,

@@ -2,15 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { type Post } from "@/server/db/schema";
+import { type PostSelect } from "@/server/db/schema";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 
 interface NavigationProps {
   chapter: number;
   columnId: string;
   columnName?: string;
-  prepost?: Post;
-  nextpost?: Post;
+  prepost?: PostSelect | null;
+  nextpost?: PostSelect | null;
   postCount?: number;
   status?: boolean;
   userId?: string;
@@ -66,14 +66,13 @@ export function Navigation({
   prepost,
   nextpost,
   postCount = 0,
-  status,
   userId,
 }: NavigationProps) {
   const router = useRouter();
   const alertMessage = () => alert("请先购买专栏");
   const [token] = useLocalStorage('token', null)
-  const canAccessPost = (post?: Post) =>
-    post?.isFree || status || userId === token;
+  const canAccessPost = (post?: PostSelect) =>
+    post?.isFree || userId === token;
 
   const navigation = {
     toDirectory: () => router.push(`/dashboard/special-column?c=1&id=${columnId}`),

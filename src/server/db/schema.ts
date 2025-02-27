@@ -287,7 +287,7 @@ export type ColumnOrder = {
   order: typeof order.$inferSelect;
 };
 
-export type Post = typeof post.$inferSelect;
+export type PostSelect = typeof post.$inferSelect;
 
 export type Order = typeof order.$inferSelect;
 export type BaseUserInfo = {
@@ -392,6 +392,6 @@ export type SpeedUp = {
   totalPrice: number;
 };
 
-export type DetailPost = Post & {
+export type DetailPost = PostSelect & {
   user: UserSelect
 }
