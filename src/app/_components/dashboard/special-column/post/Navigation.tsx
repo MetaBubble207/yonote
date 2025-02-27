@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { type Post } from "@/server/db/schema";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 
 interface NavigationProps {
   chapter: number;
@@ -13,22 +14,21 @@ interface NavigationProps {
   postCount?: number;
   status?: boolean;
   userId?: string;
-  token?: string;
 }
 
 // 通用的导航按钮组件
-const NavigationButton = ({ 
-  direction, 
-  title, 
-  onClick, 
-  disabled 
-}: { 
+const NavigationButton = ({
+  direction,
+  title,
+  onClick,
+  disabled
+}: {
   direction: 'left' | 'right';
   title: string;
   onClick?: () => void;
   disabled?: boolean;
 }) => (
-  <div 
+  <div
     className={`flex flex-col ${!disabled && 'cursor-pointer'} ${direction === 'right' ? 'ml-auto' : ''}`}
     onClick={!disabled ? onClick : undefined}
   >
@@ -68,12 +68,11 @@ export function Navigation({
   postCount = 0,
   status,
   userId,
-  token,
 }: NavigationProps) {
   const router = useRouter();
   const alertMessage = () => alert("请先购买专栏");
-
-  const canAccessPost = (post?: Post) => 
+  const [token] = useLocalStorage('token', null)
+  const canAccessPost = (post?: Post) =>
     post?.isFree || status || userId === token;
 
   const navigation = {

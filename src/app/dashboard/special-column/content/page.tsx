@@ -16,7 +16,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
     id: columnId,
     chapter,
   });
-
   const postCount = await api.post.getPostCount(columnId);
   if (!postDetailData) {
     return (
@@ -41,7 +40,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
       <div className="px-4">
         <LikeSection
           postId={postDetailData.id}
-          userId={postDetailData.user.id}
           tags={postDetailData.tag ? postDetailData.tag.split(",") : []}
         />
 
