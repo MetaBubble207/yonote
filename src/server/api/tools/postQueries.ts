@@ -4,7 +4,7 @@ import { column, post, user } from "../../db/schema";
 import { and, eq, sql } from "drizzle-orm";
 
 export const getDetailPost = async (db: PostgresJsDatabase<typeof schema>, columnId: string, chapter: number) => {
-    
+
     if (chapter < 1) {
         return null;
     }
@@ -42,7 +42,9 @@ export const getDetailPost = async (db: PostgresJsDatabase<typeof schema>, colum
     }
 
     const currentPost = result[0];
-
+    if (!currentPost?.user || !currentPost?.column || !currentPost?.post) {
+        return null;
+    }
     // 查找上一章（使用子查询优化）
     const prevPost = await db
         .select()
@@ -59,7 +61,7 @@ export const getDetailPost = async (db: PostgresJsDatabase<typeof schema>, colum
             )`
         ))
         .execute();
-    
+
     // 查找下一章（使用子查询优化）
     const nextPost = await db
         .select()
@@ -82,7 +84,7 @@ export const getDetailPost = async (db: PostgresJsDatabase<typeof schema>, colum
         currentPost: currentPost.post,
         user: currentPost.user,
         column: currentPost.column,
-        prePost: prevPost[0],
+        prevPost: prevPost[0],
         nextPost: nextPost[0]
     };
 };
