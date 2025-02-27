@@ -101,14 +101,16 @@ export async function getPostStats(
     const [likes, reads] = await Promise.all([
         db.select({ id: postLike.id })
             .from(postLike)
-            .where(eq(postLike.postId, postId)),
-        db.select({ id: postRead.id })
+            .where(and(eq(postLike.postId, postId), eq(postLike.isLike, true))),
+        db.select({
+            totalReads: sql<number>`sum(${postRead.readCount})`
+        })
             .from(postRead)
-            .where(eq(postRead.postId, postId)),
+            .where(eq(postRead.postId, postId))
     ]);
 
     return {
         likeCount: likes.length,
-        readCount: reads.length,
+        readCount: reads[0]?.totalReads ?? 0
     };
 }
