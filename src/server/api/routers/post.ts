@@ -301,4 +301,19 @@ export const postRouter = createTRPCRouter({
         })
         .where(eq(post.id, input.id));
     }),
+
+  getPostTagsList: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const postData = await ctx.db.query.post.findMany({
+        where: eq(post.columnId, input),
+      });
+      const res:string[] = ['all','free','top'];
+      postData.map((item) => {
+        const temp = item.tag?.split(",");
+        if(temp) res.push(...temp);
+      });
+      // 过滤掉重复和空值
+      return [...new Set(res)].filter((item) => item !== "");
+    }),
 });

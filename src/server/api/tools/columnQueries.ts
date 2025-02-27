@@ -55,6 +55,7 @@ export async function getColumnBasicInfo(
             content: post.content,
             isTop: post.isTop,
             isFree: post.isFree,
+            tag: post.tag,
             createdAt: post.createdAt,
             updatedAt: post.updatedAt,
             columnId: post.columnId,
