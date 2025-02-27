@@ -5,7 +5,7 @@ import { ColumnPoster } from "@/app/_components/dashboard/poster/ColumnPoster";
 export default async function Page({
   searchParams
 }: {
-  searchParams: { id: string; }
+  searchParams: Promise<{ id: string; }>;
 }) {
   const { id: columnId } = await searchParams;
 

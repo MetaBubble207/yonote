@@ -64,7 +64,7 @@ export const PostPoster = ({ user, postData, likeCount, readCount, chapter, colu
               </div>
             </div>
           </AuthorInfo>
-          <ArticleContent title={postData?.name!} content={postContent} />
+          <ArticleContent title={postData.name} content={postContent} />
           <FooterInfo
             userInfo={user!}
             token={token}
