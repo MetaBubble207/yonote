@@ -1,21 +1,23 @@
 "use client";
-import React, { useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import React, { useCallback } from "react";
 import { message } from "antd";
 import Image from "next/image";
-import { api } from "@/trpc/react";
-import useLocalStorage from "@/app/_hooks/useLocalStorage";
-import { useColumnSearch } from "@/app/_hooks/useColumnSearch";
+import { useSpecialColumn } from "@/app/_hooks/useSpecialColumn";
 import SpecialColumnIntroduce from "./SpecialColumnIntroduce";
 import SpecialColumnList from "./SpecialColumnList";
-import Reserved from "@/app/_components/dialog/Reserved";
-import Loading from "@/app/_components/common/Loading";
 import { StatisticsInfo } from "./StatisticsInfo";
 import { TabBar } from "./TabBar";
 import { SubscribeButton } from "./SubscribeButton";
-import { SearchModal } from "./modals/Modals";
-import { useAppSelector } from "@/app/_hooks/useRedux";
-import { userColumnSelector } from "@/app/_slice/user-column-slice";
+import dynamic from "next/dynamic";
+import useCheckOnClient from "@/app/_hooks/useCheckOnClient";
+
+const Reserved = dynamic(() => import("@/app/_components/dialog/Reserved"), {
+  ssr: false
+});
+
+const SearchModal = dynamic(() => import("./modals/Modals").then(mod => mod.SearchModal), {
+  ssr: false
+});
 
 interface SpecialColumnBodyProps {
   columnId: string;
@@ -24,76 +26,28 @@ interface SpecialColumnBodyProps {
   isBack?: string;
 }
 
-export default function SpecialColumnBody({
-  columnId,
-  code,
-  invitationCode,
-  isBack,
-}: SpecialColumnBodyProps) {
-  const router = useRouter();
-  const [token, setToken] = useLocalStorage("token", null);
-  const [messageApi, contextHolder] = message.useMessage();
+export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
   const [currentContent, setCurrentContent] = React.useState<number>(1);
   const [isSubscribe, setIsSubscribe] = React.useState(false);
   const [check, setCheck] = React.useState(false);
-  const { searchTag } = useAppSelector(userColumnSelector)
+  const mounted = useCheckOnClient()
   const {
+    status,
+    statusLoading,
+    detailPost,
+    detailPostLoading,
+    tags,
+    tagsLoading,
     isDesc,
     searchValue,
-    condition,
     isSearching,
     handleSearch,
     toggleSearch,
     toggleSort,
     handleSearchCancel,
     handleSearchChange,
-  } = useColumnSearch();
-
-  // API 查询
-  const { data: status, isLoading: statusLoading } = api.order.getUserStatus.useQuery(
-    { userId: token, columnId },
-    { enabled: Boolean(token) }
-  );
-
-  const { data: detailPost, isLoading: detailPostLoading } = api.order.getColumnOrder.useQuery(
-    { columnId, isDesc, search: condition, tag: searchTag },
-    { enabled: Boolean(columnId) }
-  );
-
-  const { data: userInfo, isLoading: userInfoLoading } = api.users.login.useQuery(
-    code!,
-    { enabled: Boolean(code && !token) }
-  );
-
-  const createReferral = api.referrals.add.useMutation();
-
-  // 处理登录重定向
-  useEffect(() => {
-    if (!token && !userInfo && !isBack) {
-      const origin = encodeURIComponent(
-        `/dashboard/special-column?id=${columnId}&isBack=true${invitationCode ? `&invitationCode=${invitationCode}` : ""}`
-      );
-      router.push(`/login?origin=${origin}`);
-    }
-  }, [token, userInfo, isBack, columnId, router, invitationCode]);
-
-  // 处理登录成功
-  useEffect(() => {
-    if (userInfo && !token) {
-      messageApi.success("登录成功！😆，欢迎继续订阅专栏😯~");
-      setToken(userInfo.id);
-    }
-  }, [userInfo, token, messageApi, setToken]);
-
-  // 处理邀请码
-  useEffect(() => {
-    if (!invitationCode || !token || !columnId) return;
-    createReferral.mutate({
-      userId: token,
-      referredUserId: invitationCode,
-      columnId,
-    });
-  }, [invitationCode, token, columnId, createReferral]);
+    contextHolder,
+  } = useSpecialColumn(props.columnId, props.code, props.invitationCode, props.isBack);
 
   const handleSubscribe = useCallback(() => {
     setIsSubscribe(prev => !prev);
@@ -104,10 +58,7 @@ export default function SpecialColumnBody({
     setCurrentContent(tabId);
   }, []);
 
-  if (statusLoading || userInfoLoading || detailPostLoading) {
-    return <Loading className="mt-50" />;
-  }
-
+  if(!mounted) return null;
   return (
     <div>
       {contextHolder}
@@ -115,56 +66,42 @@ export default function SpecialColumnBody({
         <StatisticsInfo
           subscriptCount={detailPost?.subscriptCount}
           contentCount={detailPost?.detailPostCard.length}
+          isLoading={detailPostLoading}
         />
 
-        <div className="mt-[11px] ml-[16px] flex items-center">
-          <TabBar
-            currentContent={currentContent}
-            onTabChange={handleTabChange}
-          />
-          <div className="ml-auto flex items-center">
-            <Image
-              onClick={toggleSearch}
-              src="/images/special-column/Magnifying glass.png"
-              alt="搜索"
-              width={18}
-              height={18}
-              className="mr-[24px] cursor-pointer"
-            />
-            <Image
-              onClick={toggleSort}
-              src={isDesc ? "/images/special-column/DescSort.png" : "/images/special-column/AscSort.png"}
-              alt="排序"
-              width={18}
-              height={18}
-              className="mr-[16px] cursor-pointer"
-            />
-          </div>
-        </div>
+        <TabBarSection 
+          currentContent={currentContent}
+          onTabChange={handleTabChange}
+          onSearch={toggleSearch}
+          onSort={toggleSort}
+          isDesc={isDesc}
+        />
 
         <div className="mb-15">
           {currentContent === 1 ? (
-
             <SpecialColumnList
               isSubscribe={status ?? false}
-              postData={detailPost!.detailPostCard}
+              isPostDataLoading={detailPostLoading}
+              isTagsLoading={tagsLoading}
+              postData={detailPost?.detailPostCard ?? []}
+              tags={tags ?? []}
             />
           ) : (
-            <SpecialColumnIntroduce />
+            <SpecialColumnIntroduce columnId={props.columnId} />
           )}
         </div>
 
-        <SubscribeButton
+        {!statusLoading && <SubscribeButton
           show={!status}
           onClick={handleSubscribe}
-        />
+        />}
       </div>
 
-      {isSubscribe && (
+      {!statusLoading && isSubscribe && (
         <Reserved
           onClose={() => setIsSubscribe(false)}
           check={check}
-          columnId={columnId}
+          columnId={props.columnId}
         />
       )}
 
@@ -178,3 +115,45 @@ export default function SpecialColumnBody({
     </div>
   );
 }
+
+// 抽离 TabBar 部分为独立组件
+const TabBarSection = React.memo(({ 
+  currentContent, 
+  onTabChange, 
+  onSearch, 
+  onSort, 
+  isDesc 
+}: { 
+  currentContent: number;
+  onTabChange: (id: number) => void;
+  onSearch: () => void;
+  onSort: () => void;
+  isDesc: boolean;
+}) => (
+  <div className="mt-[11px] ml-[16px] flex items-center">
+    <TabBar
+      currentContent={currentContent}
+      onTabChange={onTabChange}
+    />
+    <div className="ml-auto flex items-center">
+      <Image
+        onClick={onSearch}
+        src="/images/special-column/Magnifying glass.png"
+        alt="搜索"
+        width={18}
+        height={18}
+        className="mr-[24px] cursor-pointer"
+      />
+      <Image
+        onClick={onSort}
+        src={isDesc ? "/images/special-column/DescSort.png" : "/images/special-column/AscSort.png"}
+        alt="排序"
+        width={18}
+        height={18}
+        className="mr-[16px] cursor-pointer"
+      />
+    </div>
+  </div>
+));
+
+TabBarSection.displayName = 'TabBarSection';

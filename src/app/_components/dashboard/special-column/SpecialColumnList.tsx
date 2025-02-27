@@ -5,28 +5,24 @@ import NoData from "@/app/_components/common/NoData";
 import { type DetailPostCard } from "@/server/db/schema";
 import { useAppDispatch, useAppSelector } from "@/app/_hooks/useRedux";
 import { setSearchTag, userColumnSelector } from "@/app/_slice/user-column-slice";
+import { LoadingSkeleton } from "../../common/LoadingSkeleton";
+import { Skeleton } from "antd";
 
 const SpecialColumnList = ({
   isSubscribe,
   postData,
+  isPostDataLoading,
+  isTagsLoading,
+  tags,
 }: {
   isSubscribe: boolean;
+  isPostDataLoading: boolean;
+  isTagsLoading: boolean;
   postData: DetailPostCard[];
+  tags: string[];
 }) => {
   const dispatch = useAppDispatch();
   const { searchTag } = useAppSelector(userColumnSelector);
-
-  // 处理标签列表
-  const tags = useMemo(() => {
-    if (!postData.length) return ["all", "free", "top"];
-
-    const customTags = postData
-      .flatMap(item => item.tag ? item.tag.split(",").map(tag => tag.trim()) : [])
-      .filter((item, index, self) => self.indexOf(item) === index && item !== "");
-
-    return ["all", "free", "top", ...customTags];
-  }, [postData]);
-
   // 处理过滤后的文章列表
   const filteredPosts = useMemo(() => {
     if (!postData) return [];
@@ -57,30 +53,73 @@ const SpecialColumnList = ({
 
   return (
     <div>
-      <div className="mt-23px flex overflow-scroll pb-3 pr-3">
-        {tags.map((tag) => (
-          <div
-            key={tag}
-            className="text-3.25 font-not-italic font-400 lh-6 border-rd-1 ml-2 mr-2 h-6 shrink-0 pl-3 pr-3 text-center"
-            onClick={() => dispatch(setSearchTag(tag))}
-            style={getCategoryStyle(tag)}
-          >
-            {getDisplayTag(tag)}
+      <div className="mt-23px">
+        {isTagsLoading ?
+          <div className="flex gap-2 overflow-hidden px-2">
+             <Skeleton.Button 
+              active 
+              size="small"
+              className="!h-6 !w-12 rounded-4px"
+            />
+             <Skeleton.Button 
+              active 
+              size="small"
+              className="!h-6 !w-12 rounded-4px"
+            />
+             <Skeleton.Button 
+              active 
+              size="small"
+              className="!h-6 !w-12 rounded-4px"
+            />
+             <Skeleton.Button 
+              active 
+              size="small"
+              className="!h-6 !w-12 rounded-4px"
+            />
+             <Skeleton.Button 
+              active 
+              size="small"
+              className="!h-6 !w-12 rounded-4px"
+            />
+             <Skeleton.Button 
+              active 
+              size="small"
+              className="!h-6 !w-12 rounded-4px"
+            />
+             <Skeleton.Button 
+              active 
+              size="small"
+              className="!h-6 !w-12 rounded-4px"
+            />
           </div>
-        ))}
+          : <div className="flex overflow-scroll pb-3 pr-3">
+            {tags.map((tag) => (
+              <div
+                key={tag}
+                className="text-3.25 font-not-italic font-400 lh-6 border-rd-1 ml-2 mr-2 h-6 shrink-0 pl-3 pr-3 text-center"
+                onClick={() => dispatch(setSearchTag(tag))}
+                style={getCategoryStyle(tag)}
+              >
+                {getDisplayTag(tag)}
+              </div>
+            ))}
+          </div>}
       </div>
 
-      {filteredPosts.length === 0 ? (
-        <NoData title="暂无数据噢😯~" />
-      ) : (
-        filteredPosts.map(item => (
-          <PostCard
-            key={item.id}
-            postDetail={item}
-            isSubscribe={isSubscribe}
-          />
-        ))
-      )}
+      {isPostDataLoading ?
+        <LoadingSkeleton rows={4} count={5} />
+        :
+        filteredPosts.length === 0 ? (
+          <NoData title="暂无数据噢😯~" />
+        ) : (
+          filteredPosts.map(item => (
+            <PostCard
+              key={item.id}
+              postDetail={item}
+              isSubscribe={isSubscribe}
+            />
+          ))
+        )}
     </div>
   );
 };
