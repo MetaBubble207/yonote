@@ -15,7 +15,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
     id: columnId,
     chapter,
   });
-  const postCount = await api.post.getPostCount(columnId);
+
   if (!postDetailData) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -29,7 +29,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
       <div>
         <ActionButtons url={`/dashboard/poster/post?c=${chapter}&id=${columnId}`} />
         <ArticleContent
-          postData={{...postDetailData.currentPost, user: postDetailData.user!}}
+          postData={{...postDetailData.currentPost, user: postDetailData.user}}
           date={postDetailData.currentPost.createdAt ? time2DateString(postDetailData.currentPost.createdAt) : ""}
           name={postDetailData.currentPost.name || ""}
           content={postDetailData.currentPost.content || ""}
@@ -43,12 +43,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
         />
 
         <Navigation
-          chapter={chapter}
-          columnId={columnId}
-          columnName={postDetailData.column?.name}
-          postCount={postCount}
-          prepost={postDetailData.prePost}
-          nextpost={postDetailData.nextPost}
+          postData={postDetailData}
         />
       </div>
     </div>

@@ -2,18 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { type PostSelect } from "@/server/db/schema";
+import { ColumnSelect, UserSelect, type PostSelect } from "@/server/db/schema";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 
 interface NavigationProps {
-  chapter: number;
-  columnId: string;
-  columnName?: string;
-  prepost?: PostSelect | null;
-  nextpost?: PostSelect | null;
-  postCount?: number;
-  status?: boolean;
-  userId?: string;
+  postData: {
+    currentPost: PostSelect,
+    nextPost?: PostSelect | null,
+    prevPost?: PostSelect | null,
+    user: UserSelect,
+    column: ColumnSelect
+  }
 }
 
 // 通用的导航按钮组件
@@ -60,19 +59,18 @@ const NavigationButton = ({
 );
 
 export function Navigation({
-  chapter,
-  columnId,
-  columnName,
-  prepost,
-  nextpost,
-  postCount = 0,
-  userId,
+  postData,
 }: NavigationProps) {
+  const columnId = postData.column.id;
+  const chapter = postData.currentPost.chapter;
+  const columnName = postData.column.name;
+  const prevPost = postData.prevPost;
+  const nextPost = postData.nextPost;
   const router = useRouter();
   const alertMessage = () => alert("请先购买专栏");
   const [token] = useLocalStorage('token', null)
   const canAccessPost = (post?: PostSelect) =>
-    post?.isFree || userId === token;
+    post?.isFree || postData.user.id === token;
 
   const navigation = {
     toDirectory: () => router.push(`/dashboard/special-column?c=1&id=${columnId}`),
@@ -105,16 +103,16 @@ export function Navigation({
           <div className="mt-8px flex justify-between">
             <NavigationButton
               direction="left"
-              title={chapter === 1 ? "已经是第一篇了" : (prepost?.name || '')}
-              onClick={canAccessPost(prepost) ? navigation.toPrevious : alertMessage}
-              disabled={chapter === 1}
+              title={chapter === 1 ? "已经是第一篇了" : (prevPost?.name || '')}
+              onClick={canAccessPost(prevPost!) ? navigation.toPrevious : alertMessage}
+              disabled={!prevPost}
             />
 
             <NavigationButton
               direction="right"
-              title={postCount <= chapter ? "已经是末篇了" : (nextpost?.name || '')}
-              onClick={canAccessPost(nextpost) ? navigation.toNext : alertMessage}
-              disabled={postCount <= chapter}
+              title={!nextPost ? "已经是末篇了" : (nextPost?.name || '')}
+              onClick={canAccessPost(nextPost!) ? navigation.toNext : alertMessage}
+              disabled={!nextPost}
             />
           </div>
         </div>
