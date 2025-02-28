@@ -53,11 +53,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
     setData(dataSource || []);
   }, [dataSource]);
 
-  // 处理函数
-  const handleEdit = useCallback((postId: number) => {
-    router.push(`/edit/edit?postId=${postId}`);
-  }, [router]);
-
   const handleToggleTop = useCallback((id: number, isTop: boolean) => {
     updateIsTopApi.mutate({
       id: id,
@@ -153,13 +148,13 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
         const tagLengthB = b.tag?.split(",").length || 0;
         return tagLengthA - tagLengthB;
       },
-      render: (tags) => {
+      render: (tags:string) => {
         if (!tags) return null;
         const tagArray = tags.split(",").filter(tag => tag.trim() !== "");
         return (
-          <div className="flex flex-col">
+          <div className="flex flex-wrap">
             {tagArray.map((tag, index) => (
-              <span key={index} className="text-[#1DB48D]">
+              <span key={index} className="text-[#1DB48D] max-w-200px overflow-ellipsis">
                 #{tag.trim()}&nbsp;
               </span>
             ))}
