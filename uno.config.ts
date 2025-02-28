@@ -24,6 +24,9 @@ export default defineConfig({
     },
     height: {
       "subtract-register": "calc(100vh - 200px)"
+    },
+    minHeight: {
+      "subtract-register": "calc(100vh - 200px)"
     }
   },
 });
