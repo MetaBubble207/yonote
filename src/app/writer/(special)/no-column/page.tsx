@@ -1,25 +1,11 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import NoData from "@/app/_components/common/NoData";
+import Link from "next/link";
 
-export default function NoColumnPage() {
-  const router = useRouter();
-  const [isGo, setIsGo] = useState(false);
-  useEffect(() => {
-    if (isGo) {
-      router.push("/writer/homepage");
-    }
-  }, [isGo, router]);
-
+export default function Page() {
   return (
-    <div className={"text-10 flex h-full w-full items-center justify-center"}>
-      <span>您还未申请自己的专栏，请先申请后再进行</span>
-      <span
-        onClick={() => setIsGo(true)}
-        className={"text-primary cursor-pointer"}
-      >
-        操作
-      </span>
+    <div className={"text-10 h-subtract-register flex flex-col w-full items-center justify-center"}>
+      <NoData title="您还未申请自己的专栏，请先申请后再进行"></NoData>
+      <Link href={'/writer/homepage'} className={"text-primary cursor-pointer"}>点击申请</Link>
     </div>
   );
 }
