@@ -70,7 +70,7 @@ export const FilterSection = ({ columnId }: { columnId: string | null }) => {
             <div className="flex flex-wrap items-end gap-y-4">
                 <div className="flex flex-wrap gap-8 items-end flex-1">
                     <div className="flex items-center min-w-[360px]">
-                        <label className="lh-5.5 whitespace-nowrap w-[70px]">内容标题：</label>
+                        <label className="lh-5.5 whitespace-nowrap md:w-[70px]">内容标题：</label>
                         <Input
                             className="rounded-1 border-1 ml-4 h-8 w-[270px] border-solid border-[#D9D9D9] bg-[#FFF]"
                             placeholder="搜索标题"
@@ -81,7 +81,7 @@ export const FilterSection = ({ columnId }: { columnId: string | null }) => {
                     </div>
 
                     <div className="flex items-center min-w-[360px]">
-                        <label className="lh-5.5 whitespace-nowrap w-[90px]">标签：</label>
+                        <label className="lh-5.5 whitespace-nowrap xl:w-50px md:w-[92px]">标签：</label>
                         <Input
                             className="rounded-1 border-1 ml-4 h-8 w-[270px] border-solid border-[#D9D9D9] bg-[#FFF]"
                             placeholder="不限"
@@ -92,7 +92,7 @@ export const FilterSection = ({ columnId }: { columnId: string | null }) => {
                     </div>
 
                     <div className="flex items-center min-w-[360px]">
-                        <label className="text-3.5 font-400 lh-5.5 whitespace-nowrap w-[70px]">
+                        <label className="text-3.5 font-400 lh-5.5 whitespace-nowrap md:w-[70px]">
                             发布时间：
                         </label>
                         <div className="ml-4 w-[270px]">
