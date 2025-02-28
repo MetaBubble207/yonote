@@ -5,7 +5,6 @@ import { api } from "@/trpc/react";
 import Link from "next/link";
 import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { Skeleton, Empty } from "antd";
-import withTheme from "@/theme";
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from "@/server/api/root";
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
@@ -87,6 +86,6 @@ const Activities = () => {
   );
 };
 
-const Page = () => withTheme(<Activities />);
+const Page = () => <Activities />;
 
 export default Page;

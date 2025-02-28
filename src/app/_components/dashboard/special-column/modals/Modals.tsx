@@ -2,7 +2,6 @@
 import { Modal, Input } from "antd";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import { ModalProps, OrderModalProps } from "@/app/dashboard/special-column/types";
-import withTheme from "@/theme";
 const { Search } = Input;
 export const TopUpModal: React.FC<ModalProps> = ({ onClose, onConfirm }) => (
     <W100H50Modal>
@@ -88,7 +87,7 @@ export const SearchModal = ({
     onChange,
 }: SearchModalProps) => {
     return (
-        withTheme(<Modal
+        <Modal
             title="搜索您想要搜索的帖子"
             open={isOpen}
             onOk={onOk}
@@ -100,6 +99,6 @@ export const SearchModal = ({
                 placeholder="支持搜索标题和内容"
                 size="large"
             />
-        </Modal>)
+        </Modal>
     );
 };

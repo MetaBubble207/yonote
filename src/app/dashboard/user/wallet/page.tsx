@@ -7,7 +7,6 @@ import Loading from "@/app/_components/common/Loading";
 import { onBridgeReady } from "@/app/_utils/weixinPay";
 import { WalletCard } from "@/app/_components/dashboard/user/WalletCard";
 import { TransactionList } from "@/app/_components/dashboard/user/TransactionList";
-import withTheme from "@/theme";
 import { WeixinPayData } from "./types";
 import Error from "@/app/_components/common/Error";
 export default function Page() {
@@ -134,17 +133,17 @@ export default function Page() {
       </div>
 
       {/* 提现确认弹窗 */}
-      {withTheme(<Modal
+      <Modal
         open={withdrawOpen}
         onOk={handleWithdrawConfirm}
         confirmLoading={confirmLoading}
         onCancel={() => setWithdrawOpen(false)}
       >
         <div>确认要提现￥{walletData?.amountWithdraw ?? 0}吗</div>
-      </Modal>)}
+      </Modal>
 
       {/* 充值弹窗 */}
-      {withTheme(<Modal
+      <Modal
         title="充值"
         width="20"
         open={payOpen}
@@ -159,7 +158,7 @@ export default function Page() {
             placeholder="输入要充值的金额（单位：元）"
           />
         </div>
-      </Modal>)}
+      </Modal>
 
 
       {contextHolder}

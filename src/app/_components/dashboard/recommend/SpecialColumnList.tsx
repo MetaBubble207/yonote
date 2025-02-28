@@ -7,7 +7,6 @@ import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 import { FixedSizeList as List } from 'react-window';
 import InfiniteLoader from "react-window-infinite-loader";
 import { Spin } from "antd";
-import withTheme from "@/theme";
 
 interface Category {
   key: string;
@@ -101,7 +100,7 @@ const SpecialColumnList = () => {
             style={style} 
             className="flex flex-col items-center justify-center py-4 gap-2"
           >
-            {withTheme(<Spin size="small"/>)}
+            <Spin size="small"/>
             <span className="text-sm text-[#B5B5B5]">加载中...</span>
           </div>
         );
