@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { column, post, user } from "@/server/db/schema";
-import { and, eq, gt, like, lt } from "drizzle-orm";
+import { and, desc, eq, gt, like, lt } from "drizzle-orm";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 import { createCaller } from "@/server/api/root";
 import { getDetailPost } from "../tools/postQueries";
@@ -96,10 +96,10 @@ export const postRouter = createTRPCRouter({
     .input(
       z.object({
         columnId: z.string(),
-        title: z.string(),
-        tag: z.string(),
-        startDate: z.date().nullable(),
-        endDate: z.date().nullable(),
+        title: z.string().optional().default(""),
+        tag: z.string().optional().default(""),
+        startDate: z.date().nullable().optional(),
+        endDate: z.date().nullable().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -109,14 +109,16 @@ export const postRouter = createTRPCRouter({
       const whereConditions = [
         eq(post.columnId, input.columnId),
         eq(post.status, true),
-        ...(input.title ? [like(post.name, `%${input.title}%`)] : []),
-        ...(input.tag ? [like(post.tag, `%${input.tag}%`)] : []),
-        ...(input.startDate ? [gt(post.createdAt, input.startDate)] : []),
-        ...(input.endDate ? [lt(post.createdAt, input.endDate)] : []),
       ];
-      return db.query.post.findMany({
-        where: and(...whereConditions),
-      });
+
+      // 只在有值时添加条件，避免不必要的空字符串检查
+      if (input.title) whereConditions.push(like(post.name, `%${input.title}%`));
+      if (input.tag) whereConditions.push(like(post.tag, `%${input.tag}%`));
+      if (input.startDate) whereConditions.push(gt(post.createdAt, input.startDate));
+      if (input.endDate) whereConditions.push(lt(post.createdAt, input.endDate));
+
+      return db.select().from(post).where(and(...whereConditions))
+        .orderBy(desc(post.isTop), desc(post.updatedAt));
     }),
 
   getAllPost: publicProcedure
