@@ -95,16 +95,16 @@ export const postRouter = createTRPCRouter({
   getPostFilter: publicProcedure
     .input(
       z.object({
-        columnId: z.string(),
+        columnId: z.string().optional(),
         title: z.string().optional().default(""),
         tag: z.string().optional().default(""),
-        startDate: z.date().nullable().optional(),
-        endDate: z.date().nullable().optional(),
+        startDate: z.string().nullable().optional(),
+        endDate: z.string().nullable().optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
       const { db } = ctx;
-
+      if (!input.columnId) return [];
       // 构建查询条件
       const whereConditions = [
         eq(post.columnId, input.columnId),
@@ -114,8 +114,8 @@ export const postRouter = createTRPCRouter({
       // 只在有值时添加条件，避免不必要的空字符串检查
       if (input.title) whereConditions.push(like(post.name, `%${input.title}%`));
       if (input.tag) whereConditions.push(like(post.tag, `%${input.tag}%`));
-      if (input.startDate) whereConditions.push(gt(post.createdAt, input.startDate));
-      if (input.endDate) whereConditions.push(lt(post.createdAt, input.endDate));
+      if (input.startDate) whereConditions.push(gt(post.createdAt, new Date(input.startDate)));
+      if (input.endDate) whereConditions.push(lt(post.createdAt, new Date(input.endDate)));
 
       return db.select().from(post).where(and(...whereConditions))
         .orderBy(desc(post.isTop), desc(post.updatedAt));
