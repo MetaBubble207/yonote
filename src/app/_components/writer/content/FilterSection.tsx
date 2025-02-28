@@ -29,13 +29,6 @@ export const FilterSection = ({ columnId }: { columnId: string | null }) => {
         if (searchParams.tag) params.set("tag", searchParams.tag);
         if (searchParams.startDate) params.set("startDate", searchParams.startDate.toISOString());
         if (searchParams.endDate) params.set("endDate", searchParams.endDate.toISOString());
-        try{
-            console.log(1);
-        }catch(e){
-            console.log(e);
-        } finally {
-            console.log(2);
-        }
         // 导航到带有查询参数的同一页面
         router.push(`/writer/content-management?${params.toString()}`);
     }, [searchParams, columnId, router]);

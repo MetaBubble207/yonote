@@ -1,21 +1,20 @@
 "use client"
 import { type PostSelect } from "@/server/db/schema";
-import { Button, Modal, Table, message, type TableColumnsType } from "antd";
+import { Button, Modal, Table, message, type TableColumnsType, App } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { time2DateTimeStringSeconds } from "@/tools/timeToString";
 import Link from "next/link";
 import { api } from "@/trpc/react";
-
+import { ExclamationCircleFilled } from '@ant-design/icons';
 interface TableComponentProps {
   dataSource: PostSelect[];
 }
 
 const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
   const [data, setData] = useState<PostSelect[]>([]);
-  const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
   // API 调用
   const updateIsTopApi = api.post.updateIsTop.useMutation({
     onSuccess: () => {
@@ -26,7 +25,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
       messageApi.error("操作失败");
     }
   });
-  
+
   const updateIsFreeApi = api.post.updateIsFree.useMutation({
     onSuccess: () => {
       messageApi.success("更新成功");
@@ -36,11 +35,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
       messageApi.error("操作失败");
     }
   });
-  
+
   const deleteApi = api.post.deletePost.useMutation({
     onSuccess: () => {
       messageApi.success("删除成功");
-      // refetch();
     },
     onError: () => {
       messageApi.error("删除失败");
@@ -48,8 +46,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
   });
 
   useEffect(() => {
-    console.log("dataSource ==<>", dataSource);
-    
     setData(dataSource || []);
   }, [dataSource]);
 
@@ -58,10 +54,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
       id: id,
       isTop: !isTop,
     });
-    
+
     // 乐观更新UI
-    setData(prevData => 
-      prevData.map(item => 
+    setData(prevData =>
+      prevData.map(item =>
         item.id === id ? { ...item, isTop: !isTop } : item
       )
     );
@@ -72,29 +68,35 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
       id: id,
       isFree: !isFree,
     });
-    
+
     // 乐观更新UI
-    setData(prevData => 
-      prevData.map(item => 
+    setData(prevData =>
+      prevData.map(item =>
         item.id === id ? { ...item, isFree: !isFree } : item
       )
     );
   }, [updateIsFreeApi]);
 
-  const handleClickDelete = useCallback((id: number) => {
-    Modal.confirm({
-      title: '确认删除',
-      content: '确定要删除这篇文章吗？此操作不可恢复。',
-      okText: '确认',
-      cancelText: '取消',
-      okButtonProps: { danger: true },
-      onOk: () => {
-        deleteApi.mutate({ id });
-        // 乐观更新UI
-        setData(prevData => prevData.filter(item => item.id !== id));
-      }
-    });
-  }, [deleteApi]);
+  const handleClickDelete = (id: number) => {
+    setDeleteId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    if (deleteId) {
+      deleteApi.mutate({ id: deleteId });
+      // 乐观更新UI
+      setData(prevData => prevData.filter(item => item.id !== deleteId));
+    }
+    setIsModalOpen(false);
+    setDeleteId(null);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setDeleteId(null);
+    messageApi.info("已取消删除");
+  };
 
   // 表格列定义
   const columns: TableColumnsType<PostSelect> = useMemo(() => [
@@ -148,7 +150,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
         const tagLengthB = b.tag?.split(",").length || 0;
         return tagLengthA - tagLengthB;
       },
-      render: (tags:string) => {
+      render: (tags: string) => {
         if (!tags) return null;
         const tagArray = tags.split(",").filter(tag => tag.trim() !== "");
         return (
@@ -218,6 +220,20 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
   return (
     <>
       {contextHolder}
+      <Modal
+        title="确认删除"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="确认"
+        cancelText="取消"
+        okButtonProps={{ danger: true }}
+      >
+        <div className="flex items-center">
+          <ExclamationCircleFilled className="text-[#faad14] text-[22px] mr-2" />
+          <span>确定要删除这篇文章吗？此操作不可恢复😯</span>
+        </div>
+      </Modal>
       <div className="overflow-x-auto min-h-[400px]">
         <Table
           rowKey="id"
