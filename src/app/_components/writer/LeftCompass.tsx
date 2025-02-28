@@ -14,8 +14,8 @@ const LeftCompass = () => {
   return (
     <>
       {!filterPathname.includes(pathname) && (
-        <div className="top-17.5 w-64.77925 z-100 fixed h-screen shrink-0 bg-[#FFF]">
-          <div className="w-65.25 h-72.4785 mt-10 flex shrink-0 flex-col">
+        <div className="top-17.5 w-65 z-100 fixed h-screen shrink-0 bg-[#FFF]">
+          <div className="w-65 h-72.4785 mt-10 flex shrink-0 flex-col">
             {/* {column && <Column />} */}
             <Column />
             <div

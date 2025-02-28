@@ -37,7 +37,7 @@ const Login = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-[#F6F6F6]">
+    <div className="flex h-full w-full items-center justify-center">
       {/* <Head>
         <script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
       </Head> */}
