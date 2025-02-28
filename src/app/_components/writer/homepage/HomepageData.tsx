@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import Loading from "@/app/_components/common/Loading";
 import { api } from "@/trpc/react";
+import { PublishButton } from "../PublishButton";
 
 const HomepageData = ({ columnId }: { columnId: string | undefined }) => {
   const code = useSearchParams().get("code");
@@ -52,12 +53,7 @@ const HomepageData = ({ columnId }: { columnId: string | undefined }) => {
     <div className="h-82 border-rd-2.5 w-full bg-[#FFF] pl-8 pr-9">
       <div className="pt-34px flex items-center">
         <span className="text-4 font-700 lh-6 text-[#323232]">主板看板</span>
-        <Link
-          href={`/edit/edit?columnId=${columnId}`}
-          className="w-20.5 color-[#1db48d] ml-32px flex h-9 bg-[#dbf9f1]"
-        >
-          <span className="m-auto">+发布</span>
-        </Link>
+        <PublishButton className="ml-32px" columnId={columnId} />
       </div>
       <Panel columnId={columnId}></Panel>
     </div>

@@ -92,7 +92,7 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
-  getPostFilter: publicProcedure
+  getPostsFilter: publicProcedure
     .input(
       z.object({
         columnId: z.string().optional(),
