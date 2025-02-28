@@ -22,5 +22,8 @@ export default defineConfig({
       "custom-user_gradient_2": "rgba(236, 249, 249, 1)",
       "custom-user_gradient_3": "rgba(245, 245, 251,0.6)",
     },
+    height: {
+      "subtract-register": "calc(100vh - 200px)"
+    }
   },
 });
