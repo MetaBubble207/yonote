@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { column, post, user } from "@/server/db/schema";
-import { and, desc, eq, gt, like, lt } from "drizzle-orm";
+import { post } from "@/server/db/schema";
+import { and, desc, eq, gt, like, lt, sql } from "drizzle-orm";
 import { getCurrentTime } from "@/tools/getCurrentTime";
 import { createCaller } from "@/server/api/root";
 import { getDetailPost } from "../tools/postQueries";
@@ -100,25 +100,38 @@ export const postRouter = createTRPCRouter({
         tag: z.string().optional().default(""),
         startDate: z.string().nullable().optional(),
         endDate: z.string().nullable().optional(),
+        isTop: z.boolean().optional(),
+        isFree: z.boolean().optional(),
+        pageSize: z.number().optional().default(10),
+        currentPage: z.number().optional().default(1),
       }),
     )
     .query(async ({ ctx, input }) => {
       const { db } = ctx;
-      if (!input.columnId) return [];
+      if (!input.columnId) return { data: [], total: 0 };
       // 构建查询条件
       const whereConditions = [
         eq(post.columnId, input.columnId),
         eq(post.status, true),
       ];
-
+      // 计算总数
+      const total = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(post)
+        .where(and(...whereConditions))
+        .then(result => Number(result[0]?.count) || 0);
       // 只在有值时添加条件，避免不必要的空字符串检查
       if (input.title) whereConditions.push(like(post.name, `%${input.title}%`));
       if (input.tag) whereConditions.push(like(post.tag, `%${input.tag}%`));
       if (input.startDate) whereConditions.push(gt(post.createdAt, new Date(input.startDate)));
       if (input.endDate) whereConditions.push(lt(post.createdAt, new Date(input.endDate)));
-
-      return db.select().from(post).where(and(...whereConditions))
-        .orderBy(desc(post.isTop), desc(post.updatedAt));
+      if (input.isTop !== undefined) whereConditions.push(eq(post.isTop, input.isTop));
+      if (input.isFree !== undefined) whereConditions.push(eq(post.isFree, input.isFree));
+      const data = await db.select().from(post).where(and(...whereConditions))
+        .orderBy(desc(post.isTop), desc(post.updatedAt))
+        .limit(input.pageSize)
+        .offset((input.currentPage - 1) * input.pageSize)
+      return { data, total };
     }),
 
   getAllPost: publicProcedure
