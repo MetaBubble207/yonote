@@ -30,17 +30,25 @@ const TableComponent = ({ dataSource, total }: TableComponentProps) => {
     endSubscriptionApi.mutate({ id });
   };
 
-  const handleTableChange = (pagination: any, filters: any, sorter: any) => {
+  const handleTableChange = (pagination: any, filter: any, sorter: any) => {
     const params = new URLSearchParams(searchParams.toString());
-
     // 更新分页参数
     params.set("currentPage", String(pagination.current));
     params.set("pageSize", String(pagination.pageSize));
-
     // 更新排序参数
     if (sorter.field) {
       params.set("sortField", sorter.field);
       params.set("sortOrder", sorter.order);
+    }
+    let newStatus;
+    // 更新筛选参数
+    if (filter.status.length > 1) {
+      newStatus = 0;
+    } else if (filter.status[0]) {
+      newStatus = filter.status[0];
+    }
+    if (newStatus !== undefined) {
+      params.set("status", String(newStatus));
     }
 
     router.push(`?${params.toString()}`);
@@ -87,6 +95,15 @@ const TableComponent = ({ dataSource, total }: TableComponentProps) => {
           )}
         </span>
       ),
+      filters: [
+        { text: "订阅中", value: 1 },
+        { text: "已结束", value: 2 },
+      ],
+      // onFilter: (value, record) => {
+      //   if (value === 1) return record.status;
+      //   if (value === "已结束") return record.isTop;
+      //   return false;
+      // },
       width: "10%",
     },
     {
