@@ -122,17 +122,17 @@ export const columnRouter = createTRPCRouter({
         .select()
         .from(priceList)
         .where(eq(priceList.columnId, input.id));
-
+      
       const oldIds = oldPriceList.map(item => item.id);
       const newIds = input.priceList.map(item => item.id).filter(id => id !== undefined);
-
+      
       // 删除不再存在的价格策略
       const deletePromises = oldPriceList
         .filter(item => !newIds.includes(item.id))
         .map(item => ctx.db.delete(priceList).where(eq(priceList.id, item.id)));
-
+      
       await Promise.all(deletePromises);
-
+      
       // 更新或插入价格策略
       const updatePromises = input.priceList.map(async (item) => {
         if (item.id && oldIds.includes(item.id)) {
@@ -153,9 +153,9 @@ export const columnRouter = createTRPCRouter({
           });
         }
       });
-
+      
       await Promise.all(updatePromises);
-
+      
       // 更新专栏信息
       await ctx.db
         .update(column)
@@ -166,18 +166,18 @@ export const columnRouter = createTRPCRouter({
           updatedAt: getCurrentTime(), // 更新修改时间
         })
         .where(eq(column.id, input.id));
-
+      
       // 获取更新后的专栏数据
       const updatedColumn = await ctx.db.query.column.findFirst({
         where: eq(column.id, input.id),
       });
-
+      
       // 获取更新后的价格列表
       const updatedPriceList = await ctx.db
         .select()
         .from(priceList)
         .where(eq(priceList.columnId, input.id));
-
+      
       // 返回完整的更新后数据
       return {
         column: updatedColumn,
