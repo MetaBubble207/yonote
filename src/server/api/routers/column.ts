@@ -117,56 +117,72 @@ export const columnRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // 获取旧的价格列表
       const oldPriceList = await ctx.db
         .select()
         .from(priceList)
         .where(eq(priceList.columnId, input.id));
-      const oldIds = input.priceList.map((item) => item.id);
-      oldPriceList.map(async (item) => {
-        if (!oldIds.includes(item.id)) {
-          await ctx.db.delete(priceList).where(eq(priceList.id, item.id));
-        }
-      });
-      const sortedOldPriceList = oldPriceList.sort(
-        (item, pre) => item.id - pre.id,
-      );
-      input.priceList.map(async (item, index) => {
-        if (
-          sortedOldPriceList?.[index] &&
-          (sortedOldPriceList?.[index]?.price !==
-            input.priceList[index].price ||
-            sortedOldPriceList?.[index]?.timeLimit !==
-            input.priceList[index].timeLimit)
-        ) {
-          await ctx.db
+
+      const oldIds = oldPriceList.map(item => item.id);
+      const newIds = input.priceList.map(item => item.id).filter(id => id !== undefined);
+
+      // 删除不再存在的价格策略
+      const deletePromises = oldPriceList
+        .filter(item => !newIds.includes(item.id))
+        .map(item => ctx.db.delete(priceList).where(eq(priceList.id, item.id)));
+
+      await Promise.all(deletePromises);
+
+      // 更新或插入价格策略
+      const updatePromises = input.priceList.map(async (item) => {
+        if (item.id && oldIds.includes(item.id)) {
+          // 更新已存在的价格策略
+          return ctx.db
             .update(priceList)
             .set({
               price: item.price,
               timeLimit: item.timeLimit,
             })
-            .where(eq(priceList.id, sortedOldPriceList[index].id));
-        }
-        // 判断是否是新加入的策略
-        const isNew = !sortedOldPriceList
-          ?.map((item) => item.id)
-          .includes(item.id);
-
-        if (isNew || !sortedOldPriceList) {
-          await ctx.db.insert(priceList).values({
+            .where(eq(priceList.id, item.id));
+        } else {
+          // 插入新的价格策略
+          return ctx.db.insert(priceList).values({
             columnId: input.id,
             price: item.price,
             timeLimit: item.timeLimit,
           });
         }
       });
-      return ctx.db
+
+      await Promise.all(updatePromises);
+
+      // 更新专栏信息
+      await ctx.db
         .update(column)
         .set({
           name: input.name,
           introduce: input.introduce,
           description: input.description,
+          updatedAt: getCurrentTime(), // 更新修改时间
         })
         .where(eq(column.id, input.id));
+
+      // 获取更新后的专栏数据
+      const updatedColumn = await ctx.db.query.column.findFirst({
+        where: eq(column.id, input.id),
+      });
+
+      // 获取更新后的价格列表
+      const updatedPriceList = await ctx.db
+        .select()
+        .from(priceList)
+        .where(eq(priceList.columnId, input.id));
+
+      // 返回完整的更新后数据
+      return {
+        column: updatedColumn,
+        priceList: updatedPriceList
+      };
     }),
 
   updateCover: publicProcedure

@@ -145,8 +145,8 @@ export const wallet = createTable("wallet", {
     .defaultNow()
     .notNull(),
   updatedAt: timestamp("created_at")
-  .defaultNow()
-  .notNull(),
+    .defaultNow()
+    .notNull(),
 });
 
 export const activity = createTable("activity", {
@@ -188,8 +188,8 @@ export const courseRecommendation = createTable("course_recommendation", {
     .defaultNow()
     .notNull(),
   updatedAt: timestamp("updated_at")
-  .defaultNow()
-  .notNull(),
+    .defaultNow()
+    .notNull(),
 });
 
 export const columnRecommendation = createTable("column_recommendation", {
@@ -202,8 +202,8 @@ export const columnRecommendation = createTable("column_recommendation", {
     .defaultNow()
     .notNull(),
   updatedAt: timestamp("updated_at")
-  .defaultNow()
-  .notNull(),
+    .defaultNow()
+    .notNull(),
 });
 
 export const postLike = createTable("post_like", {
@@ -214,7 +214,7 @@ export const postLike = createTable("post_like", {
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
-    updatedAt: timestamp("updated_at")
+  updatedAt: timestamp("updated_at")
     .defaultNow()
     .notNull(),
 });
@@ -227,7 +227,7 @@ export const postRead = createTable("post_read", {
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
-    updatedAt: timestamp("updated_at")
+  updatedAt: timestamp("updated_at")
     .defaultNow()
     .notNull(),
 });
@@ -244,7 +244,7 @@ export const referrals = createTable("referrals", {
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
-    updatedAt: timestamp("updated_at")
+  updatedAt: timestamp("updated_at")
     .defaultNow()
     .notNull(),
 });
@@ -256,7 +256,7 @@ export const priceList = createTable("price_list", {
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
-    updatedAt: timestamp("updated_at")
+  updatedAt: timestamp("updated_at")
     .defaultNow()
     .notNull(),
 });
@@ -270,7 +270,7 @@ export const runningWater = createTable("running_water", {
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
-    updatedAt: timestamp("updated_at")
+  updatedAt: timestamp("updated_at")
     .defaultNow()
     .notNull(),
 });
@@ -278,6 +278,7 @@ export type UserInsert = typeof user.$inferInsert;
 export type UserSelect = typeof user.$inferSelect;
 export type RunningWaterSelect = typeof runningWater.$inferSelect;
 export type ColumnSelect = typeof column.$inferSelect;
+export type PriceListSelect = typeof priceList.$inferSelect;
 export type ColumnUser = {
   column: typeof column.$inferSelect;
   user: typeof user.$inferSelect;
