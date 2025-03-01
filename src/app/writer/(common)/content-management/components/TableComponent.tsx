@@ -6,11 +6,13 @@ import { time2DateTimeStringSeconds } from "@/tools/timeToString";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { ExclamationCircleFilled } from '@ant-design/icons';
+import { useRouter, useSearchParams } from "next/navigation";
 interface TableComponentProps {
   dataSource: PostSelect[];
+  total: number;
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
+const TableComponent: React.FC<TableComponentProps> = ({ dataSource, total }) => {
   const [data, setData] = useState<PostSelect[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,6 +50,28 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
   useEffect(() => {
     setData(dataSource || []);
   }, [dataSource]);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const handleTableChange = (pagination: any, filter: any, sorter: any) => {
+    const params = new URLSearchParams(searchParams.toString());
+    // 更新分页参数
+    params.set("currentPage", String(pagination.current));
+    params.set("pageSize", String(pagination.pageSize));
+    // 更新排序参数
+    if (sorter.field) {
+      params.set("sortField", sorter.field);
+      params.set("sortOrder", sorter.order);
+    }
+    if (filter.status) {
+      filter.status.map((item: string) => {
+        params.set(item, "true")
+      })
+    } else {
+      params.delete("isFree");
+      params.delete("isTop");
+    }
+    router.push(`?${params.toString()}`);
+  };
 
   const handleToggleTop = useCallback((id: number, isTop: boolean) => {
     updateIsTopApi.mutate({
@@ -116,14 +140,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
         return a.id - b.id;
       },
       filters: [
-        { text: "免费", value: "free" },
-        { text: "置顶", value: "top" },
+        { text: "免费", value: "isFree" },
+        { text: "置顶", value: "isTop" },
       ],
-      onFilter: (value, record) => {
-        if (value === "free") return record.isFree;
-        if (value === "top") return record.isTop;
-        return false;
-      },
       render: (_, record) => (
         <div className="flex items-center space-x-2.5 whitespace-nowrap">
           {record.isTop && (
@@ -239,10 +258,13 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource }) => {
           rowKey="id"
           columns={columns}
           dataSource={data}
+          onChange={handleTableChange}
           pagination={{
-            pageSize: 10,
+            current: Number(searchParams.get("currentPage")) || 1,
+            pageSize: Number(searchParams.get("pageSize")) || 10,
             showSizeChanger: true,
             showQuickJumper: true,
+            total: total,
             showTotal: (total) => `共 ${total} 条`,
             position: ['bottomCenter'],
           }}

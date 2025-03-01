@@ -1,4 +1,4 @@
-import Course from "@/app/_components/writer/create/Course";
+import Course from "@/app/_components/writer/Course";
 
 const Page = () => {
   return <Course />;

@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import Loading from "@/app/_components/common/Loading";
 import { api } from "@/trpc/react";
-import { PublishButton } from "../PublishButton";
+import { PublishButton } from "../../../../_components/writer/PublishButton";
 
 const HomepageData = ({ columnId }: { columnId: string | undefined }) => {
   const code = useSearchParams().get("code");

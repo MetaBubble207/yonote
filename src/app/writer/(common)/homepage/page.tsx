@@ -1,6 +1,6 @@
 import React from "react";
-import HomepageData from "@/app/_components/writer/homepage/HomepageData";
-import Chart from "@/app/_components/writer/homepage/Chart";
+import HomepageData from "@/app/writer/(common)/homepage/components/HomepageData";
+import Chart from "@/app/writer/(common)/homepage/components/Chart";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ columnId: string }> }) {
   const columnId = (await searchParams).columnId;

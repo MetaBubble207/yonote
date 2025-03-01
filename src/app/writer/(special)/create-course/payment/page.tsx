@@ -1,4 +1,4 @@
-import Payment from "@/app/_components/writer/create/Payment";
+import Payment from "@/app/_components/writer/Payment";
 import { Suspense } from "react";
 
 const Page = () => {

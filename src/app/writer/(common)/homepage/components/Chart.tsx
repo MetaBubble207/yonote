@@ -2,7 +2,7 @@
 import { DatePicker } from "antd";
 import React, { Suspense, useState } from "react";
 import dayjs from "dayjs";
-import Echarts from "@/app/_components/writer/homepage/Echarts";
+import Echarts from "@/app/writer/(common)/homepage/components/Echarts";
 
 const Chart = ({ columnId }: { columnId: string | undefined }) => {
   const dateFormat = "YYYY/MM/DD";

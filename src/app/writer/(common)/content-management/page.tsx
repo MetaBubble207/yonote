@@ -3,29 +3,24 @@ import "dayjs/locale/zh-cn";
 import Loading from "@/app/_components/common/Loading";
 import { PublishButton } from "@/app/_components/writer/PublishButton";
 import { api } from "@/trpc/server";
-import TableComponent from "@/app/_components/writer/content/TableComponent";
-import { FilterSection } from "@/app/_components/writer/content/FilterSection";
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<{
-    columnId: string;
-    title?: string;
-    tag?: string;
-    startDate?: string;
-    endDate?: string;
-  }>;
-}) {
-  const { columnId, title, tag, startDate, endDate } = await searchParams;
-
+import TableComponent from "@/app/writer/(common)/content-management/components/TableComponent";
+import { FilterSection } from "@/app/writer/(common)/content-management/components/FilterSection";
+import { PostSearchParams } from "./types";
+export default async function Page({ searchParams }: { searchParams: Promise<PostSearchParams>; }) {
+  // 处理查询参数
+  const params: PostSearchParams = {
+    columnId: (await searchParams).columnId,
+    title: (await searchParams).title,
+    tag: (await searchParams).tag,
+    startDate: (await searchParams).startDate,
+    endDate: (await searchParams).endDate,
+    currentPage: Number((await searchParams).currentPage) || 1,
+    pageSize: Number((await searchParams).pageSize) || 10,
+    isTop: (await searchParams).isTop ? Boolean((await searchParams).isTop) : undefined,
+    isFree: (await searchParams).isFree ? Boolean((await searchParams).isFree) : undefined,
+  };
   // 服务端获取数据
-  const posts = await api.post.getPostsFilter({
-    columnId,
-    title,
-    tag,
-    startDate,
-    endDate,
-  });
+  const { data: posts, total } = await api.post.getPostsFilter(params);
 
   return (
     <Suspense fallback={<Loading className="min-h-[calc(100vh-200px)] flex items-center justify-center" />}>
@@ -34,11 +29,11 @@ export default async function Page({
           <div className="text-4 font-not-italic font-700 lh-6 text-[#323232]">
             内容管理
           </div>
-          <PublishButton className="ml-32px" columnId={columnId} />
+          <PublishButton className="ml-32px" columnId={params.columnId} />
         </div>
-        <FilterSection columnId={columnId} />
+        <FilterSection columnId={params.columnId} />
         <div className="mt-4 overflow-auto">
-          <TableComponent dataSource={posts}/>
+          <TableComponent dataSource={posts} total={total} />
         </div>
       </div>
     </Suspense>

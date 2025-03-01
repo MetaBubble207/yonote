@@ -1,4 +1,4 @@
-import Column from "@/app/_components/writer/create/Column";
+import Column from "@/app/_components/writer/Column";
 
 const Page = () => {
   return <Column />;

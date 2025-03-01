@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
-import Date from "@/app/_components/writer/datarange/Date";
+import Date from "@/app/writer/(common)/speed-up/components/Date";
 import {
   Button,
   Collapse,
@@ -17,7 +17,7 @@ import { api } from "@/trpc/react";
 import { useSearchParams } from "next/navigation";
 import Loading from "@/app/_components/common/Loading";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
-import TableComponent from "@/app/_components/writer/speed-up/TableComponent";
+import TableComponent from "@/app/writer/(common)/speed-up/components/TableComponent";
 
 const distributionConfig: SliderSingleProps["marks"] = {
   0: "0%",

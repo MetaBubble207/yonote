@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { api } from "@/trpc/server";
 import Loading from "@/app/_components/common/Loading";
-import TableComponent from "@/app/_components/writer/column-manage/TableComponent";
+import TableComponent from "@/app/writer/(common)/subscribe-manage/components/TableComponent";
 import type { SubscribeSearchParams } from "./types";
 import { FilterSection } from "./components/FilterSection";
 
