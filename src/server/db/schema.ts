@@ -373,15 +373,6 @@ export type PostDetail = {
   subscriptCount: number;
 };
 
-export type PriceList = {
-  id: number;
-  columnId: string;
-  price: number;
-  timeLimit: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 export type SpeedUp = {
   id: number;
   avatar: string;

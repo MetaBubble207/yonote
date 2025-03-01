@@ -1,4 +1,4 @@
-import { type PriceList } from "@/server/db/schema";
+import { type PriceListSelect } from "@/server/db/schema";
 
 export interface ReservedProps {
     onClose: () => void;
@@ -7,9 +7,9 @@ export interface ReservedProps {
 }
 
 export interface PriceItemProps {
-    strategy: PriceList;
+    strategy: PriceListSelect;
     isSelected: boolean;
-    onSelect: (item: PriceList) => void;
+    onSelect: (item: PriceListSelect) => void;
 }
 
 export interface ModalProps {
@@ -19,7 +19,7 @@ export interface ModalProps {
 
 export interface OrderModalProps extends ModalProps {
     columnName: string;
-    selectedItem: PriceList;
+    selectedItem: PriceListSelect;
     balance: number;
     onTopUp: (amount: number) => void;
 }

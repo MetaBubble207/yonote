@@ -6,7 +6,7 @@ import { message } from "antd";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import Loading from "@/app/_components/common/Loading";
-import { type PriceList } from "@/server/db/schema";
+import { type PriceListSelect } from "@/server/db/schema";
 import { ConfirmPayModal, OrderModal, TopUpModal } from "../dashboard/special-column/modals/Modals";
 import { PriceItem } from "../dashboard/special-column/PriceItem";
 import { ReservedProps } from "@/app/dashboard/special-column/types";
@@ -19,7 +19,7 @@ type WeixinJSBridgeResponse = {
 const Reserved: React.FC<ReservedProps> = ({ onClose, check, columnId }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [token] = useLocalStorage("token", null);
-  const [selectedItem, setSelectedItem] = useState<PriceList>();
+  const [selectedItem, setSelectedItem] = useState<PriceListSelect>();
   const [showTopUpModal, setShowTopUpModal] = useState(false);
   const [showConfirmPayModal, setConfirmPayModal] = useState(false);
   const [showOrderModel, setShowOrderModel] = useState(false);
