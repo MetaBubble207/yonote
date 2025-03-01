@@ -443,7 +443,7 @@ export const orderRouter = createTRPCRouter({
       }
     }),
 
-    getColumnOrder: publicProcedure
+  getColumnOrder: publicProcedure
     .input(z.object({
       columnId: z.string(),
       search: z.string().optional(),
@@ -456,7 +456,7 @@ export const orderRouter = createTRPCRouter({
       try {
         // 获取基础数据
         const { columnData, subscription, posts } = await getColumnBasicInfo(db, columnId, search, isDesc, tag);
-        
+
         // 获取用户数据
         const userData = await getUserData(db, columnData.userId);
 
@@ -464,7 +464,7 @@ export const orderRouter = createTRPCRouter({
         const postsWithStats = await Promise.all(
           posts.map(async (post) => {
             const stats = await getPostStats(db, post.id);
-            
+
             return {
               ...post,
               ...stats,
@@ -764,42 +764,90 @@ export const orderRouter = createTRPCRouter({
   getSubscriptionFilter: publicProcedure
     .input(
       z.object({
-        columnId: z.string(),
-        userId: z.string().nullable(),
-        status: z.boolean().nullable(),
-        startDate: z.date().nullable(),
-        endDate: z.date().nullable(),
+        columnId: z.string().optional(),
+        userId: z.string().nullable().optional(),
+        status: z.number().nullable().optional(),
+        startDate: z.string().nullable().optional(),
+        endDate: z.string().nullable().optional(),
+        pageSize: z.number().optional().default(10),
+        currentPage: z.number().optional().default(1),
       }),
     )
-    .query(async ({ ctx, input }): Promise<OrderBuyer[]> => {
+    .query(async ({ ctx, input }): Promise<{ data: OrderBuyer[], total: number }> => {
       const { db } = ctx;
-
+      const { columnId, userId, startDate, endDate, pageSize, currentPage } = input;
+      const status = input.status === 0 ? null : (input.status === 1 ? true : false);
       // 构建查询条件
       const whereConditions = [
-        eq(order.columnId, input.columnId),
-        ...(input.userId ? [eq(order.buyerId, input.userId)] : []),
-        ...(input.status !== null ? [eq(order.status, input.status)] : []),
-        ...(input.startDate ? [gt(order.createdAt, input.startDate)] : []),
-        ...(input.endDate ? [lt(order.endDate, input.endDate)] : []),
-      ];
-      // 执行查询
-      const orders = await db
-        .select()
+        columnId ? eq(order.columnId, columnId) : undefined,
+        userId ? eq(order.buyerId, userId) : undefined,
+        status !== null ? eq(order.status, status) : undefined,
+        startDate ? gt(order.createdAt, new Date(startDate)) : undefined,
+        endDate ? lt(order.endDate, new Date(endDate)) : undefined,
+      ].filter(Boolean);
+
+      // 计算总数
+      const totalCount = await db
+        .select({ count: sql<number>`count(*)` })
         .from(order)
         .where(and(...whereConditions))
-        .orderBy(order.createdAt);
-      console.log(input.status);
-      const promises = orders?.map(async (item) => {
-        if (await checkSubscriptionStatus(db, item.id)) {
-          await expireSubscription(db, item.id);
-          item.status = false;
-        }
-        const u = await db.query.user.findFirst({
-          where: eq(user.id, item.buyerId),
-        });
-        return { ...item, userName: u.name };
-      });
-      return Promise.all(promises);
+        .then(result => Number(result[0]?.count) || 0);
+
+      // 分页查询订单
+      const orders = await db
+        .select({
+          id: order.id,
+          columnId: order.columnId,
+          buyerId: order.buyerId,
+          status: order.status,
+          createdAt: order.createdAt,
+          endDate: order.endDate,
+          price: order.price,
+          payment: order.payment,
+          referralLevel: order.referralLevel,
+        })
+        .from(order)
+        .where(and(...whereConditions))
+        .orderBy(desc(order.createdAt))
+        .limit(pageSize)
+        .offset((currentPage - 1) * pageSize);
+
+      if (!orders.length) {
+        return { data: [], total: 0 };
+      }
+
+      // 批量获取用户信息
+      const userIds = [...new Set(orders.map(order => order.buyerId))];
+      const users = await db
+        .select({
+          id: user.id,
+          name: user.name,
+        })
+        .from(user)
+        .where(inArray(user.id, userIds));
+
+      const userMap = new Map(users.map(user => [user.id, user]));
+
+      // 批量检查并更新订阅状态
+      const ordersWithUserInfo = await Promise.all(
+        orders.map(async (item) => {
+          const needsUpdate = await checkSubscriptionStatus(db, item.id);
+          if (needsUpdate) {
+            await expireSubscription(db, item.id);
+            item.status = false;
+          }
+
+          return {
+            ...item,
+            userName: userMap.get(item.buyerId)?.name || '未知用户',
+          };
+        })
+      );
+
+      return {
+        data: ordersWithUserInfo as OrderBuyer[],
+        total: totalCount,
+      };
     }),
 
   endSubscription: publicProcedure
