@@ -346,20 +346,6 @@ export const columnRouter = createTRPCRouter({
     return await Promise.all(promises);
   }),
 
-  getContentNumber: publicProcedure.query(async ({ ctx }) => {
-    const columns = await ctx.db
-      .select()
-      .from(column)
-      .orderBy(desc(column.introduce));
-    const promises = columns.map(async (item) => {
-      const u = await ctx.db.query.user.findFirst({
-        where: eq(user.id, item.userId),
-      });
-      return { ...item, user: u };
-    });
-    return await Promise.all(promises);
-  }),
-
   getColumnDetail: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
@@ -369,30 +355,6 @@ export const columnRouter = createTRPCRouter({
         .where(and(eq(column.id, input)));
       return columnDetail[0];
     }),
-
-  //订阅量查询
-  getColumnOrderNumbers: publicProcedure.query(async ({ ctx }) => {
-    const columnIds = await ctx.db
-      .select({ columnId: order.columnId, userId: order.ownerId })
-      .from(order)
-      .groupBy(order.columnId, order.ownerId)
-      .orderBy(sql`count(*) DESC`);
-
-    const promises = columnIds.map(async (item) => {
-      const col = await ctx.db
-        .select()
-        .from(column)
-        .where(eq(column.id, item.columnId))
-        .limit(1);
-      const owner = await ctx.db
-        .select()
-        .from(user)
-        .where(eq(user.id, item.userId))
-        .limit(1);
-      return { ...col[0], user: { ...owner[0] } };
-    });
-    return await Promise.all(promises);
-  }),
 
   // 获取用户更新了帖子还未读的专栏列表
   getUpdateColumn: publicProcedure
@@ -502,30 +464,6 @@ export const columnRouter = createTRPCRouter({
           isVisible: isVisible ?? true, // 默认为 true
         };
       });
-    }),
-
-  getAlreadySubscribedColumns: publicProcedure
-    .input(z.object({ userId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      // 获取订单
-      const orders = await ctx.db
-        .select()
-        .from(order)
-        .where(and(eq(order.buyerId, input.userId), eq(order.status, true)));
-      // 获取专栏
-      const resTemp: ColumnOrder[] = [];
-      const promises = orders.map(async (order) => {
-        resTemp.push({
-          column: await ctx.db.query.column.findFirst({
-            where: eq(column.id, order.columnId),
-          }),
-          order: order,
-        });
-      });
-      await Promise.all(promises);
-      return resTemp.sort((a, b) =>
-        a.order.createdAt > b.order.createdAt ? 1 : -1,
-      );
     }),
 
   // 获取专栏及其用户信息
