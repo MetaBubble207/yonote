@@ -565,4 +565,41 @@ export const columnRouter = createTRPCRouter({
         })
         .where(eq(column.id, input.id));
     }),
+  // 获取作者最近发布一次的专栏Id
+  getLatestColumnId: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const { db } = ctx;
+
+      // 1. 先查询该作者拥有的所有专栏
+      const authorColumns = await db
+        .select({
+          id: column.id
+        })
+        .from(column)
+        .where(eq(column.userId, input));
+      if (!authorColumns.length || !authorColumns[0] || authorColumns[0].id === null) {
+        return null; // 作者没有专栏
+      }
+
+      const columnIds = authorColumns.map(col => col.id);
+      // 2. 查询这些专栏下的所有帖子，按更新时间降序排序
+      const latestPost = await db
+        .select({
+          columnId: post.columnId,
+          updatedAt: post.updatedAt
+        })
+        .from(post)
+        .where(
+          sql`${post.columnId} IN (${sql.join(columnIds.map(id => sql`${id}`), sql`, `)})`
+        )
+        .orderBy(desc(post.updatedAt))
+        .limit(1);
+      // 如果作者没有发布过帖子，则返回第一个查到的columnId
+      if (!latestPost.length || !latestPost[0] || latestPost[0].columnId === null) {
+        return authorColumns[0]!.id;
+      }
+      // 3. 返回最近更新的专栏ID
+      return latestPost[0].columnId;
+    }),
 });
