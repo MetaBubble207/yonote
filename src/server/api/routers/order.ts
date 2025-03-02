@@ -58,115 +58,6 @@ const expireSubscription = (
     .where(eq(order.id, id));
 };
 export const orderRouter = createTRPCRouter({
-  // Test
-  getOrderByColumnIdTest: publicProcedure
-    .input(
-      z.object({
-        columnId: z.string(),
-        buyerId: z.string().optional(),
-        status: z.boolean().optional(),
-        startPick: z.string().optional(),
-        endPick: z.string().optional(),
-        pageSize: z.number().default(10),
-        currentPage: z.number().default(1),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      const conditions = [eq(order.columnId, input.columnId)];
-
-      if (input.status !== undefined && input.status !== null) {
-        conditions.push(eq(order.status, input.status));
-      }
-
-      if (input.buyerId) {
-        const selectedUserIdNum = await ctx.db
-          .select({ id: user.id })
-          .from(user)
-          .where(like(user.idNumber, `${input.buyerId}%`));
-        if (selectedUserIdNum.length > 0) {
-          conditions.push(
-            inArray(
-              order.buyerId,
-              selectedUserIdNum.map((u) => u.id),
-            ),
-          );
-        } else {
-          // 如果没有匹配的用户，返回空结果
-          return { data: [], total: 0 };
-        }
-      }
-
-      if (input.startPick && input.endPick) {
-        const startDate = new Date(input.startPick);
-        startDate.setHours(0, 0, 0, 0);
-        const endDate = new Date(input.endPick);
-        endDate.setHours(23, 59, 59, 999);
-
-        conditions.push(between(order.createdAt, startDate, endDate));
-      }
-
-      const pageSize = input.pageSize;
-      const currentPage = input.currentPage;
-      const offset = (currentPage - 1) * pageSize;
-
-      const totalOrdersCountResult = await ctx.db
-        .select({
-          count: sql<number>`count(*)`.as("count"),
-        })
-        .from(order)
-        .where(and(...conditions));
-
-      const totalOrdersCount = totalOrdersCountResult[0]?.count || 0;
-
-      const orders = await ctx.db.query.order.findMany({
-        where: and(...conditions),
-        limit: pageSize,
-        offset: offset,
-      });
-
-      const buyerIds = orders.map((order) => order.buyerId);
-      if (buyerIds.length === 0) {
-        return { data: [], total: totalOrdersCount };
-      }
-
-      const users = await ctx.db
-        .select({
-          id: user.id,
-          avatar: user.avatar,
-          name: user.name,
-          idNumber: user.idNumber,
-        })
-        .from(user)
-        .where(inArray(user.id, buyerIds));
-
-      const userMap = users.reduce((acc, usr) => {
-        acc[usr.id] = usr;
-        return acc;
-      }, {});
-
-      const subscriptions = await ctx.db
-        .select({
-          buyerId: order.buyerId,
-          status: order.status,
-          createdAt: order.createdAt,
-          endDate: order.endDate,
-        })
-        .from(order)
-        .where(
-          and(
-            inArray(order.buyerId, buyerIds),
-            eq(order.columnId, input.columnId),
-          ),
-        );
-
-      const combinedResults = subscriptions.map((subscription) => ({
-        ...subscription,
-        user: userMap[subscription.buyerId],
-      }));
-
-      return { data: combinedResults, total: totalOrdersCount };
-    }),
-
   // 创建订单
   createOrder: publicProcedure
     .input(
@@ -506,34 +397,6 @@ export const orderRouter = createTRPCRouter({
         .where(and(eq(order.buyerId, input.userId), eq(order.status, true)));
     }),
 
-  // 更新订阅状态
-  updateStatus: publicProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-        status: z.boolean(),
-        columnId: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const result = await ctx.db
-        .update(order)
-        .set({ status: !input.status })
-        .where(
-          and(
-            eq(order.buyerId, input.userId),
-            eq(order.columnId, input.columnId),
-          ),
-        )
-        .returning({
-          buyerId: order.buyerId,
-          status: order.status,
-          columnId: order.columnId,
-        });
-
-      return result[0]; // 确保只返回更新后的单个对象
-    }),
-
   // 查看用户是否购买专栏
   getUserStatus: publicProcedure
     .input(
@@ -587,56 +450,6 @@ export const orderRouter = createTRPCRouter({
         console.error('Error checking user subscription status:', error);
         return false;
       }
-    }),
-
-  changeStatus: publicProcedure
-    .input(
-      z.object({
-        columnId: z.string(),
-        isVisible: z.boolean(),
-        userId: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const orders = await ctx.db
-        .select()
-        .from(order)
-        .where(
-          and(
-            eq(order.columnId, input.columnId),
-            eq(order.buyerId, input.userId),
-          ),
-        );
-      if (orders.length === 0) {
-        throw new Error("该columnId在order表中不存在");
-      }
-
-      return ctx.db
-        .update(order)
-        .set({
-          isVisible: input.isVisible,
-        })
-        .where(eq(order.columnId, input.columnId));
-    }),
-
-  changeStatusBatch: publicProcedure
-    .input(
-      z.object({
-        orders: z.array(
-          z.object({ orderId: z.number(), isVisible: z.boolean() }),
-        ),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { db } = ctx;
-      input.orders.map(async (item) => {
-        await db
-          .update(order)
-          .set({
-            isVisible: item.isVisible,
-          })
-          .where(eq(order.id, item.orderId));
-      });
     }),
 
   getSubscriptionVolume: publicProcedure
@@ -718,46 +531,6 @@ export const orderRouter = createTRPCRouter({
           Math.floor((todayData.length / yesterdayData.length) * 100) / 100;
         return rate >= 1 ? rate - 1 : -rate;
       }
-    }),
-
-  getSubscriptionRange: publicProcedure
-    .input(z.object({ columnId: z.string(), start: z.date(), end: z.date() }))
-    .query(async ({ ctx, input }): Promise<number[]> => {
-      // 用于存储每天数据的数组
-      let dailyData: number[] = [];
-
-      // 克隆开始日期，以便我们可以在循环中修改它
-      let currentDate = new Date(input.start);
-
-      // 循环遍历从开始日期到结束日期的每一天
-      while (currentDate <= input.end) {
-        // 获取当前日期的订单数量
-        const ordersForCurrentDate = await ctx.db
-          .select()
-          .from(order)
-          .where(
-            and(
-              eq(order.columnId, input.columnId),
-              and(
-                gt(
-                  order.createdAt,
-                  new Date(currentDate.setUTCHours(0, 0, 0, 0)),
-                ),
-                lt(
-                  order.createdAt,
-                  new Date(currentDate.setUTCHours(23, 59, 59, 999)),
-                ),
-              ),
-            ),
-          );
-        // 将当前日期的订单数量添加到数组中
-        dailyData.push(ordersForCurrentDate.length);
-        // 将当前日期增加一天
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-
-      // 返回每一天的数据
-      return dailyData;
     }),
 
   // 获取订阅列表
@@ -854,15 +627,6 @@ export const orderRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .mutation(({ ctx, input }) => {
       return expireSubscription(ctx.db, input.id);
-    }),
-
-  getTotalPriceByReferralId: publicProcedure
-    .input(z.string())
-    .query(async ({ ctx, input }) => {
-      const list = await ctx.db.query.order.findMany({
-        where: eq(order.recommendationId, input),
-      });
-      return list.map((item) => item.price);
     }),
 
   // 批量更新订单可视状态(前端订阅管理部分使用)
