@@ -225,15 +225,20 @@ export const readRouter = createTRPCRouter({
         };
         const { db } = ctx;
 
-        // 调整时区并创建日期范围
+        // 调整为东八区时间（UTC+8）
         const startDate = new Date(input.start);
-        startDate.setUTCHours(0, 0, 0, 0);
+        // 设置为当天的00:00:00（东八区）
+        startDate.setHours(0, 0, 0, 0);
+        // 调整为UTC时间（加8小时）用于数据库查询
+        const startDateUTC = new Date(startDate.getTime() + 8 * 60 * 60 * 1000);
 
         const endDate = new Date(input.end);
-        endDate.setUTCHours(23, 59, 59, 999);
-
-        // 计算日期范围内的天数
-        const dayCount = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+        // 设置为当天的23:59:59（东八区）
+        endDate.setHours(23, 59, 59, 999);
+        // 调整为UTC时间（加8小时）用于数据库查询
+        const endDateUTC = new Date(endDate.getTime() + 8 * 60 * 60 * 1000);
+        // 计算日期范围内的天数（使用东八区时间计算）
+        const dayCount = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
         // 初始化结果数组
         const readsData = Array(dayCount).fill(0);
@@ -265,8 +270,8 @@ export const readRouter = createTRPCRouter({
               and(
                 eq(postRead.postId, p.id),
                 and(
-                  gt(postRead.createdAt, startDate),
-                  lt(postRead.createdAt, endDate)
+                  gt(postRead.createdAt, startDateUTC),
+                  lt(postRead.createdAt, endDateUTC)
                 )
               )
             )
@@ -287,27 +292,32 @@ export const readRouter = createTRPCRouter({
             and(
               eq(order.columnId, input.columnId),
               and(
-                gt(order.createdAt, startDate),
-                lt(order.createdAt, endDate)
+                gt(order.createdAt, startDateUTC),
+                lt(order.createdAt, endDateUTC)
               )
             )
           );
-        // 4. 按日期分组统计数据
+        // 4. 按日期分组统计数据（转换为东八区时间）
         for (const read of allReads) {
-          const readDate = new Date(read.createdAt);
-          const dayIndex = Math.floor((readDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+          // 将 UTC 时间转换为东八区时间
+          const readDate = new Date(read.createdAt.getTime() + 8 * 60 * 60 * 1000);
+          // 计算与起始日期的天数差
+          const dayIndex = Math.floor((readDate.getTime() - startDateUTC.getTime()) / (1000 * 60 * 60 * 24));
           if (dayIndex >= 0 && dayIndex < dayCount) {
             readsData[dayIndex]++;
           }
         }
 
         for (const subscription of allSubscriptions) {
-          const subDate = new Date(subscription.createdAt);
-          const dayIndex = Math.floor((subDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+          // 将 UTC 时间转换为东八区时间
+          const subDate = new Date(subscription.createdAt.getTime());
+          // 计算与起始日期的天数差
+          const dayIndex = Math.floor((subDate.getTime() - startDateUTC.getTime()) / (1000 * 60 * 60 * 24));
           if (dayIndex >= 0 && dayIndex < dayCount) {
             subscriptionsData[dayIndex]++;
           }
         }
+
         // 返回每一天的数据
         return {
           readCount: readsData,
