@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { and, eq, gte, lte, like, sql, desc, count } from "drizzle-orm";
-import { referrals, type SpeedUp, order, user } from "@/server/db/schema";
+import { referrals, type SpeedUp, order, user, UserSelect } from "@/server/db/schema";
 import { createCaller } from "@/server/api/root";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
@@ -18,39 +18,6 @@ export const getOneByUserIdAndColumnId = (
 };
 
 export const referralsRouter = createTRPCRouter({
-  // 保留原有方法，但不推荐使用
-  getByColumnId: publicProcedure
-    .input(z.string())
-    .query(async ({ ctx, input }) => {
-      const caller = createCaller(ctx);
-      const res: SpeedUp[] = [];
-      const referralsList = await ctx.db.query.referrals.findMany({
-        where: eq(referrals.columnId, input),
-      });
-      // 使用 Map 按照 referredUserId 去重
-      const uniqueReferrals = Array.from(
-        new Map(
-          referralsList.map((item) => [item.referredUserId, item]),
-        ).values(),
-      );
-      const promise = uniqueReferrals.map(async (referral, index) => {
-        const price = await caller.order.getTotalPriceByReferralId(
-          referral.referredUserId,
-        );
-        const user = await getOneUser(ctx.db, referral.referredUserId!);
-        res.push({
-          id: index + 1,
-          avatar: user.avatar,
-          username: user.name,
-          userId: user.id,
-          acceleratedTotal: price.length,
-          totalPrice: price.reduce((acc, curr) => acc + curr, 0),
-        });
-      });
-      await Promise.all(promise);
-      return res;
-    }),
-
   // 新增分页查询方法
   getByColumnIdPaginated: publicProcedure
     .input(
@@ -92,12 +59,10 @@ export const referralsRouter = createTRPCRouter({
         .from(order)
         .where(and(...conditions))
         .groupBy(order.recommendationId);
-
       // 获取用户ID列表
       const userIds = orderResults
         .map(item => item.recommendationId)
         .filter(Boolean) as string[];
-
       // 如果没有推荐记录，直接返回空结果
       if (userIds.length === 0) {
         return {
@@ -107,30 +72,37 @@ export const referralsRouter = createTRPCRouter({
           pageSize
         };
       }
+      let userResults: UserSelect[];
 
-      // 构建用户查询条件
-      let userConditions = [];
+      try {
+        // 使用 Promise.all 和多个单独查询替代 IN 操作符
+        // 使用类型断言确保返回类型符合UserSelect[]
+        userResults = (await Promise.all(
+          userIds.map(async (id) => {
+            // 如果有userId筛选条件，先检查当前id是否匹配
+            if (userId && !id.includes(userId)) {
+              return null;
+            }
 
-      // 使用 IN 操作符查询多个用户
-      if (userIds.length > 0) {
-        userConditions.push(sql`${user.id} IN (${userIds.join(',')})`);
+            const result = await ctx.db
+              .select({
+                id: user.id,
+                name: user.name,
+                avatar: user.avatar,
+              })
+              .from(user)
+              .where(eq(user.id, id));
+
+            return result[0] || null;
+          })
+        )) as UserSelect[];
+
+        // 过滤掉null结果
+        userResults = userResults.filter(Boolean);
+      } catch (error) {
+        console.error("查询用户信息出错:", error);
+        userResults = [];
       }
-
-      // 添加用户ID筛选
-      if (userId) {
-        userConditions.push(like(user.id, `%${userId}%`));
-      }
-
-      // 查询用户信息
-      const userResults = await ctx.db
-        .select({
-          id: user.id,
-          name: user.name,
-          avatar: user.avatar,
-        })
-        .from(user)
-        .where(userConditions.length > 0 ? and(...userConditions) : undefined);
-
       // 合并数据
       const mergedData = userResults.map(userInfo => {
         const orderInfo = orderResults.find(order => order.recommendationId === userInfo.id);
@@ -143,7 +115,6 @@ export const referralsRouter = createTRPCRouter({
           totalPrice: Number(orderInfo?.totalPrice) || 0,
         } as SpeedUp;
       });
-
       // 按加速量排序
       const sortedData = mergedData.sort((a, b) => b.acceleratedTotal - a.acceleratedTotal);
 
