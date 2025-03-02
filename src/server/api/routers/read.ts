@@ -11,52 +11,7 @@ import {
 } from "@/tools/getCurrentTime";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
-
-export const getColumnsReadFC = async (db: PostgresJsDatabase<typeof schema>, columnId: string) => {
-  const result = await db
-    .select({
-      totalReads: sql<number>`sum(${postRead.readCount})`,
-    })
-    .from(post)
-    .leftJoin(postRead, eq(post.id, postRead.postId))
-    .where(eq(post.columnId, columnId))
-    .groupBy(post.columnId);
-
-  return result[0]?.totalReads ?? 0;
-}
-
-interface TimeRange {
-  start: Date;
-  end: Date;
-}
-
-// 统一的阅读量查询函数
-async function getColumnReadsInRange(
-  db: PostgresJsDatabase<typeof schema>,
-  columnId: string,
-  timeRange?: TimeRange
-): Promise<number> {
-  const baseQuery = db
-    .select({
-      readCount: sql<number>`count(*)`,
-    })
-    .from(post)
-    .leftJoin(postRead, eq(post.id, postRead.postId))
-    .where(eq(post.columnId, columnId));
-
-  if (timeRange) {
-    return (await baseQuery
-      .where(
-        and(
-          gt(postRead.createdAt, timeRange.start),
-          lt(postRead.createdAt, timeRange.end)
-        )
-      )
-      .execute())[0]?.readCount ?? 0;
-  }
-
-  return (await baseQuery.execute())[0]?.readCount ?? 0;
-}
+import { getAllHomepageData, getColumnReadsInRange, getReads } from "../tools/readQueries";
 
 export const readRouter = createTRPCRouter({
   create: publicProcedure
@@ -238,88 +193,20 @@ export const readRouter = createTRPCRouter({
       });
     }),
 
-  // 获取昨天、上周、上个月的阅读量
-  getReading: publicProcedure
-    .input(z.object({ columnId: z.string() }))
+  getHomepageData: publicProcedure
+    .input(z.string())
     .query(async ({ ctx, input }) => {
-      const [yesterday, lastWeek, lastMonth] = await Promise.all([
-        getColumnReadsInRange(ctx.db, input.columnId, {
-          start: getYesterdayMidnight(),
-          end: getTodayMidnight(),
-        }),
-        getColumnReadsInRange(ctx.db, input.columnId, {
-          start: getLastWeekDates().lastMonday,
-          end: getLastWeekDates().lastSunday,
-        }),
-        getColumnReadsInRange(ctx.db, input.columnId, {
-          start: getLastMonthDates().firstDayOfLastMonth,
-          end: getLastMonthDates().lastDayOfLastMonth,
-        }),
-      ]);
-
-      return [yesterday, lastWeek, lastMonth];
-    }),
-
-  getReadingRateOfIncrease: publicProcedure
-    .input(z.object({ columnId: z.string() }))
-    .query(async ({ ctx, input }): Promise<number> => {
-      const yesterdayMidnight = getYesterdayMidnight();
-      const todayMidnight = getTodayMidnight();
-      const now = getCurrentTime();
-      // 查询所有专栏下所有的帖子
-      const posts = await ctx.db
-        .select()
-        .from(post)
-        .where(eq(post.columnId, input.columnId));
-
-      let yesterdayReadCount = 0;
-      let todayReadCount = 0;
-      const readPromises = posts.map(async (item) => {
-        const yesterdayReads = await ctx.db
-          .select()
-          .from(postRead)
-          .where(
-            and(
-              eq(postRead.postId, item.id),
-              and(
-                gt(postRead.createdAt, yesterdayMidnight),
-                lt(postRead.createdAt, todayMidnight),
-              ),
-            ),
-          );
-        yesterdayReadCount += yesterdayReads.length;
-        const todayReads = await ctx.db
-          .select()
-          .from(postRead)
-          .where(
-            and(
-              eq(postRead.postId, item.id),
-              and(
-                gt(postRead.createdAt, todayMidnight),
-                lt(postRead.createdAt, now),
-              ),
-            ),
-          );
-        todayReadCount += todayReads.length;
-      });
-      await Promise.all(readPromises);
-      if (yesterdayReadCount === 0) {
-        return todayReadCount * 100;
-      } else if (todayReadCount === 0) {
-        return -yesterdayReadCount * 100;
-      } else {
-        const rate =
-          Math.floor((todayReadCount / yesterdayReadCount) * 100) / 100;
-        return rate >= 1 ? rate - 1 : -rate;
-      }
+      const { db } = ctx;
+      // 一次性获取所有主页数据
+      return getAllHomepageData(db, input);
     }),
 
   getHomePageDataRange: publicProcedure
     .input(
       z.object({
         columnId: z.string(),
-        start: z.date().nullable(),
-        end: z.date().nullable(),
+        start: z.string().nullable(),
+        end: z.string().nullable(),
       }),
     )
     .query(
@@ -331,81 +218,96 @@ export const readRouter = createTRPCRouter({
         subscriptionCount: number[];
         speedUpCount: number[];
       }> => {
-        if (input.start === null || input.end === null) return null;
+        if (input.start === null || input.end === null) return {
+          readCount: [],
+          subscriptionCount: [],
+          speedUpCount: []
+        };
         const { db } = ctx;
-        // 用于存储每天数据的数组
-        const readsData: number[] = [];
-        const subscriptionsData: number[] = [];
-        const speedUpData: number[] = [];
 
-        // 克隆开始日期，以便我们可以在循环中修改它
-        let currentDate = new Date(input.start.getTime() + 8 * 60 * 60 * 1000);
-        const endDate = new Date(input.end.getTime() + 31 * 59 * 59 * 1000);
-        // 查询所有专栏下所有的帖子
+        // 调整时区并创建日期范围
+        const startDate = new Date(input.start);
+        startDate.setUTCHours(0, 0, 0, 0);
+
+        const endDate = new Date(input.end);
+        endDate.setUTCHours(23, 59, 59, 999);
+
+        // 计算日期范围内的天数
+        const dayCount = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+        // 初始化结果数组
+        const readsData = Array(dayCount).fill(0);
+        const subscriptionsData = Array(dayCount).fill(0);
+        const speedUpData = Array(dayCount).fill(0);
+
+        // 1. 获取所有专栏下的帖子 - 只查询一次
         const posts = await db
           .select()
           .from(post)
           .where(eq(post.columnId, input.columnId));
-        // 循环遍历从开始日期到结束日期的每一天
-        while (new Date(currentDate.setUTCHours(0, 0, 0, 0)) <= endDate) {
-          // 查询阅读量
-          let readCount = 0;
-          const readPromises = posts.map(async (item) => {
-            const todayReads = await db
-              .select()
-              .from(postRead)
-              .where(
-                and(
-                  eq(postRead.postId, item.id),
-                  and(
-                    gt(
-                      postRead.createdAt,
-                      new Date(currentDate.setUTCHours(0, 0, 0, 0)),
-                    ),
-                    lt(
-                      postRead.createdAt,
-                      new Date(currentDate.setUTCHours(23, 59, 59, 999)),
-                    ),
-                  ),
-                ),
-              );
-            readCount += todayReads.length;
-          });
-          await Promise.all(readPromises);
-          // 将当前日期的订单数量添加到数组中
-          readsData.push(readCount);
 
-          // 查询订阅量
-          const subscriptionCount: number = (
-            await db
-              .select()
-              .from(order)
-              .where(
-                and(
-                  eq(order.columnId, input.columnId),
-                  and(
-                    gt(
-                      order.createdAt,
-                      new Date(currentDate.setUTCHours(0, 0, 0, 0)),
-                    ),
-                    lt(
-                      order.createdAt,
-                      new Date(currentDate.setUTCHours(23, 59, 59, 999)),
-                    ),
-                  ),
-                ),
-              )
-          ).length;
-          subscriptionsData.push(subscriptionCount);
-
-          // 查询加速计划
-          const speedUpCount = 0;
-          speedUpData.push(speedUpCount);
-
-          // 将当前日期增加一天
-          currentDate.setDate(currentDate.getDate() + 1);
+        if (posts.length === 0) {
+          return {
+            readCount: readsData,
+            subscriptionCount: subscriptionsData,
+            speedUpCount: speedUpData,
+          };
         }
 
+        // 2. 获取日期范围内的所有阅读记录 - 分别查询每个帖子的阅读记录并合并
+        const allReadsPromises = posts.map(p =>
+          db.select({
+            postId: postRead.postId,
+            createdAt: postRead.createdAt,
+          })
+            .from(postRead)
+            .where(
+              and(
+                eq(postRead.postId, p.id),
+                and(
+                  gt(postRead.createdAt, startDate),
+                  lt(postRead.createdAt, endDate)
+                )
+              )
+            )
+        );
+
+        // 并行执行所有查询
+        const allReadsResults = await Promise.all(allReadsPromises);
+        // 合并所有结果
+        const allReads = allReadsResults.flat();
+
+        // 3. 获取日期范围内的所有订阅记录 - 只查询一次
+        const allSubscriptions = await db
+          .select({
+            createdAt: order.createdAt,
+          })
+          .from(order)
+          .where(
+            and(
+              eq(order.columnId, input.columnId),
+              and(
+                gt(order.createdAt, startDate),
+                lt(order.createdAt, endDate)
+              )
+            )
+          );
+        // 4. 按日期分组统计数据
+        for (const read of allReads) {
+          const readDate = new Date(read.createdAt);
+          const dayIndex = Math.floor((readDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+          if (dayIndex >= 0 && dayIndex < dayCount) {
+            readsData[dayIndex]++;
+          }
+        }
+
+        for (const subscription of allSubscriptions) {
+          const subDate = new Date(subscription.createdAt);
+          const dayIndex = Math.floor((subDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+          if (dayIndex >= 0 && dayIndex < dayCount) {
+            subscriptionsData[dayIndex]++;
+          }
+        }
         // 返回每一天的数据
         return {
           readCount: readsData,
