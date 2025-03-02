@@ -10,21 +10,27 @@ import {
 import Preview from "@/app/_components/writer/Preview";
 import TagInput from "./TagInput";
 import { api } from "@/trpc/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import { Button } from "antd";
-import OSS from "ali-oss";
+import { ossClient } from "@/app/_utils/oss";
 
-let client = new OSS({
-  region: "oss-cn-shenzhen",
-  accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID,
-  accessKeySecret: process.env.NEXT_PUBLIC_ACCESS_KEY_SECRET,
-  stsToken: process.env.NEXT_PUBLIC_STS_TOKEN,
-  bucket: process.env.NEXT_PUBLIC_BUCKET,
-});
+interface MyEditorProps {
+  initialPostData?: any;
+  initialDraftData?: any;
+  initialColumnId: string;
+  postId?: number;
+}
 
-const MyEditor = () => {
+const MyEditor = ({
+  initialPostData,
+  initialDraftData,
+  initialColumnId,
+  postId
+}: MyEditorProps) => {
   const router = useRouter();
+  const columnId = initialColumnId;
+
   const createPost = api.post.create.useMutation({
     onSuccess: () => {
       router.push(`/writer/content-management?columnId=${columnId}`);
@@ -37,62 +43,30 @@ const MyEditor = () => {
     },
   });
 
-  const params = useSearchParams();
-  let columnId;
-  columnId = params.get("columnId");
-  const postId = params.get("postId");
-  let postData;
-  const { data: postQueryData, isSuccess: isPostSuccess } =
-    api.post.getByPostId.useQuery(
-      {
-        id: parseInt(postId),
-      },
-      { enabled: Boolean(postId) },
-    );
-  if (isPostSuccess) {
-    columnId = postQueryData.columnId;
-    postData = postQueryData;
-  }
-
-  let draftData;
-  const { data: draftQueryData, isSuccess: isDraftSuccess } =
-    api.post.getDraft.useQuery(
-      {
-        columnId: columnId,
-      },
-      {
-        enabled: Boolean(!postId),
-      },
-    );
-  if (isDraftSuccess) {
-    draftData = draftQueryData;
-  }
-
   const [editor, setEditor] = useState<IDomEditor | null>(null);
-  let [html, setHtml] = useState("");
+  const [html, setHtml] = useState("");
   const draft = html;
   const [title, setTitle] = useState("");
   const [preview, setPreview] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [publishModal, setPublishModal] = useState(false);
 
+  // 使用服务端传入的初始数据
   useEffect(() => {
-    // 此时是路由过来的数据
-    console.log(postData, draftData);
-    if (postData) {
-      setTitle(postData.name);
-      setHtml(postData.content);
-      setTags(postData.tag ? postData.tag.split(",") : []);
-    } else if (draftData) {
-      setTitle(draftData.name);
-      setHtml(draftData.content);
-      setTags(draftData.tag ? draftData.tag.split(",") : []);
+    if (initialPostData) {
+      setTitle(initialPostData.name);
+      setHtml(initialPostData.content);
+      setTags(initialPostData.tag ? initialPostData.tag.split(",") : []);
+    } else if (initialDraftData) {
+      setTitle(initialDraftData.name);
+      setHtml(initialDraftData.content);
+      setTags(initialDraftData.tag ? initialDraftData.tag.split(",") : []);
     } else {
       setTitle("");
       setHtml("");
       setTags([]);
     }
-  }, [postData, draftData]);
+  }, [initialPostData, initialDraftData]);
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newTitle = event.target.value.slice(0, 64); // 限制标题长度为64个字符
@@ -102,6 +76,7 @@ const MyEditor = () => {
   const togglePreview = () => {
     setPreview(!preview);
   };
+
   const Modal = () => {
     return (
       <W100H50Modal>
@@ -129,50 +104,50 @@ const MyEditor = () => {
       </W100H50Modal>
     );
   };
+
   // 保存草稿的函数
   const saveDraft = () => {
-    if (draftData) {
+    if (initialDraftData) {
       updatePost.mutate({
-        id: draftData.id,
-        name: title, // 使用标题作为草稿的名称
-        content: html, // 使用 HTML 内容作为草稿的内容
-        tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
+        id: initialDraftData.id,
+        name: title,
+        content: html,
+        tag: tags.join(","),
         status: false,
         columnId: columnId,
       });
     } else {
       createPost.mutate({
-        name: title, // 使用标题作为草稿的名称
-        content: html, // 使用 HTML 内容作为草稿的内容
-        tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
+        name: title,
+        content: html,
+        tag: tags.join(","),
         status: false,
         columnId: columnId,
       });
-      router.push(`/writer/content-management?columnId=${columnId}`);
     }
   };
-  console.log(postData);
+
   const publish = () => {
-    // 调用保存草稿的 API 请求，并传递标题、HTML 内容和标签
-    if (postData || draftData) {
+    if (initialPostData || initialDraftData) {
       updatePost.mutate({
-        id: postData?.id ?? draftData.id,
-        name: title, // 使用标题作为草稿的名称
-        content: html, // 使用 HTML 内容作为草稿的内容
-        tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
+        id: initialPostData?.id ?? initialDraftData.id,
+        name: title,
+        content: html,
+        tag: tags.join(","),
         status: true,
         columnId: columnId,
       });
     } else {
       createPost.mutate({
-        name: title, // 使用标题作为草稿的名称
-        content: html, // 使用 HTML 内容作为草稿的内容
-        tag: tags.join(","), // 将标签列表转换为逗号分隔的字符串
+        name: title,
+        content: html,
+        tag: tags.join(","),
         status: true,
         columnId: columnId,
       });
     }
   };
+
   // 发布的函数
   const handleClickPublish = () => {
     setPublishModal(true);
@@ -222,10 +197,6 @@ const MyEditor = () => {
     "codeBlock",
     "blockquote",
     "divider",
-
-    // 菜单组，包含多个菜单
-
-    // 继续配置其他菜单...
   ];
 
   const editorConfig: Partial<IEditorConfig> = {
@@ -234,13 +205,14 @@ const MyEditor = () => {
     MENU_CONF: {
       uploadImage: {
         // 自定义上传
-        async customUpload(file: File, insertFn) {
-          const result = await client.put(file.name, file);
-          insertFn(result.url, result.name, insertFn, result.url);
+        async customUpload(file: File, insertFn: (url: string, alt: string, href: string, url_org?: string) => void) {
+          const result = await ossClient.put(file.name, file);
+          insertFn(result.url, result.name, result.url, result.url);
         },
       },
     },
   };
+
   useEffect(() => {
     return () => {
       if (editor == null) return;
@@ -250,7 +222,7 @@ const MyEditor = () => {
   }, [editor]);
 
   return (
-    <div className="m-auto h-full w-full bg-[#FFF] pl-14 pr-6 pt-9">
+    <div className="m-auto h-full w-full bg-[#FFF] pl-14 pr-6 pt-9 pb-20">
       <div className="pt-6.375 flex items-center justify-between">
         {/* 工具栏 */}
         <div className={"flex items-center space-x-4"}>
@@ -273,9 +245,8 @@ const MyEditor = () => {
           </Button>
           <Button
             style={{ width: "88px", height: "32px" }}
-            className={`${
-              preview ? "text-#ffffff" : "text-[rgba(0,0,0,0.65)]"
-            } text-3.5 font-not-italic font-400`}
+            className={`${preview ? "text-#ffffff" : "text-[rgba(0,0,0,0.65)]"
+              } text-3.5 font-not-italic font-400`}
             onClick={togglePreview}
           >
             {preview ? "取消预览" : "预览"}
@@ -326,7 +297,6 @@ const MyEditor = () => {
                   placeholder="在这里输入标题"
                   maxLength={64}
                   className="mt-7.5 pl-10 outline-none"
-                  v-mode="title"
                 />
                 {/* 富文本编辑器 */}
                 <Editor
@@ -346,7 +316,7 @@ const MyEditor = () => {
           )}
         </div>
       </div>
-      {publishModal && <Modal></Modal>}
+      {publishModal && <Modal />}
     </div>
   );
 };
