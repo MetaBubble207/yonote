@@ -13,10 +13,10 @@ import {
   user,
 } from "@/server/db/schema";
 import { and, asc, desc, eq, like, sql } from "drizzle-orm";
-import { uniqueArray } from "@/tools/uniqueArray";
+import { uniqueArray } from "@/app/_utils/uniqueArray";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
-import { getCurrentTime } from "@/tools/getCurrentTime";
+import { getCurrentTime } from "@/app/_utils/getCurrentTime";
 import { getOneUser } from "./user";
 import { getPostStats } from "../tools/columnQueries";
 

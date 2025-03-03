@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { postLike, user, post, column } from "@/server/db/schema";
 import { eq, sql } from "drizzle-orm";
-import { getCurrentTime } from "@/tools/getCurrentTime";
+import { getCurrentTime } from "@/app/_utils/getCurrentTime";
 import { and } from "drizzle-orm";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";

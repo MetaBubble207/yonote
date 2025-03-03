@@ -1,5 +1,5 @@
 import { ColumnSelect } from "@/server/db/schema"
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture"
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture"
 import Image from "next/image"
 export const ColumnContent = ({ column }: { column: ColumnSelect }) => {
     return <div className="w-73 h-44.5 ml-4.5 mt-4" >

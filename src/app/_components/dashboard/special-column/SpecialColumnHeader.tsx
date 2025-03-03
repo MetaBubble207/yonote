@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { useMemo } from "react";
 import ActionButtons from "./ActionButton";
 import { Skeleton } from "antd";

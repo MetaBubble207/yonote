@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { time2DateString } from "@/tools/timeToString";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { time2DateString } from "@/app/_utils/timeToString";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import React from "react";
 import { type DetailColumnCard } from "@/server/db/schema";
 

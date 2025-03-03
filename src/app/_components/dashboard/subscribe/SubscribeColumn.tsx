@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { BaseColumnCardDateString } from "@/server/db/schema";
 
 const SubscribeColumn = ({ column }: { column: BaseColumnCardDateString }) => {

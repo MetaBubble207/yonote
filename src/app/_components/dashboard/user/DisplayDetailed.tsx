@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { api } from "@/trpc/react";
 import NoData from "@/app/_components/common/NoData";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { type UserInsert } from "@/server/db/schema";
 import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 
@@ -106,9 +106,8 @@ const DisplayDetailed = ({ token, userInfo }: Props) => {
             {tab.label}
           </button>
           <div
-            className={`ml-2.25 w-2.75 rounded-2 mt-1 h-1 ${
-              currentPage === tab.id ? "bg-primary" : "bg-#FFF"
-            }`}
+            className={`ml-2.25 w-2.75 rounded-2 mt-1 h-1 ${currentPage === tab.id ? "bg-primary" : "bg-#FFF"
+              }`}
           />
         </div>
       ))}
@@ -118,7 +117,7 @@ const DisplayDetailed = ({ token, userInfo }: Props) => {
   // 内容渲染
   const RenderContent = () => {
     if (currentPage === 1) {
-      if (isUpdateLoading) return <LoadingSkeleton rows={3}/>;
+      if (isUpdateLoading) return <LoadingSkeleton rows={3} />;
       if (!updateColumnInfos?.length) {
         return <NoData title="你已经阅读完该作者所有的帖子了噢😁~" />;
       }
@@ -128,7 +127,7 @@ const DisplayDetailed = ({ token, userInfo }: Props) => {
     }
 
     if (currentPage === 2) {
-      if (!columnInfos?.length) return <LoadingSkeleton rows={3}/>;
+      if (!columnInfos?.length) return <LoadingSkeleton rows={3} />;
       return columnInfos.map((item) => (
         <ColumnCard key={item.id} {...item} />
       ));

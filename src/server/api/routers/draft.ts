@@ -4,7 +4,7 @@ import { post } from "@/server/db/schema"; // 导入数据库连接函数
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { eq } from "drizzle-orm";
-import { getCurrentTime } from "@/tools/getCurrentTime";
+import { getCurrentTime } from "@/app/_utils/getCurrentTime";
 
 export const draftRouter = createTRPCRouter({
   create: publicProcedure

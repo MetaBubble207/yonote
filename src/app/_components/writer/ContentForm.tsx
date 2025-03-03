@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { api } from "@/trpc/react";
-import { time2DateString } from "@/tools/timeToString";
+import { time2DateString } from "@/app/_utils/timeToString";
 import { useSearchParams } from "next/navigation";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import Link from "next/link";

@@ -8,7 +8,7 @@ import {
   getLastWeekDates,
   getTodayMidnight,
   getYesterdayMidnight,
-} from "@/tools/getCurrentTime";
+} from "@/app/_utils/getCurrentTime";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
 import { getAllHomepageData, getColumnReadsInRange, getReads } from "../tools/readQueries";

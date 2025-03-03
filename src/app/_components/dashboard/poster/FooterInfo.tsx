@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "antd";
 import QRCode from "qrcode.react";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { UserSelect } from "@/server/db/schema";
 
 interface BottomInfoProps {

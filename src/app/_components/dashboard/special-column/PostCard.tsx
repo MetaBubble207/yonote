@@ -2,8 +2,8 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useMemo } from "react";
-import { time2DateString } from "@/tools/timeToString";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { time2DateString } from "@/app/_utils/timeToString";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { type DetailPostCard } from "@/server/db/schema";
 import Link from "next/link";
 import { message } from "antd";
@@ -26,11 +26,11 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, isSubscribe }) => {
     const name = postDetail.name || "未知专栏";
 
     return {
-      truncatedContent: content.length > MAX_CONTENT_LENGTH 
-        ? content.substring(0, MAX_CONTENT_LENGTH) + "..." 
+      truncatedContent: content.length > MAX_CONTENT_LENGTH
+        ? content.substring(0, MAX_CONTENT_LENGTH) + "..."
         : content,
-      truncatedName: name.length > MAX_TITLE_LENGTH 
-        ? name.substring(0, MAX_TITLE_LENGTH) + "..." 
+      truncatedName: name.length > MAX_TITLE_LENGTH
+        ? name.substring(0, MAX_TITLE_LENGTH) + "..."
         : name
     };
   }, [postDetail.content, postDetail.name]);

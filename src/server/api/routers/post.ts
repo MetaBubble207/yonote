@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { post } from "@/server/db/schema";
 import { and, desc, eq, gt, like, lt, sql } from "drizzle-orm";
-import { getCurrentTime } from "@/tools/getCurrentTime";
+import { getCurrentTime } from "@/app/_utils/getCurrentTime";
 import { createCaller } from "@/server/api/root";
 import { getDetailPost } from "../tools/postQueries";
 

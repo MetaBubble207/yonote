@@ -2,7 +2,7 @@
 import { type PostSelect } from "@/server/db/schema";
 import { Button, Modal, Table, message, type TableColumnsType } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { date2DateTimeStringSeconds } from "@/tools/timeToString";
+import { date2DateTimeStringSeconds } from "@/app/_utils/timeToString";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { ExclamationCircleFilled } from '@ant-design/icons';

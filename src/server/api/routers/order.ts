@@ -23,7 +23,7 @@ import {
   getLastWeekDates,
   getTodayMidnight,
   getYesterdayMidnight,
-} from "@/tools/getCurrentTime";
+} from "@/app/_utils/getCurrentTime";
 import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { getOneUser } from "@/server/api/routers/user";
 import { getOneByUserIdAndColumnId } from "@/server/api/routers/referrals";

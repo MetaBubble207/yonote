@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { time2DateString } from "@/tools/timeToString";
+import { time2DateString } from "@/app/_utils/timeToString";
 import Link from "next/link";
 import React from "react";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { type DetailColumnCard } from "@/server/db/schema";
 
 const ColumnCard = ({ columnData }: { columnData: DetailColumnCard }) => {

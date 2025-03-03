@@ -5,7 +5,7 @@ import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 import { useAppDispatch, useAppSelector } from "@/app/_hooks/useRedux";
 import { setSubscribeColumnList, userSubscribeSelector } from "@/app/_slice/user-subscribe-slice";
 import { useEffect } from "react";
-import { date2DateTimeStringMouth } from "@/tools/timeToString";
+import { date2DateTimeStringMouth } from "@/app/_utils/timeToString";
 
 export default function UserColumn({ token }: { token: string | null }) {
   const { subscribeColumnList } = useAppSelector(userSubscribeSelector);

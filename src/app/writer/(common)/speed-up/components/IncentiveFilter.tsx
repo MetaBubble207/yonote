@@ -4,7 +4,7 @@ import { ConfigProvider, DatePicker } from "antd";
 import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/zh-cn";
 import locale from "antd/locale/zh_CN";
-import { time2DateString } from "@/tools/timeToString";
+import { time2DateString } from "@/app/_utils/timeToString";
 
 const { RangePicker } = DatePicker;
 

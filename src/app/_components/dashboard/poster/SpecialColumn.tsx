@@ -8,7 +8,7 @@ import QRCode from "qrcode.react";
 import { domToPng } from "modern-screenshot";
 import { Button } from "antd";
 import Loading from "@/app/_components/common/Loading";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 
 const SpecialColumn = () => {
   const params = useSearchParams();
@@ -34,7 +34,7 @@ const SpecialColumn = () => {
   }
 
   const { data: orderData, isLoading: isOrderLoading } =
-    api.order.getColumnOrder.useQuery({columnId: columnId!});
+    api.order.getColumnOrder.useQuery({ columnId: columnId! });
 
   const [columnIntro, setColumnIntro] = useState("");
   useEffect(() => {

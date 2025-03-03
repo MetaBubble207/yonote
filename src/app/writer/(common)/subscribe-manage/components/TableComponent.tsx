@@ -2,7 +2,7 @@
 import { type OrderBuyer } from "@/server/db/schema";
 import { Button, Table, message, type TableColumnsType } from "antd";
 import React from "react";
-import { date2DateTimeStringSeconds } from "@/tools/timeToString";
+import { date2DateTimeStringSeconds } from "@/app/_utils/timeToString";
 import { api } from "@/trpc/react";
 import { useRouter, useSearchParams } from "next/navigation";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { type DetailPost } from "@/server/db/schema";
 
 interface ArticleContentProps {

@@ -6,7 +6,7 @@ import Loading from "@/app/_components/common/Loading";
 import { ConfigProvider } from "antd";
 import locale from "antd/locale/zh_CN";
 import "dayjs/locale/zh-cn";
-import { date2DateTimeStringSeconds } from "@/tools/timeToString";
+import { date2DateTimeStringSeconds } from "@/app/_utils/timeToString";
 
 const { RangePicker } = DatePicker;
 

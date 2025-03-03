@@ -2,9 +2,9 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { z } from "zod";
 import { column, user, wallet } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
-import { getCurrentTime } from "@/tools/getCurrentTime";
+import { getCurrentTime } from "@/app/_utils/getCurrentTime";
 import * as process from "process";
-import { getSoleId } from "@/tools/getSoleId";
+import { getSoleId } from "@/app/_utils/getSoleId";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
 
@@ -27,7 +27,7 @@ export const userRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return getOneUser(ctx.db, input);
     }),
-    
+
   getOneByColumnId: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {

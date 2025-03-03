@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ColumnSelect } from "@/server/db/schema";
 import { message } from "antd";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 
 interface CarouselProps {
   columnId: string | null;
