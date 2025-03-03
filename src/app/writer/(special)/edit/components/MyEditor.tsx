@@ -8,26 +8,19 @@ import {
   type IToolbarConfig,
 } from "@wangeditor/editor";
 import Preview from "@/app/_components/writer/Preview";
-import TagInput from "./TagInput";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import { Button } from "antd";
 import { ossClient } from "@/app/_utils/oss";
-
-interface MyEditorProps {
-  initialPostData?: any;
-  initialDraftData?: any;
-  initialColumnId: string;
-  postId?: number;
-}
+import { EditorProps } from "@/app/writer/(special)/edit/types";
+import TagInput from "./TagInput";
 
 const MyEditor = ({
   initialPostData,
   initialDraftData,
   initialColumnId,
-  postId
-}: MyEditorProps) => {
+}: EditorProps) => {
   const router = useRouter();
   const columnId = initialColumnId;
 
@@ -130,7 +123,7 @@ const MyEditor = ({
   const publish = () => {
     if (initialPostData || initialDraftData) {
       updatePost.mutate({
-        id: initialPostData?.id ?? initialDraftData.id,
+        id: initialPostData?.id ?? initialDraftData!.id,
         name: title,
         content: html,
         tag: tags.join(","),
@@ -199,19 +192,23 @@ const MyEditor = ({
     "divider",
   ];
 
-  const editorConfig: Partial<IEditorConfig> = {
-    placeholder: "请输入内容...",
-    maxLength: 1000,
-    MENU_CONF: {
-      uploadImage: {
-        // 自定义上传
-        async customUpload(file: File, insertFn: (url: string, alt: string, href: string, url_org?: string) => void) {
+  // 修改 ossClient 的使用方式，确保只在客户端使用
+const editorConfig: Partial<IEditorConfig> = {
+  placeholder: "请输入内容...",
+  maxLength: 1000,
+  MENU_CONF: {
+    uploadImage: {
+      // 自定义上传
+      async customUpload(file: File, insertFn: (url: string, alt: string, href: string, url_org?: string) => void) {
+        // 确保在客户端环境中执行
+        if (typeof window !== 'undefined') {
           const result = await ossClient.put(file.name, file);
           insertFn(result.url, result.name, result.url, result.url);
-        },
+        }
       },
     },
-  };
+  },
+};
 
   useEffect(() => {
     return () => {
