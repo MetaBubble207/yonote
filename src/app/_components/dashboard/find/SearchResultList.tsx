@@ -4,9 +4,9 @@ import { api } from "@/trpc/react";
 import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 import NoData from "../../common/NoData";
 import Link from "next/link";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import Image from "next/image";
-import { time2DateString } from "@/tools/timeToString";
+import { time2DateString } from "@/app/_utils/timeToString";
 interface CardProps {
     item: BaseColumnCard;
 }

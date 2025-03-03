@@ -2,7 +2,7 @@ import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
 import { sql, eq, gt, lt, and } from "drizzle-orm";
 import { order, post, postRead, } from "@/server/db/schema";
-import { getCurrentTime, getLastMonthDates, getLastWeekDates, getTodayMidnight, getYesterdayMidnight } from "@/tools/getCurrentTime";
+import { getCurrentTime, getLastMonthDates, getLastWeekDates, getTodayMidnight, getYesterdayMidnight } from "@/app/_utils/getCurrentTime";
 interface TimeRange {
     start: Date;
     end: Date;

@@ -1,4 +1,4 @@
-import { date2DateTimeStringMinutes } from "@/tools/timeToString";
+import { date2DateTimeStringMinutes } from "@/app/_utils/timeToString";
 import NoData from "@/app/_components/common/NoData";
 import { TransactionListProps } from "@/app/dashboard/user/wallet/types";
 

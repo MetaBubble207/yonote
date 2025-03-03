@@ -5,7 +5,6 @@ import {
   type BaseColumnCard,
   type ColumnSelect,
   column,
-  type ColumnOrder,
   type DetailColumnCard,
   order,
   post,
@@ -14,88 +13,10 @@ import {
   user,
 } from "@/server/db/schema";
 import { and, asc, desc, eq, like, sql } from "drizzle-orm";
-import { uniqueArray } from "@/tools/uniqueArray";
-import { createCaller } from "@/server/api/root";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type * as schema from "@/server/db/schema";
-import { getCurrentTime } from "@/tools/getCurrentTime";
-import { getOneUser } from "./user";
-import { getPostStats } from "../tools/columnQueries";
-
-const getDetailColumnCard = async (
-  ctx: { headers: Headers; db: PostgresJsDatabase<typeof schema> },
-  columnId: string,
-): Promise<DetailColumnCard | null> => {
-  const { db } = ctx;
-  const columnData = await db.query.column.findFirst({
-    where: eq(column.id, columnId),
-  });
-
-  if (!columnData) {
-    return null;
-  }
-  // 获取专栏下的所有帖子
-  const posts = await db
-    .select()
-    .from(post)
-    .where(and(eq(post.columnId, columnId), eq(post.status, true)))
-    .orderBy(asc(post.chapter));
-  // 并行获取所有文章的统计数据并累加
-  const postsWithStats = await Promise.all(
-    posts.map(async (post) => await getPostStats(db, post.id))
-  );
-
-  // 计算总阅读量和点赞量
-  const { readCount, likeCount } = postsWithStats.reduce(
-    (acc, curr) => ({
-      readCount: Number(acc.readCount) + Number(curr.readCount ?? 0),
-      likeCount: Number(acc.likeCount) + Number(curr.likeCount ?? 0),
-    }),
-    { readCount: 0, likeCount: 0 }
-  );
-
-  // 获取专栏订阅量
-  const subscriptionCount = (
-    await db.select().from(order).where(eq(order.columnId, columnId))
-  ).length;
-  // 获取帖子数量
-  const postCount = (
-    await db.select().from(post).where(eq(post.columnId, columnId))
-  ).length;
-  // 获取作者基本信息
-  const userData = await getOneUser(ctx.db, columnData!.userId!);
-  let detailColumnCard: DetailColumnCard = {
-    avatar: "",
-    cover: "",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    id: "",
-    isFree: false,
-    isTop: false,
-    name: "",
-    likeCount: 0,
-    readCount: 0,
-    introduce: '',
-    description: '',
-    subscriptionCount: 0,
-    postCount: 0,
-    userId: "",
-    userName: "",
-    idType: 0,
-  };
-  if (!userData) return null;
-  Object.assign(detailColumnCard, {
-    ...columnData,
-    readCount,
-    likeCount,
-    subscriptionCount,
-    postCount,
-    userId: userData.id,
-    userName: userData.name,
-    avatar: userData.avatar,
-  });
-  return detailColumnCard;
-};
+import { uniqueArray } from "@/app/_utils/uniqueArray";
+import { getCurrentTime } from "@/app/_utils/getCurrentTime";
+import { getDetailColumnCard } from "../tools/columnQueries";
+import { getOneUser } from "../tools/userQueries";
 
 export const columnRouter = createTRPCRouter({
   update: publicProcedure
@@ -238,8 +159,9 @@ export const columnRouter = createTRPCRouter({
                 eq(postRead.userId, input.visitorId),
               ),
             });
+            if (!readData) return;
             // 阅读记录的更新时间小于文章的更新时间则说明文章更新了，读者还没读
-            if (readData?.updatedAt < item.updatedAt) {
+            if (readData.updatedAt < item.updatedAt) {
               const isExist = res.find((item) => item.id === column.id);
               if (!isExist) {
                 res.push(column);
@@ -279,18 +201,12 @@ export const columnRouter = createTRPCRouter({
             .where(eq(column.userId, user.id));
 
           return userColumns.map(col => ({
-            id: col.id,
-            name: col.name,
-            introduce: col.introduce ?? undefined,
-            description: col.description ?? undefined,
-            cover: col.cover ?? "",
+            ...col, // 包含所有原始专栏字段，包括 distributorship 和 type
             userId: user.id,
-            userName: user.name,
+            userName: user.name ?? "",
             idType: user.idType ?? 0,
             avatar: user.avatar ?? "",
             isVisible: true, // 默认为 true
-            createdAt: col.createdAt!,
-            updatedAt: col.updatedAt!,
           }));
         })
       );
@@ -307,18 +223,12 @@ export const columnRouter = createTRPCRouter({
           }
 
           return {
-            id: col.id,
-            name: col.name,
-            introduce: col.introduce ?? undefined,
-            description: col.description ?? undefined,
-            cover: col.cover ?? "",
+            ...col, // 包含所有原始专栏字段，包括 distributorship 和 type
             userId: userData.id,
-            userName: userData.name,
+            userName: userData.name ?? "",
             idType: userData.idType ?? 0,
             avatar: userData.avatar ?? "",
             isVisible: true, // 默认为 true
-            createdAt: col.createdAt!,
-            updatedAt: col.updatedAt!,
           };
         })
       );
@@ -382,7 +292,7 @@ export const columnRouter = createTRPCRouter({
         .select()
         .from(post)
         .where(sql`${post.columnId} IN ${Array.from(columnIds)}`);
-
+      console.log("posts ====>", posts)
       if (!posts.length) return [];
 
       // 批量获取阅读记录
@@ -393,17 +303,18 @@ export const columnRouter = createTRPCRouter({
           eq(postRead.userId, input),
           sql`${postRead.postId} IN ${posts.map(p => p.id)}`
         ));
-
+      console.log("readRecords ===>", readRecords)
       const readMap = new Map(readRecords.map(r => [r.postId, r]));
 
       // 检查每篇文章的更新状态
       for (const post of posts) {
         const readRecord = readMap.get(post.id);
-        const needsUpdate = !readRecord || readRecord.updatedAt! < post.updatedAt!;
+        const needsUpdate = !readRecord || readRecord.updatedAt < post.updatedAt;
 
-        if (needsUpdate && !result.has(post.columnId!)) {
-          const detailColumnCard = await getDetailColumnCard(ctx, post.columnId!);
-          result.set(post.columnId!, detailColumnCard);
+        if (needsUpdate && !result.has(post.columnId)) {
+          const detailColumnCard = await getDetailColumnCard(ctx, post.columnId);
+          if (!detailColumnCard) continue;
+          result.set(post.columnId, detailColumnCard);
         }
       }
 
@@ -415,7 +326,6 @@ export const columnRouter = createTRPCRouter({
     .input(z.string())
     .query(async ({ ctx, input }): Promise<BaseColumnCard[]> => {
       const { db } = ctx;
-      const caller = createCaller(ctx);
 
       // 获取所有有效订阅记录，增加 isVisible 字段
       const orders = await db
@@ -458,9 +368,9 @@ export const columnRouter = createTRPCRouter({
         return {
           ...col,
           userId: user.id,
-          idType: user.idType,
-          userName: user.name,
-          avatar: user.avatar,
+          idType: user.idType ?? 0,
+          userName: user.name ?? "",
+          avatar: user.avatar!,
           isVisible: isVisible ?? true, // 默认为 true
         };
       });
@@ -552,18 +462,6 @@ export const columnRouter = createTRPCRouter({
         items,
         nextCursor: hasNextPage ? cursor + limit : undefined,
       };
-    }),
-
-  // 更新创作时间
-  changeUpdatedAt: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db
-        .update(column)
-        .set({
-          updatedAt: getCurrentTime(),
-        })
-        .where(eq(column.id, input.id));
     }),
   // 获取作者最近发布一次的专栏Id
   getLatestColumnId: publicProcedure

@@ -7,7 +7,7 @@ import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import DisplayDetailed from "@/app/_components/dashboard/user/DisplayDetailed";
 import Loading from "@/app/_components/common/Loading";
 import Error from "@/app/_components/common/Error";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import type { UserInsert } from "@/server/db/schema";
 // 用户头像组件
 const UserAvatar = ({ userInfo }: { userInfo: UserInsert }) => (

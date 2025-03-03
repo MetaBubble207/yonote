@@ -5,23 +5,24 @@ import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 import { useAppDispatch, useAppSelector } from "@/app/_hooks/useRedux";
 import { setSubscribeColumnList, userSubscribeSelector } from "@/app/_slice/user-subscribe-slice";
 import { useEffect } from "react";
-import { BaseColumnCard } from "@/server/db/schema";
+import { date2DateTimeStringMouth } from "@/app/_utils/timeToString";
 
-export default function UserColumn({ token }: { token: string }) {
+export default function UserColumn({ token }: { token: string | null }) {
   const { subscribeColumnList } = useAppSelector(userSubscribeSelector);
   const dispatch = useAppDispatch();
   const { data: visibleColumnData, isLoading } = api.column.getSubscriptColumn.useQuery(
-    token,
+    token!,
     { enabled: Boolean(token && subscribeColumnList.length === 0) }
   );
   useEffect(() => {
     if (visibleColumnData) {
       // 将日期对象转换为 ISO 字符串
-      const serializedData = visibleColumnData.map((column: BaseColumnCard) => ({
+      const serializedData = visibleColumnData.map((column) => ({
         ...column,
-        createdAt: column.createdAt?.toISOString(),
-        updatedAt: column.updatedAt?.toISOString(),
+        createdAt: date2DateTimeStringMouth(column.createdAt as Date),
+        updatedAt: date2DateTimeStringMouth(column.updatedAt as Date),
       }));
+      console.log("column ====>", visibleColumnData, serializedData)
       dispatch(setSubscribeColumnList(serializedData))
     }
   }, [visibleColumnData])

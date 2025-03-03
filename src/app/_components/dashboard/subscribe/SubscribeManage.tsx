@@ -8,7 +8,7 @@ import { api } from "@/trpc/react";
 import { BaseColumnCard, BaseColumnCardDateString } from "@/server/db/schema";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { useAppDispatch, useAppSelector } from "@/app/_hooks/useRedux";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 
 // 常量配置
 const CONSTANTS = {
@@ -147,7 +147,7 @@ const SubscribeManage: React.FC = () => {
 
     changeVisible.mutate(newState.map(item => ({
       columnId: item.id,
-      isVisible: item.isVisible,
+      isVisible: item.isVisible ?? false,
       userId: token,
     })));
   }, [columnsState, changeVisible, dispatch, token]);

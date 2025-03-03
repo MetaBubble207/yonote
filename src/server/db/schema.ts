@@ -72,7 +72,7 @@ export const column = createTable("column", {
   name: varchar("name", { length: 256 }).notNull(),
   distributorship: boolean("distributorship").notNull().default(false), // 是否是共创计划
   introduce: varchar("introduce"),
-  type: varchar("type").notNull(), // 专栏 小课
+  type: varchar("type").notNull(), // column/course
   cover: text("logo").default(
     "http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png",
   ),
@@ -312,32 +312,16 @@ export type OrderBuyer = {
   userName: string;
 };
 
-export type BaseColumnCard = {
-  id: string;
-  name: string;
-  introduce: string | null;
-  description: string | null;
-  cover?: string | null;
+export type BaseColumnCard = ColumnSelect & {
   userId: string;
   userName: string;
   idType: number;
   avatar: string;
   isVisible?: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 };
 
-export type BaseColumnCardDateString = {
-  id: string;
-  name: string;
-  introduce?: string;
-  description?: string;
-  cover: string;
-  userId: string;
-  userName: string;
-  idType: number;
-  avatar: string;
-  isVisible: boolean;
+// 使用 Omit 排除原有的 Date 类型字段，然后添加字符串类型的日期字段
+export type BaseColumnCardDateString = Omit<BaseColumnCard, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
   updatedAt: string;
 };

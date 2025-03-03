@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { message } from "antd";
 import Image from "next/image";
 import { api } from "@/trpc/react";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { ossClient } from "@/app/_utils/oss";
 
 interface ColumnCoverProps {

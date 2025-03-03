@@ -4,10 +4,7 @@ import {
   column,
   order,
   type OrderBuyer,
-  post,
   type PostDetail,
-  postLike,
-  postRead,
   priceList,
   referrals,
   runningWater,
@@ -15,20 +12,13 @@ import {
   wallet,
 } from "@/server/db/schema";
 import type * as schema from "../../db/schema";
-import { and, between, desc, eq, gt, inArray, like, lt, sql } from "drizzle-orm";
+import { and, desc, eq, gt, inArray, lt, sql } from "drizzle-orm";
 import { addDays } from "date-fns";
-import {
-  getCurrentTime,
-  getLastMonthDates,
-  getLastWeekDates,
-  getTodayMidnight,
-  getYesterdayMidnight,
-} from "@/tools/getCurrentTime";
+import { getCurrentTime, } from "@/app/_utils/getCurrentTime";
 import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { getOneUser } from "@/server/api/routers/user";
-import { getOneByUserIdAndColumnId } from "@/server/api/routers/referrals";
-import { getOneDistributorshipDetail } from "@/server/api/routers/distributorshipDetail";
 import { getColumnBasicInfo, getPostStats, getUserData } from "../tools/columnQueries";
+import { getOneUser } from "../tools/userQueries";
+import { getOneDistributorshipDetail } from "../tools/distributorshipDetailQueries";
 // 检查该订阅状态是否需要更新，即过期日期已经截止了，但是状态还是true
 const checkSubscriptionStatus = async (
   db: PostgresJsDatabase<typeof schema>,
@@ -37,25 +27,11 @@ const checkSubscriptionStatus = async (
   const o = await db.query.order.findFirst({
     where: and(eq(order.id, id), eq(order.status, true)),
   });
-  console.log(o);
   if (!o?.endDate) {
     return false;
   }
 
   return o.endDate < getCurrentTime();
-};
-
-// 让该订阅过期
-const expireSubscription = (
-  db: PostgresJsDatabase<typeof schema>,
-  id: number,
-) => {
-  return db
-    .update(order)
-    .set({
-      status: false,
-    })
-    .where(eq(order.id, id));
 };
 export const orderRouter = createTRPCRouter({
   // 创建订单
@@ -137,12 +113,9 @@ export const orderRouter = createTRPCRouter({
           expenditureOrIncome: 0,
         });
         // 查找有没有推荐人
-        const referrerData = await getOneByUserIdAndColumnId(
-          ctx.db,
-          input.columnId,
-          input.buyerId,
-        );
-
+        const referrerData = await ctx.db.query.referrals.findFirst({
+          where: and(eq(referrals.userId, input.buyerId), eq(referrals.columnId, input.columnId)),
+        });
         // 推荐表新增推荐人
         if (referrerData?.referredUserId) {
           // 推荐人钱包增加
@@ -244,18 +217,18 @@ export const orderRouter = createTRPCRouter({
               recommendationId: referrerData.referredUserId,
               referralLevel: 2,
             });
-          } else {
+          } else if (distributorshipDetail) {
             // 只有一级分销
             // 作者和一级分销拿钱
             const authorRate =
               1 -
-              distributorshipDetail.platDistributorship -
+              distributorshipDetail.platDistributorship! -
               (isVip ? 0.06 : 0.15);
             const income = {
               author: priceListData.price! * authorRate,
               firstClassReferrer:
                 priceListData.price! *
-                distributorshipDetail.platDistributorship,
+                distributorshipDetail.platDistributorship!,
             };
             await ctx.db
               .update(wallet)
@@ -524,7 +497,12 @@ export const orderRouter = createTRPCRouter({
         orders.map(async (item) => {
           const needsUpdate = await checkSubscriptionStatus(db, item.id);
           if (needsUpdate) {
-            await expireSubscription(db, item.id);
+            await db
+              .update(order)
+              .set({
+                status: false,
+              })
+              .where(eq(order.id, item.id))
             item.status = false;
           }
 
@@ -544,7 +522,7 @@ export const orderRouter = createTRPCRouter({
   endSubscription: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation(({ ctx, input }) => {
-      return expireSubscription(ctx.db, input.id);
+      return ctx.db.update(order).set({ status: false, }).where(eq(order.id, input.id));;
     }),
 
   // 批量更新订单可视状态(前端订阅管理部分使用)

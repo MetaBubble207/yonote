@@ -3,7 +3,7 @@ import Image from "next/image";
 import React from "react";
 import { api } from "@/trpc/react";
 import Link from "next/link";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { Skeleton, Empty } from "antd";
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from "@/server/api/root";

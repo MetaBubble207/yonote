@@ -1,8 +1,8 @@
 "use client"
 import { type PostSelect } from "@/server/db/schema";
-import { Button, Modal, Table, message, type TableColumnsType, App } from "antd";
+import { Button, Modal, Table, message, type TableColumnsType } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { time2DateTimeStringSeconds } from "@/tools/timeToString";
+import { date2DateTimeStringSeconds } from "@/app/_utils/timeToString";
 import Link from "next/link";
 import { api } from "@/trpc/react";
 import { ExclamationCircleFilled } from '@ant-design/icons';
@@ -188,14 +188,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ dataSource, total }) =>
       title: <span className="whitespace-nowrap">更新时间</span>,
       dataIndex: "updatedAt",
       sorter: (a, b) => (a.updatedAt > b.updatedAt ? 1 : -1),
-      render: (value) => <span>{time2DateTimeStringSeconds(value)}</span>,
+      render: (value) => <span>{date2DateTimeStringSeconds(value)}</span>,
       width: "15.5%",
     },
     {
       title: <span className="whitespace-nowrap">发布时间</span>,
       dataIndex: "createdAt",
       sorter: (a, b) => (a.createdAt > b.createdAt ? 1 : -1),
-      render: (value) => <span>{time2DateTimeStringSeconds(value)}</span>,
+      render: (value) => <span>{date2DateTimeStringSeconds(value)}</span>,
       width: "15.5%",
     },
     {

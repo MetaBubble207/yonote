@@ -1,6 +1,6 @@
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { activity } from "@/server/db/schema";
-import { getCurrentTime } from "@/tools/getCurrentTime";
+import { getCurrentTime } from "@/app/_utils/getCurrentTime";
 
 export const activityRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {

@@ -6,7 +6,7 @@ import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import React, { useEffect, useState, useCallback } from "react";
 import { api } from "@/trpc/react";
 import { Skeleton } from "antd";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { useRouter, useSearchParams } from "next/navigation";
 
 // 类型定义

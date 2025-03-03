@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { UserSelect } from "@/server/db/schema";
 
 interface AuthorInfoProps {

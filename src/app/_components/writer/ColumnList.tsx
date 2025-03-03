@@ -5,7 +5,7 @@ import ColumnPopup from "./ColumnPopup";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import Loading from "@/app/_components/common/Loading";
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { ColumnSelect } from "@/server/db/schema";
 
 const ColumnList = ({ columnId }: { columnId: string | null }) => {

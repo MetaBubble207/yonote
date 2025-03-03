@@ -1,12 +1,12 @@
 "use client"
-import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
+import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { Skeleton } from "antd";
 import Image from "next/image";
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
 import useCheckLoginState from "@/app/_hooks/useCheckLoginState";
-import { isValid } from "@/tools/isValid";
+import { isValid } from "@/app/_utils/isValid";
 import useCheckOnClient from "@/app/_hooks/useCheckOnClient";
 
 const MAX_TEXT_LENGTH = 15;
@@ -17,7 +17,7 @@ const RecentlyReadCard = ({ code }: { code?: string }) => {
     const { token } = useCheckLoginState('/login?origin=/dashboard/subscribe', code);
 
     const { data: recentRead, isLoading: isRecentReadLoading } = api.read.getRecentRead.useQuery(
-        token!, 
+        token!,
         { enabled: Boolean(token) }
     );
 
@@ -32,8 +32,8 @@ const RecentlyReadCard = ({ code }: { code?: string }) => {
         }
 
         const name = recentRead.name || "";
-        const truncatedName = name.length > MAX_TEXT_LENGTH 
-            ? `${name.substring(0, MAX_TEXT_LENGTH)}...` 
+        const truncatedName = name.length > MAX_TEXT_LENGTH
+            ? `${name.substring(0, MAX_TEXT_LENGTH)}...`
             : name;
 
         if (!recentRead.content) {
@@ -43,8 +43,8 @@ const RecentlyReadCard = ({ code }: { code?: string }) => {
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = recentRead.content;
         const text = tempDiv.textContent || tempDiv.innerText || "";
-        const readContent = text.length > MAX_TEXT_LENGTH 
-            ? `${text.substring(0, MAX_TEXT_LENGTH)}...` 
+        const readContent = text.length > MAX_TEXT_LENGTH
+            ? `${text.substring(0, MAX_TEXT_LENGTH)}...`
             : text;
 
         return { truncatedName, readContent };
