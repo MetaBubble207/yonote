@@ -1,6 +1,8 @@
-import Course from "@/app/_components/writer/Course";
+import { CreateCourseClient } from "./components/CreateCourseClient";
 
-const Page = () => {
-  return <Course />;
+export default async function Page({ searchParams }: { searchParams: Promise<{ id: string }> }) {
+  const { id } = await searchParams;
+  return <CreateCourseClient columnId={id} />;
 };
-export default Page;
+
+
