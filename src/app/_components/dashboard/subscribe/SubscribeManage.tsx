@@ -147,7 +147,7 @@ const SubscribeManage: React.FC = () => {
 
     changeVisible.mutate(newState.map(item => ({
       columnId: item.id,
-      isVisible: item.isVisible,
+      isVisible: item.isVisible ?? false,
       userId: token,
     })));
   }, [columnsState, changeVisible, dispatch, token]);

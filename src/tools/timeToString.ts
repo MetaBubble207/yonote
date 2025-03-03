@@ -57,7 +57,15 @@ export const date2DateTimeStringSeconds = (date: Date) => {
   const seconds = String(date.getSeconds()).padStart(2, '0');
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
-
+// 保留月份和日，时和分
+export const date2DateTimeStringMouth = (date: Date) => {
+  if (!date) return "";
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${month}-${day} ${hours}:${minutes}`;
+};
 export const timeToTimeString = (dateString: string) => {
   if (!dateString) return "";
   dateString = String(dateString);

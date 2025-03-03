@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { time2DateString } from "@/tools/timeToString";
 import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 import { BaseColumnCardDateString } from "@/server/db/schema";
 
@@ -41,7 +40,7 @@ const SubscribeColumn = ({ column }: { column: BaseColumnCardDateString }) => {
       </div>
       <Link href={`/dashboard/special-column?id=${column.id}`} className="flex-1">
         <div className="text-2.75 lh-4 ml-2.6 text-[#B5B5B5]">
-          {time2DateString(column.createdAt)}发布
+          {column.createdAt}发布
         </div>
         <div className="border-rd-[2px_16px_16px_16px] w-73.25 ml-2 mt-1 flex h-24 shrink-0 items-center bg-[#FFF]">
           <div className="w-49.75 pl-2.5">

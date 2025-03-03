@@ -238,8 +238,9 @@ export const columnRouter = createTRPCRouter({
                 eq(postRead.userId, input.visitorId),
               ),
             });
+            if (!readData) return;
             // 阅读记录的更新时间小于文章的更新时间则说明文章更新了，读者还没读
-            if (readData?.updatedAt < item.updatedAt) {
+            if (readData.updatedAt < item.updatedAt) {
               const isExist = res.find((item) => item.id === column.id);
               if (!isExist) {
                 res.push(column);
@@ -382,7 +383,7 @@ export const columnRouter = createTRPCRouter({
         .select()
         .from(post)
         .where(sql`${post.columnId} IN ${Array.from(columnIds)}`);
-
+      console.log("posts ====>", posts)
       if (!posts.length) return [];
 
       // 批量获取阅读记录
@@ -393,17 +394,18 @@ export const columnRouter = createTRPCRouter({
           eq(postRead.userId, input),
           sql`${postRead.postId} IN ${posts.map(p => p.id)}`
         ));
-
+      console.log("readRecords ===>", readRecords)
       const readMap = new Map(readRecords.map(r => [r.postId, r]));
 
       // 检查每篇文章的更新状态
       for (const post of posts) {
         const readRecord = readMap.get(post.id);
-        const needsUpdate = !readRecord || readRecord.updatedAt! < post.updatedAt!;
+        const needsUpdate = !readRecord || readRecord.updatedAt < post.updatedAt;
 
-        if (needsUpdate && !result.has(post.columnId!)) {
-          const detailColumnCard = await getDetailColumnCard(ctx, post.columnId!);
-          result.set(post.columnId!, detailColumnCard);
+        if (needsUpdate && !result.has(post.columnId)) {
+          const detailColumnCard = await getDetailColumnCard(ctx, post.columnId);
+          if (!detailColumnCard) continue;
+          result.set(post.columnId, detailColumnCard);
         }
       }
 
@@ -415,7 +417,6 @@ export const columnRouter = createTRPCRouter({
     .input(z.string())
     .query(async ({ ctx, input }): Promise<BaseColumnCard[]> => {
       const { db } = ctx;
-      const caller = createCaller(ctx);
 
       // 获取所有有效订阅记录，增加 isVisible 字段
       const orders = await db
@@ -458,9 +459,9 @@ export const columnRouter = createTRPCRouter({
         return {
           ...col,
           userId: user.id,
-          idType: user.idType,
-          userName: user.name,
-          avatar: user.avatar,
+          idType: user.idType ?? 0,
+          userName: user.name ?? "",
+          avatar: user.avatar!,
           isVisible: isVisible ?? true, // 默认为 true
         };
       });
