@@ -2,7 +2,7 @@
 import { type OrderBuyer } from "@/server/db/schema";
 import { Button, Table, message, type TableColumnsType } from "antd";
 import React from "react";
-import { time2DateTimeStringSeconds } from "@/tools/timeToString";
+import { date2DateTimeStringSeconds } from "@/tools/timeToString";
 import { api } from "@/trpc/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -110,14 +110,14 @@ const TableComponent = ({ dataSource, total }: TableComponentProps) => {
       title: "订阅开始时间",
       dataIndex: "createdAt",
       sorter: (a, b) => (a.createdAt > b.createdAt ? 1 : -1),
-      render: (value) => <span>{time2DateTimeStringSeconds(value)}</span>,
+      render: (value) => <span>{date2DateTimeStringSeconds(value)}</span>,
       width: "17%",
     },
     {
       title: "订阅结束时间",
       dataIndex: "endDate",
       sorter: (a, b) => (a.endDate > b.endDate ? 1 : -1),
-      render: (value) => <span>{time2DateTimeStringSeconds(value)}</span>,
+      render: (value) => <span>{date2DateTimeStringSeconds(value)}</span>,
       width: "17%",
     },
     {
