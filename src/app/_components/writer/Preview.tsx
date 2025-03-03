@@ -3,6 +3,7 @@ import Image from "next/image";
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
+import { NotImage } from "@/utils/DefaultPicture";
 
 interface PreviewProps {
   title: string;
@@ -35,7 +36,7 @@ const Preview = ({ title, html, tags }: PreviewProps) => {
           <div className={""}>
             <div>
               <Image
-                src={user?.avatar}
+                src={user?.avatar ?? NotImage()}
                 alt={"心智与阅读"}
                 width={33}
                 height={33}
@@ -55,7 +56,7 @@ const Preview = ({ title, html, tags }: PreviewProps) => {
               {user?.idType === 1 && (
                 <Image
                   src={"/images/special-column/Group 225.png"}
-                  alt={"心智与阅读"}
+                  alt={"用户头像"}
                   width={12}
                   height={12}
                   className={"ml-1"}
