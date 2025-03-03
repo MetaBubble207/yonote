@@ -7,7 +7,7 @@ import {
   type IEditorConfig,
   type IToolbarConfig,
 } from "@wangeditor/editor";
-import Preview from "@/app/_components/writer/Preview";
+import { Preview } from "@/app/writer/(special)/edit/components/Preview";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import W100H50Modal from "@/app/_components/common/W100H50Modal";
@@ -193,22 +193,22 @@ const MyEditor = ({
   ];
 
   // 修改 ossClient 的使用方式，确保只在客户端使用
-const editorConfig: Partial<IEditorConfig> = {
-  placeholder: "请输入内容...",
-  maxLength: 1000,
-  MENU_CONF: {
-    uploadImage: {
-      // 自定义上传
-      async customUpload(file: File, insertFn: (url: string, alt: string, href: string, url_org?: string) => void) {
-        // 确保在客户端环境中执行
-        if (typeof window !== 'undefined') {
-          const result = await ossClient.put(file.name, file);
-          insertFn(result.url, result.name, result.url, result.url);
-        }
+  const editorConfig: Partial<IEditorConfig> = {
+    placeholder: "请输入内容...",
+    maxLength: 1000,
+    MENU_CONF: {
+      uploadImage: {
+        // 自定义上传
+        async customUpload(file: File, insertFn: (url: string, alt: string, href: string, url_org?: string) => void) {
+          // 确保在客户端环境中执行
+          if (typeof window !== 'undefined') {
+            const result = await ossClient.put(file.name, file);
+            insertFn(result.url, result.name, result.url, result.url);
+          }
+        },
       },
     },
-  },
-};
+  };
 
   useEffect(() => {
     return () => {

@@ -11,7 +11,7 @@ interface PreviewProps {
   tags: string[];
 }
 
-const Preview = ({ title, html, tags }: PreviewProps) => {
+export const Preview = ({ title, html, tags }: PreviewProps) => {
   const token = useLocalStorage("token", null);
   const user = api.users.getOne.useQuery(token[0]).data;
   console.log(user);
@@ -98,5 +98,3 @@ const Preview = ({ title, html, tags }: PreviewProps) => {
     </div>
   );
 };
-
-export default Preview;
