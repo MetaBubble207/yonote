@@ -238,14 +238,10 @@ export const postRouter = createTRPCRouter({
 
   getByPostId: publicProcedure
     .input(z.object({ id: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const data = await ctx.db.query.post.findFirst({
+    .query(({ ctx, input }) => {
+      return ctx.db.query.post.findFirst({
         where: eq(post.id, input.id),
       });
-      if (!data) {
-        throw new Error("No data found");
-      }
-      return data;
     }),
 
   getDraft: publicProcedure
