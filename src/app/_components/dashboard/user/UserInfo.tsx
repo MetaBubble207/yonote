@@ -1,14 +1,11 @@
 "use client"
-import { api } from "@/trpc/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import DisplayDetailed from "@/app/_components/dashboard/user/DisplayDetailed";
-import Loading from "@/app/_components/common/Loading";
-import Error from "@/app/_components/common/Error";
 import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
-import type { UserInsert } from "@/server/db/schema";
+import type { UserInsert, UserSelect } from "@/server/db/schema";
 // 用户头像组件
 const UserAvatar = ({ userInfo }: { userInfo: UserInsert }) => (
   <div className="w-31 h-31 absolute top--10 mb-10 flex flex-col items-center justify-center">
@@ -67,23 +64,8 @@ const MoreContentLink = () => (
   </div>
 );
 // 用户头像组件
-export default function UserInfo({ userId }: { userId: string }) {
+export default function UserInfo({ userInfo }: { userInfo: UserSelect }) {
   const [token] = useLocalStorage("token", null);
-
-  const {
-    data: userInfo,
-    isLoading,
-    isError,
-  } = api.users.getOne.useQuery(userId);
-
-  if (isLoading) {
-    return <Loading className="mt-80" />;
-  }
-
-  if (isError || !userInfo) {
-    return <Error text="没有找到该用户的信息😯~" />;
-  }
-
   return (
     <div>
       <div className="h-28.25 blur-24 relative w-full">
