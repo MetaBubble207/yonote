@@ -1,31 +1,26 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-
-interface Column {
-  id: string;
-  name: string;
-  cover: string;
-  createdAt: string;
-}
+import { useRouter } from "next/navigation";
+import { ColumnSelect } from "@/server/db/schema";
+import { message } from "antd";
+import { LoadingImage, NotImage } from "@/utils/DefaultPicture";
 
 interface CarouselProps {
-  columns: Column[];
-  onImageClick: (index: number, column: Column) => void;
+  columnId: string | null;
+  columns: ColumnSelect[] | [];
+  onImageClick: (index: number, column: ColumnSelect) => void;
 }
 
-const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
+const ColumnPopup: React.FC<CarouselProps> = ({ columnId, columns, onImageClick }) => {
   const [currentIndices, setCurrentIndices] = useState<number[]>([]);
   const router = useRouter();
-  const params = useSearchParams();
-
+  const [messageApi, contextHolder] = message.useMessage();
   useEffect(() => {
-    const columnId = params.get("columnId");
     if ((!columnId || columnId === "null") && columns?.length) {
-      router.push("/writer/homepage?columnId=" + columns[0].id);
+      router.push("/writer/homepage?columnId=" + columns[0]!.id);
     }
-  }, [columns, params, router]);
+  }, [columns, columnId, router]);
 
   useEffect(() => {
     if (columns?.length) {
@@ -53,20 +48,25 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
 
   const handleImageClick = (index: number) => {
     const selectedColumn = columns[index];
+    if (!selectedColumn) {
+      messageApi.error("专栏不存在");
+      return;
+    }
     onImageClick(index, selectedColumn);
     router.push("/writer/homepage?columnId=" + selectedColumn.id);
   };
 
   return (
     <div className="w-213.34 h-94.7 border-0.5 border-#D9D9D9 border-rd-2 flex items-center border-solid bg-white">
+      {contextHolder}
       <button
         onClick={goToPrevImage}
         className="ml-6.6"
         disabled={columns.length <= 4}
       >
         <Image
-          src={"/images/writer/edit/left-c.svg"}
-          alt={"left-c"}
+          src={"/images/writer/compass/left-arrow.svg"}
+          alt={"left-arrow"}
           width={24}
           height={24}
         />
@@ -82,13 +82,9 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
               <div className="w-160px h-206px relative">
                 <Image
                   placeholder="blur"
-                  blurDataURL={
-                    columns[index]?.cover ?? "/images/user/Loading.svg"
-                  }
-                  src={columns[index]?.cover}
+                  blurDataURL={LoadingImage()}
+                  src={columns[index]?.cover ?? NotImage()}
                   alt={`cover${index + 1}`}
-                  // width={160}
-                  // height={51.5}
                   layout="fill"
                   objectFit="cover"
                   quality={100}
@@ -118,8 +114,8 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columns, onImageClick }) => {
         disabled={columns.length <= 4}
       >
         <Image
-          src={"/images/writer/edit/right-c.svg"}
-          alt={"right-c"}
+          src={"/images/writer/compass/right-arrow.svg"}
+          alt={"right-arrow"}
           width={24}
           height={24}
         />
