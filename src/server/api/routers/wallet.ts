@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { runningWater, user, wallet } from "@/server/db/schema";
+import { runningWater, wallet } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
 import process from "process";
@@ -22,6 +22,7 @@ export const walletRouter = createTRPCRouter({
       await ctx.db.update(wallet).set({
         amountWithdraw: 0,
       });
+      if (!walletData) return null;
       await ctx.db.insert(runningWater).values({
         userId: input.id,
         price: walletData.amountWithdraw,
@@ -42,8 +43,6 @@ export const walletRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        const { db } = ctx;
-
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const Payment = require("wxpay-v3");
         const paymnet = new Payment({
@@ -75,7 +74,7 @@ export const walletRouter = createTRPCRouter({
 
         // 构造签名串
         const signStr = `${appId}\n${timeStamp}\n${nonceStr}\n${packageStr}\n`;
-        const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY.replace(
+        const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY!.replace(
           /\\n/g,
           "\n",
         );
@@ -123,6 +122,7 @@ export const walletRouter = createTRPCRouter({
       const walletData = await db.query.wallet.findFirst({
         where: eq(wallet.userId, input.userId),
       });
+      if (!walletData) return;
       // 钱包可提现金额增加
       await db
         .update(wallet)

@@ -1,22 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { and, eq, gte, lte, like, sql, desc, count } from "drizzle-orm";
+import { and, eq, gte, lte, sql } from "drizzle-orm";
 import { referrals, type SpeedUp, order, user, UserSelect } from "@/server/db/schema";
-import { createCaller } from "@/server/api/root";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type * as schema from "@/server/db/schema";
-import { getOneUser } from "./user";
-
-export const getOneByUserIdAndColumnId = (
-  db: PostgresJsDatabase<typeof schema>,
-  id: string,
-  columnId: string,
-) => {
-  return db.query.referrals.findFirst({
-    where: and(eq(referrals.userId, id), eq(referrals.columnId, columnId)),
-  });
-};
-
 export const referralsRouter = createTRPCRouter({
   // 新增分页查询方法
   getByColumnIdPaginated: publicProcedure
@@ -162,11 +147,5 @@ export const referralsRouter = createTRPCRouter({
           referredUserId: input.referredUserId,
         });
       }
-    }),
-
-  getOneByUserIdAndColumnId: publicProcedure
-    .input(z.object({ columnId: z.string(), userId: z.string() }))
-    .query(({ ctx, input }) => {
-      return getOneByUserIdAndColumnId(ctx.db, input.userId, input.columnId);
     }),
 });

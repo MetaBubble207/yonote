@@ -1,17 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { column, order, post, postRead } from "@/server/db/schema";
+import { order, post, postRead } from "@/server/db/schema";
 import { and, desc, eq, gt, lt, sql } from "drizzle-orm";
-import {
-  getCurrentTime,
-  getLastMonthDates,
-  getLastWeekDates,
-  getTodayMidnight,
-  getYesterdayMidnight,
-} from "@/app/_utils/getCurrentTime";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type * as schema from "@/server/db/schema";
-import { getAllHomepageData, getColumnReadsInRange, getReads } from "../tools/readQueries";
+import { getCurrentTime, } from "@/app/_utils/getCurrentTime";
+import { getAllHomepageData } from "../tools/readQueries";
 
 export const readRouter = createTRPCRouter({
   create: publicProcedure
@@ -62,68 +54,6 @@ export const readRouter = createTRPCRouter({
         });
     }),
 
-  getReadList: publicProcedure
-    .input(
-      z.object({ id: z.string(), chapter: z.number(), userId: z.string() }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const c = await ctx.db.query.column.findFirst({
-        where: eq(column.id, input.id),
-      });
-      if (!c) {
-        throw new Error("Column not found");
-      }
-      const data = await ctx.db
-        .select()
-        .from(post)
-        .where(eq(post.columnId, input.id));
-      if (!data?.length) {
-        throw new Error("No data found");
-      }
-      // const postId = data[input.chapter - 1].id
-      const postData = await ctx.db.query.post.findFirst({
-        where: and(
-          eq(post.columnId, input.id),
-          eq(post.chapter, input.chapter),
-        ),
-      });
-      if (!postData?.id) {
-        throw new Error("No data found");
-      }
-      const postId = postData.id;
-      const list = await ctx.db
-        .select()
-        .from(postRead)
-        .where(
-          and(eq(postRead.postId, postId), eq(postRead.userId, input.userId)),
-        );
-      if (!list?.length) {
-        return ctx.db
-          .insert(postRead)
-          .values({
-            postId: postId,
-            userId: input.userId,
-            updatedAt: getCurrentTime(),
-            readCount: 1,
-          })
-          .returning({
-            postId: postRead.postId,
-            userId: postRead.userId,
-            postRead: postRead.readCount,
-          });
-      } else {
-        // return list;
-        return ctx.db
-          .update(postRead)
-          .set({
-            updatedAt: getCurrentTime(),
-          })
-          .where(
-            and(eq(postRead.postId, postId), eq(postRead.userId, input.userId)),
-          );
-      }
-    }),
-
   // 获取文章阅读量
   getPostRead: publicProcedure
     .input(z.object({ postId: z.number() }))
@@ -159,38 +89,6 @@ export const readRouter = createTRPCRouter({
       }
 
       return recent[0].post;
-    }),
-
-  // 获取专栏昨天阅读量
-  getYesterdayReading: publicProcedure
-    .input(z.object({ columnId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      return getColumnReadsInRange(ctx.db, input.columnId, {
-        start: getYesterdayMidnight(),
-        end: getTodayMidnight(),
-      });
-    }),
-
-  // 获取专栏上周阅读量
-  getLastWeekReading: publicProcedure
-    .input(z.object({ columnId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const { lastMonday, lastSunday } = getLastWeekDates();
-      return getColumnReadsInRange(ctx.db, input.columnId, {
-        start: lastMonday,
-        end: lastSunday,
-      });
-    }),
-
-  // 获取专栏上月阅读量
-  getLastMonthReading: publicProcedure
-    .input(z.object({ columnId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const { firstDayOfLastMonth, lastDayOfLastMonth } = getLastMonthDates();
-      return getColumnReadsInRange(ctx.db, input.columnId, {
-        start: firstDayOfLastMonth,
-        end: lastDayOfLastMonth,
-      });
     }),
 
   getHomepageData: publicProcedure

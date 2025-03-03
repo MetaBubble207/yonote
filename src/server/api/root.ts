@@ -2,7 +2,6 @@ import { postRouter } from "@/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { userRouter } from "@/server/api/routers/user";
 import { columnRouter } from "@/server/api/routers/column";
-import { draftRouter } from "./routers/draft";
 import { postLikeRouter } from "./routers/postLike";
 import { walletRouter } from "./routers/wallet";
 import { orderRouter } from "./routers/order";
@@ -23,7 +22,6 @@ export const appRouter = createTRPCRouter({
   post: postRouter,
   users: userRouter,
   column: columnRouter,
-  draft: draftRouter,
   like: postLikeRouter,
   wallet: walletRouter,
   order: orderRouter,

@@ -2,17 +2,8 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { z } from "zod";
 import { distributorshipDetail } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type * as schema from "@/server/db/schema";
+import { getOneDistributorshipDetail } from "../tools/distributorshipDetailQueries";
 
-export const getOneDistributorshipDetail = (
-  db: PostgresJsDatabase<typeof schema>,
-  id: string,
-) => {
-  return db.query.distributorshipDetail.findFirst({
-    where: eq(distributorshipDetail.columnId, id),
-  });
-};
 export const distributorshipDetailRouter = createTRPCRouter({
   getOne: publicProcedure.input(z.string()).query(async ({ input, ctx }) => {
     const res = await getOneDistributorshipDetail(ctx.db, input);
@@ -42,19 +33,6 @@ export const distributorshipDetailRouter = createTRPCRouter({
         .set({
           distributorship: distributorshipFractionalPart,
           extend: extendFractionalPart,
-        })
-        .where(eq(distributorshipDetail.columnId, columnId));
-    }),
-
-  updatePlatPlatDistributorship: publicProcedure
-    .input(z.object({ columnId: z.string(), isVip: z.boolean() }))
-    .mutation(async ({ input, ctx }) => {
-      const { columnId, isVip } = input;
-      const platDistributorship = isVip ? 0.06 : 0.15;
-      return ctx.db
-        .update(distributorshipDetail)
-        .set({
-          platDistributorship: platDistributorship,
         })
         .where(eq(distributorshipDetail.columnId, columnId));
     }),

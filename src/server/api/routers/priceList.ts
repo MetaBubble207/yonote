@@ -16,11 +16,6 @@ export const priceListRouter = createTRPCRouter({
       const walletData = await ctx.db.query.wallet.findFirst({ where: eq(wallet.userId, input.buyerId) });
       return { priceListData, columnData, walletData };
     }),
-  delById: publicProcedure
-    .input(z.object({ id: z.number() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db.delete(priceList).where(eq(priceList.id, input.id));
-    }),
   getByColumnId: publicProcedure
     .input(z.string())
     .query(({ ctx, input }) => {

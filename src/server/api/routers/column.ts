@@ -14,88 +14,9 @@ import {
 } from "@/server/db/schema";
 import { and, asc, desc, eq, like, sql } from "drizzle-orm";
 import { uniqueArray } from "@/app/_utils/uniqueArray";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type * as schema from "@/server/db/schema";
 import { getCurrentTime } from "@/app/_utils/getCurrentTime";
-import { getOneUser } from "./user";
-import { getPostStats } from "../tools/columnQueries";
-
-const getDetailColumnCard = async (
-  ctx: { headers: Headers; db: PostgresJsDatabase<typeof schema> },
-  columnId: string,
-): Promise<DetailColumnCard | null> => {
-  const { db } = ctx;
-  const columnData = await db.query.column.findFirst({
-    where: eq(column.id, columnId),
-  });
-
-  if (!columnData) {
-    return null;
-  }
-  // 获取专栏下的所有帖子
-  const posts = await db
-    .select()
-    .from(post)
-    .where(and(eq(post.columnId, columnId), eq(post.status, true)))
-    .orderBy(asc(post.chapter));
-  // 并行获取所有文章的统计数据并累加
-  const postsWithStats = await Promise.all(
-    posts.map(async (post) => await getPostStats(db, post.id))
-  );
-
-  // 计算总阅读量和点赞量
-  const { readCount, likeCount } = postsWithStats.reduce(
-    (acc, curr) => ({
-      readCount: Number(acc.readCount) + Number(curr.readCount ?? 0),
-      likeCount: Number(acc.likeCount) + Number(curr.likeCount ?? 0),
-    }),
-    { readCount: 0, likeCount: 0 }
-  );
-
-  // 获取专栏订阅量
-  const subscriptionCount = (
-    await db.select().from(order).where(eq(order.columnId, columnId))
-  ).length;
-  // 获取帖子数量
-  const postCount = (
-    await db.select().from(post).where(eq(post.columnId, columnId))
-  ).length;
-  // 获取作者基本信息
-  const userData = await getOneUser(ctx.db, columnData!.userId!);
-  let detailColumnCard: DetailColumnCard = {
-    id: "",
-    name: "",
-    distributorship: false,
-    introduce: null,
-    type: "",
-    cover: null,
-    description: null,
-    userId: "",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    avatar: "",
-    isFree: false,
-    isTop: false,
-    likeCount: 0,
-    readCount: 0,
-    subscriptionCount: 0,
-    postCount: 0,
-    userName: "",
-    idType: 0,
-  };
-  if (!userData) return null;
-  Object.assign(detailColumnCard, {
-    ...columnData,
-    readCount,
-    likeCount,
-    subscriptionCount,
-    postCount,
-    userId: userData.id,
-    userName: userData.name,
-    avatar: userData.avatar,
-  });
-  return detailColumnCard;
-};
+import { getDetailColumnCard } from "../tools/columnQueries";
+import { getOneUser } from "../tools/userQueries";
 
 export const columnRouter = createTRPCRouter({
   update: publicProcedure
@@ -541,18 +462,6 @@ export const columnRouter = createTRPCRouter({
         items,
         nextCursor: hasNextPage ? cursor + limit : undefined,
       };
-    }),
-
-  // 更新创作时间
-  changeUpdatedAt: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(({ ctx, input }) => {
-      return ctx.db
-        .update(column)
-        .set({
-          updatedAt: getCurrentTime(),
-        })
-        .where(eq(column.id, input.id));
     }),
   // 获取作者最近发布一次的专栏Id
   getLatestColumnId: publicProcedure

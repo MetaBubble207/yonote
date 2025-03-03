@@ -1,9 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { post } from "@/server/db/schema";
+import { column, post } from "@/server/db/schema";
 import { and, desc, eq, gt, like, lt, sql } from "drizzle-orm";
 import { getCurrentTime } from "@/app/_utils/getCurrentTime";
-import { createCaller } from "@/server/api/root";
 import { getDetailPost } from "../tools/postQueries";
 
 export const postRouter = createTRPCRouter({
@@ -25,10 +24,8 @@ export const postRouter = createTRPCRouter({
         .from(post)
         .where(eq(post.columnId, input.columnId));
       const chapter = (await record).length + 1;
-
-      const caller = createCaller(ctx);
       // 更新专栏创作时间
-      await caller.column.changeUpdatedAt({ id: input.columnId });
+      await db.update(column).set({ updatedAt: getCurrentTime(), }).where(eq(column.id, input.columnId));
       return db
         .insert(post)
         .values({
@@ -77,12 +74,6 @@ export const postRouter = createTRPCRouter({
     .mutation(({ ctx, input }) => {
       return ctx.db.delete(post).where(eq(post.id, input.id));
     }),
-
-  getLatest: publicProcedure.query(({ ctx }) => {
-    return ctx.db.query.post.findFirst({
-      orderBy: (post, { desc }) => [desc(post.createdAt)],
-    });
-  }),
 
   getAll: publicProcedure
     .input(z.object({ columnId: z.string() }))
@@ -134,48 +125,6 @@ export const postRouter = createTRPCRouter({
       return { data, total };
     }),
 
-  getAllPost: publicProcedure
-    .input(z.object({ columnId: z.string() }))
-    .query(({ ctx, input }) => {
-      return ctx.db
-        .select()
-        .from(post)
-        .where(eq(post.columnId, input.columnId));
-    }),
-
-  // 专栏详情页展示有序的章节数
-  getAllInOrder: publicProcedure
-    .input(z.object({ columnId: z.string(), activeCategory: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const postNoTop = ctx.db
-        .select()
-        .from(post)
-        .where(and(eq(post.columnId, input.columnId), eq(post.isTop, false)))
-        .orderBy(post.createdAt);
-      const postIsTop = ctx.db
-        .select()
-        .from(post)
-        .where(and(eq(post.columnId, input.columnId), eq(post.isTop, true)))
-        .orderBy(post.createdAt);
-      if (input.activeCategory == "全部") {
-        return [...(await postIsTop), ...(await postNoTop)];
-      } else if (input.activeCategory == "免费") {
-        return [...(await postIsTop), ...(await postNoTop)].filter(
-          (item) => item.isFree == true,
-        );
-      } else if (input.activeCategory == "置顶") {
-        return [...(await postIsTop)];
-      } else {
-        const postIsTopTag = (await postIsTop).filter((item) =>
-          item.tag.includes(input.activeCategory),
-        );
-        const postNoTopTag = (await postNoTop).filter((item) =>
-          item.tag.includes(input.activeCategory),
-        );
-        return [...postIsTopTag, ...postNoTopTag];
-      }
-    }),
-
   getDetailPostById: publicProcedure
     .input(z.object({ id: z.string(), chapter: z.number() }))
     .query(async ({ ctx, input }) => {
@@ -194,21 +143,6 @@ export const postRouter = createTRPCRouter({
       return data.length;
     }),
 
-  getPostTag: publicProcedure
-    .input(z.object({ columnId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const data = await ctx.db.query.post.findMany({
-        where: eq(post.columnId, input.columnId),
-      });
-      const res = [];
-      data.map((item) => {
-        const temp = item.tag.split(",");
-        res.push(...temp);
-      });
-      // 过滤掉重复和空值
-      return [...new Set(res)].filter((item) => item !== "");
-    }),
-
   getByName: publicProcedure
     .input(z.object({ title: z.string(), tag: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -222,18 +156,6 @@ export const postRouter = createTRPCRouter({
           ),
         );
       console.log(userData);
-    }),
-
-  getPostId: publicProcedure
-    .input(z.object({ id: z.string(), chapter: z.number() }))
-    .query(async ({ ctx, input }) => {
-      const postId = await ctx.db.query.post.findFirst({
-        where: and(
-          eq(post.columnId, input.id),
-          eq(post.chapter, input.chapter),
-        ),
-      });
-      return postId.id;
     }),
 
   getByPostId: publicProcedure
@@ -264,9 +186,8 @@ export const postRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const caller = createCaller(ctx);
       // 更新专栏创作时间
-      await caller.column.changeUpdatedAt({ id: input.columnId });
+      await ctx.db.update(column).set({ updatedAt: getCurrentTime(), }).where(eq(column.id, input.columnId));
       return ctx.db
         .update(post)
         .set({

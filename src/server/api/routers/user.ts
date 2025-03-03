@@ -5,21 +5,7 @@ import { eq } from "drizzle-orm";
 import { getCurrentTime } from "@/app/_utils/getCurrentTime";
 import * as process from "process";
 import { getSoleId } from "@/app/_utils/getSoleId";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type * as schema from "@/server/db/schema";
-
-export const getOneUser = async (
-  db: PostgresJsDatabase<typeof schema>,
-  id: string,
-) => {
-  if (id === "") return null;
-  const data = await db.query.user.findFirst({ where: eq(user.id, id) });
-  if (data) {
-    return data;
-  } else {
-    return null;
-  }
-};
+import { getOneUser } from "../tools/userQueries";
 
 export const userRouter = createTRPCRouter({
   getOne: publicProcedure
@@ -45,66 +31,6 @@ export const userRouter = createTRPCRouter({
       const appid = process.env.NEXT_PUBLIC_APP_ID;
       // 测试使用的appsecret
       const appsecret = process.env.NEXT_PUBLIC_APP_SECRET;
-      // 获取access_token
-      const get_access_token_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${appsecret}&code=${input}&grant_type=authorization_code`;
-      try {
-        const accessTokenResponse = await fetch(get_access_token_url);
-        if (!accessTokenResponse.ok) {
-          throw new Error("Failed to fetch access token");
-        }
-
-        const accessTokenData = await accessTokenResponse.json();
-
-        const getUserInfoUrl = `https://api.weixin.qq.com/sns/userinfo?access_token=${accessTokenData.access_token}&openid=${accessTokenData.openid}&lang=zh_CN`;
-
-        const userInfoResponse = await fetch(getUserInfoUrl);
-        if (!userInfoResponse.ok) {
-          throw new Error("Failed to fetch user info");
-        }
-
-        const userInfoData = await userInfoResponse.json();
-
-        const getUserDB = await ctx.db
-          .select()
-          .from(user)
-          .where(eq(user.id, userInfoData.openid));
-
-        if (getUserDB === null || getUserDB.length === 0) {
-          // 创建新用户
-          await ctx.db.insert(wallet).values({
-            userId: userInfoData.openid,
-          });
-          return (
-            await ctx.db
-              .insert(user)
-              .values({
-                id: userInfoData.openid,
-                name: userInfoData.nickname,
-                avatar: userInfoData.headimgurl,
-                sex: userInfoData.sex,
-                idNumber: getSoleId(),
-                updatedAt: getCurrentTime(),
-              })
-              .returning({
-                id: user.id,
-                name: user.name,
-                avatar: user.avatar,
-                sex: user.sex,
-              })
-          )[0];
-        }
-        return getUserDB[0];
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    }),
-
-  qrcodeLogin: publicProcedure
-    .input(z.string())
-    .query(async ({ ctx, input }) => {
-      const appid = process.env.NEXT_PUBLIC_QRCODE_APP_ID;
-
-      const appsecret = process.env.NEXT_PUBLIC_QRCODE_APP_SECRET;
       // 获取access_token
       const get_access_token_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${appsecret}&code=${input}&grant_type=authorization_code`;
       try {
