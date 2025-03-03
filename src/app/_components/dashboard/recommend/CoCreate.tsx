@@ -3,9 +3,10 @@ import { api } from "@/trpc/react";
 import React, { useState, useEffect } from "react";
 import ColumnCard from "@/app/_components/dashboard/find/ColumnCard";
 import Loading from "@/app/_components/common/Loading";
+import { ColumnSelect } from "@/server/db/schema";
 
 const CoCreate = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<ColumnSelect[]>([]);
 
   // 使用 useQuery 钩子获取数据
   const { data: queryData, isFetching } = api.column.getAll.useQuery();
