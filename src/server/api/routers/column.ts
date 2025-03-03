@@ -143,26 +143,28 @@ export const columnRouter = createTRPCRouter({
         .select()
         .from(column)
         .where(eq(column.userId, input.writerId));
+
       const res: ColumnSelect[] = [];
       // 遍历作者下的每一个专栏的帖子
       const promises = columns.map(async (column) => {
+        // 获取专栏下所有的文章, 并过滤掉变成草稿的文章，即筛选掉 status 为 false
         const posts = await db
           .select()
           .from(post)
-          .where(eq(post.columnId, column.id));
+          .where(and(eq(post.columnId, column.id),eq(post.status, true)));
         return Promise.all(
           posts.map(async (item) => {
             // 查看阅读表数据
             const readData = await db.query.postRead.findFirst({
               where: and(
-                eq(postRead.postId, post.id),
+                eq(postRead.postId, item.id),
                 eq(postRead.userId, input.visitorId),
               ),
             });
-            if (!readData) return;
-            // 阅读记录的更新时间小于文章的更新时间则说明文章更新了，读者还没读
-            if (readData.updatedAt < item.updatedAt) {
-              const isExist = res.find((item) => item.id === column.id);
+            // 1. 阅读记录的更新时间小于文章的更新时间则说明文章更新了，读者还没读
+            // 2. 没有阅读过
+            if (!readData || readData.updatedAt < item.updatedAt) {
+              const isExist = res.find((columnItem) => columnItem.id === item.columnId);
               if (!isExist) {
                 res.push(column);
               }
