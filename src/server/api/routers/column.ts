@@ -15,7 +15,7 @@ import {
 import { and, asc, desc, eq, like, sql } from "drizzle-orm";
 import { uniqueArray } from "@/app/_utils/uniqueArray";
 import { getCurrentTime } from "@/app/_utils/getCurrentTime";
-import { getDetailColumnCard } from "../tools/columnQueries";
+import { checkUnreadPosts, getDetailColumnCard } from "../tools/columnQueries";
 import { getOneUser } from "../tools/userQueries";
 
 export const columnRouter = createTRPCRouter({
@@ -144,37 +144,24 @@ export const columnRouter = createTRPCRouter({
         .from(column)
         .where(eq(column.userId, input.writerId));
 
-      const res: ColumnSelect[] = [];
-      // 遍历作者下的每一个专栏的帖子
-      const promises = columns.map(async (column) => {
-        // 获取专栏下所有的文章, 并过滤掉变成草稿的文章，即筛选掉 status 为 false
-        const posts = await db
-          .select()
-          .from(post)
-          .where(and(eq(post.columnId, column.id),eq(post.status, true)));
-        return Promise.all(
-          posts.map(async (item) => {
-            // 查看阅读表数据
-            const readData = await db.query.postRead.findFirst({
-              where: and(
-                eq(postRead.postId, item.id),
-                eq(postRead.userId, input.visitorId),
-              ),
-            });
-            // 1. 阅读记录的更新时间小于文章的更新时间则说明文章更新了，读者还没读
-            // 2. 没有阅读过
-            if (!readData || readData.updatedAt < item.updatedAt) {
-              const isExist = res.find((columnItem) => columnItem.id === item.columnId);
-              if (!isExist) {
-                res.push(column);
-              }
-            }
-          }),
-        );
-      });
-      await Promise.all(promises);
-      return res;
+      if (!columns.length) return [];
+
+      // 获取所有专栏的文章
+      const posts = await db
+        .select()
+        .from(post)
+        .where(and(
+          sql`${post.columnId} IN ${columns.map(c => c.id)}`,
+          eq(post.status, true)
+        ));
+
+      // 检查未读更新
+      const updatedColumnIds = await checkUnreadPosts(db, posts, input.visitorId);
+
+      // 返回有更新的专栏
+      return columns.filter(col => updatedColumnIds.has(col.id));
     }),
+
 
   getColumnName: publicProcedure
     .input(z.object({ searchValue: z.string() }))
@@ -269,6 +256,57 @@ export const columnRouter = createTRPCRouter({
     }),
 
   // 获取用户更新了帖子还未读的专栏列表
+  // getUpdateColumn: publicProcedure
+  //   .input(z.string())
+  //   .query(async ({ ctx, input }): Promise<DetailColumnCard[]> => {
+  //     const { db } = ctx;
+
+  //     // 获取用户有效订阅的专栏
+  //     const orders = await db
+  //       .select()
+  //       .from(order)
+  //       .where(and(
+  //         eq(order.buyerId, input),
+  //         eq(order.isVisible, true),
+  //         eq(order.status, true),
+  //       ));
+
+  //     if (!orders.length) return [];
+
+  //     const columnIds = new Set(orders.map(order => order.columnId));
+  //     const result = new Map<string, DetailColumnCard>();
+
+  //     // 批量获取所有相关文章
+  //     const posts = await db
+  //       .select()
+  //       .from(post)
+  //       .where(sql`${post.columnId} IN ${Array.from(columnIds)}`);
+  //     if (!posts.length) return [];
+
+  //     // 批量获取阅读记录
+  //     const readRecords = await db
+  //       .select()
+  //       .from(postRead)
+  //       .where(and(
+  //         eq(postRead.userId, input),
+  //         sql`${postRead.postId} IN ${posts.map(p => p.id)}`
+  //       ));
+  //     const readMap = new Map(readRecords.map(r => [r.postId, r]));
+
+  //     // 检查每篇文章的更新状态
+  //     for (const post of posts) {
+  //       const readRecord = readMap.get(post.id);
+  //       const needsUpdate = !readRecord || readRecord.updatedAt < post.updatedAt;
+
+  //       if (needsUpdate && !result.has(post.columnId)) {
+  //         const detailColumnCard = await getDetailColumnCard(ctx, post.columnId);
+  //         if (!detailColumnCard) continue;
+  //         result.set(post.columnId, detailColumnCard);
+  //       }
+  //     }
+
+  //     return Array.from(result.values());
+  //   }),
   getUpdateColumn: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }): Promise<DetailColumnCard[]> => {
@@ -283,46 +321,31 @@ export const columnRouter = createTRPCRouter({
           eq(order.isVisible, true),
           eq(order.status, true),
         ));
+      console.log("orders ==>", orders);
 
       if (!orders.length) return [];
 
       const columnIds = new Set(orders.map(order => order.columnId));
-      const result = new Map<string, DetailColumnCard>();
+      console.log("columnIds ===>", columnIds);
 
       // 批量获取所有相关文章
       const posts = await db
         .select()
         .from(post)
         .where(sql`${post.columnId} IN ${Array.from(columnIds)}`);
-      console.log("posts ====>", posts)
+
       if (!posts.length) return [];
 
-      // 批量获取阅读记录
-      const readRecords = await db
-        .select()
-        .from(postRead)
-        .where(and(
-          eq(postRead.userId, input),
-          sql`${postRead.postId} IN ${posts.map(p => p.id)}`
-        ));
-      console.log("readRecords ===>", readRecords)
-      const readMap = new Map(readRecords.map(r => [r.postId, r]));
+      // 检查未读更新
+      const updatedColumnIds = await checkUnreadPosts(db, posts, input);
 
-      // 检查每篇文章的更新状态
-      for (const post of posts) {
-        const readRecord = readMap.get(post.id);
-        const needsUpdate = !readRecord || readRecord.updatedAt < post.updatedAt;
+      // 获取详细信息
+      const detailColumns = await Promise.all(
+        Array.from(updatedColumnIds).map(id => getDetailColumnCard(ctx, id))
+      );
 
-        if (needsUpdate && !result.has(post.columnId)) {
-          const detailColumnCard = await getDetailColumnCard(ctx, post.columnId);
-          if (!detailColumnCard) continue;
-          result.set(post.columnId, detailColumnCard);
-        }
-      }
-
-      return Array.from(result.values());
+      return detailColumns.filter((col): col is DetailColumnCard => col !== null);
     }),
-
   // 获取用户所有可见订阅专栏列表
   getSubscriptColumn: publicProcedure
     .input(z.string())

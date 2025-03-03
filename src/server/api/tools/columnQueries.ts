@@ -158,7 +158,7 @@ export const getDetailColumnCard = async (
         await db.select().from(post).where(eq(post.columnId, columnId))
     ).length;
     // 获取作者基本信息
-    const userData = await getOneUser(ctx.db, columnData!.userId!);
+    const userData = await getOneUser(ctx.db, columnData.userId);
     let detailColumnCard: DetailColumnCard = {
         id: "",
         name: "",
@@ -193,3 +193,35 @@ export const getDetailColumnCard = async (
     });
     return detailColumnCard;
 };
+
+// 检查文章更新状态的工具函数
+export async function checkUnreadPosts(
+    db: PostgresJsDatabase<typeof schema>,
+    posts: { id: number; columnId: string; updatedAt: Date }[],
+    userId: string,
+  ) {
+    if (!posts.length) return new Set<string>();
+  
+    // 批量获取阅读记录
+    const readRecords = await db
+      .select()
+      .from(postRead)
+      .where(and(
+        eq(postRead.userId, userId),
+        sql`${postRead.postId} IN ${posts.map(p => p.id)}`
+      ));
+    
+    const readMap = new Map(readRecords.map(r => [r.postId, r]));
+    const updatedColumnIds = new Set<string>();
+  
+    // 检查每篇文章的更新状态
+    for (const post of posts) {
+      const readRecord = readMap.get(post.id);
+      const needsUpdate = !readRecord || readRecord.updatedAt < post.updatedAt;
+      if (needsUpdate) {
+        updatedColumnIds.add(post.columnId);
+      }
+    }
+  
+    return updatedColumnIds;
+  }

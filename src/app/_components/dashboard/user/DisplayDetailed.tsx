@@ -64,7 +64,6 @@ const ColumnCard = ({ id, cover, name, introduce }: ColumnCardProps) => (
 const DisplayDetailed = ({ token, userInfo }: Props) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // 使用 React Query 的数据获取
   const { data: subscribeInfos } = api.order.getUserOrder.useQuery({
     userId: userInfo.id,
   });
