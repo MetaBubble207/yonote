@@ -67,15 +67,18 @@ const ColumnItem: React.FC<{
     disabled={!isManaging}
   >
     <div className="flex">
-      <Image
-        src={item.cover ?? NotImage()}
-        width={100}
-        height={100}
-        alt="cover"
-        className="w-11.375 h-15.478 inline-block rounded"
-        placeholder="blur"
-        blurDataURL={LoadingImage()}
-      />
+      <div className="relative w-11.5 h-15">
+        <Image
+          src={item.cover ?? NotImage()}
+          alt="cover"
+          className="rounded-2 object-cover"
+          placeholder="blur"
+          blurDataURL={LoadingImage()}
+          quality={100}
+          fill
+          loading="lazy"
+        />
+      </div>
       <div className="ml-3 mt-3 flex flex-col">
         <div className="text-3 font-500 lh-6 text-[#252525]">
           {truncateText(item.name, CONSTANTS.MAX_NAME_LENGTH)}
@@ -171,7 +174,7 @@ const SubscribeManage: React.FC = () => {
 
     return (
       <div className="w-85.75 h-20.471 bg-#fff rounded-2.5 m-auto flex">
-        <div className="w-100% mt-2 flex flex-col">
+        <div className="w-100% mt-2 flex flex-col space-y-4">
           {columnsState?.map((item, index) => (
             <ColumnItem
               key={item.id}
