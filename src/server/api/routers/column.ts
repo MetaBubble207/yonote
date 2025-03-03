@@ -256,57 +256,6 @@ export const columnRouter = createTRPCRouter({
     }),
 
   // 获取用户更新了帖子还未读的专栏列表
-  // getUpdateColumn: publicProcedure
-  //   .input(z.string())
-  //   .query(async ({ ctx, input }): Promise<DetailColumnCard[]> => {
-  //     const { db } = ctx;
-
-  //     // 获取用户有效订阅的专栏
-  //     const orders = await db
-  //       .select()
-  //       .from(order)
-  //       .where(and(
-  //         eq(order.buyerId, input),
-  //         eq(order.isVisible, true),
-  //         eq(order.status, true),
-  //       ));
-
-  //     if (!orders.length) return [];
-
-  //     const columnIds = new Set(orders.map(order => order.columnId));
-  //     const result = new Map<string, DetailColumnCard>();
-
-  //     // 批量获取所有相关文章
-  //     const posts = await db
-  //       .select()
-  //       .from(post)
-  //       .where(sql`${post.columnId} IN ${Array.from(columnIds)}`);
-  //     if (!posts.length) return [];
-
-  //     // 批量获取阅读记录
-  //     const readRecords = await db
-  //       .select()
-  //       .from(postRead)
-  //       .where(and(
-  //         eq(postRead.userId, input),
-  //         sql`${postRead.postId} IN ${posts.map(p => p.id)}`
-  //       ));
-  //     const readMap = new Map(readRecords.map(r => [r.postId, r]));
-
-  //     // 检查每篇文章的更新状态
-  //     for (const post of posts) {
-  //       const readRecord = readMap.get(post.id);
-  //       const needsUpdate = !readRecord || readRecord.updatedAt < post.updatedAt;
-
-  //       if (needsUpdate && !result.has(post.columnId)) {
-  //         const detailColumnCard = await getDetailColumnCard(ctx, post.columnId);
-  //         if (!detailColumnCard) continue;
-  //         result.set(post.columnId, detailColumnCard);
-  //       }
-  //     }
-
-  //     return Array.from(result.values());
-  //   }),
   getUpdateColumn: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }): Promise<DetailColumnCard[]> => {
@@ -321,12 +270,10 @@ export const columnRouter = createTRPCRouter({
           eq(order.isVisible, true),
           eq(order.status, true),
         ));
-      console.log("orders ==>", orders);
 
       if (!orders.length) return [];
 
       const columnIds = new Set(orders.map(order => order.columnId));
-      console.log("columnIds ===>", columnIds);
 
       // 批量获取所有相关文章
       const posts = await db

@@ -190,6 +190,7 @@ export const getDetailColumnCard = async (
         userId: userData.id,
         userName: userData.name,
         avatar: userData.avatar,
+        idType: userData.idType,
     });
     return detailColumnCard;
 };
