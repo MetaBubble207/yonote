@@ -5,7 +5,6 @@ import {
   type BaseColumnCard,
   type ColumnSelect,
   column,
-  type ColumnOrder,
   type DetailColumnCard,
   order,
   post,
@@ -15,7 +14,6 @@ import {
 } from "@/server/db/schema";
 import { and, asc, desc, eq, like, sql } from "drizzle-orm";
 import { uniqueArray } from "@/tools/uniqueArray";
-import { createCaller } from "@/server/api/root";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "@/server/db/schema";
 import { getCurrentTime } from "@/tools/getCurrentTime";
@@ -65,21 +63,23 @@ const getDetailColumnCard = async (
   // 获取作者基本信息
   const userData = await getOneUser(ctx.db, columnData!.userId!);
   let detailColumnCard: DetailColumnCard = {
-    avatar: "",
-    cover: "",
+    id: "",
+    name: "",
+    distributorship: false,
+    introduce: null,
+    type: "",
+    cover: null,
+    description: null,
+    userId: "",
     createdAt: new Date(),
     updatedAt: new Date(),
-    id: "",
+    avatar: "",
     isFree: false,
     isTop: false,
-    name: "",
     likeCount: 0,
     readCount: 0,
-    introduce: '',
-    description: '',
     subscriptionCount: 0,
     postCount: 0,
-    userId: "",
     userName: "",
     idType: 0,
   };
@@ -280,18 +280,12 @@ export const columnRouter = createTRPCRouter({
             .where(eq(column.userId, user.id));
 
           return userColumns.map(col => ({
-            id: col.id,
-            name: col.name,
-            introduce: col.introduce ?? undefined,
-            description: col.description ?? undefined,
-            cover: col.cover ?? "",
+            ...col, // 包含所有原始专栏字段，包括 distributorship 和 type
             userId: user.id,
-            userName: user.name,
+            userName: user.name ?? "",
             idType: user.idType ?? 0,
             avatar: user.avatar ?? "",
             isVisible: true, // 默认为 true
-            createdAt: col.createdAt!,
-            updatedAt: col.updatedAt!,
           }));
         })
       );
@@ -308,18 +302,12 @@ export const columnRouter = createTRPCRouter({
           }
 
           return {
-            id: col.id,
-            name: col.name,
-            introduce: col.introduce ?? undefined,
-            description: col.description ?? undefined,
-            cover: col.cover ?? "",
+            ...col, // 包含所有原始专栏字段，包括 distributorship 和 type
             userId: userData.id,
-            userName: userData.name,
+            userName: userData.name ?? "",
             idType: userData.idType ?? 0,
             avatar: userData.avatar ?? "",
             isVisible: true, // 默认为 true
-            createdAt: col.createdAt!,
-            updatedAt: col.updatedAt!,
           };
         })
       );
