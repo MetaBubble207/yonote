@@ -232,7 +232,7 @@ const SubscribeManage: React.FC = () => {
               {isManaging ? "保存" : "管理"}
             </button>
           </div>
-          {selectedTab === 1 ? renderColumnList() : <ManagementClass manage={isManaging} />}
+          {selectedTab === 1 ? renderColumnList() : <ManagementClass />}
         </div>
       </Drawer>
     </div>
