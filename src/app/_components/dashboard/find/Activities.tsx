@@ -4,9 +4,10 @@ import React from "react";
 import { api } from "@/trpc/react";
 import Link from "next/link";
 import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
-import { Skeleton, Empty } from "antd";
+import { Empty } from "antd";
 import { inferProcedureOutput } from "@trpc/server";
 import { AppRouter } from "@/server/api/root";
+import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 type Activity = inferProcedureOutput<AppRouter["activity"]["getAll"]>[number];
 
@@ -52,28 +53,10 @@ const ActivityCard = ({ item }: { item: Activity }) => (
   </Link>
 );
 
-type SkeletonProps = {
-  count?: number;
-};
-
-const LoadingSkeleton = ({ count = 3 }: SkeletonProps) => (
-  <>
-    {Array.from({ length: count }).map((_, index) => (
-      <Skeleton
-        key={index}
-        active
-        paragraph={{ rows: 5 }}
-        title={false}
-        className="h-36.25 border-rd-4 p5 mt-4 w-full bg-white"
-      />
-    ))}
-  </>
-);
-
-const Activities = () => {
+export const Activities = () => {
   const { data: queryData, isLoading, error } = api.activity.getAll.useQuery();
 
-  if (isLoading) return <LoadingSkeleton />;
+  if (isLoading) return <LoadingSkeleton className="mt-4" rows={4} count={4} spaceY={4}/>;
   if (error) return <div className="text-red-500">加载失败，请稍后重试</div>;
   if (!queryData?.length) return <Empty description="暂无活动" />;
 
@@ -85,7 +68,3 @@ const Activities = () => {
     </div>
   );
 };
-
-const Page = () => <Activities />;
-
-export default Page;

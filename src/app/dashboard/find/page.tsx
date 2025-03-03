@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Navbar from "@/app/_components/common/Navbar";
-import Activities from "@/app/_components/dashboard/find/Activities";
+import { Activities } from "@/app/_components/dashboard/find/Activities";
 import SearchColumn from "@/app/_components/common/SearchColumn";
 import Link from "next/link";
 
