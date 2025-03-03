@@ -24,7 +24,7 @@ const UserAvatar = ({ userInfo }: { userInfo: UserInsert }) => (
       {userInfo.idType === 1 && (
         <Image
           className="ml-1.25"
-          src="/images/user/Rank.svg"
+          src="/images/user/vip.svg"
           alt="认证标识"
           width={20}
           height={20}

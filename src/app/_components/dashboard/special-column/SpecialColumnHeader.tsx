@@ -18,7 +18,8 @@ const CONSTANTS = {
     WIDTH: 111,
     HEIGHT: 156
   },
-  AVATAR_SIZE: 18
+  AVATAR_SIZE: 18,
+  VIP_ICON_SIZE: 12
 } as const;
 
 const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
@@ -78,10 +79,10 @@ const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
         </div>
         {data?.idType === 1 && (
           <Image
-            src="/images/special-column/Group 225.png"
+            src="/images/user/vip.svg"
             alt="VIP图标"
-            width={CONSTANTS.AVATAR_SIZE}
-            height={CONSTANTS.AVATAR_SIZE}
+            width={CONSTANTS.VIP_ICON_SIZE}
+            height={CONSTANTS.VIP_ICON_SIZE}
             className="ml-1"
           />
         )}

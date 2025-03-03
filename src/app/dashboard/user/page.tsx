@@ -87,7 +87,7 @@ export default function UserPage() {
             </h1>
             {userInfo?.idType === 1 && (
               <Image
-                src="/images/user/Rank.svg"
+                src="/images/user/vip.svg"
                 alt="group"
                 width={20}
                 height={20}

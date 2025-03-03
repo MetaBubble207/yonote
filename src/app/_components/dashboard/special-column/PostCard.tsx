@@ -101,10 +101,10 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, isSubscribe }) => {
             {/* 用户信息 */}
             <div className="ml-5px">
               <div className="flex items-center text-2.75 font-500 lh-18px text-[#999]">
-                {postDetail?.userName || "未知用户"}
-                {postDetail?.idType === 1 && (
+                {postDetail.userName || "未知用户"}
+                {postDetail.idType === 1 && (
                   <Image
-                    src="/images/special-column/Group 225.png"
+                    src="/images/user/vip.svg"
                     alt="VIP标识"
                     width={12}
                     height={12}

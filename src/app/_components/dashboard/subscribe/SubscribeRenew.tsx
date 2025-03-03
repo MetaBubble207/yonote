@@ -71,13 +71,17 @@ const SubscribeRenew = ({ column }: { column: DetailColumnCard }) => {
                   <div className="text-2.75 lh-4 text-[#999]">
                     {column.userName}
                   </div>
-                  <Image
-                    src={"/images/subscribe/vip.svg"}
-                    alt="cover"
-                    width={24}
-                    height={24}
-                    className="ml-1.2 h-3 w-3"
-                  ></Image>
+                  {
+                    column.idType === 1 && (
+                      <Image
+                        src={"/images/subscribe/vip.svg"}
+                        alt="cover"
+                        width={24}
+                        height={24}
+                        className="ml-1.2 h-3 w-3"
+                      ></Image>
+                    )
+                  }
                 </div>
                 <div className="text-2.75 lh-4 text-[#B5B5B5]">
                   {time2DateString(column.createdAt)}发布

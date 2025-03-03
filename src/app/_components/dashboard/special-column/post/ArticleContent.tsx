@@ -36,7 +36,7 @@ export function ArticleContent({ postData, date, name, content }: ArticleContent
             </div>
             {postData?.user.idType === 1 && (
               <Image
-                src="/images/special-column/Group 225.png"
+                src="/images/user/vip.svg"
                 alt="心智与阅读"
                 width={12}
                 height={12}

@@ -50,7 +50,7 @@ const Page = () => {
               </div>
               <div>
                 <Image
-                  src={"/images/special-column/Group 225.png"}
+                  src={"/images/user/vip.svg"}
                   alt={"心智与阅读"}
                   width={12}
                   height={12}

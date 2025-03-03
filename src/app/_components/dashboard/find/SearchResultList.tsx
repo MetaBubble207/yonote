@@ -47,7 +47,7 @@ const Card = ({ item }: CardProps) => (
                             </div>
                             {item.idType === 1 && (
                                 <Image
-                                    src="/images/special-column/Group 225.png"
+                                    src="/images/user/vip.svg"
                                     alt="认证标识"
                                     width={12}
                                     height={12}

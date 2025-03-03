@@ -55,7 +55,7 @@ export const Preview = ({ title, html, tags }: PreviewProps) => {
               </div>
               {user?.idType === 1 && (
                 <Image
-                  src={"/images/special-column/Group 225.png"}
+                  src={"/images/user/vip.svg"}
                   alt={"用户头像"}
                   width={12}
                   height={12}
