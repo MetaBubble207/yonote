@@ -32,7 +32,7 @@ interface Props {
 
 // 抽离卡片组件
 const ColumnCard = ({ id, cover, name, introduce }: ColumnSelect) => (
-  <Link href={`/dashboard/special-column?id=${id}`} className="mb-4 flex">
+  <Link href={`/dashboard/special-column?id=${id}`} className="mb-4 flex mx-6">
     <div className="w-15.5 h-19 relative">
       <Image
         placeholder="blur"
@@ -100,7 +100,7 @@ const DisplayDetailed = ({ writerId, subscribeInfos, columnInfos, postLength }: 
 
     const current = contentMap[currentPage as keyof typeof contentMap];
 
-    if (current.loading) return <LoadingSkeleton rows={3} />;
+    if (current.loading) return <LoadingSkeleton className="mx-3 mt--4" rows={3} count={4} spaceY={0}/>;
     if (!current.data?.length) return <NoData title={current.emptyMessage} />;
 
     return current.data.map(item => <ColumnCard key={item.id} {...item} />);
@@ -119,9 +119,9 @@ const DisplayDetailed = ({ writerId, subscribeInfos, columnInfos, postLength }: 
       </div>
 
       {/* 内容区域 */}
-      <div className="rounded-2.5 ml-8 mr-8 mt-4">
+      <div className="rounded-2.5 mt-4">
         {/* Tab栏 */}
-        <div className="mb-6 flex">
+        <div className="mb-6 flex mx-8">
           {TABS.map((tab) => (
             <div key={tab.id} className="flex-col">
               <button
