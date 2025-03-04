@@ -2,7 +2,6 @@ import { type PriceListSelect } from "@/server/db/schema";
 
 export interface ReservedProps {
     onClose: () => void;
-    check: boolean;
     columnId: string
 }
 

@@ -1,74 +1,77 @@
 "use client"
 import { Modal, Input } from "antd";
-import W100H50Modal from "@/app/_components/common/W100H50Modal";
-import { ModalProps, OrderModalProps } from "@/app/dashboard/special-column/types";
 const { Search } = Input;
-export const TopUpModal: React.FC<ModalProps> = ({ onClose, onConfirm }) => (
-    <W100H50Modal>
-        <div>
-            <label htmlFor="amount">输入充值金额</label>
-            <input type="text" id="amount" />
-        </div>
-        <button onClick={onConfirm}>充值</button>
-    </W100H50Modal>
-);
+import { PaymentInfo, PaymentState } from "@/app/_types/payment";
 
-export const ConfirmPayModal: React.FC<ModalProps> = ({ onClose, onConfirm }) => (
-    <W100H50Modal>
-        <div>确定是否购买该专栏</div>
-        <div className="mt-5 flex space-x-10">
-            <button onClick={onConfirm} className="bg-transparent">确认</button>
-            <button onClick={onClose} className="bg-transparent">取消</button>
-        </div>
-    </W100H50Modal>
-);
+interface PaymentModalsProps {
+    state: PaymentState;
+    setState: React.Dispatch<React.SetStateAction<PaymentState>>;
+    paymentInfo: PaymentInfo;
+    handleRecharge: (amount: number) => void;
+    columnData: {
+        type: number;
+        name: string;
+    };
+    balance: number;
+}
 
-export const OrderModal: React.FC<OrderModalProps> = ({
-    onClose,
-    onConfirm,
-    columnName,
-    selectedItem,
+export const PaymentModals: React.FC<PaymentModalsProps> = ({
+    state,
+    setState,
+    paymentInfo,
+    handleRecharge,
+    columnData,
     balance,
-    onTopUp,
 }) => {
-    const needTopUp = balance < selectedItem.price;
-    const topUpAmount = selectedItem.price - balance;
-
     return (
-        <Modal
-            title="确认订单"
-            centered
-            open={true}
-            onCancel={onClose}
-            footer={null}
-        >
-            <div className="mt-6 flex w-full items-center justify-between">
-                <div className="h-10 w-40 overflow-scroll">{columnName}</div>
-                <div>
-                    {selectedItem.timeLimit >= 999999
-                        ? `${selectedItem.price}/永久`
-                        : `${selectedItem.price}/${selectedItem.timeLimit}天`}
+        <>
+            <Modal
+                title="充值对话框"
+                open={state.showTopUp}
+                onCancel={() => setState(prev => ({ ...prev, showTopUp: false }))}
+                onOk={() => handleRecharge(state.rechargeAmount)}
+            >
+                <Input
+                    type="number"
+                    value={state.rechargeAmount}
+                    onChange={e => setState(prev => ({ ...prev, rechargeAmount: Number(e.target.value) }))}
+                    placeholder="请输入要充值的金额"
+                />
+            </Modal>
+
+            <Modal
+                title="购买对话框"
+                open={state.showConfirm}
+                onCancel={() => setState(prev => ({ ...prev, showConfirm: false }))}
+                onOk={() => setState(prev => ({ ...prev, showConfirm: false, showOrder: true }))}
+            >
+                <span>{`确认是否购买该${columnData.type === 0 ? '专栏' : '小课'}`}</span>
+            </Modal>
+
+            <Modal
+                title="支付对话框"
+                open={state.showOrder && paymentInfo.shouldShow}
+                onCancel={() => setState(prev => ({ ...prev, showOrder: false }))}
+                onOk={paymentInfo.handleClick}
+                okText={paymentInfo.buttonText}
+                okButtonProps={{ className: "bg-#45E1B8" }}
+            >
+                <div className="flex w-full items-center justify-between">
+                    <div>{columnData.type === 0 ? "专栏" : "小课"}：{columnData.name}</div>
+                    <div>
+                        {paymentInfo.timeLimit! >= 999999
+                            ? `¥${paymentInfo.price}/永久`
+                            : `¥${paymentInfo.price}/${paymentInfo.timeLimit}天`}
+                    </div>
                 </div>
-            </div>
-            <div className="my-6">
-                <span>余额: ¥{balance}</span>
-                {needTopUp && (
-                    <span className="text-red">（还需充值¥{topUpAmount}~😁）</span>
-                )}
-            </div>
-            {needTopUp ? (
-                <button
-                    className="bg-#45E1B8 w-80"
-                    onClick={() => onTopUp(topUpAmount)}
-                >
-                    充值并支付（¥{topUpAmount}）
-                </button>
-            ) : (
-                <button className="bg-#45E1B8 w-80" onClick={onConfirm}>
-                    支付
-                </button>
-            )}
-        </Modal>
+                <div className="mt-3">
+                    <span>余额: ¥{balance}</span>
+                    {paymentInfo.needRecharge && (
+                        <span className="text-red">（还需充值¥{paymentInfo.rechargeAmount}~😁）</span>
+                    )}
+                </div>
+            </Modal>
+        </>
     );
 };
 interface SearchModalProps {

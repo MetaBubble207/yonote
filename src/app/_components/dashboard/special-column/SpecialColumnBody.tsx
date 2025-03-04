@@ -28,7 +28,6 @@ interface SpecialColumnBodyProps {
 export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
   const [currentContent, setCurrentContent] = React.useState<number>(1);
   const [isSubscribe, setIsSubscribe] = React.useState(false);
-  const [check, setCheck] = React.useState(false);
   const mounted = useCheckOnClient()
   const {
     status,
@@ -50,14 +49,13 @@ export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
 
   const handleSubscribe = useCallback(() => {
     setIsSubscribe(prev => !prev);
-    setCheck(prev => !prev);
   }, []);
 
   const handleTabChange = useCallback((tabId: number) => {
     setCurrentContent(tabId);
   }, []);
 
-  if(!mounted) return null;
+  if (!mounted) return null;
   return (
     <div>
       {contextHolder}
@@ -68,7 +66,7 @@ export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
           isLoading={detailPostLoading}
         />
 
-        <TabBarSection 
+        <TabBarSection
           currentContent={currentContent}
           onTabChange={handleTabChange}
           onSearch={toggleSearch}
@@ -99,7 +97,6 @@ export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
       {!statusLoading && isSubscribe && (
         <Reserved
           onClose={() => setIsSubscribe(false)}
-          check={check}
           columnId={props.columnId}
         />
       )}
@@ -116,13 +113,13 @@ export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
 }
 
 // 抽离 TabBar 部分为独立组件
-const TabBarSection = React.memo(({ 
-  currentContent, 
-  onTabChange, 
-  onSearch, 
-  onSort, 
-  isDesc 
-}: { 
+const TabBarSection = React.memo(({
+  currentContent,
+  onTabChange,
+  onSearch,
+  onSort,
+  isDesc
+}: {
   currentContent: number;
   onTabChange: (id: number) => void;
   onSearch: () => void;

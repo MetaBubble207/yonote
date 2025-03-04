@@ -2,9 +2,11 @@ import type { PriceListSelect } from "@/server/db/schema";
 import type { MessageInstance } from "antd/es/message/interface";
 
 export const isValid = (s: unknown) => {
-    return s !== undefined && s !== null && s !== '';
+  return s !== undefined && s !== null && s !== '';
 }
-
+export const isPriceListValid = (item: PriceListSelect | undefined): item is PriceListSelect => {
+  return item !== null && item !== undefined;
+}
 export const validatePriceList = (
   priceList: PriceListSelect[],
   messageApi: MessageInstance
