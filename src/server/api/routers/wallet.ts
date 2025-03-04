@@ -139,15 +139,17 @@ export const walletRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { db } = ctx;
       // 获取流水中收入的部分，且时间超过了 24 小时的
+      const twentyFourHoursAgo = new Date(getCurrentTime().getTime() - 24 * 60 * 60 * 1000);
       const runningWaterData = await db.query.runningWater.findMany({
         where: and(
           eq(runningWater.userId, input),
           eq(runningWater.expenditureOrIncome, 1),
           eq(runningWater.isFreezed, true),
           ne(runningWater.name, '充值'),
-          lt(runningWater.createdAt, getCurrentTime()),
+          lt(runningWater.createdAt, twentyFourHoursAgo),
         ),
       });
+
       // 获取钱包金额
       const walletData = await db.query.wallet.findFirst({
         where: eq(wallet.userId, input),
