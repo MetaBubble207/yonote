@@ -50,6 +50,7 @@ const IncentiveSettings: React.FC<IncentiveSettingsProps> = ({
         throttle((distribution, extend) => {
             if (!columnId) return;
             updateDistributorshipDetail.mutate({
+                isVip: isVip,
                 columnId: columnId,
                 distributorship: distribution / 100,
                 extend: extend / 100,

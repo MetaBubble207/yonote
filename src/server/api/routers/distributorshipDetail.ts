@@ -16,13 +16,15 @@ export const distributorshipDetailRouter = createTRPCRouter({
   update: publicProcedure
     .input(
       z.object({
+        isVip: z.boolean(),
         columnId: z.string(),
         distributorship: z.number(),
         extend: z.number(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { columnId, distributorship, extend } = input;
+      const { columnId, distributorship, extend, isVip } = input;
+      // 检测vip身份和平台抽成的情况
       if (distributorship + extend > 0.7) {
         throw new Error("经销分成加推广分成比例超过百分之70");
       }
@@ -31,6 +33,7 @@ export const distributorshipDetailRouter = createTRPCRouter({
         .set({
           distributorship: distributorship,
           extend: extend,
+          platDistributorship: isVip ? 0.06 : 0.15
         })
         .where(eq(distributorshipDetail.columnId, columnId));
     }),
