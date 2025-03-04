@@ -38,6 +38,7 @@ export const CreateColumnClient = ({ columnId }: { columnId: string | null }) =>
       id: columnId,
       name: name.trim(),
       userId: token,
+      type: 0
     });
   };
 

@@ -10,6 +10,7 @@ export const invitationCodeRouter = createTRPCRouter({
         id: z.string(),
         name: z.string(),
         userId: z.string(),
+        type: z.number(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -31,7 +32,7 @@ export const invitationCodeRouter = createTRPCRouter({
         id: input.id,
         name: input.name,
         userId: input.userId,
-        type: 0,
+        type: input.type,
       });
     }),
 });
