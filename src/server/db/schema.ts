@@ -268,7 +268,7 @@ export const runningWater = createTable("running_water", {
   name: varchar("name").notNull(),
   price: real("price").notNull(),
   expenditureOrIncome: integer("expenditure_or_income").notNull(),
-  isfreezed: boolean("isfreezed").notNull().default(false),
+  isFreezed: boolean("is_freezed").notNull().default(true),
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
