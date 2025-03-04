@@ -19,18 +19,21 @@ export const TransactionList = ({ data, currentType }: TransactionListProps) => 
     <>
       {filteredData.map((item) => (
         <div key={item.id}>
-          <div className="ml-0">
-            <div className="w-27 text-3.25 font-not-italic font-400 lh-6 text-[#252525]">
-              {item.name}
+          <div className="flex">
+            <div>
+              <div className="w-60 text-3.25 font-not-italic font-400 lh-6 text-[#252525]">
+                {item.name}
+              </div>
+              <div className="w-26.5 h-6.25 text-2.75 font-not-italic font-400 lh-6 mt--1 shrink-0 text-[#999]">
+                {date2DateTimeStringMinutes(item.createdAt)}
+              </div>
             </div>
-            <div className="w-26.5 h-6.25 text-2.75 font-not-italic font-400 lh-6 mt--1 shrink-0 text-[#999]">
-              {date2DateTimeStringMinutes(item.createdAt)}
+            <div className="flex-1 flex items-center justify-end text-3.75 font-700 text-[#252525]">
+              <span>{item.expenditureOrIncome === 0 ? "-" : "+"}</span>
+              <span>￥{item.price}</span>
             </div>
           </div>
-          <div className="w-20.75 h-5.5 text-3.75 font-700 lh-6 ml-60 mt--11 shrink-0 text-right text-[#252525]">
-            {item.expenditureOrIncome === 0 ? "-" : "+"}￥{item.price}
-          </div>
-          <div className="border-1 mt-5" />
+          <div className="border-1 mt-2px" />
           <div className="mt-4" />
         </div>
       ))}

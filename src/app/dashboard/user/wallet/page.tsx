@@ -137,8 +137,8 @@ export default function Page() {
       </div>
 
       {/* 交易列表 */}
-      <div className="ml-6.5 w-80.5 h-14.25 mt-4 flex shrink-0 items-center justify-center">
-        <div className="w-80.5 h-14.25 shrink-0">
+      <div className="ml-6.5 w-80.5 mt-4 flex shrink-0 items-center justify-center">
+        <div className="w-80.5 shrink-0">
           <TransactionList data={runningWaterData} currentType={currentType} />
         </div>
       </div>
