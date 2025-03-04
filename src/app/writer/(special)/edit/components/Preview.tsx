@@ -3,7 +3,7 @@ import Image from "next/image";
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
-import { NotImage } from "@/utils/DefaultPicture";
+import { NotImage } from "@/app/_utils/DefaultPicture";
 
 interface PreviewProps {
   title: string;

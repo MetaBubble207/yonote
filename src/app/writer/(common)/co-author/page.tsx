@@ -30,20 +30,16 @@ const Page: React.FC = () => {
     return { days, hours, minutes, seconds };
   };
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
   const [day, setDay] = useState(0);
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
-  const [second, setSecond] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       const newTimeLeft = calculateTimeLeft();
-      setTimeLeft(newTimeLeft);
       setDay(newTimeLeft.days);
       setHour(newTimeLeft.hours);
       setMinute(newTimeLeft.minutes);
-      setSecond(newTimeLeft.seconds);
     }, 1000);
 
     return () => clearTimeout(timer);

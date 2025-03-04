@@ -1,6 +1,8 @@
 import { api } from "@/trpc/server";
 import { notFound } from "next/navigation";
 import { EditorClient } from "./components/EditorClient";
+import { validateColumn } from "@/app/_components/common/CheckColumnId";
+import { DataQueryError } from "@/app/_components/common/DataQueryError";
 
 export default async function Page({
   searchParams,
@@ -23,7 +25,14 @@ export default async function Page({
     // 获取草稿数据（如果没有postId但有columnId）
     let draftData = undefined;
     if (!postId && columnId) {
-      draftData = await api.post.getDraft({ columnId });
+      const validation = await validateColumn(columnId);
+      if (!validation.isValid) {
+        return <div className="mt-100">
+          {validation.error}
+        </div>;
+      }
+      const columnData = validation.columnData;
+      draftData = await api.post.getDraft({ columnId: columnData!.id });
     }
 
     return (
@@ -37,14 +46,8 @@ export default async function Page({
     );
   } catch (error) {
     console.error("编辑页面加载错误:", error);
-    // 返回一个简单的错误UI，避免整个页面崩溃
     return (
-      <div className="h-full w-full mt-86px flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-bold text-red-500">加载失败</h2>
-          <p className="mt-2">请刷新页面重试</p>
-        </div>
-      </div>
+      <DataQueryError />
     );
   }
 }

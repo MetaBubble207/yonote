@@ -2,36 +2,22 @@ import React from "react";
 import { api } from "@/trpc/server";
 import HomepageDataServer from "./components/HomepageDataServer";
 import ChartContainer from "./components/ChartContainer";
+import { DataQueryError } from "@/app/_components/common/DataQueryError";
+import { validateColumn } from "@/app/_components/common/CheckColumnId";
 
 export default async function Page({
   searchParams
 }: {
   searchParams: Promise<{ columnId?: string }>
 }) {
-  const { columnId } = await searchParams;
-  try {
-    if (!columnId) {
-      return (
-        <div className="flex h-full w-full items-center justify-center">
-          <div className="text-center">
-            <h3 className="text-xl font-semibold">数据加载失败</h3>
-            <p className="mt-2 text-gray-500">请刷新页面重试</p>
-          </div>
-        </div>
-      );
-    }
-    const columnData = await api.column.getColumnDetail(columnId)
+  let { columnId } = await searchParams;
 
-    if (!columnData) {
-      return (
-        <div className="flex h-full w-full items-center justify-center">
-          <div className="text-center">
-            <h3 className="text-xl font-semibold">专栏不存在</h3>
-            <p className="mt-2 text-gray-500">请刷新页面重试</p>
-          </div>
-        </div>
-      );
+  try {
+    const validation = await validateColumn(columnId);
+    if (!validation.isValid) {
+      return validation.error;
     }
+    columnId = validation.columnData!.id!;
     // 并行获取所有需要的数据
     const { reads, readingRate, subscriptions, subscriptionRate } = await api.read.getHomepageData(columnId);
 
@@ -53,13 +39,6 @@ export default async function Page({
     );
   } catch (error) {
     console.error("Error loading homepage data:", error);
-    return (
-      <div className="flex h-full w-full items-center justify-center">
-        <div className="text-center">
-          <h3 className="text-xl font-semibold">数据加载失败</h3>
-          <p className="mt-2 text-gray-500">请刷新页面重试</p>
-        </div>
-      </div>
-    );
+    return <DataQueryError />
   }
 }

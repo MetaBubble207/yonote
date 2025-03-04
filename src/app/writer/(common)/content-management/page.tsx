@@ -6,6 +6,7 @@ import { api } from "@/trpc/server";
 import TableComponent from "@/app/writer/(common)/content-management/components/TableComponent";
 import { FilterSection } from "@/app/writer/(common)/content-management/components/FilterSection";
 import { PostSearchParams } from "./types";
+import { validateColumn } from "@/app/_components/common/CheckColumnId";
 export default async function Page({ searchParams }: { searchParams: Promise<PostSearchParams>; }) {
   // 处理查询参数
   const params: PostSearchParams = {
@@ -19,6 +20,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pos
     isTop: (await searchParams).isTop ? Boolean((await searchParams).isTop) : undefined,
     isFree: (await searchParams).isFree ? Boolean((await searchParams).isFree) : undefined,
   };
+  const validation = await validateColumn(params.columnId);
+  if (!validation.isValid) {
+    return validation.error;
+  }
+  const columnId = validation.columnData!.id!;
   // 服务端获取数据
   const { data: posts, total } = await api.post.getPostsFilter(params);
 
@@ -29,9 +35,9 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pos
           <div className="text-4 font-not-italic font-700 lh-6 text-[#323232]">
             内容管理
           </div>
-          <PublishButton className="ml-32px" columnId={params.columnId} />
+          <PublishButton className="ml-32px" columnId={columnId} />
         </div>
-        <FilterSection columnId={params.columnId} />
+        <FilterSection columnId={columnId} />
         <div className="mt-4 overflow-auto">
           <TableComponent dataSource={posts} total={total} />
         </div>

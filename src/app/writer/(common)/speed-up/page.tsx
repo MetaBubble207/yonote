@@ -1,6 +1,8 @@
 import React from "react";
 import SpeedUpClient from "./components/SpeedUpClient";
 import { api } from "@/trpc/server";
+import { validateColumn } from "@/app/_components/common/CheckColumnId";
+import { DataQueryError } from "@/app/_components/common/DataQueryError";
 
 export default async function SpeedUpPage({
   searchParams,
@@ -14,15 +16,20 @@ export default async function SpeedUpPage({
     currentPage?: string;
   }>;
 }) {
-  const params = await searchParams;
-  const columnId = params.columnId;
-  const userId = params.userId || "";
-  const startPick = params.startPick || undefined;
-  const endPick = params.endPick || undefined;
-  const pageSize = params.pageSize ? parseInt(params.pageSize) : 10;
-  const currentPage = params.currentPage ? parseInt(params.currentPage) : 1;
-
   try {
+    const params = await searchParams;
+    let columnId = params.columnId;
+    const userId = params.userId || "";
+    const startPick = params.startPick || undefined;
+    const endPick = params.endPick || undefined;
+    const pageSize = params.pageSize ? parseInt(params.pageSize) : 10;
+    const currentPage = params.currentPage ? parseInt(params.currentPage) : 1;
+
+    const validation = await validateColumn(columnId);
+    if (!validation.isValid) {
+      return validation.error;
+    }
+    columnId = validation.columnData!.id!;
     // 并行获取数据
     const [distributorshipData, speedUpData] = await Promise.all([
       columnId ? api.distributorshipDetail.getOne(columnId) : null,
@@ -51,14 +58,7 @@ export default async function SpeedUpPage({
       />
     );
   } catch (error) {
-    console.error("Error loading data:", error);
-    return (
-      <div className="flex h-full w-full items-center justify-center">
-        <div className="text-center">
-          <h3 className="text-xl font-semibold">数据加载失败</h3>
-          <p className="mt-2 text-gray-500">请刷新页面重试</p>
-        </div>
-      </div>
-    );
+    console.error("Error loading speed-up data:", error);
+    return <DataQueryError />;
   }
 }

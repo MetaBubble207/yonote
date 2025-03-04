@@ -2,30 +2,36 @@ import React from "react";
 import { api } from "@/trpc/server";
 import ColumnSettingsTable from "./components/TableComponent";
 import ColumnCover from "./components/ColumnCover";
+import { validateColumn } from "@/app/_components/common/CheckColumnId";
+import { DataQueryError } from "@/app/_components/common/DataQueryError";
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{ columnId?: string }>;
 }) {
-  const { columnId } = await searchParams;
+  try {
+    let { columnId } = await searchParams;
+    const validation = await validateColumn(columnId);
+    if (!validation.isValid) {
+      return validation.error;
+    }
+    const columnData = validation.columnData;
+    // 服务端获取数据
+    const priceListData = await api.priceList.getByColumnId(columnData!.id);
 
-  if (!columnId) {
-    return <div className="p-8">请选择一个专栏</div>;
+    return (
+      <div className="rounded-2.5 flex h-full w-full items-start bg-[#FFF] pl-8 pt-8">
+        <ColumnSettingsTable
+          columnData={columnData!}
+          priceListData={priceListData?.sort((a, b) => a.id - b.id) || []}
+        />
+
+        <ColumnCover columnId={columnData!.id} initialCover={columnData?.cover} />
+      </div>
+    );
+  } catch (error) {
+    console.log("Error loading column-settings data:",error);
+    return <DataQueryError/>
   }
-
-  // 服务端获取数据
-  const columnData = await api.column.getById(columnId);
-  const priceListData = await api.priceList.getByColumnId(columnId);
-
-  return (
-    <div className="rounded-2.5 flex h-full w-full items-start bg-[#FFF] pl-8 pt-8">
-      <ColumnSettingsTable
-        columnData={columnData!}
-        priceListData={priceListData?.sort((a, b) => a.id - b.id) || []}
-      />
-
-      <ColumnCover columnId={columnId} initialCover={columnData?.cover} />
-    </div>
-  );
 }
