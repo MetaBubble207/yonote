@@ -72,12 +72,12 @@ const ColumnSettingsTable: React.FC<ColumnSettingsTableProps> = ({
     const handleSubmit = () => {
         form.validateFields().then(values => {
             console.log("formData ==>", formData);
-            
+
             const checkPrice = formData.priceList.every(item => item.price >= 10)
             console.log("checkPrice ==>", checkPrice);
-            
+
             setShowConfirmModal(false);
-            if(!checkPrice){
+            if (!checkPrice) {
                 messageApi.info("价格不能低于10元");
                 return;
             }
@@ -258,7 +258,13 @@ const ColumnSettingsTable: React.FC<ColumnSettingsTableProps> = ({
                         required
                     >
                         <div className="text-3.5 font-400 lh-5.5 text-[rgba(0,0,0,0.65)]">
-                            一口价
+
+                            <div className="flex items-center">
+                                <span className="text-3.5 font-400 lh-5.5 text-[rgba(0,0,0,0.85)]">
+                                    {isForever ? "一口价" : "限时订阅"}
+                                </span>
+                            </div>
+
                         </div>
                     </Form.Item>
                 </div>
