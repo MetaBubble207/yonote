@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Button } from "antd";
-import QRCode from "qrcode.react";
+import { QRCodeCanvas } from "qrcode.react";
 import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { UserSelect } from "@/server/db/schema";
 
@@ -55,7 +55,7 @@ export const FooterInfo = ({ userInfo, token, qrCodeURL, onScreenshot }: BottomI
 
       <div className="ml-18.5">
         <div className="rounded-1.5 border mx-auto flex h-16 w-16 items-center justify-center border-[#c1c1c1] border-solid">
-          <QRCode id="columnQrCode" value={qrCodeURL} size={50} />
+          <QRCodeCanvas id="columnQrCode" value={qrCodeURL} size={50} />
         </div>
         <div className="h-5.75 text-2.5 font-normal leading-6 mt-1.25 text-[#999]">
           扫码查看详情
