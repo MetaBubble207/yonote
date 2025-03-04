@@ -65,7 +65,7 @@ export const PaymentModals: React.FC<PaymentModalsProps> = ({
                     </div>
                 </div>
                 <div className="mt-3">
-                    <span>余额: ¥{balance}</span>
+                    <span>余额：¥{balance}</span>
                     {paymentInfo.needRecharge && (
                         <span className="text-red">（还需充值¥{paymentInfo.rechargeAmount}~😁）</span>
                     )}
