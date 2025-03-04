@@ -8,6 +8,7 @@ import { api } from "@/trpc/react";
 import { Skeleton } from "antd";
 import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ColumnSelect } from "@/server/db/schema";
 
 // 类型定义
 interface NavItem {
@@ -252,52 +253,60 @@ export default function UserPage() {
       ));
     }, [currentPage]);
 
+    const Card = ({ item }: { item: ColumnSelect }) => {
+      return <Link
+        href={`/dashboard/special-column?id=${item.id}`}
+        className="mb-4 flex"
+        key={item.id}
+      >
+        <div className="w-15.5 h-19 relative">
+          <Image
+            placeholder="blur"
+            blurDataURL={LoadingImage()}
+            src={item?.cover ?? NotImage()}
+            alt="cover"
+            quality={100}
+            fill
+            loading="lazy"
+            className="rounded object-cover"
+          />
+        </div>
+        <div>
+          <div className="w-59.25 text-3.75 font-500 lh-6 ml-2 overflow-hidden text-ellipsis whitespace-nowrap">
+            「{item?.name ?? "未知专栏"}」
+          </div>
+          <div className="w-59.25 text-#666 text-3.25 font-400 ml-3 mt-2 overflow-hidden text-ellipsis whitespace-nowrap">
+            {item?.introduce ?? "暂无简介"}
+          </div>
+        </div>
+      </Link>
+    }
     const Column = () => {
-      if (!columnInfo || columnInfo.length === 0)
+      const filteredColumns = columnInfo?.filter(item => item.type === 0);
+      if (!columnInfo || !filteredColumns?.length)
         return (
           <div className="mt-4 h-10 text-center text-[#B5B5B5]">
             暂无数据哦~
           </div>
         );
 
-      return columnInfo.slice(0, columnInfo.length > 1 ? 2 : 1).map((item) => (
-        <Link
-          href={`/dashboard/special-column?id=${item.id}`}
-          className="mb-4 flex"
-          key={item.id}
-        >
-          <div className="w-15.5 h-19 relative">
-            <Image
-              placeholder="blur"
-              blurDataURL={LoadingImage()}
-              src={item?.cover ?? NotImage()}
-              alt="cover"
-              quality={100}
-              fill
-              loading="lazy"
-              className="rounded object-cover"
-            />
-          </div>
-          <div>
-            <div className="w-59.25 text-3.75 font-500 lh-6 ml-2 overflow-hidden text-ellipsis whitespace-nowrap">
-              「{item?.name ?? "未知专栏"}」
-            </div>
-            <div className="w-59.25 text-#666 text-3.25 font-400 ml-3 mt-2 overflow-hidden text-ellipsis whitespace-nowrap">
-              {item?.introduce ?? "暂无简介"}
-            </div>
-          </div>
-        </Link>
+      return filteredColumns.slice(0, Math.min(2, filteredColumns.length)).map(item => (
+        <Card item={item} key={item.id} />
       ));
     };
 
     const Course = () => {
-      return (
-        <div className={"flex items-center justify-center"}>
+      const filteredColumns = columnInfo?.filter(item => item.type === 1);
+      if (!columnInfo || !filteredColumns?.length)
+        return (
           <div className="mt-4 h-10 text-center text-[#B5B5B5]">
             暂无数据哦~
           </div>
-        </div>
-      );
+        );
+
+      return filteredColumns.slice(0, Math.min(2, filteredColumns.length)).map(item => (
+        <Card item={item} key={item.id} />
+      ));
     };
 
     if (!token || !userInfo) return <></>;
@@ -330,8 +339,8 @@ export default function UserPage() {
   return (
     <div>
       {/* 背景颜色*/}
-      <div className="flex flex-col pb-15 bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3 min-h-screen w-full px-4">
-        <div className="flex-1">
+      <div className="px-4 flex flex-col pb-15 bg-gradient-to-rb from-custom-user_gradient_1 via-custom-user_gradient_2 to-custom-user_gradient_3">
+        <div className="flex-1 min-h-84vh w-full ">
           {/* 顶部 */}
           <UserTop />
           {/* 专栏、小课区域 */}
