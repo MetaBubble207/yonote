@@ -31,7 +31,7 @@ export const invitationCodeRouter = createTRPCRouter({
         id: input.id,
         name: input.name,
         userId: input.userId,
-        type: 'column',
+        type: 0,
       });
     }),
 });
