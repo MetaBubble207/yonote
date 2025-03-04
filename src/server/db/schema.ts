@@ -14,6 +14,7 @@ import {
   smallint,
   text,
 } from "drizzle-orm/pg-core";
+import { number } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -72,7 +73,7 @@ export const column = createTable("column", {
   name: varchar("name", { length: 256 }).notNull(),
   distributorship: boolean("distributorship").notNull().default(false), // 是否是共创计划
   introduce: varchar("introduce"),
-  type: varchar("type").notNull(), // column/course
+  type: integer("type").notNull().default(0), // 0: column, 1: course
   cover: text("logo").default(
     "http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png",
   ),
