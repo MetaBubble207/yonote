@@ -132,7 +132,7 @@ export const orderRouter = createTRPCRouter({
           if (!firstClassReferrerWalletData)
             return { status: "fail", meg: "没有找到该推荐人钱包" };
           // 通过一级分销的userId去查看分销表有无二级分销
-          const referralsData = await ctx.db.query.referrals.findFirst({
+          const extendUserData = await ctx.db.query.referrals.findFirst({
             where: and(
               eq(referrals.userId, referrerData.referredUserId),
               eq(referrals.columnId, input.columnId),
@@ -147,19 +147,19 @@ export const orderRouter = createTRPCRouter({
             return { status: "fail", meg: "分销表不存在" }
           }
           actualIncome = priceListData.price * (1 - distributorshipDetail.platDistributorship);
-          if (referralsData) {
+          if (extendUserData) {
             // 有二级分销
             // 查找二级推荐人的钱包
             const secondClassReferrerWalletData =
               await ctx.db.query.wallet.findFirst({
-                where: eq(wallet.userId, referralsData.userId),
+                where: eq(wallet.userId, extendUserData.referredUserId),
               });
             if (!secondClassReferrerWalletData) return { status: "fail", meg: "没有找到该二级推荐人钱包" };
             // 计算作者倍率，一减去 一级分销和二级分销的和
             const authorRate = 1 - (distributorshipDetail.extend + distributorshipDetail.distributorship);
             const income = {
               author: actualIncome * authorRate,
-              firstClassReferrer: actualIncome * distributorshipDetail.platDistributorship,
+              firstClassReferrer: actualIncome * distributorshipDetail.distributorship,
               secondClassReferrer: actualIncome * distributorshipDetail.extend,
             };
             await ctx.db
