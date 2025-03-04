@@ -75,7 +75,7 @@ export const useSpecialColumn = (
       referredUserId: invitationCode,
       columnId,
     });
-  }, [invitationCode, token, columnId, createReferral]);
+  }, [invitationCode, token, columnId]);
 
   return {
     status,
