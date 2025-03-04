@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from "react";
-import ManagementClass from "./ManagementClass";
 import Image from "next/image";
 import { Checkbox, Drawer, message } from "antd";
 import { LoadingSkeleton } from "../../common/LoadingSkeleton";
@@ -26,8 +25,8 @@ const CONSTANTS = {
 
 // Tab 配置
 const TABS = [
-  { id: 1, label: "专栏" },
-  { id: 2, label: "小课" },
+  { id: 0, label: "专栏" },
+  { id: 1, label: "小课" },
 ] as const;
 
 type TabId = typeof TABS[number]['id'];
@@ -45,7 +44,7 @@ const TabButton: React.FC<TabButtonProps> = ({ tab, isActive, onClick }) => (
     className={`w-17 rounded-4px h-6 ${isActive
       ? `bg-[${CONSTANTS.COLORS.ACTIVE_BG}] text-[${CONSTANTS.COLORS.ACTIVE_TEXT}]`
       : `bg-[${CONSTANTS.COLORS.INACTIVE_BG}] text-[${CONSTANTS.COLORS.INACTIVE_TEXT}]`
-      } ${tab.id === 2 ? 'ml-6' : ''}`}
+      } ${tab.id === 1 ? 'ml-6' : ''}`}
     onClick={() => onClick(tab.id)}
   >
     {tab.label}
@@ -56,14 +55,14 @@ const ColumnItem: React.FC<{
   item: BaseColumnCardDateString;
   index: number;
   isManaging: boolean;
-  onVisibilityChange: (index: number, visible: boolean) => void;
+  onVisibilityChange: (index: string, visible: boolean) => void;
 }> = ({ item, index, isManaging, onVisibilityChange }) => (
   <Checkbox
     key={item.id}
     value={index}
     className="flex flex-row"
     checked={item.isVisible}
-    onChange={(e) => onVisibilityChange(index, e.target.checked)}
+    onChange={(e) => onVisibilityChange(item.id, e.target.checked)}
     disabled={!isManaging}
   >
     <div className="flex">
@@ -108,7 +107,7 @@ const serializeColumnData = (column: BaseColumnCard) => ({
 // 主组件
 const SubscribeManage: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<TabId>(1);
+  const [selectedTab, setSelectedTab] = useState<TabId>(0);
   const [isManaging, setIsManaging] = useState(false);
   const [token] = useLocalStorage("token", "");
   const [columnsState, setColumnsState] = useState<BaseColumnCardDateString[]>([]);
@@ -124,7 +123,7 @@ const SubscribeManage: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const changeVisible = api.order.updateOrderVisible.useMutation({
     onSuccess: () => {
-      messageApi.success("保存成功", 1);
+      messageApi.success("保存成功");
     }
   });
 
@@ -155,9 +154,11 @@ const SubscribeManage: React.FC = () => {
     })));
   }, [columnsState, changeVisible, dispatch, token]);
 
-  const handleChange = useCallback((index: number, visible: boolean) => {
+  const handleChange = useCallback((columnId: string, visible: boolean) => {
+    console.log('index =>', columnId);
+    
     setColumnsState(prev => prev.map((item, i) =>
-      i === index ? { ...item, isVisible: visible } : item
+      item.id === columnId ? { ...item, isVisible: visible } : item
     ));
   }, []);
 
@@ -169,13 +170,13 @@ const SubscribeManage: React.FC = () => {
   }, [isManaging, handleSave]);
 
   // 渲染方法
-  const renderColumnList = () => {
+  const renderColumnList = (type: number) => {
     if (isLoading) return <LoadingSkeleton count={CONSTANTS.LOADING_SKELETON_COUNT} />;
 
     return (
       <div className="w-85.75 h-20.471 bg-#fff rounded-2.5 m-auto flex">
         <div className="w-100% mt-2 flex flex-col space-y-4">
-          {columnsState?.map((item, index) => (
+          {columnsState?.filter(item => item.type === type).map((item, index) => (
             <ColumnItem
               key={item.id}
               item={item}
@@ -235,7 +236,7 @@ const SubscribeManage: React.FC = () => {
               {isManaging ? "保存" : "管理"}
             </button>
           </div>
-          {selectedTab === 1 ? renderColumnList() : <ManagementClass />}
+          {renderColumnList(selectedTab)}
         </div>
       </Drawer>
     </div>
