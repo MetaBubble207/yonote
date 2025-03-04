@@ -110,7 +110,7 @@ export const orderRouter = createTRPCRouter({
         await ctx.db.insert(runningWater).values({
           userId: input.buyerId,
           price: priceListData.price,
-          name: `购买专栏${columnData.name}`,
+          name: `购买专栏《${columnData.name}》`,
           expenditureOrIncome: 0,
         });
 
