@@ -48,6 +48,8 @@ export const CreateCourseClient = ({ columnId }: { columnId: string | null }) =>
       name: name.trim(),
       userId: token,
       type: 1,
+      paymentMode: 'permanent',
+      permanentPrice: parseInt(price)
     });
   };
 
@@ -91,7 +93,7 @@ export const CreateCourseClient = ({ columnId }: { columnId: string | null }) =>
             </label>
             <div className="ml-4 flex items-center">
               <Image
-                src="/images/writer/co-author/check.svg"
+                src="/images/writer/create/radio-checked.svg"
                 alt="check"
                 width={20}
                 height={20}
@@ -111,7 +113,7 @@ export const CreateCourseClient = ({ columnId }: { columnId: string | null }) =>
             <div className="ml-4 flex items-center">
               <button className="flex items-center">
                 <Image
-                  src={`/images/writer/co-author/check.svg`}
+                  src={`/images/writer/create/radio-checked.svg`}
                   alt={'check'}
                   width={20}
                   height={20}
