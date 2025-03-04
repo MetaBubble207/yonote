@@ -21,7 +21,7 @@ const RecentlyReadCard = ({ code }: { code?: string }) => {
         { enabled: Boolean(token) }
     );
 
-    const { data: recentColumn, isLoading: isRecentColumnLoading } = api.column.getColumnDetail.useQuery(
+    const { data: recentColumn, isLoading: isRecentColumnLoading } = api.column.getById.useQuery(
         recentRead?.columnId ?? "",
         { enabled: Boolean(isValid(recentRead)) }
     );

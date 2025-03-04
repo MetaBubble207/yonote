@@ -9,7 +9,7 @@ import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { ColumnSelect } from "@/server/db/schema";
 
 const ColumnList = ({ columnId }: { columnId: string | null }) => {
-  const { data: currentColumn } = api.column.getColumnDetail.useQuery(columnId!, {
+  const { data: currentColumn } = api.column.getById.useQuery(columnId!, {
     enabled: Boolean(columnId),
   });
   const [showColumnPopup, setShowColumnPopup] = useState(false);

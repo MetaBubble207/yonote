@@ -20,6 +20,18 @@ export default async function Page({
         </div>
       );
     }
+    const columnData = await api.column.getColumnDetail(columnId)
+
+    if (!columnData) {
+      return (
+        <div className="flex h-full w-full items-center justify-center">
+          <div className="text-center">
+            <h3 className="text-xl font-semibold">专栏不存在</h3>
+            <p className="mt-2 text-gray-500">请刷新页面重试</p>
+          </div>
+        </div>
+      );
+    }
     // 并行获取所有需要的数据
     const { reads, readingRate, subscriptions, subscriptionRate } = await api.read.getHomepageData(columnId);
 

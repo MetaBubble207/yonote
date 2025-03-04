@@ -15,7 +15,7 @@ export default async function Page({
   }
 
   // 服务端获取数据
-  const columnData = await api.column.getColumnDetail(columnId);
+  const columnData = await api.column.getById(columnId);
   const priceListData = await api.priceList.getByColumnId(columnId);
 
   return (

@@ -9,7 +9,7 @@ interface SpecialColumnIntroduceProps {
 }
 
 const SpecialColumnIntroduce = React.memo(({ columnId }: SpecialColumnIntroduceProps) => {
-  const { data: column, isLoading } = api.column.getColumnDetail.useQuery(columnId);
+  const { data: column, isLoading } = api.column.getById.useQuery(columnId);
 
   if (isLoading) {
     return (

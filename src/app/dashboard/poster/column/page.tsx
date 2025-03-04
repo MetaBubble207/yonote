@@ -10,7 +10,7 @@ export default async function Page({
   const { id: columnId } = await searchParams;
 
   const [column, user, order] = await Promise.all([
-    api.column.getColumnDetail(columnId),
+    api.column.getById(columnId),
     api.users.getOneByColumnId(columnId),
     api.order.getColumnOrder({columnId})
   ]);

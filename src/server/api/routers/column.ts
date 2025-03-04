@@ -243,7 +243,7 @@ export const columnRouter = createTRPCRouter({
     return await Promise.all(promises);
   }),
 
-  getColumnDetail: publicProcedure
+  getById: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const columnDetail = await ctx.db.query.column.findFirst({ where: eq(column.id, input) });
