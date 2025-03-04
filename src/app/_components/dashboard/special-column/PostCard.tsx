@@ -43,8 +43,8 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, isSubscribe }) => {
     }
   };
 
-  const TagBadge = ({ children }: { children: React.ReactNode }) => (
-    <span className="border-rd-0.5 text-2.5 font-not-italic font-500 lh-6 px-7px py-3px ml-10px shrink-0 bg-[#FDB069] text-[#000]">
+  const TagBadge = ({ children, className }: { children: React.ReactNode, className?:string }) => (
+    <span className={`w-26px h-16px flex justify-center items-center border-rd-0.5 text-2.5 font-300 ml-10px shrink-0 text-#fff ${className}`}>
       {children}
     </span>
   );
@@ -72,8 +72,8 @@ const PostCard: React.FC<PostCardProps> = ({ postDetail, isSubscribe }) => {
             <span className="truncate block">
               {truncatedName}
             </span>
-            {postDetail?.isTop && <TagBadge>置顶</TagBadge>}
-            {postDetail?.isFree && <TagBadge>免费</TagBadge>}
+            {postDetail?.isTop && <TagBadge className={'bg-#FDB069'}>置顶</TagBadge>}
+            {postDetail?.isFree && <TagBadge className={'bg-#75C3EE'}>免费</TagBadge>}
           </div>
           <div className="text-3.25 pt-5px text-[#666] line-clamp-2">
             {truncatedContent}
