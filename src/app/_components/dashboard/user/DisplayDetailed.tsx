@@ -1,42 +1,34 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { api } from "@/trpc/react";
 import NoData from "@/app/_components/common/NoData";
 import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
-import { type UserInsert } from "@/server/db/schema";
+import { type UserInsert, type ColumnSelect } from "@/server/db/schema";
 import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 
-// 类型定义
+// 常量定义
+const TABS = [
+  { id: 1, label: "更新" },
+  { id: 2, label: "专栏" },
+  { id: 3, label: "小课" },
+] as const;
+
+const STATS = [
+  { key: 'subscribe', label: '订阅' },
+  { key: 'column', label: '专栏' },
+  { key: 'content', label: '内容' },
+] as const;
+
+// 组件类型定义
 interface Props {
   token: string;
   userInfo: UserInsert;
 }
 
-interface TabInfo {
-  id: number;
-  label: string;
-}
-
-interface ColumnCardProps {
-  id: string;
-  cover: string | null;
-  name: string | null;
-  introduce: string | null;
-}
-
-
-// 统计数字展示组件
-const StatsDisplay = ({ length, stat }: { length: number; stat: string }) => (
-  <div className="flex flex-col items-center">
-    {length || 0}
-    <h2 className="text-3 font-normal leading-6 text-[#999]">{stat}</h2>
-  </div>
-);
-
-// 专栏卡片组件
-const ColumnCard = ({ id, cover, name, introduce }: ColumnCardProps) => (
+// 抽离卡片组件
+const ColumnCard = ({ id, cover, name, introduce }: ColumnSelect) => (
   <Link href={`/dashboard/special-column?id=${id}`} className="mb-4 flex">
     <div className="w-15.5 h-19 relative">
       <Image
@@ -64,6 +56,7 @@ const ColumnCard = ({ id, cover, name, introduce }: ColumnCardProps) => (
 const DisplayDetailed = ({ token, userInfo }: Props) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
+  // API 查询
   const { data: subscribeInfos } = api.order.getUserOrder.useQuery({
     userId: userInfo.id,
   });
@@ -71,76 +64,87 @@ const DisplayDetailed = ({ token, userInfo }: Props) => {
     userId: userInfo.id,
   });
   const { data: postLength } = api.post.getPostCount.useQuery(userInfo.id);
-
   const { data: updateColumnInfos, isLoading: isUpdateLoading } = api.column.getUpdate.useQuery({
     writerId: userInfo.id,
     visitorId: token,
   });
 
-  // Tab 配置
-  const tabs: TabInfo[] = [
-    { id: 1, label: "更新" },
-    { id: 2, label: "专栏" },
-    { id: 3, label: "小课" },
-  ];
+  // 统计数据
+  const stats = useMemo(() => ({
+    subscribe: subscribeInfos?.length ?? 0,
+    column: columnInfos?.length ?? 0,
+    content: postLength ?? 0,
+  }), [subscribeInfos?.length, columnInfos?.length, postLength]);
 
-  // 统计展示列表
-  const StatsDisplayList = () => (
-    <div className="text-neutral text-4 flex w-full justify-center space-x-14 font-bold leading-6">
-      <StatsDisplay stat="订阅" length={subscribeInfos?.length ?? 0} />
-      <StatsDisplay stat="专栏" length={columnInfos?.length ?? 0} />
-      <StatsDisplay stat="内容" length={postLength ?? 0} />
-    </div>
-  );
+  // 过滤后的专栏数据
+  const filteredColumns = useMemo(() => ({
+    columns: columnInfos?.filter(item => item.type === 0) ?? [],
+    courses: columnInfos?.filter(item => item.type === 1) ?? [],
+  }), [columnInfos]);
 
-  // Tab 组件
-  const Tabs = () => (
-    <div className="mb-6 flex">
-      {tabs.map((tab) => (
-        <div key={tab.id} className="flex-col">
-          <button
-            className="mr-8 p0 bg-transparent"
-            onClick={() => setCurrentPage(tab.id)}
-          >
-            {tab.label}
-          </button>
-          <div
-            className={`ml-2.25 w-2.75 rounded-2 mt-1 h-1 ${currentPage === tab.id ? "bg-primary" : "bg-#FFF"
-              }`}
-          />
-        </div>
-      ))}
-    </div>
-  );
-
-  // 内容渲染
-  const RenderContent = () => {
-    if (currentPage === 1) {
-      if (isUpdateLoading) return <LoadingSkeleton rows={3} />;
-      if (!updateColumnInfos?.length) {
-        return <NoData title="你已经阅读完该作者所有的帖子了噢😁~" />;
+  // 渲染内容
+  const renderContent = () => {
+    const contentMap = {
+      1: {
+        data: updateColumnInfos,
+        loading: isUpdateLoading,
+        emptyMessage: "你已经阅读完该作者所有的帖子了噢😁~"
+      },
+      2: {
+        data: filteredColumns.columns,
+        loading: !columnInfos,
+        emptyMessage: "暂无专栏数据"
+      },
+      3: {
+        data: filteredColumns.courses,
+        loading: !columnInfos,
+        emptyMessage: "暂无小课数据"
       }
-      return updateColumnInfos.map((item) => (
-        <ColumnCard key={item.id} {...item} />
-      ));
-    }
+    };
 
-    if (currentPage === 2) {
-      if (!columnInfos?.length) return <LoadingSkeleton rows={3} />;
-      return columnInfos.map((item) => (
-        <ColumnCard key={item.id} {...item} />
-      ));
-    }
-
-    return <NoData title="没有查找到数据噢😯~" />;
+    const current = contentMap[currentPage as keyof typeof contentMap];
+    
+    if (current.loading) return <LoadingSkeleton rows={3} />;
+    if (!current.data?.length) return <NoData title={current.emptyMessage} />;
+    
+    return current.data.map(item => <ColumnCard key={item.id} {...item} />);
   };
 
   return (
     <>
-      <StatsDisplayList />
+      {/* 统计展示 */}
+      <div className="text-neutral text-4 flex w-full justify-center space-x-14 font-bold leading-6">
+        {STATS.map(({ key, label }) => (
+          <div key={key} className="flex flex-col items-center">
+            {stats[key as keyof typeof stats]}
+            <h2 className="text-3 font-normal leading-6 text-[#999]">{label}</h2>
+          </div>
+        ))}
+      </div>
+
+      {/* 内容区域 */}
       <div className="rounded-2.5 ml-8 mr-8 mt-4">
-        <Tabs />
-        <RenderContent />
+        {/* Tab栏 */}
+        <div className="mb-6 flex">
+          {TABS.map((tab) => (
+            <div key={tab.id} className="flex-col">
+              <button
+                className="mr-8 p0 bg-transparent"
+                onClick={() => setCurrentPage(tab.id)}
+              >
+                {tab.label}
+              </button>
+              <div
+                className={`ml-2.25 w-2.75 rounded-2 mt-1 h-1 ${
+                  currentPage === tab.id ? "bg-primary" : "bg-#FFF"
+                }`}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* 内容渲染 */}
+        {renderContent()}
       </div>
     </>
   );

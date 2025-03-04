@@ -310,8 +310,6 @@ export const columnRouter = createTRPCRouter({
           eq(order.buyerId, input.userId),
           eq(order.status, true),
         ));
-      console.log("ordersQuery ====>", ordersQuery);
-      
       let orders;
       if (input.type !== undefined) {
         // 如果指定了类型，则联表查询符合类型的专栏
@@ -326,8 +324,6 @@ export const columnRouter = createTRPCRouter({
         orders = await ordersQuery;
         if (!orders.length) return [];
       }
-      console.log("orders ===>", );
-      
       if (!orders.length) return [];
       // 创建订阅记录映射，用于后续获取 isVisible
       const orderMap = new Map(orders.map(o => [o.columnId, o.isVisible]));
@@ -347,8 +343,6 @@ export const columnRouter = createTRPCRouter({
 
       // 创建用户信息查找映射
       const userMap = new Map(users.map(user => [user!.id, user]));
-      console.log("columns ==>", columns);
-      
       // 组合数据，添加 isVisible 字段
       return columns.map(col => {
         const user = userMap.get(col.userId);
