@@ -25,13 +25,8 @@ export const ColumnContent = ({ column }: { column: ColumnSelect }) => {
             </div>
             {/* 简介内容 */}
             <div
-                className="w-44.744 h-35 text-2.5 font-500 lh-6 ml-2.75 mt-2 text-[#666]"
-                style={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-flex",
-                    WebkitLineClamp: 6,
-                }}
+                className="w-44.744 h-35 text-2.5 font-medium leading-6 ml-2.75 mt-2 text-[#666] 
+                    overflow-hidden text-ellipsis whitespace-nowrap line-clamp-6"
             >
                 {column.introduce}
             </div>

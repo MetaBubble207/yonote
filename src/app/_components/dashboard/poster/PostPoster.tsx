@@ -31,7 +31,7 @@ export const PostPoster = ({ user, postData, likeCount, readCount, chapter, colu
   }, [postData?.content]);
 
   const originURL = typeof window !== 'undefined' ? window.location.origin : '';
-  const qrcodeURL = `${originURL}/dashboard/special-column/content?c=${chapter}&id=${columnId}&invitationCode=${token}`;
+  const qrCodeURL = `${originURL}/dashboard/special-column/content?c=${chapter}&id=${columnId}&invitationCode=${token}`;
 
   const { png, pngUrl, isScreenshot, handleScreenshotClick } = useScreenshot();
 
@@ -68,7 +68,7 @@ export const PostPoster = ({ user, postData, likeCount, readCount, chapter, colu
           <FooterInfo
             userInfo={user!}
             token={token}
-            qrcodeURL={qrcodeURL}
+            qrCodeURL={qrCodeURL}
             onScreenshot={handleScreenshotClick}
           />
         </div>

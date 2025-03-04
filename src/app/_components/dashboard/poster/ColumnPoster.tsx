@@ -20,7 +20,7 @@ export const ColumnPoster = ({ user, column, ContentCount, subscribeCount }: Col
     const [token] = useLocalStorage('token', null);
 
     const originURL = typeof window !== 'undefined' ? window.location.origin : '';
-    const qrcodeURL = `${originURL}/dashboard/special-column?&id=${column.id}&invitationCode=${token}`;
+    const qrCodeURL = `${originURL}/dashboard/special-column?&id=${column.id}&invitationCode=${token}`;
 
     const { png, pngUrl, isScreenshot, handleScreenshotClick } = useScreenshot();
 
@@ -37,7 +37,7 @@ export const ColumnPoster = ({ user, column, ContentCount, subscribeCount }: Col
                 </div>
             ) : (
                 <div ref={png} className="h-129.5005 mx-4 w-full bg-[#ffffff]">
-                    <AuthorInfo user={user!}>
+                    <AuthorInfo user={user}>
                         <div className="ml-2.25 flex items-center">
                             <div
                                 className={
@@ -61,7 +61,7 @@ export const ColumnPoster = ({ user, column, ContentCount, subscribeCount }: Col
                     <FooterInfo
                         userInfo={user!}
                         token={token}
-                        qrcodeURL={qrcodeURL}
+                        qrCodeURL={qrCodeURL}
                         onScreenshot={handleScreenshotClick}
                     />
                 </div>
