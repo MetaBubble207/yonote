@@ -9,7 +9,7 @@ import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 interface CarouselProps {
   columnId: string | null;
   columns: ColumnSelect[] | [];
-  onImageClick: (index: number, column: ColumnSelect) => void;
+  onImageClick: (b: boolean) => void;
 }
 
 const ColumnPopup: React.FC<CarouselProps> = ({ columnId, columns, onImageClick }) => {
@@ -52,7 +52,7 @@ const ColumnPopup: React.FC<CarouselProps> = ({ columnId, columns, onImageClick 
       messageApi.error("专栏不存在");
       return;
     }
-    onImageClick(index, selectedColumn);
+    onImageClick(false);
     router.push("/writer/homepage?columnId=" + selectedColumn.id);
   };
 

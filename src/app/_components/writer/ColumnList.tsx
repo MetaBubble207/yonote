@@ -77,7 +77,7 @@ const ColumnList = ({ columnId }: { columnId: string | null }) => {
             {isLoading ? (
               <Loading />
             ) : (
-              <ColumnPopup columnId={columnId} columns={columns || []} onImageClick={handleImageClick} />
+              <ColumnPopup columnId={columnId} columns={columns || []} onImageClick={setShowColumnPopup} />
             )}
           </div>
         </div>
