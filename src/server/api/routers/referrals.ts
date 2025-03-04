@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { and, eq, gte, lte, sql } from "drizzle-orm";
+import { and, eq, gt, gte, lte, sql } from "drizzle-orm";
 import { referrals, type SpeedUp, order, user, UserSelect } from "@/server/db/schema";
+import { getCurrentTime } from "@/app/_utils/getCurrentTime";
 export const referralsRouter = createTRPCRouter({
   // 新增分页查询方法
   getByColumnIdPaginated: publicProcedure
@@ -122,11 +123,12 @@ export const referralsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      // 查看被邀请的用户有没有购买过该专栏
+      // 查看被邀请的用户有没有购买过该专栏，如果已经过期的则不算
       const columnData = await ctx.db.query.order.findFirst({
         where: and(
           eq(order.buyerId, input.userId),
-          eq(order.columnId, input.columnId)
+          eq(order.columnId, input.columnId),
+          gt(order.endDate, getCurrentTime())
         )
       })
       // 购买过直接返回
