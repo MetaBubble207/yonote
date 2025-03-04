@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { runningWater, wallet } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq, lt, ne } from "drizzle-orm";
 import crypto from "crypto";
 import process from "process";
+import { getCurrentTime } from "@/app/_utils/getCurrentTime";
 
 export const walletRouter = createTRPCRouter({
   getByUserId: publicProcedure
@@ -130,5 +131,45 @@ export const walletRouter = createTRPCRouter({
           amountWithdraw: walletData.amountWithdraw + input.amount,
         })
         .where(eq(wallet.userId, input.userId));
+    }),
+
+  // 检测冻结金额是否需要解冻
+  checkFreezeIncome: publicProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const { db } = ctx;
+      // 获取流水中收入的部分，且时间超过了 24 小时的
+      const runningWaterData = await db.query.runningWater.findMany({
+        where: and(
+          eq(runningWater.userId, input),
+          eq(runningWater.expenditureOrIncome, 1),
+          eq(runningWater.isfreezed, false),
+          ne(runningWater.name, '充值'),
+          lt(runningWater.createdAt, getCurrentTime()),
+        ),
+      });
+      // 获取钱包金额
+      const walletData = await db.query.wallet.findFirst({
+        where: eq(wallet.userId, input),
+      });
+      if (!walletData) return;
+      // 钱包中的冻结金额减去收入的部分
+      await db
+        .update(wallet)
+        .set({
+          freezeIncome: walletData.freezeIncome - runningWaterData.reduce((acc, cur) => acc + cur.price, 0),
+          amountWithdraw: walletData.amountWithdraw + runningWaterData.reduce((acc, cur) => acc + cur.price, 0),
+        })
+        .where(eq(wallet.userId, input));
+
+      // 更新流水中的 isfreezed 字段
+      await Promise.all(runningWaterData.map(async item => {
+        await db
+          .update(runningWater)
+          .set({
+            isfreezed: true,
+          })
+          .where(eq(runningWater.id, item.id));
+      }))
     }),
 });

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import { api } from "@/trpc/react";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { message, Modal } from "antd";
@@ -47,6 +47,17 @@ export default function Page() {
     }
   });
 
+  const checkFreezeIncome = api.wallet.checkFreezeIncome.useMutation({
+    onSuccess: () => {
+      refetch();
+    }
+  })
+
+  useEffect(() => {
+    if (!token) return;
+    checkFreezeIncome.mutate(token)
+  }, [token])
+  
   // 处理函数
   const handleWithdraw = useCallback(() => {
     if (!walletData || !walletData.amountWithdraw) {
@@ -90,7 +101,7 @@ export default function Page() {
   }, [token, afterRecharge]);
 
   if (isWalletLoading || isRunningWaterLoading) return <Loading />;
-  if (!walletData || !runningWaterData) return <Error text="哎呀，页面出错啦😣"/>
+  if (!walletData || !runningWaterData) return <Error text="哎呀，页面出错啦😣" />
   return (
     <div>
       <div className="mt-8 flex items-center justify-center">
