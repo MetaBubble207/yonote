@@ -122,18 +122,27 @@ export const referralsRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // 查看被邀请的用户有没有购买过该专栏
+      const columnData = await ctx.db.query.order.findFirst({
+        where: and(
+          eq(order.buyerId, input.userId),
+          eq(order.columnId, input.columnId)
+        )
+      })
+      // 购买过直接返回
+      if (columnData) return;
+
+      // 查看原本用户有没有在该专栏上被推荐过
       const data = await ctx.db.query.referrals.findFirst({
         where: and(
           eq(referrals.userId, input.userId),
           eq(referrals.columnId, input.columnId),
         ),
       });
+      // 有的话就更新，没有就新插入
       if (data) {
         return ctx.db
-          .update(referrals)
-          .set({
-            referredUserId: input.referredUserId,
-          })
+          .update(referrals).set({ referredUserId: input.referredUserId })
           .where(
             and(
               eq(referrals.userId, input.userId),
