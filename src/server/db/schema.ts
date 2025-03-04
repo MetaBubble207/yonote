@@ -280,6 +280,7 @@ export type UserSelect = typeof user.$inferSelect;
 export type RunningWaterSelect = typeof runningWater.$inferSelect;
 export type ColumnSelect = typeof column.$inferSelect;
 export type PriceListSelect = typeof priceList.$inferSelect;
+export type OrderSelect = typeof order.$inferSelect;
 export type ColumnUser = {
   column: typeof column.$inferSelect;
   user: typeof user.$inferSelect;

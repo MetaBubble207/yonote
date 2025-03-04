@@ -5,8 +5,9 @@ import React, { useState, useMemo } from "react";
 import { api } from "@/trpc/react";
 import NoData from "@/app/_components/common/NoData";
 import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
-import { type UserInsert, type ColumnSelect } from "@/server/db/schema";
+import { OrderSelect, type ColumnSelect } from "@/server/db/schema";
 import { LoadingSkeleton } from "../../common/LoadingSkeleton";
+import useLocalStorage from "@/app/_hooks/useLocalStorage";
 
 // 常量定义
 const TABS = [
@@ -23,8 +24,10 @@ const STATS = [
 
 // 组件类型定义
 interface Props {
-  token: string;
-  userInfo: UserInsert;
+  writerId: string;
+  subscribeInfos: OrderSelect[];
+  columnInfos: ColumnSelect[];
+  postLength: number;
 }
 
 // 抽离卡片组件
@@ -53,19 +56,12 @@ const ColumnCard = ({ id, cover, name, introduce }: ColumnSelect) => (
   </Link>
 );
 
-const DisplayDetailed = ({ token, userInfo }: Props) => {
+const DisplayDetailed = ({ writerId, subscribeInfos, columnInfos, postLength }: Props) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [token] = useLocalStorage("token", null);
 
-  // API 查询
-  const { data: subscribeInfos } = api.order.getUserOrder.useQuery({
-    userId: userInfo.id,
-  });
-  const { data: columnInfos } = api.column.getAllByUserId.useQuery({
-    userId: userInfo.id,
-  });
-  const { data: postLength } = api.post.getPostCount.useQuery(userInfo.id);
   const { data: updateColumnInfos, isLoading: isUpdateLoading } = api.column.getUpdate.useQuery({
-    writerId: userInfo.id,
+    writerId: writerId,
     visitorId: token,
   });
 
@@ -103,10 +99,10 @@ const DisplayDetailed = ({ token, userInfo }: Props) => {
     };
 
     const current = contentMap[currentPage as keyof typeof contentMap];
-    
+
     if (current.loading) return <LoadingSkeleton rows={3} />;
     if (!current.data?.length) return <NoData title={current.emptyMessage} />;
-    
+
     return current.data.map(item => <ColumnCard key={item.id} {...item} />);
   };
 
@@ -116,7 +112,7 @@ const DisplayDetailed = ({ token, userInfo }: Props) => {
       <div className="text-neutral text-4 flex w-full justify-center space-x-14 font-bold leading-6">
         {STATS.map(({ key, label }) => (
           <div key={key} className="flex flex-col items-center">
-            {stats[key as keyof typeof stats]}
+            {stats[key]}
             <h2 className="text-3 font-normal leading-6 text-[#999]">{label}</h2>
           </div>
         ))}
@@ -135,9 +131,8 @@ const DisplayDetailed = ({ token, userInfo }: Props) => {
                 {tab.label}
               </button>
               <div
-                className={`ml-2.25 w-2.75 rounded-2 mt-1 h-1 ${
-                  currentPage === tab.id ? "bg-primary" : "bg-#FFF"
-                }`}
+                className={`ml-2.25 w-2.75 rounded-2 mt-1 h-1 ${currentPage === tab.id ? "bg-primary" : "bg-#FFF"
+                  }`}
               />
             </div>
           ))}

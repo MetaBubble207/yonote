@@ -1,13 +1,12 @@
-"use client"
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import DisplayDetailed from "@/app/_components/dashboard/user/DisplayDetailed";
 import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
-import type { UserInsert, UserSelect } from "@/server/db/schema";
+import type { UserSelect } from "@/server/db/schema";
+import { api } from "@/trpc/server";
 // 用户头像组件
-const UserAvatar = ({ userInfo }: { userInfo: UserInsert }) => (
+const UserAvatar = ({ userInfo }: { userInfo: UserSelect }) => (
   <div className="w-31 h-31 absolute top--10 mb-10 flex flex-col items-center justify-center">
     <Image
       src={userInfo.avatar ?? NotImage()}
@@ -50,46 +49,51 @@ const UserAvatar = ({ userInfo }: { userInfo: UserInsert }) => (
     </div>
   </div>
 );
-// 更多内容链接组件
-const MoreContentLink = () => (
-  <div className="flex w-full items-center justify-center pb-9">
-    <div className="w-26 flex h-7 items-center justify-center rounded-full bg-[#daf9f1]">
-      <Link
-        href="/dashboard/find"
-        className="text-3 font-500 text-[#1DB48D]"
-      >
-        更多优质内容
-      </Link>
-    </div>
+// 用户封面组件
+const UserCover = ({ avatar }: { avatar: string | null }) => (
+  <div className="h-28.25 blur-24 relative w-full">
+    <Image
+      placeholder="blur"
+      blurDataURL={LoadingImage()}
+      src={avatar ?? NotImage()}
+      alt="用户封面"
+      fill
+      priority
+      quality={100}
+      className="rounded-2 object-cover"
+    />
   </div>
 );
-// 用户头像组件
-export default function UserInfo({ userInfo }: { userInfo: UserSelect }) {
-  const [token] = useLocalStorage("token", null);
+
+export default async function UserInfo({ userInfo }: { userInfo: UserSelect }) {
+  // 并行请求数据
+  const [subscribeInfos, columnInfos, postLength] = await Promise.all([
+    api.order.getUserOrder({ userId: userInfo.id }),
+    api.column.getAllByUserId({ userId: userInfo.id }),
+    api.post.getPostCount(userInfo.id)
+  ]);
+
   return (
     <div>
-      <div className="h-28.25 blur-24 relative w-full">
-        <Image
-          placeholder="blur"
-          blurDataURL={LoadingImage()}
-          src={userInfo.avatar ?? NotImage()}
-          alt="用户封面"
-          fill
-          priority
-          quality={100}
-          className="rounded-2 object-cover"
-        />
-      </div>
+      <UserCover avatar={userInfo.avatar} />
       <div className="w-93.75 border-rd-[10px_10px_0px_0px] relative flex justify-center bg-[#FFF]">
         <UserAvatar userInfo={userInfo} />
         <div className="flex h-full w-full flex-col">
           <div className="mt-26">
             <DisplayDetailed
-              token={token}
-              userInfo={userInfo}
+              subscribeInfos={subscribeInfos}
+              writerId={userInfo.id}
+              postLength={postLength}
+              columnInfos={columnInfos}
             />
           </div>
-          <MoreContentLink />
+          <div className="flex w-full items-center justify-center pb-9">
+            <div className="w-26 flex h-7 items-center justify-center rounded-full bg-[#daf9f1]">
+              <Link href="/dashboard/find" className="text-3 font-500 text-[#1DB48D]">
+                更多优质内容
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>
