@@ -134,15 +134,14 @@ export default function SpeedUpClient({
             endDate: dateRange?.[1]
         });
     };
-
+    const { refetch: refetchDistributorshipDetail } = api.distributorshipDetail.getOne.useQuery(
+        columnId as string,
+        { enabled: false }
+    );
     // 处理分销激活
     const handleActivated = async () => {
         setLoading(true);
         try {
-            const { refetch: refetchDistributorshipDetail } = api.distributorshipDetail.getOne.useQuery(
-                columnId as string,
-                { enabled: false }
-            );
             await refetchDistributorshipDetail();
             // 刷新页面以获取新的分销数据
             router.refresh();
