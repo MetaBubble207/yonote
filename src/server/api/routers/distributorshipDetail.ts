@@ -23,16 +23,14 @@ export const distributorshipDetailRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { columnId, distributorship, extend } = input;
-      const distributorshipFractionalPart = distributorship / 100;
-      const extendFractionalPart = extend / 100;
-      if (distributorshipFractionalPart + extendFractionalPart > 0.7) {
+      if (distributorship + extend > 0.7) {
         throw new Error("经销分成加推广分成比例超过百分之70");
       }
       return ctx.db
         .update(distributorshipDetail)
         .set({
-          distributorship: distributorshipFractionalPart,
-          extend: extendFractionalPart,
+          distributorship: distributorship,
+          extend: extend,
         })
         .where(eq(distributorshipDetail.columnId, columnId));
     }),
