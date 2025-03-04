@@ -16,7 +16,7 @@ export const PriceItem: React.FC<PriceItemProps> = ({
                 ¥{strategy.price}
             </div>
             <div className="text-3 font-medium leading-6 ml-1 text-[#B5B5B5]">
-                {strategy.timeLimit >= 99999
+                {strategy.timeLimit >= 999999
                     ? "一次购买，永久有效"
                     : `限时购买，有效期${strategy.timeLimit}天`}
             </div>

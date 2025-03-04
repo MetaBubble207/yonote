@@ -45,7 +45,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({
             <div className="mt-6 flex w-full items-center justify-between">
                 <div className="h-10 w-40 overflow-scroll">{columnName}</div>
                 <div>
-                    {selectedItem.timeLimit >= 99999
+                    {selectedItem.timeLimit >= 999999
                         ? `${selectedItem.price}/永久`
                         : `${selectedItem.price}/${selectedItem.timeLimit}天`}
                 </div>
