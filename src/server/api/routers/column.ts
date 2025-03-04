@@ -295,24 +295,40 @@ export const columnRouter = createTRPCRouter({
     }),
   // 获取用户所有可见订阅专栏列表
   getSubscriptColumn: publicProcedure
-    .input(z.string())
+    .input(z.object({ userId: z.string(), type: z.number().optional() }))
     .query(async ({ ctx, input }): Promise<BaseColumnCard[]> => {
       const { db } = ctx;
 
-      // 获取所有有效订阅记录，增加 isVisible 字段
-      const orders = await db
+      // 获取用户订阅的专栏记录
+      const ordersQuery = db
         .select({
           columnId: order.columnId,
           isVisible: order.isVisible
         })
         .from(order)
         .where(and(
-          eq(order.buyerId, input),
+          eq(order.buyerId, input.userId),
           eq(order.status, true),
         ));
-
+      console.log("ordersQuery ====>", ordersQuery);
+      
+      let orders;
+      if (input.type !== undefined) {
+        // 如果指定了类型，则联表查询符合类型的专栏
+        orders = await ordersQuery
+          .innerJoin(column, and(
+            eq(order.columnId, column.id),
+            eq(column.type, input.type)
+          ));
+        if (!orders.length) return [];
+      } else {
+        // 如果没有指定类型，则查询所有订阅
+        orders = await ordersQuery;
+        if (!orders.length) return [];
+      }
+      console.log("orders ===>", );
+      
       if (!orders.length) return [];
-
       // 创建订阅记录映射，用于后续获取 isVisible
       const orderMap = new Map(orders.map(o => [o.columnId, o.isVisible]));
 
@@ -326,15 +342,16 @@ export const columnRouter = createTRPCRouter({
       // 批量获取用户数据
       const userIds = [...new Set(columns.map(col => col.userId))];
       const users = await Promise.all(
-        userIds.map(id => getOneUser(ctx.db, id!))
+        userIds.map(id => getOneUser(ctx.db, id))
       );
 
       // 创建用户信息查找映射
       const userMap = new Map(users.map(user => [user!.id, user]));
-
+      console.log("columns ==>", columns);
+      
       // 组合数据，添加 isVisible 字段
       return columns.map(col => {
-        const user = userMap.get(col.userId!);
+        const user = userMap.get(col.userId);
         const isVisible = orderMap.get(col.id);
         if (!user) throw new Error(`User not found for column ${col.id}`);
         return {

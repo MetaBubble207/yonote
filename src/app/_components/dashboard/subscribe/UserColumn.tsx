@@ -11,7 +11,7 @@ export default function UserColumn({ token }: { token: string | null }) {
   const { subscribeColumnList } = useAppSelector(userSubscribeSelector);
   const dispatch = useAppDispatch();
   const { data: visibleColumnData, isLoading } = api.column.getSubscriptColumn.useQuery(
-    token!,
+    { userId: token!, type: 0 },
     { enabled: Boolean(token && subscribeColumnList.length === 0) }
   );
   useEffect(() => {
@@ -19,20 +19,19 @@ export default function UserColumn({ token }: { token: string | null }) {
       // 将日期对象转换为 ISO 字符串
       const serializedData = visibleColumnData.map((column) => ({
         ...column,
-        createdAt: date2DateTimeStringMouth(column.createdAt as Date),
-        updatedAt: date2DateTimeStringMouth(column.updatedAt as Date),
+        createdAt: date2DateTimeStringMouth(column.createdAt),
+        updatedAt: date2DateTimeStringMouth(column.updatedAt),
       }));
-      console.log("column ====>", visibleColumnData, serializedData)
       dispatch(setSubscribeColumnList(serializedData))
     }
   }, [visibleColumnData])
   if (isLoading) return <LoadingSkeleton rows={3} count={4} />;
-  if (!visibleColumnData?.length)
+  if (!subscribeColumnList?.filter(column => (column.isVisible && column.type === 0)).length)
     return <NoData title="还没有订阅过专栏噢😯~" />;
 
   return (
     <div>
-      {subscribeColumnList.filter(column => column.isVisible).map((column) => (
+      {subscribeColumnList.filter(column => (column.isVisible && column.type === 0)).map((column) => (
         <SubscribeColumn key={column.id} column={column} />
       ))}
     </div>

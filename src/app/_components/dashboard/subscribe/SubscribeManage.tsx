@@ -117,7 +117,7 @@ const SubscribeManage: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { data: columns, isLoading } = api.column.getSubscriptColumn.useQuery(
-    token,
+    { userId: token },
     { enabled: Boolean(token && subscribeColumnList.length === 0) }
   );
 

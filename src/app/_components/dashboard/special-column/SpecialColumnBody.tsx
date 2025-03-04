@@ -1,6 +1,5 @@
 "use client";
 import React, { useCallback } from "react";
-import { message } from "antd";
 import Image from "next/image";
 import { useSpecialColumn } from "@/app/_hooks/useSpecialColumn";
 import SpecialColumnIntroduce from "./SpecialColumnIntroduce";
