@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { runningWater } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export const runningWaterRouter = createTRPCRouter({
   getRunningWater: publicProcedure
@@ -10,6 +10,7 @@ export const runningWaterRouter = createTRPCRouter({
       return ctx.db
         .select()
         .from(runningWater)
-        .where(eq(runningWater.userId, input.id));
+        .where(eq(runningWater.userId, input.id))
+        .orderBy(desc(runningWater.updatedAt));
     }),
 });
