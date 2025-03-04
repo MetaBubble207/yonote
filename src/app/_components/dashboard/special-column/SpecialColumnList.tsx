@@ -56,43 +56,43 @@ const SpecialColumnList = ({
       <div className="mt-23px">
         {isTagsLoading ?
           <div className="flex gap-2 overflow-hidden px-2">
-             <Skeleton.Button 
-              active 
+            <Skeleton.Button
+              active
               size="small"
               className="!h-6 !w-12 rounded-4px"
             />
-             <Skeleton.Button 
-              active 
+            <Skeleton.Button
+              active
               size="small"
               className="!h-6 !w-12 rounded-4px"
             />
-             <Skeleton.Button 
-              active 
+            <Skeleton.Button
+              active
               size="small"
               className="!h-6 !w-12 rounded-4px"
             />
-             <Skeleton.Button 
-              active 
+            <Skeleton.Button
+              active
               size="small"
               className="!h-6 !w-12 rounded-4px"
             />
-             <Skeleton.Button 
-              active 
+            <Skeleton.Button
+              active
               size="small"
               className="!h-6 !w-12 rounded-4px"
             />
-             <Skeleton.Button 
-              active 
+            <Skeleton.Button
+              active
               size="small"
               className="!h-6 !w-12 rounded-4px"
             />
-             <Skeleton.Button 
-              active 
+            <Skeleton.Button
+              active
               size="small"
               className="!h-6 !w-12 rounded-4px"
             />
           </div>
-          : <div className="flex overflow-scroll pb-3 pr-3">
+          : <div className="flex overflow-scroll pb-1 pr-3 [&::-webkit-scrollbar]:h-2px [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:bg-transparent">
             {tags.map((tag) => (
               <div
                 key={tag}
