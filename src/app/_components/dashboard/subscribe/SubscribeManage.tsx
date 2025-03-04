@@ -8,6 +8,7 @@ import { BaseColumnCard, BaseColumnCardDateString } from "@/server/db/schema";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { useAppDispatch, useAppSelector } from "@/app/_hooks/useRedux";
 import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
+import NoData from "../../common/NoData";
 
 // 常量配置
 const CONSTANTS = {
@@ -156,7 +157,7 @@ const SubscribeManage: React.FC = () => {
 
   const handleChange = useCallback((columnId: string, visible: boolean) => {
     console.log('index =>', columnId);
-    
+
     setColumnsState(prev => prev.map((item, i) =>
       item.id === columnId ? { ...item, isVisible: visible } : item
     ));
@@ -172,11 +173,12 @@ const SubscribeManage: React.FC = () => {
   // 渲染方法
   const renderColumnList = (type: number) => {
     if (isLoading) return <LoadingSkeleton count={CONSTANTS.LOADING_SKELETON_COUNT} />;
-
+    const renderColumn = columnsState?.filter(item => item.type === type);
+    if (renderColumn.length === 0) return <NoData title={`还没有订阅的${type === 0 ? "专栏" : "小课"}噢😯~`} />
     return (
       <div className="w-85.75 h-20.471 bg-#fff rounded-2.5 m-auto flex">
         <div className="w-100% mt-2 flex flex-col space-y-4">
-          {columnsState?.filter(item => item.type === type).map((item, index) => (
+          {renderColumn.map((item, index) => (
             <ColumnItem
               key={item.id}
               item={item}
