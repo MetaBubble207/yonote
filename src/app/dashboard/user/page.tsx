@@ -9,6 +9,7 @@ import { Skeleton } from "antd";
 import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ColumnSelect } from "@/server/db/schema";
+import useCheckOnClient from "@/app/_hooks/useCheckOnClient";
 
 // 类型定义
 interface NavItem {
@@ -310,7 +311,7 @@ export default function UserPage() {
     };
 
     if (!token || !userInfo) return <></>;
-
+    if (!isUserInfoLoading && !isColumnInfoLoading && (!columnInfo || columnInfo.length === 0)) return <></>;
     return (
       <>
         <div className="border-rd-2.5 bg-#FFF mt-4 w-full pb-2 pl-4 pt-4">
@@ -335,7 +336,8 @@ export default function UserPage() {
       </>
     );
   }
-
+  const mounted = useCheckOnClient();
+  if (!mounted) return <></>;
   return (
     <div>
       {/* 背景颜色*/}
