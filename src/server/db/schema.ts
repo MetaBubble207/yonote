@@ -90,9 +90,9 @@ export const column = createTable("column", {
 export const distributorshipDetail = createTable("distributorship_detail", {
   id: serial("id").primaryKey(),
   columnId: varchar("column_id").notNull(),
-  platDistributorship: real("plat_distributorship"),
-  distributorship: real("distributorship"),
-  extend: real("extend"),
+  platDistributorship: real("plat_distributorship").notNull().default(0.15),
+  distributorship: real("distributorship").notNull().default(0),
+  extend: real("extend").notNull().default(0),
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
