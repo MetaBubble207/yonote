@@ -42,6 +42,7 @@ const SpecialColumnList = () => {
       conditions: currentContent,
       limit: PAGE_SIZE,
       sortOrder,
+      type: 0,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,

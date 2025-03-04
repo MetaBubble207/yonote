@@ -204,7 +204,7 @@ export const columnRouter = createTRPCRouter({
       const columnsByName = await Promise.all(
         columnResults.map(async (col) => {
           const userData = await db.query.user.findFirst({
-            where: eq(user.id, col.userId!)
+            where: eq(user.id, col.userId)
           });
 
           if (!userData) {
@@ -403,20 +403,29 @@ export const columnRouter = createTRPCRouter({
       limit: z.number().default(10),
       cursor: z.number().default(0),
       sortOrder: z.boolean().default(true),
+      type: z.number().optional(),
     }))
     .query(async ({ ctx, input }): Promise<{
       items: DetailColumnCard[];
       nextCursor: number | undefined;
     }> => {
-      const { conditions, limit, cursor, sortOrder } = input;
-
-      const allColumn = await ctx.db
+      const { conditions, limit, cursor, sortOrder, type } = input;
+      // 构建查询条件
+      const query = ctx.db
         .select()
         .from(column)
         .limit(limit + 1)
-        .offset(cursor)
-        .orderBy(sortOrder ? asc(column.id) : desc(column.id));
+        .offset(cursor);
 
+      // 如果指定了类型，添加类型过滤条件
+      if (type !== undefined) {
+        query.where(eq(column.type, type));
+      }
+
+      // 添加排序
+      query.orderBy(sortOrder ? asc(column.id) : desc(column.id));
+
+      const allColumn = await query;
       const hasNextPage = allColumn.length > limit;
       const columns = hasNextPage ? allColumn.slice(0, -1) : allColumn;
 
@@ -484,7 +493,7 @@ export const columnRouter = createTRPCRouter({
         .limit(1);
       // 如果作者没有发布过帖子，则返回第一个查到的columnId
       if (!latestPost.length || !latestPost[0] || latestPost[0].columnId === null) {
-        return authorColumns[0]!.id;
+        return authorColumns[0].id;
       }
       // 3. 返回最近更新的专栏ID
       return latestPost[0].columnId;
