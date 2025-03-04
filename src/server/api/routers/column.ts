@@ -3,12 +3,10 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
   type BaseColumnCard,
-  type ColumnSelect,
   column,
   type DetailColumnCard,
   order,
   post,
-  postRead,
   priceList,
   user,
 } from "@/server/db/schema";
@@ -248,11 +246,8 @@ export const columnRouter = createTRPCRouter({
   getColumnDetail: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const columnDetail = await ctx.db
-        .select()
-        .from(column)
-        .where(and(eq(column.id, input)));
-      return columnDetail[0];
+      const columnDetail = await ctx.db.query.column.findFirst({ where: eq(column.id, input) });
+      return columnDetail ?? null;
     }),
 
   // 获取用户更新了帖子还未读的专栏列表
