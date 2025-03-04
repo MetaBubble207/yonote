@@ -57,7 +57,7 @@ export default function Page() {
     if (!token) return;
     checkFreezeIncome.mutate(token)
   }, [token])
-  
+
   // 处理函数
   const handleWithdraw = useCallback(() => {
     if (!walletData || !walletData.amountWithdraw) {
@@ -100,7 +100,7 @@ export default function Page() {
     setPayOpen(false);
   }, [token, afterRecharge]);
 
-  if (isWalletLoading || isRunningWaterLoading) return <Loading />;
+  if (isWalletLoading || isRunningWaterLoading) return <Loading className="mt-50" />;
   if (!walletData || !runningWaterData) return <Error text="哎呀，页面出错啦😣" />
   return (
     <div>
