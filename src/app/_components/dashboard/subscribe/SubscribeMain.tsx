@@ -54,7 +54,7 @@ const SubscribeMain = ({code}:{code?: string}) => {
       case 2:
         return <UserColumn token={token} />;
       case 3:
-        return <UserCourse />;
+        return <UserCourse token={token}/>;
       default:
         return null;
     }
