@@ -14,8 +14,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<Spe
         <div className={"w-full"}>
           <SpecialColumnHeader columnId={id}></SpecialColumnHeader>
         </div>
-        {/*专栏主体*/}
-        <SpecialColumnBody columnId={id} code={code} invitationCode={invitationCode} isBack={isBack}></SpecialColumnBody>
+        <SpecialColumnBody
+          columnId={id}
+          code={code}
+          invitationCode={invitationCode}
+          isBack={isBack}
+        />
       </div>
     </div>
   );

@@ -76,11 +76,10 @@ export function Navigation({
 
   const canAccessPost = (post: PostSelect | undefined | null) =>
     post?.isFree || postData.user.id === token;
-
   const navigation = {
-    toDirectory: () => router.push(`/dashboard/special-column?c=1&id=${columnId}`),
-    toPrevious: () => router.push(`/dashboard/special-column/content?c=${prevPost!.chapter}&id=${columnId}`),
-    toNext: () => router.push(`/dashboard/special-column/content?c=${nextPost!.chapter}&id=${columnId}`),
+    toDirectory: () => router.back(),
+    toPrevious: () => router.replace(`/dashboard/special-column/content?c=${prevPost!.chapter}&id=${columnId}`),
+    toNext: () => router.replace(`/dashboard/special-column/content?c=${nextPost!.chapter}&id=${columnId}`),
   };
 
   return (
