@@ -4,12 +4,13 @@ import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { api } from "@/trpc/react";
+import Link from "next/link";
 
 const Compass = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const code = useSearchParams().get("code");
-  const [isGo, setIsGo] = useState(false);
+  const searchParams = useSearchParams();
+  const code = searchParams.get("code");
   const handleLogout = () => {
     setToken(null);
   };
@@ -27,20 +28,29 @@ const Compass = () => {
   }, [token, pathname, router]);
 
   const user = api.users.getOne.useQuery(token ?? "").data;
-
+  const [columnIdState, setColumnIdState] = useState<string>();
+  const columnId = searchParams.get('columnId')
+  const { data: latestColumnId } = api.column.getLatestColumnId.useQuery(token, { enabled: Boolean((columnId === undefined || columnId === null) && token) });
+  // 组件初始化逻辑
   useEffect(() => {
-    if (isGo) router.push(`/writer/homepage`);
-  }, [isGo, router]);
-
+    if (!columnId || columnId === null) {
+      if (latestColumnId) {
+        setColumnIdState(latestColumnId)
+        router.push(`${pathname}?columnId=${latestColumnId}`)
+      }
+    } else {
+      setColumnIdState(columnId)
+    }
+    if (!token) {
+      router.push('/writer/login')
+    }
+  }, [columnId, token, latestColumnId])
   return (
     <div>
       <div className="w-100% h-17.5 pr-23px z-101 fixed top-0 flex shrink-0 items-center justify-between bg-[#FFF]">
         {/*左半边导航区*/}
         <div className="w-107.55675 h-11.75 ml-7.1975 mt-2.875 flex shrink-0 items-center">
-          <div
-            className="h-9.48025 inline-flex w-20 items-center"
-            onClick={() => setIsGo(true)}
-          >
+          <Link href={`/writer/homepage?columnId=${columnIdState}`} className="h-9.48025 inline-flex w-20 items-center cursor-pointer shrink-0">
             <Image
               src={"/images/logo.svg"}
               alt={"cover"}
@@ -52,16 +62,14 @@ const Compass = () => {
               <div className="font-size-4 shrink-0">有记</div>
               <div className="font-size-2 tracking-1.2 shrink-0">YoNote</div>
             </div>
-          </div>
-          <div className="text-3.5 font-400 lh-6 ml-17.5575 text-[#323232]">
+          </Link>
+          <div className="text-3.5 font-400 lh-6 ml-17.5575 text-[#323232] cursor-pointer">
             官网
-            <button></button>
           </div>
-          <div className="text-3.5 font-400 lh-6 ml-15 text-[#323232]">
+          <div className="text-3.5 font-400 lh-6 ml-15 text-[#323232] cursor-pointer">
             专栏申请
-            <button></button>
           </div>
-          <div className="text-3.5 font-400 lh-6 ml-15 text-[#323232]">
+          <div className="text-3.5 font-400 lh-6 ml-15 text-[#323232] cursor-pointer">
             反馈社区
           </div>
         </div>
