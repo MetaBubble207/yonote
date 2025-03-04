@@ -133,14 +133,36 @@ export const postRouter = createTRPCRouter({
       return getDetailPost(db, id, chapter);
     }),
 
-  getPostCount: publicProcedure
+    getPostCount: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const data = await ctx.db.query.post.findMany({
-        where: and(eq(post.columnId, input), eq(post.status, true)),
-      });
-      // 返回所有根据 id 查询的数据
-      return data.length;
+      const { db } = ctx;
+      
+      // 1. 先查询作者的所有专栏
+      const authorColumns = await db
+        .select({
+          id: column.id
+        })
+        .from(column)
+        .where(eq(column.userId, input));
+
+      if (!authorColumns.length) return 0;
+
+      // 2. 获取所有专栏ID
+      const columnIds = authorColumns.map(col => col.id);
+
+      // 3. 查询这些专栏下的所有已发布文章数量
+      const result = await db
+        .select({
+          count: sql<number>`count(*)`
+        })
+        .from(post)
+        .where(and(
+          sql`${post.columnId} IN ${columnIds}`,
+          eq(post.status, true)
+        ));
+
+      return Number(result[0]?.count) || 0;
     }),
 
   getByName: publicProcedure
