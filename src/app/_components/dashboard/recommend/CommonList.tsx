@@ -26,7 +26,11 @@ const ITEM_HEIGHT = 150;
 const WINDOW_HEIGHT = 800;
 const PAGE_SIZE = 10;
 
-const SpecialColumnList = () => {
+interface CommonListProps {
+  type: number;
+}
+
+export const CommonList = ({ type }: CommonListProps) => {
   const [activeCategory, setActiveCategory] = useState<string>("默认");
   const [currentContent, setCurrentContent] = useState<number>(0);
   const [sortOrder, setSortOrder] = useState<boolean>(true);
@@ -42,15 +46,15 @@ const SpecialColumnList = () => {
       conditions: currentContent,
       limit: PAGE_SIZE,
       sortOrder,
-      type: 0,
+      type,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-      // 当排序条件改变时重新获取数据
       refetchOnMount: true,
     }
   );
 
+  
   const flattenedData = useMemo(() => {
     if (!data?.pages) return [];
     return data.pages.flatMap(page => page.items);
@@ -174,5 +178,3 @@ const SpecialColumnList = () => {
     </div>
   );
 };
-
-export default SpecialColumnList;
