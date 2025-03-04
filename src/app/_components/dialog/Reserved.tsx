@@ -30,7 +30,7 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, columnId }) => {
     paymentInfo,
     handleRecharge,
     isReady,
-  } = usePayment(selectedItem, balance, token, data?.columnData, onClose);
+  } = usePayment(selectedItem, balance, token, data?.columnData, onClose, messageApi);
 
   useEffect(() => {
     if (data?.priceListData && data.priceListData.length > 0) {

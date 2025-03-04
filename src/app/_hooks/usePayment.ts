@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState, useEffect } from 'react';
-import { message } from 'antd';
 import { api } from "@/trpc/react";
 import { isPriceListValid } from "@/app/_utils/isValid";
 import type { ColumnSelect, PriceListSelect } from "@/server/db/schema";
 import { PaymentInfo, PaymentState } from '../_types/payment';
+import { MessageInstance } from 'antd/lib/message/interface';
 
 export const usePayment = (
     selectedItem: PriceListSelect | undefined,
@@ -11,8 +11,8 @@ export const usePayment = (
     token: string | null,
     columnData: ColumnSelect | undefined,
     onClose: () => void,
+    messageApi: MessageInstance
 ) => {
-    const [messageApi] = message.useMessage();
     const [state, setState] = useState<PaymentState>({
         showTopUp: false,
         showConfirm: false,
@@ -21,7 +21,7 @@ export const usePayment = (
     });
 
     // 确保所有必要的数据都存在
-    const isReady = Boolean(token && columnData && selectedItem);
+    const isReady = Boolean(token && columnData);
 
     const subscribeOrder = api.order.createOrder.useMutation({
         onSuccess: () => {
@@ -100,6 +100,15 @@ export const usePayment = (
         });
     }, [isReady, token, columnData, recharge]);
 
+    const handleNeedRecharge = useCallback((amount: number) => {
+        setState(prev => ({
+            ...prev,
+            rechargeAmount: amount,
+            showTopUp: true,
+            showOrder: false
+        }));
+    }, []);
+
     const paymentInfo = useMemo((): PaymentInfo => {
         if (!isReady || !isPriceListValid(selectedItem)) {
             return {
@@ -119,18 +128,13 @@ export const usePayment = (
             needRecharge,
             buttonText: needRecharge ? `充值并支付（¥${rechargeAmount}）` : "支付",
             handleClick: needRecharge
-                ? () => setState(prev => ({
-                    ...prev,
-                    rechargeAmount,
-                    showTopUp: true,
-                    showOrder: false
-                }))
+                ? () => handleNeedRecharge(rechargeAmount)
                 : handlePay,
             rechargeAmount,
             price: selectedItem.price,
             timeLimit: selectedItem.timeLimit,
         };
-    }, [isReady, selectedItem, balance, handlePay]);
+    }, [isReady, selectedItem, balance, handlePay, handleNeedRecharge]);
 
     // 当数据未准备好时，重置状态
     useEffect(() => {
