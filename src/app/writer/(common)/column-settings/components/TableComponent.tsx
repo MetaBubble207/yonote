@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Form, Input, Switch, Button, message, Table, Space, Modal } from "antd";
+import { Form, Input, Switch, Button, message, Space, Modal } from "antd";
 import { api } from "@/trpc/react";
-import W100H50Modal from "@/app/_components/common/W100H50Modal";
 import type { ColumnSelect, PriceListSelect } from "@/server/db/schema";
 import "../style/table.css"
+import { PriceStrategyTable } from "./PriceStrategyTable";
 
 interface ColumnSettingsTableProps {
     columnData: ColumnSelect;
@@ -29,7 +29,7 @@ const ColumnSettingsTable: React.FC<ColumnSettingsTableProps> = ({
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
     const [checkColor, setCheckColor] = useState("#1DB48D");
-
+    const [isForever, setIsForever] = useState(false);
     // 使用单独的状态维护表单数据
     const [formData, setFormData] = useState<FormData>({
         name: columnData?.name || "",
@@ -46,6 +46,7 @@ const ColumnSettingsTable: React.FC<ColumnSettingsTableProps> = ({
             description: columnData?.description || "",
             priceList: [...(priceListData || [])]
         });
+        setIsForever(priceListData.some(item => item.timeLimit >= 999999));
     }, [columnData, priceListData]);
 
     const updateApi = api.column.update.useMutation({
@@ -70,6 +71,16 @@ const ColumnSettingsTable: React.FC<ColumnSettingsTableProps> = ({
 
     const handleSubmit = () => {
         form.validateFields().then(values => {
+            console.log("formData ==>", formData);
+            
+            const checkPrice = formData.priceList.every(item => item.price >= 10)
+            console.log("checkPrice ==>", checkPrice);
+            
+            setShowConfirmModal(false);
+            if(!checkPrice){
+                messageApi.info("价格不能低于10元");
+                return;
+            }
             updateApi.mutate({
                 id: columnData?.id || "",
                 name: values.name,
@@ -77,17 +88,11 @@ const ColumnSettingsTable: React.FC<ColumnSettingsTableProps> = ({
                 introduce: values.introduce,
                 description: values.description,
             });
-            setShowConfirmModal(false);
         });
     };
 
     const updatePriceList = (index: number, key: string, value: any) => {
         try {
-            // 检查输入是否为纯数字且不能是0开头，但是可以是0
-            if (value.startsWith("0") && value !== "0") {
-                messageApi.info("输入的价格不能以0开头");
-                return false;
-            }
             const numValue = Number(value);
 
             if (key === "price") {
@@ -97,47 +102,55 @@ const ColumnSettingsTable: React.FC<ColumnSettingsTableProps> = ({
                 }
             }
 
-            if (key === "timeLimit") {
-                if (isNaN(numValue)) {
-                    messageApi.info("输入的天数不是纯数字噢😯~");
-                    return false;
-                }
+            // 创建新的价格列表
+            const newPriceList = [...formData.priceList];
 
-                // 检查是否已经存在永久专栏
-                if (numValue >= 99999) {
-                    const hasForever = formData.priceList.some((item, idx) => idx !== index && item.timeLimit >= 99999);
-                    if (hasForever) {
-                        messageApi.info("超过99998天就是永久专栏了，已经拥有一个永久专栏了，不能再添加了噢~");
+            // 一口价模式下，确保只有一个价格策略且 timeLimit 为 999999
+            if (isForever) {
+                newPriceList[0] = {
+                    id: newPriceList[0]?.id || Date.now(),
+                    columnId: columnData.id,
+                    price: key === "price" ? numValue : (newPriceList[0]?.price || 0),
+                    timeLimit: 999999,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                };
+            } else {
+                // 限时订阅模式的逻辑保持不变
+                if (key === "timeLimit") {
+                    if (isNaN(numValue)) {
+                        messageApi.info("输入的天数不是纯数字噢😯~");
+                        return false;
+                    }
+
+                    // 检查是否已经存在永久专栏
+                    if (numValue >= 999999) {
+                        messageApi.info("价格不能超过 999998 天噢😯~");
+                        return false;
+                    }
+
+                    // 检查是否有重复的天数
+                    const hasDuplicate = formData.priceList.some((item, idx) =>
+                        idx !== index && item.timeLimit === numValue
+                    );
+                    if (hasDuplicate) {
+                        messageApi.info("已经存在相同天数的价格策略了，请设置不同的天数~");
                         return false;
                     }
                 }
 
-                // 检查是否有重复的天数
-                const hasDuplicate = formData.priceList.some((item, idx) =>
-                    idx !== index && item.timeLimit === numValue
-                );
-                if (hasDuplicate) {
-                    messageApi.info("已经存在相同天数的价格策略了，请设置不同的天数~");
-                    return false;
-                }
+                newPriceList[index] = {
+                    ...newPriceList[index],
+                    [key]: numValue,
+                    id: newPriceList[index]?.id || Date.now(),
+                    columnId: columnData.id,
+                    price: key === "price" ? numValue : (newPriceList[index]?.price || 0),
+                    timeLimit: key === "timeLimit" ? numValue : (newPriceList[index]?.timeLimit || 0),
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                };
             }
 
-            // 创建新的价格列表，避免直接修改状态
-            const newPriceList = [...formData.priceList];
-
-            // 确保所有必需的属性都存在，避免undefined值
-            newPriceList[index] = {
-                ...newPriceList[index],
-                [key]: numValue,
-                id: newPriceList[index]?.id || 0,
-                columnId: newPriceList[index]?.columnId || "",
-                price: key === "price" ? numValue : (newPriceList[index]?.price || 0),
-                timeLimit: key === "timeLimit" ? numValue : (newPriceList[index]?.timeLimit || 0),
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            // 更新整个表单数据
             setFormData({
                 ...formData,
                 priceList: newPriceList
@@ -203,73 +216,6 @@ const ColumnSettingsTable: React.FC<ColumnSettingsTableProps> = ({
         });
         form.resetFields();
     };
-
-    // 修改表格宽度，使编辑前后保持一致
-    const columns = [
-        {
-            title: '天数',
-            dataIndex: 'timeLimit',
-            key: 'timeLimit',
-            width: 160,
-            render: (text: number, record: PriceListSelect, index: number) => (
-                isEditing ? (
-                    <Input
-                        className="border-rd-1 border-1 h-8 w-32 border-solid border-[#D9D9D9] bg-[#FFF] pl-3"
-                        placeholder="大于99998天即为永久"
-                        style={{ fontSize: "14px" }}
-                        value={text}
-                        onChange={(e) => {
-                            updatePriceList(index, "timeLimit", e.target.value);
-                        }}
-                        maxLength={7}
-                    />
-                ) : (
-                    <span className="text-3.5 font-not-italic font-400 lh-5.5 text-[rgba(0,0,0,0.85)]">
-                        {text >= 99999 ? "永久买断" : `${text}天`}
-                    </span>
-                )
-            ),
-        },
-        {
-            title: '价格',
-            dataIndex: 'price',
-            key: 'price',
-            width: 160,
-            render: (text: number, record: PriceListSelect, index: number) => (
-                isEditing ? (
-                    <Input
-                        className="border-rd-1 border-1 h-8 w-32 border-solid border-[#D9D9D9] bg-[#FFF] pl-3"
-                        placeholder="输入价格"
-                        style={{ fontSize: "14px" }}
-                        value={text}
-                        onChange={(e) => {
-                            updatePriceList(index, "price", e.target.value);
-                        }}
-                        maxLength={7}
-                    />
-                ) : (
-                    <span className="text-3.5 font-not-italic font-400 lh-5.5 text-[rgba(0,0,0,0.85)]">
-                        {text}元
-                    </span>
-                )
-            ),
-        },
-        ...(isEditing ? [{
-            title: '操作',
-            key: 'action',
-            width: 80,
-            render: (_: any, __: any, index: number) => (
-                <Button
-                    type="link"
-                    className="text-[#ff4d4f] p-0"
-                    onClick={() => deleteStrategy(index)}
-                >
-                    删除
-                </Button>
-            ),
-        }] : []),
-    ];
-
     return (
         <div className="pr-8 pb-8 w-600px">
             {contextHolder}
@@ -333,27 +279,40 @@ const ColumnSettingsTable: React.FC<ColumnSettingsTableProps> = ({
                         label={<span className="text-3.5 font-400 lh-5.5 max-h-200px">价格策略</span>}
                         required
                     >
-                        <Table
-                            dataSource={formData.priceList}
-                            columns={columns}
-                            pagination={false}
-                            rowKey="id"
-                            size="small"
-                            className="mb-4"
-                            bordered={false}
-                            style={{ width: 400 }}
-                            scroll={{ x: 400 }}
-                            rowClassName="h-10"
-                        />
-
-                        {isEditing && formData.priceList.length < 4 && (
-                            <Button
-                                type="link"
-                                className="text-[#1DB48D] underline p-0"
-                                onClick={addNewStrategy}
-                            >
-                                + 添加新策略
-                            </Button>
+                        {isForever ? (
+                            <div className="flex items-center">
+                                {isEditing ? (
+                                    <Input
+                                        className="w-32 h-8"
+                                        placeholder="输入价格"
+                                        value={formData.priceList[0]?.price || ''}
+                                        onChange={(e) => updatePriceList(0, "price", e.target.value)}
+                                        maxLength={7}
+                                    />
+                                ) : (
+                                    <span className="text-3.5 font-400 lh-5.5 text-[rgba(0,0,0,0.85)]">
+                                        {formData.priceList[0]?.price || 0}元
+                                    </span>
+                                )}
+                            </div>
+                        ) : (
+                            <>
+                                <PriceStrategyTable
+                                    priceList={formData.priceList}
+                                    isEditing={isEditing}
+                                    onUpdatePrice={updatePriceList}
+                                    onDeleteStrategy={isEditing ? deleteStrategy : undefined}
+                                />
+                                {isEditing && formData.priceList.length < 4 && (
+                                    <Button
+                                        type="link"
+                                        className="text-[#1DB48D] underline p-0"
+                                        onClick={addNewStrategy}
+                                    >
+                                        + 添加新策略
+                                    </Button>
+                                )}
+                            </>
                         )}
                     </Form.Item>
                 </div>
