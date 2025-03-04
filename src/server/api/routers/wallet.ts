@@ -143,7 +143,7 @@ export const walletRouter = createTRPCRouter({
         where: and(
           eq(runningWater.userId, input),
           eq(runningWater.expenditureOrIncome, 1),
-          eq(runningWater.isfreezed, false),
+          eq(runningWater.isFreezed, true),
           ne(runningWater.name, '充值'),
           lt(runningWater.createdAt, getCurrentTime()),
         ),
@@ -153,21 +153,32 @@ export const walletRouter = createTRPCRouter({
         where: eq(wallet.userId, input),
       });
       if (!walletData) return;
-      // 钱包中的冻结金额减去收入的部分
-      await db
-        .update(wallet)
-        .set({
-          freezeIncome: walletData.freezeIncome - runningWaterData.reduce((acc, cur) => acc + cur.price, 0),
-          amountWithdraw: walletData.amountWithdraw + runningWaterData.reduce((acc, cur) => acc + cur.price, 0),
-        })
-        .where(eq(wallet.userId, input));
+      // 检查当前冻结金额是否足够解冻，如果够，则正常操作，如果不够，则冻结金额清0，可提现金额新增冻结金额的全部
+      const totalPrice = runningWaterData.reduce((acc, cur) => acc + cur.price, 0);
+      if (walletData.freezeIncome > totalPrice) {
+        await db
+          .update(wallet)
+          .set({
+            freezeIncome: walletData.freezeIncome - totalPrice,
+            amountWithdraw: walletData.amountWithdraw + totalPrice,
+          })
+          .where(eq(wallet.userId, input));
+      } else {
+        await db
+          .update(wallet)
+          .set({
+            freezeIncome: 0,
+            amountWithdraw: walletData.amountWithdraw + walletData.freezeIncome,
+          })
+          .where(eq(wallet.userId, input));
+      }
 
-      // 更新流水中的 isfreezed 字段
+      // 更新流水中的 isFreezed 字段
       await Promise.all(runningWaterData.map(async item => {
         await db
           .update(runningWater)
           .set({
-            isfreezed: true,
+            isFreezed: false,
           })
           .where(eq(runningWater.id, item.id));
       }))
