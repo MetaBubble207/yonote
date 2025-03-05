@@ -24,6 +24,7 @@
     "@trpc/react-query": "^11.0.0-rc.446",
     "@trpc/server": "^11.0.0-rc.446",
     "@types/ali-oss": "^6.16.11",
+    "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.17.15",
     "@unocss/reset": "^0.58.7",
     "@wangeditor/editor": "^5.1.23",
@@ -35,6 +36,7 @@
     "drizzle-orm": "^0.40.0",
     "echarts": "^5.5.0",
     "echarts-for-react": "^3.0.2",
+    "file-saver": "^2.0.5",
     "lodash": "^4.17.21",
     "modern-screenshot": "^4.4.39",
     "next": "^15",
@@ -50,6 +52,7 @@
     "uuid": "^9.0.1",
     "weixin-js-sdk": "^1.6.5",
     "wxpay-v3": "^3.0.2",
+    "xlsx": "^0.18.5",
     "zod": "^3.23.3"
   },
   "devDependencies": {
