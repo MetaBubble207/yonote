@@ -63,6 +63,7 @@ export const ColumnPoster = ({ user, column, ContentCount, subscribeCount }: Col
                         token={token}
                         qrCodeURL={qrCodeURL}
                         onScreenshot={handleScreenshotClick}
+                        type={column.type === 0 ? "column" : "course"}
                     />
                 </div>
             )}

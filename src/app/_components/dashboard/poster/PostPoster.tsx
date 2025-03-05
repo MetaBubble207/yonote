@@ -70,6 +70,7 @@ export const PostPoster = ({ user, postData, likeCount, readCount, chapter, colu
             token={token}
             qrCodeURL={qrCodeURL}
             onScreenshot={handleScreenshotClick}
+            type={"post"}
           />
         </div>
       )}

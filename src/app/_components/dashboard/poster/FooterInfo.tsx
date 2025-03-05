@@ -9,9 +9,19 @@ interface BottomInfoProps {
   token: string | null;
   qrCodeURL: string;
   onScreenshot: () => void;
+  type: "column" | "post" | "course";
 }
 
-export const FooterInfo = ({ userInfo, token, qrCodeURL, onScreenshot }: BottomInfoProps) => {
+export const FooterInfo = ({ userInfo, token, qrCodeURL, onScreenshot, type }: BottomInfoProps) => {
+  const renderText = () => {
+    if (type === "column") {
+      return "一个专栏";
+    } else if (type === "post") {
+      return "一篇文章";
+    } else if (type === "course") {
+      return "一个小课";
+    }
+  };
   return (
     <div className="mt-14 flex justify-between text-2.5 font-medium ">
       <div className="mt-2 w-40">
@@ -49,7 +59,7 @@ export const FooterInfo = ({ userInfo, token, qrCodeURL, onScreenshot }: BottomI
         </div>
 
         <div className="text-[#999]">
-          分享了一篇文章
+          分享了{renderText()}
         </div>
       </div>
 
