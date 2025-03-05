@@ -5,6 +5,8 @@ import Image from "next/image";
 import { ColumnSelect, UserSelect, type PostSelect } from "@/server/db/schema";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { message } from "antd";
+import { api } from "@/trpc/react";
+import { useCallback } from "react";
 
 interface NavigationProps {
   postData: {
@@ -73,9 +75,12 @@ export function Navigation({
   const [messageApi, contextHolder] = message.useMessage();
   const alertMessage = () => messageApi.error("请先购买专栏");
   const [token] = useLocalStorage('token', null)
+  // 查询用户是否购买专栏
+  const { data: hadColumn } = api.order.getUserStatus.useQuery({ userId: token, columnId: columnId });
 
-  const canAccessPost = (post: PostSelect | undefined | null) =>
-    post?.isFree || postData.user.id === token;
+  const canAccessPost = useCallback((post: PostSelect | undefined | null) =>
+    (post?.isFree || hadColumn), [token, hadColumn]);
+
   const navigation = {
     toDirectory: () => router.back(),
     toPrevious: () => router.replace(`/dashboard/special-column/content?c=${prevPost!.chapter}&id=${columnId}`),
