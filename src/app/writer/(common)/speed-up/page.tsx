@@ -45,7 +45,7 @@ export default async function SpeedUpPage({
 
     return (
       <SpeedUpClient
-        columnId={columnId!}
+        columnId={columnId}
         distributorshipData={distributorshipData}
         speedUpData={speedUpData}
         initialUserId={userId}
