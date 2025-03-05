@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
-export default function ActionButtons({ url }: { url: string }) {
+export default function ActionButtons({ url, showSpeedPlanIcon }: { url: string, showSpeedPlanIcon: boolean }) {
     const router = useRouter();
     const pathname = usePathname();
     const handleShare = () => {
@@ -12,12 +12,12 @@ export default function ActionButtons({ url }: { url: string }) {
 
     return (
         <div className="flex items-center justify-end">
-            <button
+            {showSpeedPlanIcon && <button
                 className="rounded-full text-[10px] bg-#45E1B8"
                 style={{ width: 56, height: 24 }}
             >
                 加速计划
-            </button>
+            </button>}
             <button className="mr-16px ml-2.5 bg-transparent" onClick={handleShare}>
                 <Image
                     src={pathname.includes('/content')

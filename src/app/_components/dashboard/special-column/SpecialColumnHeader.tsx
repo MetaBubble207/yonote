@@ -22,7 +22,7 @@ const CONSTANTS = {
   VIP_ICON_SIZE: 12
 } as const;
 
-const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
+const SpecialColumnHeader = ({ columnId, showSpeedPlanIcon }: { columnId: string, showSpeedPlanIcon: boolean }) => {
   const router = useRouter();
 
   const { data, isLoading } = api.column.getColumnUser.useQuery(
@@ -91,11 +91,11 @@ const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
   );
   const renderSkeletonHeader = () => (
     <>
-      <div className="z-1 absolute top-0 w-full">
+      {/* <div className="z-1 absolute top-0 w-full ">
         <Skeleton.Image active className="!h-74.5 !w-full" />
-      </div>
+      </div> */}
       <div className="z-3 absolute left-0 top-2.5 w-full">
-        <ActionButtons url={`/dashboard/poster/column?id=${columnId}`} />
+        <ActionButtons url={`/dashboard/poster/column?id=${columnId}`} showSpeedPlanIcon={showSpeedPlanIcon}/>
         <div className="mt-6px flex w-full items-start pl-5">
           <Skeleton.Image active className="!h-39 !w-27.7 rounded-10px" />
           <div className="ml-10px flex flex-col">
@@ -118,7 +118,7 @@ const SpecialColumnHeader = ({ columnId }: { columnId: string }) => {
     <>
       {renderHeaderImage()}
       <div className="z-3 absolute left-0 top-2.5 w-full">
-        <ActionButtons url={`/dashboard/poster/column?id=${columnId}`} />
+        <ActionButtons url={`/dashboard/poster/column?id=${columnId}`} showSpeedPlanIcon={showSpeedPlanIcon}/>
         <div className="mt-6px flex w-full items-start pl-5">
           <Image
             placeholder="blur"
