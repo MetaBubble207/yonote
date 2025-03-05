@@ -15,7 +15,7 @@ export const FooterInfo = ({ userInfo, token, qrCodeURL, onScreenshot }: BottomI
   return (
     <div className="mt-14 flex justify-between text-2.5 font-medium ">
       <div className="mt-2 w-40">
-        <Button type={"link"} size={"small"} onClick={onScreenshot}>
+        <Button type={"link"} size={"small"} onClick={onScreenshot} className="pl-[0]!">
           <div className="flex items-center">
             <Image
               src={"/images/poster/triangle.svg"}
