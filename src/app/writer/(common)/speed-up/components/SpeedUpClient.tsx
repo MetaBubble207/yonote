@@ -12,7 +12,7 @@ import { debounce } from "lodash";
 import { exportToExcel } from "@/app/_utils/exportToExcel";
 
 interface SpeedUpClientProps {
-    columnId: string | null;
+    columnId: string;
     distributorshipData: any;
     speedUpData: {
         items: SpeedUp[];
@@ -137,7 +137,7 @@ export default function SpeedUpClient({
         exportToExcel(dataToExport, '数据导出');
     };
     const { refetch: refetchDistributorshipDetail } = api.distributorshipDetail.getOne.useQuery(
-        columnId as string,
+        columnId,
         { enabled: false }
     );
     // 处理分销激活
