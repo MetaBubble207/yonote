@@ -207,7 +207,7 @@ export const orderRouter = createTRPCRouter({
           }
 
           // 创建订单
-          return await tx.insert(order).values(orderData);
+          return await tx.insert(order).values({ ...orderData, id: undefined });
         } catch (error) {
           console.error("Error creating order:", error);
           throw error;
