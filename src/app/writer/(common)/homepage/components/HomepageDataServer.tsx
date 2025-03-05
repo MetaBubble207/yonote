@@ -21,7 +21,7 @@ const HomepageDataServer = ({
         <div className="h-82 border-rd-2.5 w-full bg-[#FFF] pl-8 pr-9">
             <div className="pt-34px flex items-center justify-between">
                 <div className="flex items-center">
-                    <span className="text-4 font-700 lh-6 text-[#323232]">主板看板</span>
+                    <span className="text-4 font-700 lh-6 text-[#323232]">主页看板</span>
                     <PublishButton className="ml-32px" columnId={columnId} />
                 </div>
             </div>
