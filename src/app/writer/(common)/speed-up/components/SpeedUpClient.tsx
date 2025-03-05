@@ -9,6 +9,7 @@ import { api } from "@/trpc/react";
 import type { SpeedUp } from "@/server/db/schema";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { debounce } from "lodash";
+import { exportToExcel } from "@/app/_utils/exportToExcel";
 
 interface SpeedUpClientProps {
     columnId: string | null;
@@ -40,7 +41,6 @@ export default function SpeedUpClient({
     const pathname = usePathname();
     const [filteredData, setFilteredData] = useState(speedUpData.items || []);
     const [loading, setLoading] = useState(false);
-    const [searchUserId, setSearchUserId] = useState<string>(initialUserId);
     const [inputUserId, setInputUserId] = useState<string>(initialUserId);
     const [dateRange, setDateRange] = useState<[Date, Date] | null>(initialDateRange);
     const [pagination, setPagination] = useState({
@@ -84,7 +84,6 @@ export default function SpeedUpClient({
     // 防抖处理用户ID搜索
     const debouncedUpdateUserId = useCallback(
         debounce((userId: string) => {
-            setSearchUserId(userId);
             updateRouteParams({
                 userId: userId || undefined,
                 currentPage: '1' // 重置到第一页
@@ -126,13 +125,16 @@ export default function SpeedUpClient({
 
     // 数据导出功能
     const handleExport = () => {
-        // TODO: 实现数据导出功能
-        console.log("Export data with filters:", {
-            columnId,
-            userId: searchUserId,
-            startDate: dateRange?.[0],
-            endDate: dateRange?.[1]
-        });
+        const dataToExport = speedUpData.items.map((item, index) => ({
+            排名: index + 1,
+            用户名: item.username,
+            用户ID: item.userId,
+            分销数量: item.distributionCount,
+            推广数量: item.promotionCount,
+            总金额: item.totalPrice,
+        }));
+
+        exportToExcel(dataToExport, '数据导出');
     };
     const { refetch: refetchDistributorshipDetail } = api.distributorshipDetail.getOne.useQuery(
         columnId as string,
