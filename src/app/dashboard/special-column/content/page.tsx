@@ -16,6 +16,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
     chapter,
   });
 
+  const columnData = await api.column.getById(columnId);
+
   if (!postDetailData) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -27,7 +29,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
   return (
     <div className="grid min-h-screen grid-rows-[1fr_auto] gap-10 bg-[#F5F7FB] pb-10 pt-4">
       <div>
-        <ActionButtons url={`/dashboard/poster/post?c=${chapter}&id=${columnId}`} />
+        <ActionButtons url={`/dashboard/poster/post?c=${chapter}&id=${columnId}`} showSpeedPlanIcon={columnData?.distributorship ?? false} />
         <ArticleContent
           postData={{ ...postDetailData.currentPost, user: postDetailData.user }}
           date={postDetailData.currentPost.createdAt ? time2DateString(postDetailData.currentPost.createdAt) : ""}
