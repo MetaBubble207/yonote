@@ -13,7 +13,7 @@ interface BottomInfoProps {
 
 export const FooterInfo = ({ userInfo, token, qrCodeURL, onScreenshot }: BottomInfoProps) => {
   return (
-    <div className="ml-4.375 mt-14 flex h-40">
+    <div className="mt-14 flex justify-between text-2.5 font-medium ">
       <div className="mt-2 w-40">
         <Button type={"link"} size={"small"} onClick={onScreenshot}>
           <div className="flex items-center">
@@ -43,21 +43,21 @@ export const FooterInfo = ({ userInfo, token, qrCodeURL, onScreenshot }: BottomI
               className="rounded-full object-cover"
             />
           </div>
-          <div className="h-5.75 text-2.5 font-medium leading-6 ml-1.25 text-[#999]">
+          <div className="ml-1.25 text-[#999]">
             {token ? userInfo?.name : "未知用户"}
           </div>
         </div>
 
-        <div className="h-5.75 text-2.5 font-medium leading-6 text-[#999]">
+        <div className="text-[#999]">
           分享了一篇文章
         </div>
       </div>
 
-      <div className="ml-18.5">
+      <div className="flex flex-col items-center">
         <div className="rounded-1.5 border mx-auto flex h-16 w-16 items-center justify-center border-[#c1c1c1] border-solid">
           <QRCodeCanvas id="columnQrCode" value={qrCodeURL} size={50} />
         </div>
-        <div className="h-5.75 text-2.5 font-normal leading-6 mt-1.25 text-[#999]">
+        <div className="mt-1.25 text-[#999]">
           扫码查看详情
         </div>
       </div>

@@ -10,8 +10,8 @@ interface AuthorInfoProps {
 export const AuthorInfo = ({ user, children }: AuthorInfoProps) => {
   return (
     <div className="flex justify-between">
-      <div className="h-19.375 flex items-center">
-        <div className="w-12.25 h-12.25 ml-5.25 mt-7.125 relative">
+      <div className="flex items-center">
+        <div className="w-12.25 h-12.25 mt-7.125 relative">
           <Image
             placeholder="blur"
             blurDataURL={LoadingImage()}
@@ -23,7 +23,7 @@ export const AuthorInfo = ({ user, children }: AuthorInfoProps) => {
             className="rounded-4 object-cover"
           />
         </div>
-        <div className="flex h-20 flex-col">
+        <div className="flex flex-col">
           <div
             className="text-3.5 font-medium leading-6 ml-2.25 mt-8 h-5 text-[#333333] 
             overflow-hidden text-ellipsis whitespace-nowrap">
