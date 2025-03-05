@@ -73,7 +73,7 @@ export default function Page() {
 
   const handleWithdrawConfirm = useCallback(() => {
     setConfirmLoading(true);
-    withdraw.mutate({ id: token });
+    withdraw.mutate(token);
     setConfirmLoading(false);
   }, [token, withdraw]);
 

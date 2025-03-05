@@ -15,17 +15,19 @@ export const walletRouter = createTRPCRouter({
       });
     }),
   withdraw: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.string())
     .mutation(async ({ ctx, input }) => {
       const walletData = await ctx.db.query.wallet.findFirst({
-        where: eq(wallet.userId, input.id),
+        where: eq(wallet.userId, input),
       });
+
       await ctx.db.update(wallet).set({
         amountWithdraw: 0,
-      });
+      }).where(eq(wallet.userId, input));
+
       if (!walletData) return null;
       await ctx.db.insert(runningWater).values({
-        userId: input.id,
+        userId: input,
         price: walletData.amountWithdraw,
         name: "提现",
         expenditureOrIncome: 0,
