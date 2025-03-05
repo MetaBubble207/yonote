@@ -52,9 +52,13 @@ const config = {
     //   },
     // ],
     "@typescript-eslint/no-require-imports": "off",
-    "drizzle/enforce-update-with-where": "warn",
     "@typescript-eslint/no-unnecessary-type-assertion": "warn",
-    "drizzle/enforce-delete-with-where": "warn",
+    "drizzle/enforce-delete-with-where": ["error", {
+      drizzleObjectName: "db"
+    }],
+    "drizzle/enforce-update-with-where": ["error", {
+      drizzleObjectName: "db"
+    }],
     "@typescript-eslint/restrict-plus-operands": "warn",
   },
 };
