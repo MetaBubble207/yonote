@@ -355,7 +355,7 @@ export const orderRouter = createTRPCRouter({
         userId ? eq(order.buyerId, userId) : undefined,
         status !== null ? eq(order.status, status) : undefined,
         startDate ? gt(order.createdAt, new Date(startDate)) : undefined,
-        endDate ? lt(order.endDate, new Date(endDate)) : undefined,
+        endDate ? lt(order.createdAt, new Date(endDate)) : undefined,
       ].filter(Boolean);
 
       // 计算总数
