@@ -359,13 +359,23 @@ export type PostDetail = {
   detailPostCard: DetailPostCard[];
   subscriptCount: number;
 };
+// 原本设计稿要求的类型，有加速量，加速量就是分销量和推广量只和
+export type SpeedUpBack = {
+  id: number;
+  avatar: string;
+  username: string;
+  userId: string;
+  acceleratedTotal: number;
+  totalPrice: number;
+};
 
 export type SpeedUp = {
   id: number;
   avatar: string;
   username: string;
   userId: string;
-  acceleratedTotal: number;
+  distributionCount: number;  // 分销数量
+  promotionCount: number;     // 推广数量
   totalPrice: number;
 };
 

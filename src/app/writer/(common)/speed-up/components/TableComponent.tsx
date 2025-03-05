@@ -60,9 +60,15 @@ const TableComponent: React.FC<TableComponentProps> = ({
       sorter: (a, b) => a.userId.localeCompare(b.userId),
     },
     {
-      title: "加速量",
-      dataIndex: "acceleratedTotal",
-      sorter: (a, b) => (a.acceleratedTotal > b.acceleratedTotal ? -1 : 1),
+      title: "分销量",
+      dataIndex: "distributionCount",
+      sorter: (a, b) => (a.distributionCount > b.distributionCount ? -1 : 1),
+      render: (value) => `${value || 0}`,
+    },
+    {
+      title: "推广量",
+      dataIndex: "promotionCount",
+      sorter: (a, b) => (a.promotionCount > b.promotionCount ? -1 : 1),
       render: (value) => `${value || 0}`,
     },
     {

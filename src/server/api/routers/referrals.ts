@@ -36,15 +36,26 @@ export const referralsRouter = createTRPCRouter({
       }
 
       // 执行查询获取订单数据
+      // const orderResults = await ctx.db
+      //   .select({
+      //     recommendationId: order.recommendationId,
+      //     totalPrice: sql`SUM(${order.price})`.as("totalPrice"),
+      //     count: sql`COUNT(*)`.as("count"),
+      //   })
+      //   .from(order)
+      //   .where(and(...conditions))
+      //   .groupBy(order.recommendationId);
       const orderResults = await ctx.db
         .select({
           recommendationId: order.recommendationId,
           totalPrice: sql`SUM(${order.price})`.as("totalPrice"),
-          count: sql`COUNT(*)`.as("count"),
+          distributionCount: sql`SUM(CASE WHEN ${order.referralLevel} = 1 THEN 1 ELSE 0 END)`.as("distributionCount"),
+          promotionCount: sql`SUM(CASE WHEN ${order.referralLevel} = 2 THEN 1 ELSE 0 END)`.as("promotionCount"),
         })
         .from(order)
         .where(and(...conditions))
         .groupBy(order.recommendationId);
+
       // 获取用户ID列表
       const userIds = orderResults
         .map(item => item.recommendationId)
@@ -89,20 +100,37 @@ export const referralsRouter = createTRPCRouter({
         console.error("查询用户信息出错:", error);
         userResults = [];
       }
-      // 合并数据
+      // // 合并数据
+      // const mergedData = userResults.map(userInfo => {
+      //   const orderInfo = orderResults.find(order => order.recommendationId === userInfo.id);
+      //   return {
+      //     id: Math.random(), // 确保有唯一ID
+      //     avatar: userInfo.avatar || "",
+      //     username: userInfo.name || "",
+      //     userId: userInfo.id,
+      //     acceleratedTotal: orderInfo?.count || 0,
+      //     totalPrice: Number(orderInfo?.totalPrice) || 0,
+      //   } as SpeedUp;
+      // });
+      // // 按加速量排序
+      // const sortedData = mergedData.sort((a, b) => b.acceleratedTotal - a.acceleratedTotal);
       const mergedData = userResults.map(userInfo => {
         const orderInfo = orderResults.find(order => order.recommendationId === userInfo.id);
         return {
-          id: Math.random(), // 确保有唯一ID
+          id: Math.random(),
           avatar: userInfo.avatar || "",
           username: userInfo.name || "",
           userId: userInfo.id,
-          acceleratedTotal: orderInfo?.count || 0,
+          distributionCount: Number(orderInfo?.distributionCount) || 0, // 分销数量
+          promotionCount: Number(orderInfo?.promotionCount) || 0,      // 推广数量
           totalPrice: Number(orderInfo?.totalPrice) || 0,
-        } as SpeedUp;
+        };
       });
-      // 按加速量排序
-      const sortedData = mergedData.sort((a, b) => b.acceleratedTotal - a.acceleratedTotal);
+
+      // 按分销量和推广量之和排序
+      const sortedData = mergedData.sort((a, b) =>
+        (b.distributionCount + b.promotionCount) - (a.distributionCount + a.promotionCount)
+      );
 
       // 分页
       const paginatedData = sortedData.slice(offset, offset + pageSize);
