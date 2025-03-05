@@ -32,15 +32,15 @@ export default async function SpeedUpPage({
     columnId = validation.columnData!.id!;
     // 并行获取数据
     const [distributorshipData, speedUpData] = await Promise.all([
-      columnId ? api.distributorshipDetail.getOne(columnId) : null,
-      columnId ? api.referrals.getByColumnIdPaginated({
+      api.distributorshipDetail.getOne(columnId),
+      api.referrals.getByColumnIdPaginated({
         columnId,
         userId,
         startDate: startPick,
         endDate: endPick,
         page: currentPage,
         pageSize
-      }) : { items: [], total: 0, page: 1, pageSize: 10 }
+      })
     ]);
 
     return (
