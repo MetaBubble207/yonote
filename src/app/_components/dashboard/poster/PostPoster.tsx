@@ -48,7 +48,7 @@ export const PostPoster = ({ user, postData, likeCount, readCount, chapter, colu
         </div>
       ) : (
         <div ref={png} className="h-129.5005 mx-4 w-full bg-[#ffffff]">
-          <AuthorInfo user={user!}>
+          <AuthorInfo user={user}>
             <div className="ml-2.25 flex items-center">
               <div className="font-D-DIN text-3.5 font-700 lh-6 text-[#252525]">
                 {likeCount}
@@ -66,7 +66,7 @@ export const PostPoster = ({ user, postData, likeCount, readCount, chapter, colu
           </AuthorInfo>
           <ArticleContent title={postData.name} content={postContent} />
           <FooterInfo
-            userInfo={user!}
+            userInfo={user}
             token={token}
             qrCodeURL={qrCodeURL}
             onScreenshot={handleScreenshotClick}

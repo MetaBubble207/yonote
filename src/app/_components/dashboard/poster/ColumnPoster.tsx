@@ -59,7 +59,7 @@ export const ColumnPoster = ({ user, column, ContentCount, subscribeCount }: Col
                     </AuthorInfo>
                     <ColumnContent column={column} />
                     <FooterInfo
-                        userInfo={user!}
+                        userInfo={user}
                         token={token}
                         qrCodeURL={qrCodeURL}
                         onScreenshot={handleScreenshotClick}

@@ -24,7 +24,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<Pos
   if (!validation.isValid) {
     return validation.error;
   }
-  const columnId = validation.columnData!.id!;
+  const columnId = validation.columnData!.id;
   // 服务端获取数据
   const { data: posts, total } = await api.post.getPostsFilter(params);
 

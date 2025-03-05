@@ -25,6 +25,6 @@ export default async function Page({
   }
 
   return (
-    <PostPoster user={user} postData={{ ...postData.currentPost, user: postData.user! }} columnId={columnId} chapter={chapter} likeCount={likeCount} readCount={readCount} />
+    <PostPoster user={user} postData={{ ...postData.currentPost, user: postData.user }} columnId={columnId} chapter={chapter} likeCount={likeCount} readCount={readCount} />
   );
 }

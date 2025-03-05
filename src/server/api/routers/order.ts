@@ -87,7 +87,7 @@ export const orderRouter = createTRPCRouter({
             tx.query.wallet.findFirst({
               where: eq(wallet.userId, columnData.userId),
             }),
-            getOneUser(tx, columnData.userId!),
+            getOneUser(tx, columnData.userId),
           ]);
 
           if (!authorWallet) return { status: "fail", meg: "没有找到该作者钱包" };
@@ -109,7 +109,7 @@ export const orderRouter = createTRPCRouter({
             expenditureOrIncome: 0,
           });
 
-          const endDate = addDays(new Date(), priceListData.timeLimit!);
+          const endDate = addDays(new Date(), priceListData.timeLimit);
           let orderData: OrderSelect = {
             ownerId: input.ownerId,
             columnId: input.columnId,
