@@ -1,5 +1,6 @@
 "use client";
 
+import { chinaMidNightOffsetInMilliseconds, chinaOffsetInMilliseconds } from "@/app/_utils/getCurrentTime";
 import { Input, DatePicker, Button } from "antd";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
@@ -27,8 +28,8 @@ export const FilterSection = ({ columnId }: { columnId: string | null }) => {
         if (columnId) params.set("columnId", columnId);
         if (searchParams.title) params.set("title", searchParams.title);
         if (searchParams.tag) params.set("tag", searchParams.tag);
-        if (searchParams.startDate) params.set("startDate", searchParams.startDate.toISOString());
-        if (searchParams.endDate) params.set("endDate", searchParams.endDate.toISOString());
+        if (searchParams.startDate) params.set("startDate", new Date(searchParams.startDate.getTime() + chinaOffsetInMilliseconds).toISOString());
+        if (searchParams.endDate) params.set("endDate", new Date(searchParams.endDate.getTime() + chinaMidNightOffsetInMilliseconds).toISOString());
         // 导航到带有查询参数的同一页面
         router.push(`/writer/content-management?${params.toString()}`);
     }, [searchParams, columnId, router]);

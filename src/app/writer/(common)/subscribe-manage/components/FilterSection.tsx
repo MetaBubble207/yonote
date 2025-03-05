@@ -4,38 +4,46 @@ import { DatePicker, Input, Select, Button } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from "react";
 import dayjs from "dayjs";
-import { SubscribeSearchParams } from "../types";
-
+import { chinaMidNightOffsetInMilliseconds, chinaOffsetInMilliseconds } from "@/app/_utils/getCurrentTime";
+interface SubscribeSearchParams {
+    columnId?: string;
+    userId?: string | null;
+    status?: number;
+    startDate: Date | null;
+    endDate: Date | null;
+    currentPage?: number;
+    pageSize?: number;
+}
 export const FilterSection = ({ columnId }: { columnId: string }) => {
     const router = useRouter();
     const [searchParams, setSearchParams] = useState<SubscribeSearchParams>({
         userId: "",
         status: 0,
-        startDate: undefined,
-        endDate: undefined,
+        startDate: null,
+        endDate: null,
     });
 
     const handleSearch = useCallback(() => {
         const params = new URLSearchParams();
-        params.set("columnId", columnId)
+        if (columnId) params.set("columnId", columnId);
         if (searchParams.userId) params.set("userId", searchParams.userId);
         if (searchParams.status !== null) params.set("status", String(searchParams.status));
-        if (searchParams.startDate) params.set("startDate", searchParams.startDate);
-        if (searchParams.endDate) params.set("endDate", searchParams.endDate);
+        if (searchParams.startDate) params.set("startDate", new Date(searchParams.startDate.getTime() + chinaOffsetInMilliseconds).toISOString());
+        if (searchParams.endDate) params.set("endDate", new Date(searchParams.endDate.getTime() + chinaMidNightOffsetInMilliseconds).toISOString());
 
         router.push(`/writer/subscribe-manage?${params.toString()}`);
-    }, [router, searchParams]);
+    }, [router, columnId, searchParams]);
 
     const onDateChange = useCallback((dates: any) => {
         if (!dates) {
-            setSearchParams(prev => ({ ...prev, startDate: undefined, endDate: undefined }));
+            setSearchParams(prev => ({ ...prev, startDate: null, endDate: null }));
             return;
         }
-        const [start, end] = dates;
+        const [date1, date2] = dates;
         setSearchParams(prev => ({
             ...prev,
-            startDate: start?.toISOString(),
-            endDate: end?.toISOString(),
+            startDate: date1 ? date1.toDate() : null,
+            endDate: date2 ? date2.toDate() : null,
         }));
     }, []);
 

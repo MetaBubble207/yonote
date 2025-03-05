@@ -9,6 +9,10 @@ export const getCurrentTime = () => {
   return new Date(currentDate.getTime() + offsetInMilliseconds);
 };
 
+export const chinaOffsetInMilliseconds = 480 * 60 * 1000;
+
+export const chinaMidNightOffsetInMilliseconds = 480 * 60 * 1000 + 24 * 60 * 60 * 1000 - 1;
+
 export const getYesterdayMidnight = () => {
   // 创建一个表示当前时间的 Date 对象
   const currentDate = new Date();

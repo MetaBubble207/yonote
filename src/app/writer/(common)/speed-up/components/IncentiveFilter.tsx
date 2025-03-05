@@ -35,7 +35,6 @@ const IncentiveFilter: React.FC<IncentiveFilterProps> = ({
     const initialDates = initialDateRange
         ? [dayjs(time2DateString(initialDateRange[0]), dateFormat), dayjs(time2DateString(initialDateRange[1]), dateFormat)]
         : undefined;
-    console.log("initialDates ==>", initialDates);
 
     // 处理日期变化
     const handleDateChange = (dates: any) => {
@@ -45,13 +44,14 @@ const IncentiveFilter: React.FC<IncentiveFilterProps> = ({
         }
 
         const [start, end] = dates;
-        onDateChange && onDateChange([start.toDate(), end.toDate()]);
+        const endDate = end.toDate().setHours(23, 59, 59, 999);
+        onDateChange && onDateChange([start.toDate(), new Date(endDate)]);
     };
 
     return (
         <div className="flex">
             <div className="w-full mt-7.425 flex items-center justify-between">
-                <div className="flex">
+                <div className="flex items-center">
                     <label className="ml-10.5575 text-3.5 font-400 lh-5.5 text-[rgba(0,0,0,0.85)] shrink-0">
                         用户ID：{" "}
                     </label>

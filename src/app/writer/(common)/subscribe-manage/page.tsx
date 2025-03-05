@@ -2,11 +2,10 @@ import React, { Suspense } from "react";
 import { api } from "@/trpc/server";
 import Loading from "@/app/_components/common/Loading";
 import TableComponent from "@/app/writer/(common)/subscribe-manage/components/TableComponent";
-import type { SubscribeSearchParams } from "./types";
 import { FilterSection } from "./components/FilterSection";
 import { DataQueryError } from "@/app/_components/common/DataQueryError";
 import { validateColumn } from "@/app/_components/common/CheckColumnId";
-
+import { SubscribeSearchParams } from "./types";
 export default async function Page({
   searchParams,
 }: {
@@ -27,7 +26,7 @@ export default async function Page({
     if (!validation.isValid) {
       return validation.error;
     }
-    const columnId = validation.columnData!.id!;
+    const columnId = params.columnId;
     // 服务端获取数据
     const { data, total } = await api.order.getSubscriptionFilter(params);
 
@@ -37,7 +36,7 @@ export default async function Page({
 
         <Suspense fallback={<Loading />}>
           <div className="mt-6">
-            <FilterSection columnId={columnId} />
+            <FilterSection columnId={columnId!} />
           </div>
 
           <div className="mt-4">
