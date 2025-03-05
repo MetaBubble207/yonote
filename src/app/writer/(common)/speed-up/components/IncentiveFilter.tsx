@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ConfigProvider, DatePicker } from "antd";
+import { ConfigProvider, DatePicker, Input } from "antd";
 import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/zh-cn";
 import locale from "antd/locale/zh_CN";
@@ -51,17 +51,17 @@ const IncentiveFilter: React.FC<IncentiveFilterProps> = ({
     return (
         <div className="flex">
             <div className="mt-7.425 flex items-center">
-                <label className="ml-10.5575 text-3.5 font-400 lh-5.5 text-[rgba(0,0,0,0.85)]">
-                    用户ID:{" "}
+                <label className="ml-10.5575 text-3.5 font-400 lh-5.5 text-[rgba(0,0,0,0.85)] shrink-0">
+                    用户ID：{" "}
                 </label>
-                <input
-                    className="pl-3.0425 border-rd-1 border-1 ml-4 h-8 w-56 shrink-0 border-solid border-[#D9D9D9] bg-[#FFF] outline-none"
+                <Input
+                    className="pl-3 ml-4 w-56! h-8 shrink-0 border-[#D9D9D9] bg-[#FFF]"
                     type="text"
                     placeholder="用户ID"
                     value={initialUserId}
                     onChange={(e) => onUserIdChange && onUserIdChange(e.target.value)}
                 />
-                <div className="ml-20.5 h-8 w-56">
+                <div className="ml-20.5 h-8 w-70">
                     <ConfigProvider locale={locale}>
                         <RangePicker
                             defaultValue={[initialDates && initialDates[0], initialDates && initialDates[1]]}
