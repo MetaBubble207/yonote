@@ -27,7 +27,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
   }
 
   return (
-    <div className="grid min-h-screen grid-rows-[1fr_auto] gap-10 bg-[#F5F7FB] pb-10 pt-4">
+    <div className="grid min-h-screen grid-rows-[1fr_auto] gap-10 bg-[#F5F7FB] pb-10 pt-4 w-full overflow-hidden">
       <div>
         <ActionButtons url={`/dashboard/poster/post?c=${chapter}&id=${columnId}`} showSpeedPlanIcon={columnData?.distributorship ?? false} />
         <ArticleContent

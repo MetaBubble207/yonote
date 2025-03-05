@@ -72,17 +72,17 @@ export function LikeSection({ postId, tags }: LikeSectionProps) {
 
     return (
         <div className="w-full pt-2 px-1 flex items-end justify-between">
-            <div className="w-70% flex flex-wrap">
+            <div className="w-70% flex flex-wrap gap-2">
                 {tags.map((tag, index) => (
                     <div
                         key={`${tag}-${index}`}
-                        className="text-3 font-not-italic font-400 lh-6 mr-2 text-[#1DB48D]"
+                        className="text-3 font-not-italic font-400 leading-6 text-[#1DB48D] break-all"
                     >
                         #{tag}
                     </div>
                 ))}
             </div>
-            <div className="top-10 flex h-5 items-center">
+            <div className="flex h-5 items-center">
                 <button
                     onClick={handleLike}
                     className="flex items-center bg-transparent"
