@@ -164,7 +164,7 @@ export const getDetailColumnCard = async (
         name: "",
         distributorship: false,
         introduce: null,
-        type: "",
+        type: 0,
         cover: null,
         description: null,
         userId: "",
@@ -200,29 +200,29 @@ export async function checkUnreadPosts(
     db: PostgresJsDatabase<typeof schema>,
     posts: { id: number; columnId: string; updatedAt: Date }[],
     userId: string,
-  ) {
+) {
     if (!posts.length) return new Set<string>();
-  
+
     // 批量获取阅读记录
     const readRecords = await db
-      .select()
-      .from(postRead)
-      .where(and(
-        eq(postRead.userId, userId),
-        sql`${postRead.postId} IN ${posts.map(p => p.id)}`
-      ));
-    
+        .select()
+        .from(postRead)
+        .where(and(
+            eq(postRead.userId, userId),
+            sql`${postRead.postId} IN ${posts.map(p => p.id)}`
+        ));
+
     const readMap = new Map(readRecords.map(r => [r.postId, r]));
     const updatedColumnIds = new Set<string>();
-  
+
     // 检查每篇文章的更新状态
     for (const post of posts) {
-      const readRecord = readMap.get(post.id);
-      const needsUpdate = !readRecord || readRecord.updatedAt < post.updatedAt;
-      if (needsUpdate) {
-        updatedColumnIds.add(post.columnId);
-      }
+        const readRecord = readMap.get(post.id);
+        const needsUpdate = !readRecord || readRecord.updatedAt < post.updatedAt;
+        if (needsUpdate) {
+            updatedColumnIds.add(post.columnId);
+        }
     }
-  
+
     return updatedColumnIds;
-  }
+}
