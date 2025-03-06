@@ -34,7 +34,7 @@ export const post = createTable(
     isTop: boolean("is_top").notNull().default(false),
     isFree: boolean("is_free").notNull().default(true),
     status: boolean("status").default(true),// 是否是草稿
-    cover: text("logo"),
+    cover: text("cover"),
     chapter: integer("chapter").notNull(),
     createdAt: timestamp("created_at")
       .defaultNow()
@@ -55,8 +55,8 @@ export const user = createTable("user", {
   idNumber: varchar("id_number").notNull(),
   password: integer("password"),
   avatar: text("avatar"),
-  idType: integer("id_type").default(0), //是否是会员
-  endDate: timestamp("end_date")
+  idType: integer("type").default(0), //是否是会员
+  endDate: timestamp("last_login_at")
     .defaultNow()
     .notNull(),
   sex: integer("sex"),
@@ -74,7 +74,7 @@ export const column = createTable("column", {
   distributorship: boolean("distributorship").notNull().default(false), // 是否是共创计划
   introduce: varchar("introduce"),
   type: integer("type").notNull().default(0), // 0: column, 1: course
-  cover: text("logo").default(
+  cover: text("cover").default(
     "http://yo-note.oss-cn-shenzhen.aliyuncs.com/%E5%8F%AF%E8%BE%BE%E9%B8%AD2.png",
   ),
   description: varchar("description"),
@@ -108,27 +108,13 @@ export const order = createTable("order", {
   buyerId: varchar("buyer_id").notNull(),
   ownerId: varchar("owner_id").notNull(),
   payment: varchar("payment").notNull().default('wallet'),
-  recommendationId: varchar("recommendation_id"),
+  recommendationId: varchar("recommender_id"),
   referralLevel: integer("referral_level"),
   status: boolean("status").notNull(),
-  endDate: timestamp("end_date")
+  endDate: timestamp("expiration_at")
     .notNull()
     .default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
-  isVisible: boolean("is_visable").notNull().default(true),
-  createdAt: timestamp("created_at")
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .notNull(),
-});
-
-export const speedUp = createTable("speed_up", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }),
-  ownerId: serial("owner_id").notNull(),
-  quantity: integer("quantity").notNull(),
-  ranking: smallint("ranking").notNull(),
+  isVisible: boolean("is_visible").notNull().default(true),
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
@@ -156,7 +142,7 @@ export const activity = createTable("activity", {
   introduction: varchar("introduction", { length: 256 }).notNull(),
   cover: varchar("cover", { length: 256 }),
   url: varchar("url", { length: 256 }).notNull(),
-  endDate: timestamp("end_date").notNull().default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
+  endDate: timestamp("expiration_at").notNull().default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
@@ -166,34 +152,6 @@ export const activity = createTable("activity", {
 });
 
 export const coColumn = createTable("co_column", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }),
-  deadline: timestamp("deadline").notNull().default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
-  subscribers: integer("subscribers"),
-  number: integer("number"),
-  createdAt: timestamp("created_at")
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .notNull(),
-});
-
-export const courseRecommendation = createTable("course_recommendation", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }),
-  deadline: timestamp("deadline").notNull().default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
-  subscribers: integer("subscribers"),
-  number: integer("number"),
-  createdAt: timestamp("created_at")
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .notNull(),
-});
-
-export const columnRecommendation = createTable("column_recommendation", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
   deadline: timestamp("deadline").notNull().default(sql`TIMESTAMP '2099-12-31 23:59:59'`),
@@ -241,7 +199,7 @@ export const referrals = createTable("referrals", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull(),
   columnId: varchar("column_id").notNull(),
-  referredUserId: varchar("referred_user_id").notNull(),
+  referredUserId: varchar("recommender_id").notNull(),
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
