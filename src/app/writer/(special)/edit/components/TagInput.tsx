@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "antd";
+import useMessage from "antd/es/message/useMessage";
 
 interface TagInputProps {
   tags: string[];
@@ -8,6 +9,7 @@ interface TagInputProps {
 }
 
 const TagInput = ({ tags, setTags }: TagInputProps) => {
+  const [messageApi, contextHolder] = useMessage();
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editValue, setEditValue] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -24,7 +26,7 @@ const TagInput = ({ tags, setTags }: TagInputProps) => {
 
   const handleConfirmEdit = () => {
     if (editingIndex !== null && editValue.trim() !== "") {
-      setTags((prevTags) => {
+      setTags((prevTags: string[]) => {
         const newTags = [...prevTags];
         if (editingIndex === prevTags.length) {
           newTags.push(editValue);
@@ -39,12 +41,16 @@ const TagInput = ({ tags, setTags }: TagInputProps) => {
   };
 
   const handleEdit = (index: number) => {
+    if (!tags[index]) {
+      messageApi.error("标签不存在");
+      return;
+    }
     setEditingIndex(index);
     setEditValue(tags[index]);
   };
 
   const handleDelete = (index: number) => {
-    setTags((prevTags) => prevTags.filter((_, i) => i !== index));
+    setTags((prevTags: string[]) => prevTags.filter((_, i) => i !== index));
   };
 
   const handleKeyDown = (
@@ -85,6 +91,7 @@ const TagInput = ({ tags, setTags }: TagInputProps) => {
 
   return (
     <div className="flex items-center gap-4">
+      {contextHolder}
       {tags.map((tag, index) => (
         <div
           key={index}
