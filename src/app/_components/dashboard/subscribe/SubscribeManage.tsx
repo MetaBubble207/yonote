@@ -233,7 +233,9 @@ const SubscribeManage: React.FC = () => {
             </div>
             <button
               onClick={handleManage}
-              className={`text-${CONSTANTS.COLORS.ACTIVE_TEXT} text-3 font-500 bg-transparent border-none`}
+              className={`${columnsState.length === 0 ? `text-#999 opacity-50` : "text-primary"} 
+                            text-3 font-500 bg-transparent border-none`}
+              disabled={columnsState.length === 0}
             >
               {isManaging ? "保存" : "管理"}
             </button>
