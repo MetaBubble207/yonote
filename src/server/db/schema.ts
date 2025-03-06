@@ -145,7 +145,7 @@ export const wallet = createTable("wallet", {
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
-  updatedAt: timestamp("created_at")
+  updatedAt: timestamp("updated_at")
     .defaultNow()
     .notNull(),
 });
@@ -269,13 +269,10 @@ export const runningWater = createTable("running_water", {
   price: real("price").notNull(),
   expenditureOrIncome: integer("expenditure_or_income").notNull(),
   isFreezed: boolean("is_freezed").notNull().default(true),
-  createdAt: timestamp("created_at")
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
 export type UserInsert = typeof user.$inferInsert;
 export type UserSelect = typeof user.$inferSelect;
 export type RunningWaterSelect = typeof runningWater.$inferSelect;
