@@ -43,9 +43,9 @@ export const post = createTable(
       .defaultNow()
       .notNull(),
   },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  }),
+  (example) => [
+    index("name_idx").on(example.name),
+  ],
 );
 
 export const user = createTable("user", {
