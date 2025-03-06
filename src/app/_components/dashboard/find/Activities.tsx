@@ -58,7 +58,7 @@ export const Activities = () => {
 
   if (isLoading) return <LoadingSkeleton className="mt-4" rows={4} count={4} spaceY={4}/>;
   if (error) return <div className="text-red-500">加载失败，请稍后重试</div>;
-  if (!queryData?.length) return <Empty description="暂无活动" />;
+  if (!queryData?.length) return <Empty className="mt-30" description="暂无活动" />;
 
   return (
     <div className="space-y-4">
