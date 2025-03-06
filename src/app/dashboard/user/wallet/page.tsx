@@ -41,7 +41,7 @@ export default function Page() {
   const withdraw = api.wallet.withdraw.useMutation({
     onSuccess: (r) => {
       setWithdrawOpen(false);
-      messageApi.success(`提现成功${r?.amountWithdraw}`).then(() => {
+      messageApi.success(`提现成功`).then(() => {
         window?.location?.reload();
       });
     }

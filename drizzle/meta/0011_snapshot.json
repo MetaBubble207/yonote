@@ -1,6 +1,6 @@
 {
-  "id": "83bfb8c0-870c-4753-b7fb-8e2786bcd49a",
-  "prevId": "4d7a5911-f05c-4dfe-a729-e96653da16ad",
+  "id": "76bac434-0031-40f2-9da2-298ebc83d409",
+  "prevId": "3a9386fa-4800-4ead-87fe-ff3a7358c404",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -38,8 +38,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "end_date": {
-          "name": "end_date",
+        "expiration_at": {
+          "name": "expiration_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -162,8 +162,8 @@
           "notNull": true,
           "default": 0
         },
-        "logo": {
-          "name": "logo",
+        "cover": {
+          "name": "cover",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -180,122 +180,6 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.yonote_column_recommendation": {
-      "name": "yonote_column_recommendation",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "deadline": {
-          "name": "deadline",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "TIMESTAMP '2099-12-31 23:59:59'"
-        },
-        "subscribers": {
-          "name": "subscribers",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "number": {
-          "name": "number",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.yonote_course_recommendation": {
-      "name": "yonote_course_recommendation",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "deadline": {
-          "name": "deadline",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "TIMESTAMP '2099-12-31 23:59:59'"
-        },
-        "subscribers": {
-          "name": "subscribers",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "number": {
-          "name": "number",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -447,8 +331,8 @@
           "notNull": true,
           "default": "'wallet'"
         },
-        "recommendation_id": {
-          "name": "recommendation_id",
+        "recommender_id": {
+          "name": "recommender_id",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -465,15 +349,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "end_date": {
-          "name": "end_date",
+        "expiration_at": {
+          "name": "expiration_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "TIMESTAMP '2099-12-31 23:59:59'"
         },
-        "is_visable": {
-          "name": "is_visable",
+        "is_visible": {
+          "name": "is_visible",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
@@ -557,8 +441,8 @@
           "notNull": false,
           "default": true
         },
-        "logo": {
-          "name": "logo",
+        "cover": {
+          "name": "cover",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -786,8 +670,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "referred_user_id": {
-          "name": "referred_user_id",
+        "recommender_id": {
+          "name": "recommender_id",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
@@ -879,63 +763,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.yonote_speed_up": {
-      "name": "yonote_speed_up",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "quantity": {
-          "name": "quantity",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ranking": {
-          "name": "ranking",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.yonote_user": {
       "name": "yonote_user",
       "schema": "",
@@ -976,15 +803,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "id_type": {
-          "name": "id_type",
+        "type": {
+          "name": "type",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "default": 0
         },
-        "end_date": {
-          "name": "end_date",
+        "last_login_at": {
+          "name": "last_login_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -1051,6 +878,13 @@
         },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,

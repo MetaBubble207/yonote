@@ -9,6 +9,7 @@ import { TabBar } from "./TabBar";
 import { SubscribeButton } from "./SubscribeButton";
 import dynamic from "next/dynamic";
 import useCheckOnClient from "@/app/_hooks/useCheckOnClient";
+import { message } from "antd";
 
 const Reserved = dynamic(() => import("@/app/_components/dialog/Reserved"), {
   ssr: false
@@ -26,6 +27,7 @@ interface SpecialColumnBodyProps {
 }
 
 export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
+  const [messageApi, contextHolder] = message.useMessage();
   const [currentContent, setCurrentContent] = React.useState<number>(1);
   const [isSubscribe, setIsSubscribe] = React.useState(false);
   const mounted = useCheckOnClient()
@@ -44,9 +46,9 @@ export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
     toggleSort,
     handleSearchCancel,
     handleSearchChange,
-    contextHolder,
-  } = useSpecialColumn(props.columnId, props.code, props.invitationCode, props.isBack);
-
+    refetch,
+  } = useSpecialColumn(props.columnId, messageApi, props.code, props.invitationCode, props.isBack);
+  
   const handleSubscribe = useCallback(() => {
     setIsSubscribe(prev => !prev);
   }, []);
@@ -94,12 +96,13 @@ export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
         />}
       </div>
 
-      {!statusLoading && isSubscribe && (
-        <Reserved
-          onClose={() => setIsSubscribe(false)}
-          columnId={props.columnId}
-        />
-      )}
+      <Reserved
+        onClose={handleSubscribe}
+        columnId={props.columnId}
+        open={!statusLoading && isSubscribe}
+        messageApi={messageApi}
+        refetch={refetch}
+      />
 
       <SearchModal
         isOpen={isSearching}

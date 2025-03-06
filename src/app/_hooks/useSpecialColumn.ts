@@ -5,13 +5,14 @@ import useLocalStorage from './useLocalStorage';
 import { useColumnSearch } from './useColumnSearch';
 import { useAppSelector } from './useRedux';
 import { userColumnSelector } from '@/app/_slice/user-column-slice';
-import { message } from 'antd';
+import { MessageInstance } from 'antd/es/message/interface';
 
 export const useSpecialColumn = (
   columnId: string,
+  messageApi: MessageInstance,
   code?: string,
   invitationCode?: string,
-  isBack?: string
+  isBack?: string,
 ) => {
   const router = useRouter();
   const [token, setToken] = useLocalStorage("token", null);
@@ -27,15 +28,14 @@ export const useSpecialColumn = (
     handleSearchCancel,
     handleSearchChange,
   } = useColumnSearch();
-  const [messageApi, contextHolder] = message.useMessage();
 
   // API 查询
-  const { data: status, isLoading: statusLoading } = api.order.getUserStatus.useQuery(
+  const { data: status, isLoading: statusLoading, refetch: refetchUserStatus } = api.order.getUserStatus.useQuery(
     { userId: token, columnId },
     { enabled: Boolean(token) }
   );
 
-  const { data: detailPost, isLoading: detailPostLoading } = api.order.getColumnOrder.useQuery(
+  const { data: detailPost, isLoading: detailPostLoading, refetch: refetchColumnOrder } = api.order.getColumnOrder.useQuery(
     { columnId, isDesc, search: condition, tag: searchTag },
     { enabled: Boolean(columnId) }
   );
@@ -77,6 +77,10 @@ export const useSpecialColumn = (
     });
   }, [invitationCode, token, columnId]);
 
+  const refetch = () => {
+    refetchUserStatus();
+    refetchColumnOrder();
+  };
   return {
     status,
     statusLoading,
@@ -93,6 +97,6 @@ export const useSpecialColumn = (
     toggleSort,
     handleSearchCancel,
     handleSearchChange,
-    contextHolder,
+    refetch,
   };
 };

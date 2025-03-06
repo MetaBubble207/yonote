@@ -6,7 +6,7 @@ import { api } from "@/trpc/react";
 import { LoadingSkeleton } from "../../common/LoadingSkeleton";
 import { FixedSizeList as List } from 'react-window';
 import InfiniteLoader from "react-window-infinite-loader";
-import { Spin } from "antd";
+import { Empty, Spin } from "antd";
 
 interface Category {
   key: string;
@@ -54,7 +54,7 @@ export const CommonList = ({ type }: CommonListProps) => {
     }
   );
 
-  
+
   const flattenedData = useMemo(() => {
     if (!data?.pages) return [];
     return data.pages.flatMap(page => page.items);
@@ -101,11 +101,11 @@ export const CommonList = ({ type }: CommonListProps) => {
     if (index >= flattenedData.length) {
       if (hasNextPage) {
         return (
-          <div 
-            style={style} 
+          <div
+            style={style}
             className="flex flex-col items-center justify-center py-4 gap-2"
           >
-            <Spin size="small"/>
+            <Spin size="small" />
             <span className="text-sm text-[#B5B5B5]">加载中...</span>
           </div>
         );
@@ -115,7 +115,7 @@ export const CommonList = ({ type }: CommonListProps) => {
 
     const item = flattenedData[index];
     if (!item) return null;
-    
+
     return (
       <div style={style} className="flex justify-center px-4 py-2">
         <ColumnCard columnData={item} />
@@ -139,6 +139,31 @@ export const CommonList = ({ type }: CommonListProps) => {
     [hasNextPage, flattenedData.length]
   );
 
+  const listRender = () => {
+    if (!isLoading && flattenedData.length === 0) {
+      return <Empty className="mt-30" description="暂无数据" />
+    }
+    return <InfiniteLoader
+      isItemLoaded={isItemLoaded}
+      itemCount={hasNextPage ? flattenedData.length + 1 : flattenedData.length}
+      loadMoreItems={loadMoreItems}
+      threshold={2}
+    >
+      {({ onItemsRendered, ref }) => (
+        <List
+          ref={ref}
+          onItemsRendered={onItemsRendered}
+          height={WINDOW_HEIGHT}
+          itemCount={hasNextPage ? flattenedData.length + 1 : flattenedData.length}
+          itemSize={ITEM_HEIGHT}
+          width="100%"
+          className="[scrollbar-width:none] [ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-10"
+        >
+          {ItemRenderer}
+        </List>
+      )}
+    </InfiniteLoader>
+  }
   return (
     <div>
       <div className="mt-6 flex h-6 w-full pl-4 pb-10">
@@ -146,33 +171,14 @@ export const CommonList = ({ type }: CommonListProps) => {
           <CategoryButton key={category.key} category={category} />
         ))}
       </div>
-      
+
       <SortButton />
 
       {isLoading ? (
-        <LoadingSkeleton className="px-4" rows={3} count={5}/>
+        <LoadingSkeleton className="px-4" rows={3} count={5} />
       ) : (
         <div className="px-4">
-          <InfiniteLoader
-            isItemLoaded={isItemLoaded}
-            itemCount={hasNextPage ? flattenedData.length + 1 : flattenedData.length}
-            loadMoreItems={loadMoreItems}
-            threshold={2}
-          >
-            {({ onItemsRendered, ref }) => (
-              <List
-                ref={ref}
-                onItemsRendered={onItemsRendered}
-                height={WINDOW_HEIGHT}
-                itemCount={hasNextPage ? flattenedData.length + 1 : flattenedData.length}
-                itemSize={ITEM_HEIGHT}
-                width="100%"
-                className="[scrollbar-width:none] [ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pb-10"
-              >
-                {ItemRenderer}
-              </List>
-            )}
-          </InfiniteLoader>
+          {listRender()}
         </div>
       )}
     </div>

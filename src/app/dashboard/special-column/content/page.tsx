@@ -5,6 +5,7 @@ import { LikeSection } from "@/app/_components/dashboard/special-column/post/Lik
 import { Navigation } from "@/app/_components/dashboard/special-column/post/Navigation";
 import { time2DateString } from "@/app/_utils/timeToString";
 import ActionButtons from "@/app/_components/dashboard/special-column/ActionButton";
+import { ButtonClient } from "@/app/_components/dashboard/special-column/post/ButtonClient";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ c: string; id: string }> }) {
   const { c, id } = await searchParams;
@@ -29,7 +30,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
   return (
     <div className="grid min-h-screen grid-rows-[1fr_auto] gap-10 bg-[#F5F7FB] pb-10 pt-4 w-full overflow-hidden">
       <div>
-        <ActionButtons url={`/dashboard/poster/post?c=${chapter}&id=${columnId}`} showSpeedPlanIcon={columnData?.distributorship ?? false} />
+        <ButtonClient columnData={columnData!} postDetailData={postDetailData.currentPost}/>
         <ArticleContent
           postData={{ ...postDetailData.currentPost, user: postDetailData.user }}
           date={postDetailData.currentPost.createdAt ? time2DateString(postDetailData.currentPost.createdAt) : ""}

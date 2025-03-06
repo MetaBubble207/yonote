@@ -170,6 +170,13 @@ const SubscribeManage: React.FC = () => {
     setIsManaging(!isManaging);
   }, [isManaging, handleSave]);
 
+  const handleClickSubscribe = () => {
+    if (columnsState.length === 0) {
+      messageApi.info("还没有订阅的专栏/小课噢~");
+      return;
+    }
+    setOpen(true)
+  }
   // 渲染方法
   const renderColumnList = (type: number) => {
     if (isLoading) return <LoadingSkeleton count={CONSTANTS.LOADING_SKELETON_COUNT} />;
@@ -204,7 +211,7 @@ const SubscribeManage: React.FC = () => {
           className="pt-0.5"
         />
         <button
-          onClick={() => setOpen(true)}
+          onClick={handleClickSubscribe}
           className="text-2.5 lh-6 ml-0.5 text-[#B5B5B5] bg-transparent"
         >
           订阅管理
@@ -233,7 +240,9 @@ const SubscribeManage: React.FC = () => {
             </div>
             <button
               onClick={handleManage}
-              className={`text-${CONSTANTS.COLORS.ACTIVE_TEXT} text-3 font-500 bg-transparent border-none`}
+              className={`${columnsState.length === 0 ? `text-#999 opacity-50` : "text-primary"} 
+                            text-3 font-500 bg-transparent border-none`}
+              disabled={columnsState.length === 0}
             >
               {isManaging ? "保存" : "管理"}
             </button>

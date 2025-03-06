@@ -11,12 +11,14 @@ export const usePayment = (
     token: string | null,
     columnData: ColumnSelect | undefined,
     onClose: () => void,
-    messageApi: MessageInstance
+    messageApi: MessageInstance,
+    refetch: () => void
 ) => {
     const [state, setState] = useState<PaymentState>({
         showTopUp: false,
         showConfirm: false,
         showOrder: false,
+        showShare: false,
         rechargeAmount: 0,
     });
 
@@ -26,8 +28,8 @@ export const usePayment = (
     const subscribeOrder = api.order.createOrder.useMutation({
         onSuccess: () => {
             messageApi.success("订阅成功", 1).then(() => {
-                onClose();
-                window?.location?.reload();
+                refetch();
+                setState(prev => ({...prev, showOrder: false, showShare: true }) )
             });
         },
         onError: () => messageApi.error("订阅失败"),
@@ -143,6 +145,7 @@ export const usePayment = (
                 showTopUp: false,
                 showConfirm: false,
                 showOrder: false,
+                showShare: false,
                 rechargeAmount: 0,
             });
         }

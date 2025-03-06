@@ -1,6 +1,6 @@
 {
-  "id": "83bfb8c0-870c-4753-b7fb-8e2786bcd49a",
-  "prevId": "4d7a5911-f05c-4dfe-a729-e96653da16ad",
+  "id": "3a9386fa-4800-4ead-87fe-ff3a7358c404",
+  "prevId": "b9b16706-ceb2-4150-8d69-9d66e032a7d7",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -557,8 +557,8 @@
           "notNull": false,
           "default": true
         },
-        "logo": {
-          "name": "logo",
+        "cover": {
+          "name": "cover",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -1051,6 +1051,13 @@
         },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,

@@ -54,7 +54,7 @@ export const userRouter = createTRPCRouter({
           .select()
           .from(user)
           .where(eq(user.id, userInfoData.openid));
-
+        
         if (getUserDB === null || getUserDB.length === 0) {
           // 创建新用户
           await ctx.db.insert(wallet).values({
@@ -69,7 +69,6 @@ export const userRouter = createTRPCRouter({
                 avatar: userInfoData.headimgurl,
                 sex: userInfoData.sex,
                 idNumber: getSoleId(),
-                updatedAt: getCurrentTime(),
               })
               .returning({
                 id: user.id,

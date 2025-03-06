@@ -3,9 +3,10 @@ import Image from "next/image";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { LoadingImage, NotImage } from "@/app/_utils/DefaultPicture";
-import { useMemo } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import ActionButtons from "./ActionButton";
-import { Skeleton } from "antd";
+import { message, Skeleton } from "antd";
+import { ShareDialog } from "../../dialog/ShareDialog";
 
 const CONSTANTS = {
   MAX_NAME_LENGTH: 10,
@@ -34,6 +35,57 @@ const SpecialColumnHeader = ({ columnId, showSpeedPlanIcon }: { columnId: string
     if (!data?.userId) return;
     router.push(`/dashboard/user/detail?id=${data.userId}`);
   };
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const [openShare, setOpenShare] = useState(false);
+
+  const handleClickShare = useCallback(() => {
+    setOpenShare(false);
+    router.push(`/dashboard/poster/column?id=${columnId}`);
+  }, [columnId, router]);
+
+  const handleClickCopy = async () => {
+    const currentUrl = `${window.location.origin}/dashboard/special-column?id=${columnId}`;
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(currentUrl);
+        console.log("http://192.168.93.28:3001/dashboard/special-column?id=123123123 复制成功");
+
+        messageApi.success("复制成功");
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = currentUrl;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          const successful = document.execCommand('copy');
+          if (!successful) throw new Error('复制失败');
+        } finally {
+          textArea.remove();
+        }
+        messageApi.success("复制成功");
+      }
+    } catch (err) {
+      messageApi.error("复制失败，请重试");
+    } finally {
+      setOpenShare(false);
+    }
+  };
+
+  const handleClickShareIcon = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpenShare(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setOpenShare(false);
+  }, []);
 
   const truncateText = useMemo(() => (text: string | undefined | null, maxLength: number) => {
     if (!text) return "";
@@ -89,13 +141,11 @@ const SpecialColumnHeader = ({ columnId, showSpeedPlanIcon }: { columnId: string
       </div>
     </div>
   );
+
   const renderSkeletonHeader = () => (
     <>
-      {/* <div className="z-1 absolute top-0 w-full ">
-        <Skeleton.Image active className="!h-74.5 !w-full" />
-      </div> */}
       <div className="z-3 absolute left-0 top-2.5 w-full">
-        <ActionButtons url={`/dashboard/poster/column?id=${columnId}`} showSpeedPlanIcon={showSpeedPlanIcon}/>
+        <ActionButtons handleClickShareIcon={handleClickShareIcon} showSpeedPlanIcon={showSpeedPlanIcon} />
         <div className="mt-6px flex w-full items-start pl-5">
           <Skeleton.Image active className="!h-39 !w-27.7 rounded-10px" />
           <div className="ml-10px flex flex-col">
@@ -114,11 +164,14 @@ const SpecialColumnHeader = ({ columnId, showSpeedPlanIcon }: { columnId: string
   if (isLoading) {
     return renderSkeletonHeader();
   }
+  if (!data) {
+    return null;
+  }
   return (
     <>
       {renderHeaderImage()}
       <div className="z-3 absolute left-0 top-2.5 w-full">
-        <ActionButtons url={`/dashboard/poster/column?id=${columnId}`} showSpeedPlanIcon={showSpeedPlanIcon}/>
+        <ActionButtons handleClickShareIcon={handleClickShareIcon} showSpeedPlanIcon={showSpeedPlanIcon} />
         <div className="mt-6px flex w-full items-start pl-5">
           <Image
             placeholder="blur"
@@ -132,8 +185,12 @@ const SpecialColumnHeader = ({ columnId, showSpeedPlanIcon }: { columnId: string
           {renderColumnInfo()}
         </div>
       </div>
+      <ShareDialog open={openShare} onClose={handleClose}
+        columnData={data} handleClickShare={handleClickShare} handleClickCopy={handleClickCopy}
+      />
+      {contextHolder}
     </>
   );
 };
 
-export default SpecialColumnHeader;
+export default memo(SpecialColumnHeader);

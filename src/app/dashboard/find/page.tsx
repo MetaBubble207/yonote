@@ -7,8 +7,8 @@ import Link from "next/link";
 
 const Find = () => {
   return (
-    <div className="bg-#F5F7FB relative min-h-screen">
-      <div className="w-85.75 m-auto pt-8">
+    <div className="bg-#F5F7FB relative min-h-screen flex flex-col">
+      <div className="w-85.75 m-auto pt-8 flex-1">
         {/*搜索框*/}
         <Link href="/dashboard/find/search-result">
           <SearchColumn></SearchColumn>
