@@ -6,13 +6,12 @@ import { UserSelect } from "@/server/db/schema";
 
 interface BottomInfoProps {
   userInfo: UserSelect;
-  token: string | null;
   qrCodeURL: string;
   onScreenshot: () => void;
   type: "column" | "post" | "course";
 }
 
-export const FooterInfo = ({ userInfo, token, qrCodeURL, onScreenshot, type }: BottomInfoProps) => {
+export const FooterInfo = ({ userInfo, qrCodeURL, onScreenshot, type }: BottomInfoProps) => {
   const renderText = () => {
     if (type === "column") {
       return "一个专栏";
@@ -45,7 +44,7 @@ export const FooterInfo = ({ userInfo, token, qrCodeURL, onScreenshot, type }: B
             <Image
               placeholder="blur"
               blurDataURL={LoadingImage()}
-              src={userInfo?.avatar ?? NotImage()}
+              src={userInfo.avatar ?? NotImage()}
               alt="cover"
               quality={100}
               fill
@@ -54,7 +53,7 @@ export const FooterInfo = ({ userInfo, token, qrCodeURL, onScreenshot, type }: B
             />
           </div>
           <div className="ml-1.25 text-[#999]">
-            {token ? userInfo?.name : "未知用户"}
+            {userInfo.name}
           </div>
         </div>
 

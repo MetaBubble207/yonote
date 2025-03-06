@@ -8,6 +8,8 @@ import { FooterInfo } from "./FooterInfo";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { ArticleContent } from "./ArticleContent";
 import { DetailPost, UserSelect } from "@/server/db/schema";
+import { Empty } from "antd";
+import { api } from "@/trpc/react";
 
 interface PostPosterProp {
   user: UserSelect;
@@ -32,9 +34,10 @@ export const PostPoster = ({ user, postData, likeCount, readCount, chapter, colu
 
   const originURL = typeof window !== 'undefined' ? window.location.origin : '';
   const qrCodeURL = `${originURL}/dashboard/special-column/content?c=${chapter}&id=${columnId}&invitationCode=${token}`;
-
   const { png, pngUrl, isScreenshot, handleScreenshotClick } = useScreenshot();
 
+  const { data: shareUser, isLoading } = api.users.getOne.useQuery(token, { enabled: !!token });
+  if (!shareUser) return <Empty description="找不到数据" />
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#999999]">
       {isScreenshot && (
@@ -66,8 +69,7 @@ export const PostPoster = ({ user, postData, likeCount, readCount, chapter, colu
           </AuthorInfo>
           <ArticleContent title={postData.name} content={postContent} />
           <FooterInfo
-            userInfo={user}
-            token={token}
+            userInfo={shareUser}
             qrCodeURL={qrCodeURL}
             onScreenshot={handleScreenshotClick}
             type={"post"}

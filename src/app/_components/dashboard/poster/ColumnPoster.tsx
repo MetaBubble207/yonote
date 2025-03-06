@@ -8,6 +8,8 @@ import { FooterInfo } from "./FooterInfo";
 import useLocalStorage from "@/app/_hooks/useLocalStorage";
 import { ColumnSelect, UserSelect } from "@/server/db/schema";
 import { ColumnContent } from "./ColumnContent";
+import { api } from "@/trpc/react";
+import { Empty } from "antd";
 
 interface ColumnPosterProp {
     user: UserSelect;
@@ -18,12 +20,13 @@ interface ColumnPosterProp {
 
 export const ColumnPoster = ({ user, column, ContentCount, subscribeCount }: ColumnPosterProp) => {
     const [token] = useLocalStorage('token', null);
-
+    const { data: shareUser, isLoading } = api.users.getOne.useQuery(token, { enabled: !!token });
     const originURL = typeof window !== 'undefined' ? window.location.origin : '';
     const qrCodeURL = `${originURL}/dashboard/special-column?&id=${column.id}&invitationCode=${token}`;
 
     const { png, pngUrl, isScreenshot, handleScreenshotClick } = useScreenshot();
-
+    if (isLoading) return <Loading className="mt-30" />
+    if (!shareUser) return <Empty description="找不到数据" />
     return (
         <div className="flex min-h-screen items-center justify-center bg-[#999999]">
             {isScreenshot && (
@@ -59,8 +62,7 @@ export const ColumnPoster = ({ user, column, ContentCount, subscribeCount }: Col
                     </AuthorInfo>
                     <ColumnContent column={column} />
                     <FooterInfo
-                        userInfo={user}
-                        token={token}
+                        userInfo={shareUser}
                         qrCodeURL={qrCodeURL}
                         onScreenshot={handleScreenshotClick}
                         type={column.type === 0 ? "column" : "course"}
