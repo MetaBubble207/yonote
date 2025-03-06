@@ -50,7 +50,7 @@ const Compass = () => {
       <div className="w-100% h-17.5 pr-23px z-101 fixed top-0 flex shrink-0 items-center justify-between bg-[#FFF]">
         {/*左半边导航区*/}
         <div className="w-107.55675 h-11.75 ml-7.1975 mt-2.875 flex shrink-0 items-center">
-          <Link href={`/writer/homepage?columnId=${columnIdState}`} className="h-9.48025 inline-flex w-20 items-center cursor-pointer shrink-0">
+          <Link href={columnIdState ? `/writer/homepage?columnId=${columnIdState}`: '/writer/no-column'} className="h-9.48025 inline-flex w-20 items-center cursor-pointer shrink-0">
             <Image
               src={"/images/logo.svg"}
               alt={"cover"}

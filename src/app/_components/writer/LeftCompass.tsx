@@ -65,13 +65,9 @@ const LeftCompass = () => {
     if (!columnId || columnId === null) {
       if (latestColumnId) {
         setColumnIdState(latestColumnId)
-        router.push(`${pathname}?columnId=${latestColumnId}`)
       }
     } else {
       setColumnIdState(columnId)
-    }
-    if (!token) {
-      router.push('/writer/login')
     }
   }, [columnId, token, latestColumnId])
 
@@ -81,7 +77,6 @@ const LeftCompass = () => {
     const iconSrc = isActive
       ? `${ICON_BASE}${item.icon}${ACTIVE_ICON_SUFFIX}`
       : `${ICON_BASE}${item.icon}${INACTIVE_ICON_SUFFIX}`;
-    console.log("item ==>", item)
     return (
       <div
         key={item.path}
