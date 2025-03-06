@@ -1,8 +1,11 @@
 import { type PriceListSelect } from "@/server/db/schema";
+import { MessageInstance } from "antd/es/message/interface";
 
 export interface ReservedProps {
     onClose: () => void;
-    columnId: string
+    columnId: string;
+    open: boolean;
+    messageApi: MessageInstance;
 }
 
 export interface PriceItemProps {
