@@ -31,7 +31,6 @@ export const ShareDialog = ({
             onClose();
         }
     }, [distributorshipData, isLoading, messageApi, onClose]);
-    console.log("distributorshipData", distributorshipData, open);
     
     if (isLoading) return <Loading />;
     return <Drawer

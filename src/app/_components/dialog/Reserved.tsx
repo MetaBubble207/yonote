@@ -47,16 +47,37 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi
     router.push(`/dashboard/poster/column?id=${columnId}`)
   }
 
-  const handleClickCopy = () => {
-    setState(prev => ({ ...prev, showShare: false }));
+  const handleClickCopy = async () => {
     const currentUrl = `${window.location.origin}/dashboard/special-column?id=${columnId}`;
-    navigator.clipboard.writeText(currentUrl)
-      .then(() => {
-        messageApi.success('链接已复制到剪贴板');
-      })
-      .catch(() => {
-        messageApi.error('复制失败，请重试');
-      });
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(currentUrl);
+        console.log("http://192.168.93.28:3001/dashboard/special-column?id=123123123 复制成功");
+
+        messageApi.success("复制成功");
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = currentUrl;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          const successful = document.execCommand('copy');
+          if (!successful) throw new Error('复制失败');
+        } finally {
+          textArea.remove();
+        }
+        messageApi.success("复制成功");
+      }
+    } catch (err) {
+      messageApi.error("复制失败，请重试");
+    } finally {
+      setState(prev => ({ ...prev, showShare: false }));
+    }
   };
   if (!isLoading && !open || (!data?.columnData || !data.priceListData || !data.walletData || !distributorshipData)) {
     return null;
