@@ -7,6 +7,7 @@ import Loading from "@/app/_components/common/Loading";
 import { ossClient } from "@/app/_utils/oss";
 import { AvatarUpload } from "@/app/_components/dashboard/user/AvatarUpload";
 import { EditableField } from "@/app/_components/dashboard/user/EditableField";
+import NoData from "@/app/_components/common/NoData";
 
 
 export default function Page() {
@@ -111,7 +112,7 @@ export default function Page() {
   }, [isEditingPhone, isEditingName]);
 
   if (isLoading) return <Loading />;
-  if (!userInfo) return null;
+  if (!userInfo) return <NoData title="没有找到该用户信息"/>;
 
   return (
     <div>
