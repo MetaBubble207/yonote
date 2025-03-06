@@ -1,6 +1,6 @@
 "use client";
 import './reserved.css'
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { Drawer } from "antd";
 import { api } from "@/trpc/react";
@@ -79,6 +79,9 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi
       setState(prev => ({ ...prev, showShare: false }));
     }
   };
+
+  const handleSharePanelClose = useCallback(() => setState(prev => ({ ...prev, showShare: false })), []);
+
   if (!isLoading && !open || (!data?.columnData || !data.priceListData || !data.walletData || !distributorshipData)) {
     return null;
   }
@@ -142,7 +145,7 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi
           </div>
         </div>
       </Drawer>
-      <ShareDialog open={state.showShare} onClose={() => setState(prev => ({ ...prev, showShare: false }))}
+      <ShareDialog open={state.showShare} onClose={handleSharePanelClose}
         columnData={data.columnData} handleClickShare={handleClickShare} handleClickCopy={handleClickCopy}
       />
     </>
