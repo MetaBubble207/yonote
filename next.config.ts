@@ -7,12 +7,12 @@ import { NextConfig } from "next";
 
 /** @type {import("next").NextConfig} */
 const config: NextConfig = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   output: "standalone",
-  typescript: {
-    // ⚠️ 生产环境建议设置为 true
-    ignoreBuildErrors: true,
-  },
+  // typescript: {
+  //   // ⚠️ 生产环境建议设置为 true
+  //   ignoreBuildErrors: true,
+  // },
   images: {
     remotePatterns: [
       {
