@@ -10,8 +10,10 @@ import { PriceItem } from "../dashboard/special-column/PriceItem";
 import type { ReservedProps } from "@/app/dashboard/special-column/types";
 import { usePayment } from "@/app/_hooks/usePayment";
 import { PaymentModals } from "../dashboard/special-column/modals/Modals";
+import { ShareDialog } from './ShareDialog';
+import { useRouter } from 'next/navigation';
 
-const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi }) => {
+const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi, refetch }) => {
   const [token] = useLocalStorage("token", null);
   const [selectedItem, setSelectedItem] = useState<PriceListSelect>();
 
@@ -19,7 +21,10 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi
     { columnId, buyerId: token },
     { enabled: !!columnId && !!token }
   );
-
+  const { data: distributorshipData } = api.distributorshipDetail.getOne.useQuery(
+    columnId,
+    { enabled: Boolean(data?.columnData?.distributorship) }
+  );
   const balance = data?.walletData?.freezeIncome ?? 0 + (data?.walletData?.amountWithdraw ?? 0);
 
   const {
@@ -27,7 +32,7 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi
     setState,
     paymentInfo,
     handleRecharge,
-  } = usePayment(selectedItem, balance, token, data?.columnData, onClose, messageApi);
+  } = usePayment(selectedItem, balance, token, data?.columnData, onClose, messageApi, refetch);
 
   useEffect(() => {
     if (data?.priceListData && data.priceListData.length > 0) {
@@ -35,8 +40,25 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi
     }
   }, [data?.priceListData]);
 
-  if (!isLoading && !open || (!data?.columnData || !data.priceListData || !data.walletData)) {
-    // messageApi.error("获取专栏信息失败");
+  const router = useRouter();
+
+  const handleClickShare = () => {
+    setState(prev => ({ ...prev, showShare: false }));
+    router.push(`/dashboard/poster/column?id=${columnId}`)
+  }
+
+  const handleClickCopy = () => {
+    setState(prev => ({ ...prev, showShare: false }));
+    const currentUrl = `${window.location.origin}/dashboard/special-column?id=${columnId}`;
+    navigator.clipboard.writeText(currentUrl)
+      .then(() => {
+        messageApi.success('链接已复制到剪贴板');
+      })
+      .catch(() => {
+        messageApi.error('复制失败，请重试');
+      });
+  };
+  if (!isLoading && !open || (!data?.columnData || !data.priceListData || !data.walletData || !distributorshipData)) {
     return null;
   }
 
@@ -99,6 +121,9 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi
           </div>
         </div>
       </Drawer>
+      <ShareDialog open={state.showShare} onClose={() => setState(prev => ({ ...prev, showShare: false }))}
+        columnData={data.columnData} handleClickShare={handleClickShare} handleClickCopy={handleClickCopy}
+      />
     </>
   );
 };

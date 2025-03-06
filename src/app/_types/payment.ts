@@ -2,6 +2,7 @@ export type PaymentState = {
     showTopUp: boolean;
     showConfirm: boolean;
     showOrder: boolean;
+    showShare: boolean;
     rechargeAmount: number;
 };
 

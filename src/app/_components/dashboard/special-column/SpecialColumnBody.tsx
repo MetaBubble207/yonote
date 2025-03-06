@@ -46,6 +46,7 @@ export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
     toggleSort,
     handleSearchCancel,
     handleSearchChange,
+    refetch,
   } = useSpecialColumn(props.columnId, messageApi, props.code, props.invitationCode, props.isBack);
 
   const handleSubscribe = useCallback(() => {
@@ -100,6 +101,7 @@ export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
         columnId={props.columnId}
         open={!statusLoading && isSubscribe}
         messageApi={messageApi}
+        refetch={refetch}
       />
 
       <SearchModal

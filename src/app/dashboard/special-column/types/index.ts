@@ -6,6 +6,7 @@ export interface ReservedProps {
     columnId: string;
     open: boolean;
     messageApi: MessageInstance;
+    refetch: () => void;
 }
 
 export interface PriceItemProps {

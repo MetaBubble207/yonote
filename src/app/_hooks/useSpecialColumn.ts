@@ -30,12 +30,12 @@ export const useSpecialColumn = (
   } = useColumnSearch();
 
   // API 查询
-  const { data: status, isLoading: statusLoading } = api.order.getUserStatus.useQuery(
+  const { data: status, isLoading: statusLoading, refetch: refetchUserStatus } = api.order.getUserStatus.useQuery(
     { userId: token, columnId },
     { enabled: Boolean(token) }
   );
 
-  const { data: detailPost, isLoading: detailPostLoading } = api.order.getColumnOrder.useQuery(
+  const { data: detailPost, isLoading: detailPostLoading, refetch: refetchColumnOrder } = api.order.getColumnOrder.useQuery(
     { columnId, isDesc, search: condition, tag: searchTag },
     { enabled: Boolean(columnId) }
   );
@@ -77,6 +77,10 @@ export const useSpecialColumn = (
     });
   }, [invitationCode, token, columnId]);
 
+  const refetch = () => {
+    refetchUserStatus();
+    refetchColumnOrder();
+  };
   return {
     status,
     statusLoading,
@@ -93,5 +97,6 @@ export const useSpecialColumn = (
     toggleSort,
     handleSearchCancel,
     handleSearchChange,
+    refetch,
   };
 };

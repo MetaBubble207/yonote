@@ -1,14 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
-export default function ActionButtons({ url, showSpeedPlanIcon }: { url: string, showSpeedPlanIcon: boolean }) {
-    const router = useRouter();
+export default function ActionButtons({ handleClickShareIcon, showSpeedPlanIcon }: { handleClickShareIcon: (e: React.MouseEvent) => void, showSpeedPlanIcon: boolean }) {
     const pathname = usePathname();
-    const handleShare = () => {
-        router.push(url);
-    };
 
     return (
         <div className="flex items-center justify-end">
@@ -18,7 +14,7 @@ export default function ActionButtons({ url, showSpeedPlanIcon }: { url: string,
             >
                 加速计划
             </button>}
-            <button className="mr-16px ml-2.5 bg-transparent" onClick={handleShare}>
+            <button className="mr-16px ml-2.5 bg-transparent" onClick={handleClickShareIcon}>
                 <Image
                     src={pathname.includes('/content')
                         ? "/images/special-column/Share-black.png"
