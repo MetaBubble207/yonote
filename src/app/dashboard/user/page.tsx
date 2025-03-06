@@ -14,19 +14,19 @@ export default function UserPage() {
   const code = useSearchParams().get("code");
   const [token, setToken] = useLocalStorage("token", null);
 
+  const { data: userInfo, isLoading: isUserInfoLoading } =
+    api.users.getOne.useQuery(token, { enabled: Boolean(token) });
+
   // API 查询
   const { data: loginData, isSuccess } = api.users.login.useQuery(
     code!,
-    { enabled: Boolean(code && !token) },
+    { enabled: Boolean(code && !userInfo) },
   );
-
-  const { data: userInfo, isLoading: isUserInfoLoading } =
-    api.users.getOne.useQuery(token, { enabled: Boolean(token) });
 
   const { data: columnInfo, isLoading: isColumnInfoLoading } =
     api.column.getAllByUserId.useQuery(
       { userId: token },
-      { enabled: Boolean(token) },
+      { enabled: Boolean(token && userInfo) },
     );
 
   useEffect(() => {
