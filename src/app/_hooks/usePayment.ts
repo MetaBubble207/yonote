@@ -28,9 +28,8 @@ export const usePayment = (
     const subscribeOrder = api.order.createOrder.useMutation({
         onSuccess: () => {
             messageApi.success("订阅成功", 1).then(() => {
-                onClose();
                 refetch();
-                setState(prev => ({...prev, showShare: true }) )
+                setState(prev => ({...prev, showOrder: false, showShare: true }) )
             });
         },
         onError: () => messageApi.error("订阅失败"),

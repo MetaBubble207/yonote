@@ -26,13 +26,23 @@ export const ShareDialog = ({
     );
 
     useEffect(() => {
-        if (!isLoading && !distributorshipData) {
-            messageApi.error('获取加速计划数据失败');
-            onClose();
+        //将消息提示和关闭操作包装在 setTimeout 中，确保它们在渲染完成后执行
+        let timer: NodeJS.Timeout;
+        if (!isLoading && !distributorshipData && columnData.distributorship) {
+            timer = setTimeout(() => {
+                messageApi.error('获取加速计划数据失败');
+                onClose();
+            }, 0);
         }
-    }, [distributorshipData, isLoading, messageApi, onClose]);
-    
+        return () => {
+            if (timer) {
+                clearTimeout(timer);
+            }
+        };
+    }, [distributorshipData, isLoading, messageApi, onClose, columnData.distributorship]);
+
     if (isLoading) return <Loading />;
+    
     return <Drawer
         title={null}
         open={open}
@@ -52,7 +62,7 @@ export const ShareDialog = ({
                 className="w-20px h-20px cursor-pointer ml-79"
                 onClick={onClose}
             />
-                <span className='text-15px'>分享</span>
+            <span className='text-15px'>分享</span>
 
             <div className='flex flex-col items-center mt-10'>
                 <div className='flex-1'>

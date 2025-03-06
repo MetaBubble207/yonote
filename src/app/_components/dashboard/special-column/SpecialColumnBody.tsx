@@ -48,7 +48,7 @@ export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
     handleSearchChange,
     refetch,
   } = useSpecialColumn(props.columnId, messageApi, props.code, props.invitationCode, props.isBack);
-
+  
   const handleSubscribe = useCallback(() => {
     setIsSubscribe(prev => !prev);
   }, []);
@@ -97,7 +97,7 @@ export default function SpecialColumnBody(props: SpecialColumnBodyProps) {
       </div>
 
       <Reserved
-        onClose={() => setIsSubscribe(false)}
+        onClose={handleSubscribe}
         columnId={props.columnId}
         open={!statusLoading && isSubscribe}
         messageApi={messageApi}

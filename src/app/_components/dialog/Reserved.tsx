@@ -21,10 +21,7 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi
     { columnId, buyerId: token },
     { enabled: !!columnId && !!token }
   );
-  const { data: distributorshipData } = api.distributorshipDetail.getOne.useQuery(
-    columnId,
-    { enabled: Boolean(data?.columnData?.distributorship) }
-  );
+
   const balance = data?.walletData?.freezeIncome ?? 0 + (data?.walletData?.amountWithdraw ?? 0);
 
   const {
@@ -77,12 +74,16 @@ const Reserved: React.FC<ReservedProps> = ({ onClose, columnId, open, messageApi
       messageApi.error("复制失败，请重试");
     } finally {
       setState(prev => ({ ...prev, showShare: false }));
+      onClose();
     }
   };
 
-  const handleSharePanelClose = useCallback(() => setState(prev => ({ ...prev, showShare: false })), []);
+  const handleSharePanelClose = useCallback(() => {
+    setState(prev => ({ ...prev, showShare: false }))
+    onClose();
+  }, []);
 
-  if (!isLoading && !open || (!data?.columnData || !data.priceListData || !data.walletData || !distributorshipData)) {
+  if (!isLoading && !open || (!data?.columnData || !data.priceListData || !data.walletData)) {
     return null;
   }
 
