@@ -1,13 +1,13 @@
+import { NextConfig } from "next";
+
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
-await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = {
+const config: NextConfig = {
   reactStrictMode: false,
-  missingSuspenseWithCSRBailout: false,
   output: "standalone",
   typescript: {
     // ⚠️ 生产环境建议设置为 true
